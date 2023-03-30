@@ -1,5 +1,14 @@
 version: '3.5'
 services:
+  db:
+    image: postgres:15.2
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: faktenforum
+      POSTGRES_PASSWORD: faktenforum
   server:
     build:
       context: .
@@ -11,4 +20,7 @@ services:
     image: faktenforum/server:latest
     ports:
       - "8081:8081"
+
+volumes:
+  db_data:
 
