@@ -1,0 +1,16 @@
+projectName: faktenforum
+platform: express
+architecture: default
+convention: default
+skipPrompt: true
+packageManager: yarn
+features:
+ - swagger
+ - passportjs
+ - db
+ - prisma
+ - testing
+ - jest
+ - linter
+ - eslint
+ - prettier
