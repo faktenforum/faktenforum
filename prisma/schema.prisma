@@ -14,8 +14,76 @@ generator tsed {
   provider = "tsed-prisma"
 }
 
+model Ticket {
+  id String @id @default(uuid())
+
+  author      User      @relation(references: [id], fields: [userId])
+  userId      String
+  FactCheck   FactCheck @relation(fields: [factCheckId], references: [id])
+  factCheckId String
+
+  resources Resource[]
+
+  origin    String?
+  createdAt DateTime @default(now())
+}
+
 model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
+  id        String     @id @default(uuid())
+  tickets   Ticket[]
+  resources Resource[]
+}
+
+model FactCheck {
+  id      String          @id @default(uuid())
+  status  FactCheckStatus
+  tickets Ticket[]
+}
+
+model Resource {
+  id String @id @default(uuid())
+
+  submittedBy User   @relation(references: [id], fields: [userId])
+  userId      String
+  ticket      Ticket @relation(references: [id], fields: [ticketId])
+  ticketId    String
+
+  type      ResourceType
+  createdAt DateTime     @default(now())
+  source    String
+  metadata  Json
+
+  firstResourceSimilarities  ResourceSimilarity[] @relation("firstResourceSimilarity")
+  secondResourceSimilarities ResourceSimilarity[] @relation("secondResourceSimilarity")
+  files                      File[]
+}
+
+model ResourceSimilarity {
+  firstResource    Resource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
+  firstResourceId  String
+  secondResource   Resource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
+  secondResourceId String
+
+  similarityScore Float
+
+  @@id([firstResourceId, secondResourceId])
+}
+
+model File {
+  id String @id @default(uuid())
+
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId String
+
+  path String
+}
+
+enum ResourceType {
+  IMAGE
+  LINK
+}
+
+enum FactCheckStatus {
+  IN_PROGRESS
+  DONE
 }
