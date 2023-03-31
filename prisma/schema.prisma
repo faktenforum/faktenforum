@@ -1,17 +1,20 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
+}
+
+generator tsed {
+  provider = "tsed-prisma"
+}
+
+generator erd {
+  provider                  = "prisma-erd-generator"
+  output                    = "../docs/ERD.svg"
+  includeRelationFromFields = true
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator tsed {
-  provider = "tsed-prisma"
 }
 
 model Ticket {
