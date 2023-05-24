@@ -1,51 +1,19 @@
-<p style="text-align: center" align="center">
-  <a href="https://tsed.io" target="_blank"><img src="https://tsed.io/tsed-og.png" width="200" alt="Ts.ED logo"/></a>
-</p>
-
 <div align="center">
-  <h1>Ts.ED - faktenforum</h1>
-  <br />
+  <h1>Faktenforum</h1>
   <div align="center">
-    <a href="https://cli.tsed.io/">Website</a>
+    <a href="https://www.faktenforum.org">Website</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://cli.tsed.io/getting-started.html">Getting started</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://api.tsed.io/rest/slack/tsedio/tsed">Slack</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://twitter.com/TsED_io">Twitter</a>
+    <a href="https://app.gitbook.com/o/aw1SvnAHl2HeONNnQsWg/home">Gitbook</a>
   </div>
   <hr />
 </div>
 
-> An awesome project based on Ts.ED framework
+## Setup
 
-## Getting started
-
-> **Important!** Ts.ED requires Node >= 14, Express >= 4 and TypeScript >= 4.
-
-```batch
-# install dependencies
-$ yarn install
-
-# serve
-$ yarn start
-
-# build for production
-$ yarn build
-$ yarn start:prod
+Install dependencies:
+```bash
+yarn install
 ```
-
-## Docker
-
-```
-# build docker image
-docker compose build
-
-# start docker image
-docker compose up
-```
-
-## Barrelsby
 
 This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to generate index files to import the controllers.
 
@@ -64,4 +32,26 @@ Edit `.barreslby.json` to customize it:
   ],
   "delete": true
 }
+```
+
+
+## Serve
+
+### From the Command Line
+```
+$ yarn start
+
+# build for production
+$ yarn build
+$ yarn start:prod
+```
+
+### Docker
+
+```
+# build docker image
+docker compose build
+
+# start docker image
+docker compose up
 ```

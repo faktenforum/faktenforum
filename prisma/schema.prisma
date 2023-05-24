@@ -17,45 +17,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Ticket {
-  id String @id @default(uuid())
+model Claim {
+  id                 String              @id @default(uuid())
+  type               ClaimSubmissionType
+  createdAt          DateTime            @default(now())
+  resources          Resource[]
+  origin             String?
+  UserSubmittedClaim UserSubmittedClaim?
+  AnonymousClaim     AnonymousClaim?
+  FactCheck          FactCheck[]
+}
 
-  author      User      @relation(references: [id], fields: [userId])
-  userId      String
-  FactCheck   FactCheck @relation(fields: [factCheckId], references: [id])
-  factCheckId String
+model UserSubmittedClaim {
+  Claim       Claim  @relation(fields: [claimId], references: [id])
+  claimId     String @id
+  submitter   User   @relation(references: [id], fields: [submitterId])
+  submitterId String
+}
 
-  resources Resource[]
-
-  origin    String?
-  createdAt DateTime @default(now())
+// TODO: Track information about anonymous claims, e.g. IP address
+model AnonymousClaim {
+  claim   Claim  @relation(fields: [claimId], references: [id])
+  claimId String @id
 }
 
 model User {
-  id        String     @id @default(uuid())
-  tickets   Ticket[]
-  resources Resource[]
+  id              String               @id @default(uuid())
+  submittedClaims UserSubmittedClaim[]
 }
 
 model FactCheck {
   id      String          @id @default(uuid())
   status  FactCheckStatus
-  tickets Ticket[]
+  claim   Claim           @relation(references: [id], fields: [claimId])
+  claimId String
 }
 
 model Resource {
-  id String @id @default(uuid())
-
-  submittedBy User   @relation(references: [id], fields: [userId])
-  userId      String
-  ticket      Ticket @relation(references: [id], fields: [ticketId])
-  ticketId    String
-
-  type      ResourceType
-  createdAt DateTime     @default(now())
-  source    String
-  metadata  Json
-
+  id                         String               @id @default(uuid())
+  claim                      Claim                @relation(references: [id], fields: [claimId])
+  claimId                    String
+  type                       ResourceType
+  createdAt                  DateTime             @default(now())
+  source                     String
+  metadata                   Json
   firstResourceSimilarities  ResourceSimilarity[] @relation("firstResourceSimilarity")
   secondResourceSimilarities ResourceSimilarity[] @relation("secondResourceSimilarity")
   files                      File[]
@@ -66,19 +71,16 @@ model ResourceSimilarity {
   firstResourceId  String
   secondResource   Resource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
   secondResourceId String
-
-  similarityScore Float
+  similarityScore  Float
 
   @@id([firstResourceId, secondResourceId])
 }
 
 model File {
-  id String @id @default(uuid())
-
+  id         String   @id @default(uuid())
   resource   Resource @relation(fields: [resourceId], references: [id])
   resourceId String
-
-  path String
+  path       String
 }
 
 enum ResourceType {
@@ -89,4 +91,9 @@ enum ResourceType {
 enum FactCheckStatus {
   IN_PROGRESS
   DONE
+}
+
+enum ClaimSubmissionType {
+  ANONYMOUS
+  USER_SUBMITTED
 }
