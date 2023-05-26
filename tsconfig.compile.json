@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["prisma"],
+  "exclude": ["prisma", "minio"],
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "./dist",
