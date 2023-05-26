@@ -1,99 +1,111 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 generator tsed {
-  provider = "tsed-prisma"
+    provider = "tsed-prisma"
 }
 
 generator erd {
-  provider                  = "prisma-erd-generator"
-  output                    = "../docs/ERD.svg"
-  includeRelationFromFields = true
+    provider                  = "prisma-erd-generator"
+    output                    = "../docs/ERD.svg"
+    includeRelationFromFields = true
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model Claim {
-  id                 String              @id @default(uuid())
-  type               ClaimSubmissionType
-  createdAt          DateTime            @default(now())
-  resources          Resource[]
-  origin             String?
-  UserSubmittedClaim UserSubmittedClaim?
-  AnonymousClaim     AnonymousClaim?
-  FactCheck          FactCheck[]
-}
-
-model UserSubmittedClaim {
-  Claim       Claim  @relation(fields: [claimId], references: [id])
-  claimId     String @id
-  submitter   User   @relation(references: [id], fields: [submitterId])
-  submitterId String
-}
-
-// TODO: Track information about anonymous claims, e.g. IP address
-model AnonymousClaim {
-  claim   Claim  @relation(fields: [claimId], references: [id])
-  claimId String @id
-}
-
-model User {
-  id              String               @id @default(uuid())
-  submittedClaims UserSubmittedClaim[]
-}
-
-model FactCheck {
-  id      String          @id @default(uuid())
-  status  FactCheckStatus
-  claim   Claim           @relation(references: [id], fields: [claimId])
-  claimId String
-}
-
-model Resource {
-  id                         String               @id @default(uuid())
-  claim                      Claim                @relation(references: [id], fields: [claimId])
-  claimId                    String
-  type                       ResourceType
-  createdAt                  DateTime             @default(now())
-  source                     String
-  metadata                   Json
-  firstResourceSimilarities  ResourceSimilarity[] @relation("firstResourceSimilarity")
-  secondResourceSimilarities ResourceSimilarity[] @relation("secondResourceSimilarity")
-  files                      File[]
-}
-
-model ResourceSimilarity {
-  firstResource    Resource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
-  firstResourceId  String
-  secondResource   Resource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
-  secondResourceId String
-  similarityScore  Float
-
-  @@id([firstResourceId, secondResourceId])
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model File {
-  id         String   @id @default(uuid())
-  resource   Resource @relation(fields: [resourceId], references: [id])
-  resourceId String
-  path       String
+    id                  String             @id @default(uuid())
+    submitter           User?              @relation(references: [id], fields: [submitterId])
+    submitterId         String?
+    submittedAt         DateTime           @default(now())
+    path                String
+    type                FileType
+    md5                 String
+    transcription       String?
+    CheckableResource   CheckableResource? @relation(fields: [checkableResourceId], references: [id])
+    checkableResourceId String?
+    ResourceTikTok      ResourceTikTok?
+}
+
+model CheckableResource {
+    id                       String               @id @default(uuid())
+    submitter                User?                @relation(references: [id], fields: [submitterId])
+    submitterId              String?
+    originalUrl              String?
+    screenshots              File[]
+    description              String?
+    claim                    Claim                @relation(fields: [claimId], references: [id])
+    claimId                  String
+    type                     ResourceType
+    ResourceTikTok           ResourceTikTok?
+    ResourceTwitter          ResourceTwitter?
+    firstResourceSimilarity  ResourceSimilarity[] @relation("firstResourceSimilarity")
+    secondResourceSimilarity ResourceSimilarity[] @relation("secondResourceSimilarity")
+}
+
+model ResourceTikTok {
+    parentResource   CheckableResource @relation(fields: [parentResourceId], references: [id])
+    parentResourceId String            @id
+    videoFile        File              @relation(fields: [fileId], references: [id])
+    fileId           String            @unique
+    poster           String
+    likes            Int
+    bookmarks        Int
+    shares           Int
+}
+
+model ResourceTwitter {
+    parentResource   CheckableResource @relation(fields: [parentResourceId], references: [id])
+    parentResourceId String            @id
+    tweetText        String
+    poster           String
+    retweets         Int
+}
+
+model ResourceSimilarity {
+    firstResource       CheckableResource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
+    firstResourceId     String
+    secondResource      CheckableResource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
+    secondResourceId    String
+    similarityScore     Float
+    manuallyConfirmed   Boolean
+    manuallyConfirmedBy User?             @relation(references: [id], fields: [confirmerId])
+    confirmerId         String?
+    manuallyConfirmedAt DateTime?
+
+    @@id([firstResourceId, secondResourceId])
+}
+
+model Claim {
+    id                String              @id @default(uuid())
+    submitter         User?               @relation(references: [id], fields: [submitterId])
+    submitterId       String?
+    submittedAt       DateTime            @default(now())
+    tags              String[]
+    CheckableResource CheckableResource[]
+}
+
+model User {
+    id                         String               @id @default(uuid())
+    submittedFiles             File[]
+    submittedCheckableResource CheckableResource[]
+    submittedClaims            Claim[]
+    ResourceSimilarity         ResourceSimilarity[]
+}
+
+enum FileType {
+    IMAGE
+    VIDEO
+    DOCUMENT
+    OTHER
 }
 
 enum ResourceType {
-  IMAGE
-  LINK
-}
-
-enum FactCheckStatus {
-  IN_PROGRESS
-  DONE
-}
-
-enum ClaimSubmissionType {
-  ANONYMOUS
-  USER_SUBMITTED
+    TIKTOK
+    TWITTER
+    OTHER
 }

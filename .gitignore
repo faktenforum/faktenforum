@@ -1,4 +1,4 @@
-### Node template
+
 .DS_Store
 # Logs
 logs
@@ -55,3 +55,6 @@ test/**/*.js.map
 .env.local
 .env.development
 .env
+
+# minio Seed data
+minio/resources/*
