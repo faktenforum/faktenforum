@@ -7,7 +7,11 @@ import prisma from "src";
 export class ClaimsController {
   @Get()
   async getClaims() {
-    const claims = await prisma.claim.findMany();
+    const claims = await prisma.claim.findMany({
+      include: {
+        CheckableResource: true
+      }
+    });
     return claims;
   }
 
