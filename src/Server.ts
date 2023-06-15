@@ -7,6 +7,7 @@ import "@tsed/swagger";
 import { join } from "path";
 
 import { config } from "./config/index";
+import * as api from "./controllers/api/index";
 import * as pages from "./controllers/pages/index";
 import * as rest from "./controllers/rest/index";
 
@@ -17,6 +18,7 @@ import * as rest from "./controllers/rest/index";
   httpsPort: false, // CHANGE
   disableComponentsScan: true,
   mount: {
+    "/api": [...Object.values(api)],
     "/rest": [...Object.values(rest)],
     "/": [...Object.values(pages)]
   },

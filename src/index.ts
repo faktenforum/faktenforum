@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { $log } from "@tsed/common";
 import { PlatformExpress } from "@tsed/platform-express";
 
@@ -17,3 +18,6 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+const prisma = new PrismaClient();
+export default prisma;
