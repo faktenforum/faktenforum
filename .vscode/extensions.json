@@ -1,6 +1,3 @@
 {
-    "recommendations": [
-        "esbenp.prettier-vscode",
-        "prisma.prisma"
-    ]
+  "recommendations": ["esbenp.prettier-vscode", "prisma.prisma"]
 }

@@ -1,4 +1,5 @@
 import { PlatformTest } from "@tsed/common";
+
 import { HelloWorldController } from "./HelloWorldController";
 
 describe("HelloWorldController", () => {

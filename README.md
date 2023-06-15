@@ -11,6 +11,7 @@
 ## Setup
 
 Install dependencies:
+
 ```bash
 yarn install
 ```
@@ -21,23 +22,16 @@ Edit `.barreslby.json` to customize it:
 
 ```json
 {
-  "directory": [
-    "./src/controllers/rest",
-    "./src/controllers/pages"
-  ],
-  "exclude": [
-    "__mock__",
-    "__mocks__",
-    ".spec.ts"
-  ],
+  "directory": ["./src/controllers/rest", "./src/controllers/pages"],
+  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
   "delete": true
 }
 ```
 
-
 ## Serve
 
 ### From the Command Line
+
 ```
 $ yarn start
 

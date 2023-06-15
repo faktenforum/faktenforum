@@ -1,16 +1,19 @@
 import { PlatformTest } from "@tsed/common";
 import SuperTest from "supertest";
-import { HelloWorldController } from "./HelloWorldController";
+
 import { Server } from "../../Server";
+import { HelloWorldController } from "./HelloWorldController";
 
 describe("HelloWorldController", () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
 
-  beforeEach(PlatformTest.bootstrap(Server, {
-    mount: {
-      "/": [HelloWorldController]
-    }
-  }));
+  beforeEach(
+    PlatformTest.bootstrap(Server, {
+      mount: {
+        "/": [HelloWorldController]
+      }
+    })
+  );
   beforeEach(() => {
     request = SuperTest(PlatformTest.callback());
   });
@@ -18,8 +21,8 @@ describe("HelloWorldController", () => {
   afterEach(PlatformTest.reset);
 
   it("should call GET /hello-world", async () => {
-     const response = await request.get("/hello-world").expect(200);
+    const response = await request.get("/hello-world").expect(200);
 
-     expect(response.text).toEqual("hello");
+    expect(response.text).toEqual("hello");
   });
 });
