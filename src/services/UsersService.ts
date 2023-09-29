@@ -33,7 +33,7 @@ export class UserService {
     });
   }
 
-  async createRefreshToken(userId: string, userAgent: string, userRole: UserRole, expiresIn: number = 86400): Promise<RefreshToken> {
+  async createRefreshToken(userId: string, userAgent: string, userRole: UserRole): Promise<RefreshToken> {
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + expiresIn);
 

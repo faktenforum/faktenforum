@@ -1,7 +1,8 @@
 {
   "directory": [
     "./src/controllers/api",
-    "./src/controllers/pages"
+    "./src/controllers/pages",
+    "./src/services"
   ],
   "exclude": [
     "__mock__",
