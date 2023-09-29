@@ -13,7 +13,7 @@
 Install dependencies:
 
 ```bash
-yarn install
+npm install
 ```
 
 This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to generate index files to import the controllers.
@@ -33,11 +33,11 @@ Edit `.barreslby.json` to customize it:
 ### From the Command Line
 
 ```
-$ yarn start
+$ npm start
 
 # build for production
-$ yarn build
-$ yarn start:prod
+$ npm build
+$ npm start:prod
 ```
 
 ### Docker

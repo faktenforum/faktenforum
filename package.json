@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "build": "yarn run barrels && tsc --project tsconfig.compile.json",
+    "build": "npm run barrels && tsc --project tsconfig.compile.json",
     "barrels": "barrelsby --config .barrelsby.json",
-    "start": "yarn run barrels && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start": "npm run barrels && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "start:prod": "cross-env NODE_ENV=production node dist/index.js",
-    "test": "yarn run test:lint && yarn run test:coverage",
+    "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test jest",
-    "test:coverage": "yarn run test:unit",
+    "test:coverage": "npm run test:unit",
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate",
     "test:lint": "eslint '**/*.{ts,js}'",
@@ -94,7 +94,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "tsed": {
-    "packageManager": "yarn",
+    "packageManager": "npm",
     "convention": "default",
     "architecture": "default"
   }
