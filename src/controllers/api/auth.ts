@@ -1,5 +1,6 @@
 import { EnvService, UserService } from "@/services";
 import { BodyParams, Controller, Cookies, Get, HeaderParams, Post, Req, Res } from "@tsed/common";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 @Controller("/auth")
@@ -12,8 +13,21 @@ export class AuthController {
     });
   }
 
+  private setRefreshTokenCookie(response: Response, refreshToken: string) {
+    response.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: this.envService.env !== "development", // Send the cookie only over HTTPS in production
+      sameSite: "strict"
+    });
+  }
+
   @Post("/login")
-  async login(@BodyParams("email") email: string, @BodyParams("password") password: string, @HeaderParams("user-agent") userAgent: string) {
+  async login(
+    @BodyParams("email") email: string,
+    @BodyParams("password") password: string,
+    @HeaderParams("user-agent") userAgent: string,
+    @Res() response: Response
+  ) {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
@@ -28,16 +42,15 @@ export class AuthController {
 
     // Generate refresh token
 
-    const refreshToken = await this.userService.createRefreshToken(user.id, user.role, userAgent);
-
+    const refreshToken = await this.userService.createRefreshToken(user.id, userAgent);
+    this.setRefreshTokenCookie(response, refreshToken);
     const token = this.generateToken(user.id, user.role);
 
     return { token };
   }
 
   @Post("/refresh")
-  async refreshToken(@Cookies() cookies: any) {
-    const { refreshToken } = cookies;
+  async refreshToken(@Res() response: Response, @Cookies("refreshToken") refreshToken: string) {
     if (!refreshToken) {
       throw new Error("Refresh token not provided");
     }
@@ -58,23 +71,26 @@ export class AuthController {
     // generate new JWT
     const token = this.generateToken(user.id, user.role);
 
-    cookies("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: true, // Send the cookie only over HTTPS
-      sameSite: "strict"
-    });
+    this.setRefreshTokenCookie(response, newRefreshToken);
 
     return { token };
   }
 
   @Get("/logout")
-  async logout(@Req() request: Express.Request, @Res() response: Express.Response) {
+  async logout(@Req() request: Request, @Res() response: Response) {
     const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
     await this.userService.revokeRefreshToken(refreshToken);
-
     // Clear the refreshToken cookie
     response.clearCookie("refreshToken");
-
     return { message: "Logged out successfully" };
+  }
+
+  @Post("/register")
+  async register(@BodyParams("email") email: string, @BodyParams("password") password: string) {
+    const user = await this.userService.createUser(email, password);
+    return {
+      id: user.id,
+      email: user.email
+    };
   }
 }

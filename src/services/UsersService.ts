@@ -10,6 +10,9 @@ export class UserService {
   constructor(private envService: EnvService) {
     this.prisma = new PrismaClient();
   }
+  async getAllUsers(): Promise<User[]> {
+    return this.prisma.user.findMany();
+  }
 
   async createUser(email: string, password: string, role: UserRole = UserRole.USER): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10); // 10 is the saltRounds; adjust as necessary
@@ -34,11 +37,11 @@ export class UserService {
     });
   }
 
-  async createRefreshToken(userId: string, userAgent: string): Promise<RefreshToken> {
+  async createRefreshToken(userId: string, userAgent: string): Promise<string> {
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + this.envService.jwtRefreshTokenLifetime);
 
-    return this.prisma.refreshToken.create({
+    const dbEntry = await this.prisma.refreshToken.create({
       data: {
         userId: userId,
         token: this.generateRandomToken(),
@@ -46,6 +49,7 @@ export class UserService {
         userAgent: userAgent
       }
     });
+    return dbEntry.token;
   }
 
   async validateRefreshToken(refreshToken: string): Promise<string | null> {

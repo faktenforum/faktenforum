@@ -1,6 +1,7 @@
 import { Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
 
+type Environment = "production" | "development" | "testing";
 @Service()
 export class EnvService {
   private readonly validEnvs = ["development", "production"];
@@ -20,8 +21,8 @@ export class EnvService {
     return Number(process.env.JWT_TOKEN_TOKEN_LIFETIME!);
   }
 
-  get env(): string {
-    return process.env.NODE_ENV || "development";
+  get env(): Environment {
+    return (process.env.NODE_ENV || "development") as Environment;
   }
 
   private validate() {
