@@ -2,7 +2,7 @@ import { Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
 
 @Service()
-export class EnvironmentService {
+export class EnvService {
   private readonly validEnvs = ["development", "production"];
   constructor() {
     this.validate();

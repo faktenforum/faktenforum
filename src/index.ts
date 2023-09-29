@@ -1,4 +1,4 @@
-import { EnvironmentService } from "@/services/EnvironmentService";
+import { EnvService } from "@/services";
 import { PrismaClient } from "@prisma/client";
 import { $log } from "@tsed/common";
 import { PlatformExpress } from "@tsed/platform-express";
@@ -8,7 +8,7 @@ import { Server } from "./Server";
 async function bootstrap() {
   try {
     const platform = await PlatformExpress.bootstrap(Server);
-    const environmentService = platform.injector.get<EnvironmentService>(EnvironmentService);
+    platform.injector.get<EnvService>(EnvService);
     await platform.listen();
 
     process.on("SIGINT", () => {

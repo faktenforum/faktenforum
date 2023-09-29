@@ -9,7 +9,6 @@ import { join } from "path";
 import { config } from "./config/index";
 import * as api from "./controllers/api/index";
 import * as pages from "./controllers/pages/index";
-import * as rest from "./controllers/rest/index";
 
 @Configuration({
   ...config,
@@ -19,7 +18,6 @@ import * as rest from "./controllers/rest/index";
   disableComponentsScan: true,
   mount: {
     "/api": [...Object.values(api)],
-    "/rest": [...Object.values(rest)],
     "/": [...Object.values(pages)]
   },
   swagger: [

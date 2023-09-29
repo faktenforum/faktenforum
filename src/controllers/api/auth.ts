@@ -1,13 +1,19 @@
-import { UserService } from "@/services/UsersService";
-import { BodyParams, Controller, Cookies, Get, Post, Req, Res } from "@tsed/common";
+import { EnvService, UserService } from "@/services";
+import { BodyParams, Controller, Cookies, Get, HeaderParams, Post, Req, Res } from "@tsed/common";
 import jwt from "jsonwebtoken";
 
 @Controller("/auth")
 export class AuthController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private envService: EnvService) {}
+
+  private generateToken(userId: string, userRole: string) {
+    return jwt.sign({ id: userId, role: userRole }, this.envService.jwtSecret, {
+      expiresIn: this.envService.jwtTokenLifetime
+    });
+  }
 
   @Post("/login")
-  async login(@BodyParams("email") email: string, @BodyParams("password") password: string) {
+  async login(@BodyParams("email") email: string, @BodyParams("password") password: string, @HeaderParams("user-agent") userAgent: string) {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
@@ -20,9 +26,11 @@ export class AuthController {
       throw new Error("Invalid password");
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: parseInt(process.env.JWT_TOKEN_TOKEN_LIFETIME!)
-    });
+    // Generate refresh token
+
+    const refreshToken = await this.userService.createRefreshToken(user.id, user.role, userAgent);
+
+    const token = this.generateToken(user.id, user.role);
 
     return { token };
   }
@@ -39,14 +47,16 @@ export class AuthController {
     if (!userId) {
       throw new Error("Invalid refresh token");
     }
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-    // Refresh Token Roation
+    // Refresh Token Rotation
     const newRefreshToken = await this.userService.rotateRefreshToken(refreshToken);
 
     // generate new JWT
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
-      expiresIn: parseInt(process.env.JWT_TOKEN_TOKEN_LIFETIME!)
-    });
+    const token = this.generateToken(user.id, user.role);
 
     cookies("refreshToken", newRefreshToken, {
       httpOnly: true,

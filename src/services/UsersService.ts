@@ -1,3 +1,4 @@
+import { EnvService } from "@/services";
 import { PrismaClient, RefreshToken, User, UserRole } from "@prisma/client";
 import { Injectable } from "@tsed/di";
 import bcrypt from "bcrypt";
@@ -6,7 +7,7 @@ import bcrypt from "bcrypt";
 export class UserService {
   private prisma: PrismaClient;
 
-  constructor() {
+  constructor(private envService: EnvService) {
     this.prisma = new PrismaClient();
   }
 
@@ -33,17 +34,16 @@ export class UserService {
     });
   }
 
-  async createRefreshToken(userId: string, userAgent: string, userRole: UserRole): Promise<RefreshToken> {
+  async createRefreshToken(userId: string, userAgent: string): Promise<RefreshToken> {
     const expiration = new Date();
-    expiration.setSeconds(expiration.getSeconds() + expiresIn);
+    expiration.setSeconds(expiration.getSeconds() + this.envService.jwtRefreshTokenLifetime);
 
     return this.prisma.refreshToken.create({
       data: {
         userId: userId,
         token: this.generateRandomToken(),
         expiresAt: expiration,
-        userAgent: userAgent,
-        userRole: userRole
+        userAgent: userAgent
       }
     });
   }
