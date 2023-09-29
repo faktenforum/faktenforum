@@ -48,16 +48,52 @@ export class UserService {
     });
   }
 
-  async getRefreshToken(token: string): Promise<RefreshToken | null> {
-    return this.prisma.refreshToken.findUnique({
+  async validateRefreshToken(refreshToken: string): Promise<string | null> {
+    const tokenRecord = await this.prisma.refreshToken.findUnique({
+      where: { token: refreshToken },
+      select: { userId: true, expiresAt: true }
+    });
+
+    if (!tokenRecord) {
+      return null;
+    }
+
+    const currentTimestamp = new Date();
+    if (tokenRecord.expiresAt <= currentTimestamp) {
+      // Token has expired
+      await this.revokeRefreshToken(refreshToken);
+      return null;
+    }
+
+    return tokenRecord.userId;
+  }
+
+  async rotateRefreshToken(token: string): Promise<string> {
+    const tokenRecord = await this.prisma.refreshToken.findUnique({
       where: { token: token }
     });
+
+    if (!tokenRecord) {
+      throw new Error("Invalid refresh token");
+    }
+
+    const newToken = this.generateRandomToken();
+    await this.prisma.refreshToken.update({
+      where: { token: token },
+      data: { token: newToken }
+    });
+
+    return newToken;
   }
 
   async revokeRefreshToken(token: string): Promise<void> {
     await this.prisma.refreshToken.delete({
       where: { token: token }
     });
+  }
+
+  async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
+    return bcrypt.compare(plainTextPassword, hashedPassword);
   }
 
   // Utility function to generate a random token for refresh tokens
