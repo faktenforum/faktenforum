@@ -3,6 +3,7 @@ import { timeStringToSeconds } from "@/utils/time";
 import { PrismaClient } from "@prisma/client";
 import { Inject, Service } from "@tsed/di";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 @Service()
 export class AuthService {
@@ -13,6 +14,11 @@ export class AuthService {
 
   constructor() {
     this.prisma = new PrismaClient();
+  }
+
+  // Utility function to generate a random token for refresh tokens
+  private generateRandomToken(): string {
+    return require("crypto").randomBytes(48).toString("hex");
   }
 
   async createRefreshToken(userId: string, userAgent: string): Promise<string> {
@@ -79,8 +85,9 @@ export class AuthService {
     return bcrypt.compare(plainTextPassword, hashedPassword);
   }
 
-  // Utility function to generate a random token for refresh tokens
-  private generateRandomToken(): string {
-    return require("crypto").randomBytes(48).toString("hex");
+  generateToken(userId: string, userRole: string) {
+    return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
+      expiresIn: this.envService.jwtTokenLifetime
+    });
   }
 }

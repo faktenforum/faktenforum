@@ -5,7 +5,6 @@ import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { Groups, In, Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 
 @Controller("/auth")
 export class AuthController {
@@ -15,12 +14,6 @@ export class AuthController {
   usersService: UsersService;
   @Inject()
   authService: AuthService;
-
-  private generateToken(userId: string, userRole: string) {
-    return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
-      expiresIn: this.envService.jwtTokenLifetime
-    });
-  }
 
   private setRefreshTokenCookie(response: Response, refreshToken: string) {
     response.cookie("refreshToken", refreshToken, {
@@ -42,7 +35,7 @@ export class AuthController {
     const user = req.user as PassportUser;
     const refreshToken = await this.authService.createRefreshToken(user.id, userAgent);
     this.setRefreshTokenCookie(response, refreshToken);
-    const token = this.generateToken(user.id, user.role);
+    const token = this.authService.generateToken(user.id, user.role);
 
     return { token };
   }
