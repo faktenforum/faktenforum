@@ -60,7 +60,7 @@ export class AuthController {
     const newRefreshToken = await this.authService.rotateRefreshToken(refreshToken);
 
     // generate new JWT
-    const token = this.generateToken(user.id, user.role);
+    const token = this.authService.generateToken(user.id, user.role);
 
     this.setRefreshTokenCookie(response, newRefreshToken);
 
