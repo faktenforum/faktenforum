@@ -12,7 +12,7 @@ export class AuthController {
 
   private generateToken(userId: string, userRole: string) {
     return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
-      expiresIn: "1m"
+      expiresIn: this.envService.jwtTokenLifetime
     });
   }
 

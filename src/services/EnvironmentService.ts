@@ -13,12 +13,12 @@ export class EnvService {
     return process.env.JWT_SECRET!;
   }
 
-  get jwtRefreshTokenLifetime(): number {
-    return Number(process.env.JWT_REFRESH_TOKEN_LIFETIME!);
+  get jwtRefreshTokenLifetime(): number | string {
+    return process.env.JWT_REFRESH_TOKEN_LIFETIME!;
   }
 
-  get jwtTokenLifetime(): number {
-    return Number(process.env.JWT_TOKEN_TOKEN_LIFETIME!);
+  get jwtTokenLifetime(): number | string {
+    return process.env.JWT_TOKEN_TOKEN_LIFETIME!;
   }
 
   get env(): Environment {
@@ -31,15 +31,7 @@ export class EnvService {
       process.exit(1);
     }
 
-    if (isNaN(this.jwtRefreshTokenLifetime) || this.jwtRefreshTokenLifetime <= 0) {
-      $log.error("JWT_REFRESH_TOKEN_LIFETIME is not set or invalid!");
-      process.exit(1);
-    }
-
-    if (isNaN(this.jwtTokenLifetime) || this.jwtTokenLifetime <= 0) {
-      $log.error("JWT_TOKEN_TOKEN_LIFETIME is not set or invalid!");
-      process.exit(1);
-    }
+    // TODO add check for string format of Token lifetimes
     // check if env is one of the following values: development, production or undefined
 
     if (!this.validEnvs.includes(this.env)) {
