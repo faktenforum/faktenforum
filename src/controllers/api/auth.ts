@@ -1,6 +1,8 @@
+import { Credentials, LoginResponse, PassportUser } from "@/models";
 import { EnvService, UsersService } from "@/services";
 import { BodyParams, Controller, Cookies, Get, HeaderParams, Post, Req, Res } from "@tsed/common";
 import { Authenticate } from "@tsed/passport";
+import { Groups, Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -22,51 +24,22 @@ export class AuthController {
     });
   }
   @Post("/login")
-  @Authenticate("login")
+  @Authenticate("local", { session: false })
+  @Returns(200, LoginResponse)
   async login(
     @Req() req: Req,
     @HeaderParams("user-agent") userAgent: string,
-    @BodyParams("email") email: string,
-    @BodyParams("password") password: string,
+    @BodyParams() credentials: Credentials,
     @Res() response: Response
   ) {
     // FACADE
-    const user = req.user as any;
-
-    const refreshToken = await this.usersService.createRefreshToken(user, userAgent);
+    const user = req.user as PassportUser;
+    const refreshToken = await this.usersService.createRefreshToken(user.id, userAgent);
     this.setRefreshTokenCookie(response, refreshToken);
     const token = this.generateToken(user.id, user.role);
 
-    return { token, user: req.user };
+    return { token };
   }
-
-  // @Post("/login")
-  // async login(
-  //   @BodyParams("email") email: string,
-  //   @BodyParams("password") password: string,
-  //   @HeaderParams("user-agent") userAgent: string,
-  //   @Res() response: Response
-  // ) {
-  //   const user = await this.usersService.getUserByEmail(email);
-
-  //   if (!user) {
-  //     throw new Error("User not found");
-  //   }
-
-  //   const isValidPassword = await this.usersService.verifyPassword(password, user.password);
-
-  //   if (!isValidPassword) {
-  //     throw new Error("Invalid password");
-  //   }
-
-  //   // Generate refresh token
-
-  //   const refreshToken = await this.usersService.createRefreshToken(user.id, userAgent);
-  //   this.setRefreshTokenCookie(response, refreshToken);
-  //   const token = this.generateToken(user.id, user.role);
-
-  //   return { token };
-  // }
 
   @Post("/refresh")
   async refreshToken(@Res() response: Response, @Cookies("refreshToken") refreshToken: string) {

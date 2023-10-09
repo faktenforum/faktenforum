@@ -1,12 +1,12 @@
-import { Format, Property } from "@tsed/schema";
+import { Property } from "@tsed/schema";
 
-export class PassportCustomUserInfoModel {
+export class PassportUser {
   @Property()
   id: string;
 
   @Property()
-  token: string;
+  email: string;
 
   @Property()
-  roles: string[];
+  role: string;
 }

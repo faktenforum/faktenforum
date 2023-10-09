@@ -98,7 +98,7 @@
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.5.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.2.2"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

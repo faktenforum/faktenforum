@@ -3,4 +3,5 @@
  */
 
 export * from "./Credentials";
+export * from "./LoginResponse";
 export * from "./PassportCustomUser";

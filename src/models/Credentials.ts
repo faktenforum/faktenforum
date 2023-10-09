@@ -1,4 +1,4 @@
-import { Format, Property } from "@tsed/schema";
+import { Format, MinLength, Property } from "@tsed/schema";
 
 export class Credentials {
   @Property()
@@ -6,5 +6,6 @@ export class Credentials {
   email: string;
 
   @Property()
+  @MinLength(3)
   password: string;
 }
