@@ -58,7 +58,8 @@
     "method-override": "^3.0.0",
     "minio": "^7.1.1",
     "passport": "^0.6.0",
-    "passport-jwt": "^4.0.1"
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^10.0.2",
@@ -79,6 +80,7 @@
     "@types/node": "^18.15.11",
     "@types/passport": "^1.0.12",
     "@types/passport-jwt": "^3.0.10",
+    "@types/passport-local": "^1.0.36",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",

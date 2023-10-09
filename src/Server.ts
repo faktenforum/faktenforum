@@ -1,7 +1,9 @@
 // /!\ keep this import
+import "@/protocols";
 import "@tsed/ajv";
 import { PlatformApplication } from "@tsed/common";
 import { Configuration, Inject } from "@tsed/di";
+import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
 import { join } from "path";

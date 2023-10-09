@@ -1,20 +1,29 @@
-import { UserService } from "@/services/UsersService";
+import { UsersService } from "@/services/UsersService";
 import { Controller, Get, PathParams } from "@tsed/common";
+import { Forbidden, Unauthorized } from "@tsed/exceptions";
+import { Authenticate } from "@tsed/passport";
+import { In, Returns, Security } from "@tsed/schema";
 
 // Import the generated type
 
 @Controller("/users")
 export class UserController {
-  constructor(private userService: UserService) {}
-
+  constructor(private usersService: UsersService) {}
+  @Authenticate("jwt")
+  @Security("jwt")
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
   @Get("/")
   async getAllUsers() {
-    return this.userService.getAllUsers();
+    return this.usersService.getAllUsers();
   }
-
+  @Authenticate("jwt")
+  @Security("jwt")
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
   @Get("/:id")
   async getUserById(@PathParams("id") id: string) {
-    return this.userService.getUserById(id);
+    return this.usersService.getUserById(id);
   }
 
   // ... other methods ...

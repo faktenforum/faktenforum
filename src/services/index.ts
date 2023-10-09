@@ -3,5 +3,4 @@
  */
 
 export * from "./EnvironmentService";
-export * from "./PassportService";
 export * from "./UsersService";

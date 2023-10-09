@@ -22,4 +22,5 @@ async function bootstrap() {
 bootstrap();
 
 const prisma = new PrismaClient();
+
 export default prisma;

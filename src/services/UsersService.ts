@@ -4,7 +4,7 @@ import { Injectable } from "@tsed/di";
 import bcrypt from "bcrypt";
 
 @Injectable()
-export class UserService {
+export class UsersService {
   private prisma: PrismaClient;
 
   constructor(private envService: EnvService) {
