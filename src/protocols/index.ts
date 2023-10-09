@@ -3,4 +3,4 @@
  */
 
 export * from "./JwtProtocol";
-export * from "./LoginProtocol";
+export * from "./LocalProtocol";

@@ -20,7 +20,9 @@ export const config: Partial<TsED.Configuration> = {
           securitySchemes: {
             jwt: {
               type: "http",
-              scheme: "bearer"
+              scheme: "bearer",
+              bearerFormat: "JWT",
+              description: "JWT Bearer Token authentication"
             }
           }
         }

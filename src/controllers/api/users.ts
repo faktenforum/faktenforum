@@ -9,7 +9,7 @@ import { In, Returns, Security } from "@tsed/schema";
 @Controller("/users")
 export class UserController {
   constructor(private usersService: UsersService) {}
-  @Authenticate("jwt")
+  @Authenticate("jwt", { session: false })
   @Security("jwt")
   @Returns(401, Unauthorized).Description("Unauthorized")
   @Returns(403, Forbidden).Description("Forbidden")
@@ -17,7 +17,7 @@ export class UserController {
   async getAllUsers() {
     return this.usersService.getAllUsers();
   }
-  @Authenticate("jwt")
+  @Authenticate("jwt", { session: false })
   @Security("jwt")
   @Returns(401, Unauthorized).Description("Unauthorized")
   @Returns(403, Forbidden).Description("Forbidden")

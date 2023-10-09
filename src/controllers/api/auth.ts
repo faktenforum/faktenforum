@@ -11,8 +11,8 @@ export class AuthController {
   constructor(private usersService: UsersService, private envService: EnvService) {}
 
   private generateToken(userId: string, userRole: string) {
-    return jwt.sign({ id: userId, role: userRole }, this.envService.jwtSecret, {
-      expiresIn: this.envService.jwtTokenLifetime
+    return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
+      expiresIn: "1m"
     });
   }
 
