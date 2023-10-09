@@ -2,6 +2,7 @@ import { Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
 
 type Environment = "production" | "development" | "testing";
+
 @Service()
 export class EnvService {
   private readonly validEnvs = ["development", "production"];
@@ -13,12 +14,20 @@ export class EnvService {
     return process.env.JWT_SECRET!;
   }
 
-  get jwtRefreshTokenLifetime(): number | string {
-    return process.env.JWT_REFRESH_TOKEN_LIFETIME!;
+  get jwtRefreshTokenLifetime(): string {
+    if (!process.env.JWT_REFRESH_TOKEN_LIFETIME) {
+      $log.error("JWT_REFRESH_TOKEN_LIFETIME is not set!");
+      process.exit(1);
+    }
+    return process.env.JWT_REFRESH_TOKEN_LIFETIME;
   }
 
-  get jwtTokenLifetime(): number | string {
-    return process.env.JWT_TOKEN_TOKEN_LIFETIME!;
+  get jwtTokenLifetime(): string {
+    if (!process.env.JWT_TOKEN_TOKEN_LIFETIME) {
+      $log.error("JWT_TOKEN_TOKEN_LIFETIME is not set!");
+      process.exit(1);
+    }
+    return process.env.JWT_TOKEN_TOKEN_LIFETIME;
   }
 
   get env(): Environment {
@@ -30,6 +39,10 @@ export class EnvService {
       $log.error("JWT_SECRET is not set!");
       process.exit(1);
     }
+
+    this.jwtRefreshTokenLifetime;
+
+    this.jwtTokenLifetime;
 
     // TODO add check for string format of Token lifetimes
     // check if env is one of the following values: development, production or undefined

@@ -1,14 +1,20 @@
-import { Credentials, LoginResponse, PassportUser } from "@/models";
-import { EnvService, UsersService } from "@/services";
-import { BodyParams, Controller, Cookies, Get, HeaderParams, Post, Req, Res } from "@tsed/common";
+import { AccountInfo, Credentials, LoginResponse, PassportUser } from "@/models";
+import { AuthService, EnvService, UsersService } from "@/services";
+import { BodyParams, Controller, Cookies, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
+import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
-import { Groups, Returns, Security } from "@tsed/schema";
+import { Groups, In, Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 @Controller("/auth")
 export class AuthController {
-  constructor(private usersService: UsersService, private envService: EnvService) {}
+  @Inject()
+  envService: EnvService;
+  @Inject()
+  usersService: UsersService;
+  @Inject()
+  authService: AuthService;
 
   private generateToken(userId: string, userRole: string) {
     return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
@@ -34,7 +40,7 @@ export class AuthController {
   ) {
     // FACADE
     const user = req.user as PassportUser;
-    const refreshToken = await this.usersService.createRefreshToken(user.id, userAgent);
+    const refreshToken = await this.authService.createRefreshToken(user.id, userAgent);
     this.setRefreshTokenCookie(response, refreshToken);
     const token = this.generateToken(user.id, user.role);
 
@@ -47,7 +53,7 @@ export class AuthController {
       throw new Error("Refresh token not provided");
     }
 
-    const userId = await this.usersService.validateRefreshToken(refreshToken);
+    const userId = await this.authService.validateRefreshToken(refreshToken);
 
     if (!userId) {
       throw new Error("Invalid refresh token");
@@ -58,7 +64,7 @@ export class AuthController {
     }
 
     // Refresh Token Rotation
-    const newRefreshToken = await this.usersService.rotateRefreshToken(refreshToken);
+    const newRefreshToken = await this.authService.rotateRefreshToken(refreshToken);
 
     // generate new JWT
     const token = this.generateToken(user.id, user.role);
@@ -68,10 +74,23 @@ export class AuthController {
     return { token };
   }
 
+  @Security("jwt")
+  @Authenticate("jwt", { session: false })
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
+  @Returns(200, AccountInfo)
+  @Get("/account")
+  async account(@Req() request: Request, @Res() response: Response) {
+    const { id } = request.user as PassportUser;
+    const user = await this.usersService.getUserById(id, { refreshTokens: true });
+    console.log(user);
+    return user;
+  }
+
   @Get("/logout")
   async logout(@Req() request: Request, @Res() response: Response) {
     const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
-    await this.usersService.revokeRefreshToken(refreshToken);
+    await this.authService.revokeRefreshToken(refreshToken);
     // Clear the refreshToken cookie
     response.clearCookie("refreshToken");
     return { message: "Logged out successfully" };

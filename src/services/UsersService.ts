@@ -1,14 +1,12 @@
-import { EnvService } from "@/services";
-import { timeStringToSeconds } from "@/utils/time";
-import { PrismaClient, RefreshToken, User, UserRole } from "@prisma/client";
-import { Injectable } from "@tsed/di";
+import { PrismaClient, User, UserRole, UserInclude } from "@prisma/client";
+import { Service } from "@tsed/di";
 import bcrypt from "bcrypt";
 
-@Injectable()
+@Service()
 export class UsersService {
   private prisma: PrismaClient;
 
-  constructor(private envService: EnvService) {
+  constructor() {
     this.prisma = new PrismaClient();
   }
   async getAllUsers(): Promise<User[]> {
@@ -26,9 +24,10 @@ export class UsersService {
     });
   }
 
-  async getUserById(id: string): Promise<User | null> {
+  async getUserById(id: string, include?: UserInclude): Promise<User | null> {
     return this.prisma.user.findUnique({
-      where: { id: id }
+      where: { id: id },
+      include
     });
   }
 
@@ -36,75 +35,5 @@ export class UsersService {
     return this.prisma.user.findUnique({
       where: { email: email }
     });
-  }
-
-  async createRefreshToken(userId: string, userAgent: string): Promise<string> {
-    const expiration = new Date();
-    expiration.setSeconds(
-      expiration.getSeconds() + timeStringToSeconds(this.envService.jwtRefreshTokenLifetime)
-    );
-
-    const dbEntry = await this.prisma.refreshToken.create({
-      data: {
-        userId: userId,
-        token: this.generateRandomToken(),
-        expiresAt: expiration,
-        userAgent: userAgent
-      }
-    });
-    return dbEntry.token;
-  }
-
-  async validateRefreshToken(refreshToken: string): Promise<string | null> {
-    const tokenRecord = await this.prisma.refreshToken.findUnique({
-      where: { token: refreshToken },
-      select: { userId: true, expiresAt: true }
-    });
-
-    if (!tokenRecord) {
-      return null;
-    }
-
-    const currentTimestamp = new Date();
-    if (tokenRecord.expiresAt <= currentTimestamp) {
-      // Token has expired
-      await this.revokeRefreshToken(refreshToken);
-      return null;
-    }
-
-    return tokenRecord.userId;
-  }
-
-  async rotateRefreshToken(token: string): Promise<string> {
-    const tokenRecord = await this.prisma.refreshToken.findUnique({
-      where: { token: token }
-    });
-
-    if (!tokenRecord) {
-      throw new Error("Invalid refresh token");
-    }
-
-    const newToken = this.generateRandomToken();
-    await this.prisma.refreshToken.update({
-      where: { token: token },
-      data: { token: newToken }
-    });
-
-    return newToken;
-  }
-
-  async revokeRefreshToken(token: string): Promise<void> {
-    await this.prisma.refreshToken.delete({
-      where: { token: token }
-    });
-  }
-
-  async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
-    return bcrypt.compare(plainTextPassword, hashedPassword);
-  }
-
-  // Utility function to generate a random token for refresh tokens
-  private generateRandomToken(): string {
-    return require("crypto").randomBytes(48).toString("hex");
   }
 }

@@ -1,6 +1,6 @@
 type TimeUnit = "s" | "m" | "h" | "d";
 
-export function timeStringToSeconds(timeStr: string): number | undefined {
+export function timeStringToSeconds(timeStr: string): number {
   const units: Record<TimeUnit, number> = {
     s: 1,
     m: 60,
@@ -9,10 +9,13 @@ export function timeStringToSeconds(timeStr: string): number | undefined {
   };
 
   const unit = timeStr.slice(-1) as TimeUnit;
+  if (["s", "m", "h", "d"].indexOf(unit) === -1) {
+    throw new Error(`Invalid time unit: ${unit}`);
+  }
   const value = parseInt(timeStr.slice(0, -1), 10);
 
   if (!isNaN(value) && units[unit] !== undefined) {
     return value * units[unit];
   }
-  return undefined;
+  throw new Error(`Invalid time string: ${timeStr}`);
 }

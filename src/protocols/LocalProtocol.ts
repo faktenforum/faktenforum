@@ -1,6 +1,6 @@
 import { PassportUser } from "@/models";
 import { Credentials } from "@/models/";
-import { UsersService } from "@/services";
+import { AuthService, UsersService } from "@/services";
 import { Constant, Req } from "@tsed/common";
 import { Inject } from "@tsed/di";
 import { BeforeInstall, OnInstall, OnVerify, Protocol } from "@tsed/passport";
@@ -18,6 +18,8 @@ import { IStrategyOptions, Strategy } from "passport-local";
 export class LocalProtocol implements OnVerify, OnInstall, BeforeInstall {
   @Inject()
   usersService: UsersService;
+  @Inject()
+  authService: AuthService;
 
   @Constant("passport.protocols.jwt.settings")
   jwtSettings: any;
@@ -44,7 +46,7 @@ export class LocalProtocol implements OnVerify, OnInstall, BeforeInstall {
       // OR throw new NotAuthorized("Wrong credentials")
     }
 
-    if (!this.usersService.verifyPassword(password, user.password)) {
+    if (!this.authService.verifyPassword(password, user.password)) {
       return false;
       // OR throw new NotAuthorized("Wrong credentials")
     }

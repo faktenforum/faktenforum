@@ -27,7 +27,7 @@ export class JwtProtocol implements OnVerify {
 
   async $onVerify(@Req() req: Req, @Arg(0) jwtPayload: JwtPayload) {
     const user = await this.usersService.getUserById(jwtPayload.sub);
-
+    // check if token is expired is done by the tsed/passport-jwt package
     if (!user) {
       throw new Unauthorized("Invalid token");
     }
