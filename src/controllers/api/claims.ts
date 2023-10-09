@@ -1,8 +1,8 @@
-import { AccessControlDecorator } from "@/decorators";
 import { Controller } from "@tsed/di";
 import { PathParams } from "@tsed/platform-params";
 import { Get } from "@tsed/schema";
 import prisma from "src";
+import { AccessControlDecorator } from "~/decorators";
 
 @Controller("/claims")
 export class ClaimsController {

@@ -1,7 +1,7 @@
-import { EnvService } from "@/services";
 import { PrismaClient } from "@prisma/client";
 import { $log } from "@tsed/common";
 import { PlatformExpress } from "@tsed/platform-express";
+import { EnvService } from "~/services";
 
 import { Server } from "./Server";
 

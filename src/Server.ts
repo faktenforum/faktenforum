@@ -1,11 +1,11 @@
 // /!\ keep this import
-import "@/protocols";
 import "@tsed/ajv";
 import { PlatformApplication } from "@tsed/common";
 import { Configuration, Inject } from "@tsed/di";
 import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
+import "~/protocols";
 
 import { config } from "./config/index";
 import * as api from "./controllers/api/index";

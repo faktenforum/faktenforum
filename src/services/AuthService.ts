@@ -1,9 +1,9 @@
-import { EnvService } from "@/services";
-import { timeStringToSeconds } from "@/utils/time";
 import { PrismaClient } from "@prisma/client";
 import { Inject, Service } from "@tsed/di";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { EnvService } from "~/services";
+import { timeStringToSeconds } from "~/utils/time";
 
 @Service()
 export class AuthService {

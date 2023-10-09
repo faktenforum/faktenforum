@@ -1,6 +1,6 @@
-import { AccessControlDecorator } from "@/decorators";
-import { UsersService } from "@/services/UsersService";
 import { Controller, Get, Inject, PathParams } from "@tsed/common";
+import { AccessControlDecorator } from "~/decorators";
+import { UsersService } from "~/services/UsersService";
 
 // Import the generated type
 

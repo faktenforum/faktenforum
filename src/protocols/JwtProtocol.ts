@@ -1,8 +1,8 @@
-import { UsersService } from "@/services";
 import { Inject, Req } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { Arg, OnVerify, Protocol } from "@tsed/passport";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
+import { UsersService } from "~/services";
 
 interface JwtPayload {
   sub: string; // Subject ( user id)

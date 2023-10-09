@@ -1,11 +1,11 @@
-import { PassportUser } from "@/models";
-import { Credentials } from "@/models/";
-import { AuthService, UsersService } from "@/services";
 import { Constant, Req } from "@tsed/common";
 import { Inject } from "@tsed/di";
 import { BeforeInstall, OnInstall, OnVerify, Protocol } from "@tsed/passport";
 import { BodyParams } from "@tsed/platform-params";
 import { IStrategyOptions, Strategy } from "passport-local";
+import { PassportUser } from "~/models";
+import { Credentials } from "~/models/";
+import { AuthService, UsersService } from "~/services";
 
 @Protocol<IStrategyOptions>({
   name: "local",

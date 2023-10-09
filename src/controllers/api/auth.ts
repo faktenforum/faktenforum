@@ -1,10 +1,10 @@
-import { AccountInfo, Credentials, LoginResponse, PassportUser } from "@/models";
-import { AuthService, EnvService, UsersService } from "@/services";
 import { BodyParams, Controller, Cookies, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { Groups, In, Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
+import { AccountInfo, Credentials, LoginResponse, PassportUser } from "~/models";
+import { AuthService, EnvService, UsersService } from "~/services";
 
 @Controller("/auth")
 export class AuthController {
