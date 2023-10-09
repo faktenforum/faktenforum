@@ -6,8 +6,13 @@
     "./src/decorators",
     "./src/middlewares",
     "./src/protocols",
-    "./src/models"
+    "./src/models",
+    "./src/utils"
   ],
-  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
+  "exclude": [
+    "__mock__",
+    "__mocks__",
+    ".spec.ts"
+  ],
   "delete": true
 }

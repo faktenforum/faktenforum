@@ -1,4 +1,5 @@
 import { EnvService } from "@/services";
+import { timeStringToSeconds } from "@/utils/time";
 import { PrismaClient, RefreshToken, User, UserRole } from "@prisma/client";
 import { Injectable } from "@tsed/di";
 import bcrypt from "bcrypt";
@@ -39,7 +40,9 @@ export class UsersService {
 
   async createRefreshToken(userId: string, userAgent: string): Promise<string> {
     const expiration = new Date();
-    expiration.setSeconds(expiration.getSeconds() + this.envService.jwtRefreshTokenLifetime);
+    expiration.setSeconds(
+      expiration.getSeconds() + timeStringToSeconds(this.envService.jwtRefreshTokenLifetime)
+    );
 
     const dbEntry = await this.prisma.refreshToken.create({
       data: {
