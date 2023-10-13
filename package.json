@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "build": "yarn run barrels && tsc --project tsconfig.compile.json",
+    "build": "npm run barrels && tsc --project tsconfig.compile.json",
     "barrels": "barrelsby --config .barrelsby.json",
-    "start": "yarn run barrels && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start": "npm run barrels && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "prepare:dev": "docker-compose -f docker-compose.dev.yml up -d",
     "start:prod": "cross-env NODE_ENV=production node dist/index.js",
-    "test": "yarn run test:lint && yarn run test:coverage",
+    "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test jest",
-    "test:coverage": "yarn run test:unit",
+    "test:coverage": "npm run test:unit",
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate",
     "test:lint": "eslint '**/*.{ts,js}'",
@@ -42,6 +43,7 @@
     "@tsed/swagger": "^7.18.2",
     "ajv": "^8.12.0",
     "barrelsby": "^2.5.1",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -51,19 +53,25 @@
     "dotenv-expand": "^10.0.0",
     "dotenv-flow": "^3.2.0",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.2",
     "method-override": "^3.0.0",
     "minio": "^7.1.1",
-    "passport": "^0.6.0"
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^10.0.2",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@tsed/cli": "^4.6.4",
     "@tsed/cli-plugin-eslint": "4.4.5",
     "@tsed/cli-plugin-jest": "4.4.5",
     "@tsed/cli-plugin-passport": "4.4.5",
     "@tsed/cli-plugin-prisma": "4.4.5",
+    "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
-    "@types/cookie-parser": "^1.4.3",
+    "@types/cookie-parser": "^1.4.4",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
@@ -71,9 +79,11 @@
     "@types/multer": "^1.4.7",
     "@types/node": "^18.15.11",
     "@types/passport": "^1.0.12",
+    "@types/passport-jwt": "^3.0.10",
+    "@types/passport-local": "^1.0.36",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
-    "@typescript-eslint/parser": "^5.57.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -88,13 +98,13 @@
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.5.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.2.2"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "tsed": {
-    "packageManager": "yarn",
+    "packageManager": "npm",
     "convention": "default",
     "architecture": "default"
   }

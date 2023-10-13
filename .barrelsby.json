@@ -1,5 +1,18 @@
 {
-  "directory": ["./src/controllers/rest", "./src/controllers/pages"],
-  "exclude": ["__mock__", "__mocks__", ".spec.ts"],
+  "directory": [
+    "./src/controllers/api",
+    "./src/controllers/pages",
+    "./src/services",
+    "./src/decorators",
+    "./src/middlewares",
+    "./src/protocols",
+    "./src/models",
+    "./src/utils"
+  ],
+  "exclude": [
+    "__mock__",
+    "__mocks__",
+    ".spec.ts"
+  ],
   "delete": true
 }

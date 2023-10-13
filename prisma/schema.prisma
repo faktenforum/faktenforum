@@ -95,6 +95,28 @@ model User {
     submittedCheckableResource CheckableResource[]
     submittedClaims            Claim[]
     ResourceSimilarity         ResourceSimilarity[]
+    email                      String               @unique
+    password                   String
+    role                       UserRole             @default(USER)
+    refreshTokens              RefreshToken[] // This is the reverse relation field
+    createdAt                  DateTime             @default(now())
+    updatedAt                  DateTime             @updatedAt
+}
+
+model RefreshToken {
+    id        String   @id @default(uuid())
+    token     String   @unique
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    expiresAt DateTime
+    userAgent String? // Optional: store user-agent string for reference
+}
+
+enum UserRole {
+    ADMIN
+    USER
 }
 
 enum FileType {
