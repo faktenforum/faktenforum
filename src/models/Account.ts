@@ -1,11 +1,12 @@
-import { CollectionOf, Format, Property } from "@tsed/schema";
+import { CollectionOf, Format, Optional, Property } from "@tsed/schema";
 
-export class LoggedInDevices {
+export class Session {
   @Property()
   id: string;
 
   @Property()
-  userAgent: string;
+  @Optional()
+  userAgent: string | null;
 
   @Format("date-time")
   expiresAt: Date;
@@ -29,15 +30,24 @@ export class AccountInfo {
   @Property()
   access_token: string;
 
-  // @Property()
-  // refresh_token: string;
-
   @Property()
   access_token_expires_in: number;
 
   // @Property()
+  // refresh_token: string;#
+  // @Property()
   // refresh_token_expires_in: number;
+}
 
-  // @CollectionOf(LoggedInDevices)
-  // refreshTokens: LoggedInDevices[];
+export class Email {
+  @Property()
+  @Format("email")
+  email: string;
+}
+
+export class PasswordUpdate {
+  @Property()
+  oldPassword: string;
+  @Property()
+  newPassword: string;
 }

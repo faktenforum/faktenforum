@@ -98,12 +98,12 @@ model User {
     email                      String               @unique
     password                   String
     role                       UserRole             @default(USER)
-    refreshTokens              RefreshToken[] // This is the reverse relation field
+    sessions                   Session[] // This is the reverse relation field
     createdAt                  DateTime             @default(now())
     updatedAt                  DateTime             @updatedAt
 }
 
-model RefreshToken {
+model Session {
     id        String   @id @default(uuid())
     token     String   @unique
     userId    String

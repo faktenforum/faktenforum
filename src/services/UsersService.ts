@@ -1,4 +1,4 @@
-import { PrismaClient, User, UserRole, UserInclude } from "@prisma/client";
+import { PrismaClient, Session, User, UserRole } from "@prisma/client";
 import { Service } from "@tsed/di";
 import bcrypt from "bcrypt";
 
@@ -24,16 +24,45 @@ export class UsersService {
     });
   }
 
-  async getUserById(id: string, include?: UserInclude): Promise<User | null> {
+  async getUserById(id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
-      where: { id: id },
-      include
+      where: { id: id }
     });
+  }
+
+  async getUserSessions(id: string): Promise<Session[] | null> {
+    return this.prisma.session.findMany({ where: { userId: id } });
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email: email }
+    });
+  }
+
+  async updateEmail(userId: string, email: string): Promise<User> {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { email }
+    });
+  }
+
+  async updatePassword(
+    id: string,
+    { oldPass, newPass }: { oldPass: string; newPass: string }
+  ): Promise<User> {
+    const oldHash = await bcrypt.hash(oldPass, 10); // 10 is the saltRounds; adjust as necessary
+    const newHash = await bcrypt.hash(newPass, 10); // 10 is the saltRounds; adjust as necessary
+    const data = await this.prisma.user.findUnique({
+      where: { id },
+      select: { password: true }
+    });
+    if (data?.password !== oldHash) {
+      throw new Error("Old password is incorrect");
+    }
+    return this.prisma.user.update({
+      where: { id },
+      data: { password: newHash }
     });
   }
 }

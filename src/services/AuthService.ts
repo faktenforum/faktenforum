@@ -27,7 +27,7 @@ export class AuthService {
       expiration.getSeconds() + timeStringToSeconds(this.envService.jwtRefreshTokenLifetime)
     );
 
-    const dbEntry = await this.prisma.refreshToken.create({
+    const dbEntry = await this.prisma.session.create({
       data: {
         userId: userId,
         token: this.generateRandomToken(),
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   async validateRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
-    const tokenRecord = await this.prisma.refreshToken.findFirst({
+    const tokenRecord = await this.prisma.session.findFirst({
       where: { token: refreshToken, userId: userId },
       select: { expiresAt: true }
     });
@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   async rotateRefreshToken(token: string): Promise<string> {
-    const tokenRecord = await this.prisma.refreshToken.findUnique({
+    const tokenRecord = await this.prisma.session.findUnique({
       where: { token: token }
     });
 
@@ -67,7 +67,7 @@ export class AuthService {
     }
 
     const newToken = this.generateRandomToken();
-    await this.prisma.refreshToken.update({
+    await this.prisma.session.update({
       where: { token: token },
       data: { token: newToken }
     });
@@ -76,7 +76,7 @@ export class AuthService {
   }
 
   async revokeRefreshToken(token: string): Promise<void> {
-    await this.prisma.refreshToken.delete({
+    await this.prisma.session.delete({
       where: { token: token }
     });
   }

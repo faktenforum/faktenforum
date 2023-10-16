@@ -4,7 +4,15 @@ import { Authenticate } from "@tsed/passport";
 import { Groups, In, Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
 import { session } from "passport";
-import { AccountInfo, Credentials, LoginResponse, PassportUser } from "~/models";
+import {
+  AccountInfo,
+  Credentials,
+  Email,
+  LoginResponse,
+  PassportUser,
+  PasswordUpdate,
+  Session
+} from "~/models";
 import { AuthService, EnvService, UsersService } from "~/services";
 
 @Controller("/auth")
@@ -84,9 +92,10 @@ export class AuthController {
       throw new Unauthorized("Invalid token session id");
     }
     const user = await this.usersService.getUserById(id);
+    const sessions = await this.usersService.getUserSessions(id);
 
     if (!user) throw new Unauthorized("Invalid User");
-
+    console.log(user);
     const token = this.authService.generateToken(user.id, user.role, sessionId);
 
     const resData: AccountInfo = {
@@ -95,6 +104,7 @@ export class AuthController {
       role: user.role,
       access_token: token,
       access_token_expires_in: Date.now() + 360
+
       // refresh_token: newRefreshToken,
       // refresh_token_expires_in: Date.now() + 360 * 1000000
     };
@@ -123,5 +133,55 @@ export class AuthController {
       id: user.id,
       email: user.email
     };
+  }
+
+  @Security("jwt")
+  @Authenticate("jwt", { session: false })
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
+  @Returns(200, Array).Of(Session)
+  @Get("/account/sessions")
+  async sessions(@Req() request: Request) {
+    const { id } = request.user as PassportUser;
+
+    const sessions = await this.usersService.getUserSessions(id);
+    return sessions?.map((session) => ({
+      id: session.id,
+      userAgent: session.userAgent,
+      expiresAt: session.expiresAt,
+      createdAt: session.createdAt,
+      updatedAt: session.updatedAt
+    }));
+  }
+
+  @Security("jwt")
+  @Authenticate("jwt", { session: false })
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
+  @Returns(200)
+  @Post("/account/email")
+  async updateEmail(@Req() request: Request, @BodyParams() body: Email) {
+    const { id } = request.user as PassportUser;
+
+    const user = await this.usersService.updateEmail(id, body.email);
+    if (!user) throw new Error("User not found");
+    return {};
+  }
+
+  @Security("jwt")
+  @Authenticate("jwt", { session: false })
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
+  @Returns(200)
+  @Post("/account/password")
+  async updatePassword(@Req() request: Request, @BodyParams() body: PasswordUpdate) {
+    const { id } = request.user as PassportUser;
+
+    const user = await this.usersService.updatePassword(id, {
+      oldPass: body.oldPassword,
+      newPass: body.newPassword
+    });
+    if (!user) throw new Error("User not found");
+    return {};
   }
 }
