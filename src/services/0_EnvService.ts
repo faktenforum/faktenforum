@@ -30,6 +30,21 @@ export class EnvService {
     return process.env.JWT_TOKEN_TOKEN_LIFETIME;
   }
 
+  get jwtIssuer(): string {
+    if (!process.env.JWT_ISSUER) {
+      $log.error("JWT_ISSUER is not set!");
+      process.exit(1);
+    }
+    return process.env.JWT_ISSUER;
+  }
+  get jwtAudience(): string {
+    if (!process.env.JWT_AUDIENCE) {
+      $log.error("JWT_AUDIENCE is not set!");
+      process.exit(1);
+    }
+    return process.env.JWT_AUDIENCE;
+  }
+
   get env(): Environment {
     return (process.env.NODE_ENV || "development") as Environment;
   }

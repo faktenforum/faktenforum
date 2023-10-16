@@ -41,7 +41,8 @@ export class AuthController {
   }
 
   @Post("/refresh")
-  async refreshToken(@Res() response: Response, @Cookies("refreshToken") refreshToken: string) {
+  async refreshToken(@Req() request: Request, @Res() response: Response) {
+    const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
     if (!refreshToken) {
       throw new Error("Refresh token not provided");
     }
@@ -72,17 +73,40 @@ export class AuthController {
   @Returns(401, Unauthorized).Description("Unauthorized")
   @Returns(403, Forbidden).Description("Forbidden")
   @Returns(200, AccountInfo)
-  @Get("/account")
+  @Get("/session")
   async account(@Req() request: Request, @Res() response: Response) {
+    const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
     const { id } = request.user as PassportUser;
-    const user = await this.usersService.getUserById(id, { refreshTokens: true });
+
+    const user = await this.usersService.getUserById(id);
     console.log(user);
-    return user;
+    if (!user) throw new Error("User not found");
+    console.log("Refresh Token", refreshToken);
+    const userId = await this.authService.validateRefreshToken(refreshToken);
+    // Refresh Token Rotation
+    const newRefreshToken = await this.authService.rotateRefreshToken(refreshToken);
+
+    // generate new JWT
+    const token = this.authService.generateToken(user.id, user.role);
+
+    this.setRefreshTokenCookie(response, newRefreshToken);
+    const resData: AccountInfo = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      access_token: token,
+      access_token_expires_in: Date.now() + 60 * 1000,
+      refresh_token: newRefreshToken
+    };
+    return resData;
   }
 
-  @Get("/logout")
+  @Post("/logout")
   async logout(@Req() request: Request, @Res() response: Response) {
     const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
+    if (!refreshToken) {
+      throw new Error("Refresh token not provided");
+    }
     await this.authService.revokeRefreshToken(refreshToken);
     // Clear the refreshToken cookie
     response.clearCookie("refreshToken");

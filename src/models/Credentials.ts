@@ -3,7 +3,7 @@ import { Format, MinLength, Property } from "@tsed/schema";
 export class Credentials {
   @Property()
   @Format("email")
-  email: string;
+  username: string;
 
   @Property()
   @MinLength(3)

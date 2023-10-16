@@ -87,7 +87,9 @@ export class AuthService {
 
   generateToken(userId: string, userRole: string) {
     return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
-      expiresIn: this.envService.jwtTokenLifetime
+      expiresIn: this.envService.jwtTokenLifetime,
+      issuer: this.envService.jwtIssuer,
+      audience: this.envService.jwtAudience
     });
   }
 }

@@ -26,12 +26,15 @@ export class AccountInfo {
   @Property()
   role: string;
 
-  @Format("date-time")
-  createdAt: Date;
+  @Property()
+  access_token: string;
 
-  @Format("date-time")
-  updatedAt: Date;
+  @Property()
+  refresh_token: string;
 
-  @CollectionOf(LoggedInDevices)
-  refreshTokens: LoggedInDevices[];
+  @Property()
+  access_token_expires_in: number;
+
+  // @CollectionOf(LoggedInDevices)
+  // refreshTokens: LoggedInDevices[];
 }
