@@ -100,7 +100,10 @@ export class AuthController {
     };
     return resData;
   }
-
+  @Security("jwt")
+  @Authenticate("jwt", { session: false })
+  @Returns(401, Unauthorized).Description("Unauthorized")
+  @Returns(403, Forbidden).Description("Forbidden")
   @Post("/logout")
   async logout(@Req() request: Request) {
     const { sessionId } = request.user as PassportUser;
