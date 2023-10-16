@@ -1,4 +1,4 @@
-import { Property } from "@tsed/schema";
+import { Optional, Property } from "@tsed/schema";
 
 export class PassportUser {
   @Property()
@@ -9,4 +9,8 @@ export class PassportUser {
 
   @Property()
   role: string;
+
+  @Property()
+  @Optional()
+  sessionId?: string;
 }

@@ -29,11 +29,14 @@ export class AccountInfo {
   @Property()
   access_token: string;
 
-  @Property()
-  refresh_token: string;
+  // @Property()
+  // refresh_token: string;
 
   @Property()
   access_token_expires_in: number;
+
+  // @Property()
+  // refresh_token_expires_in: number;
 
   // @CollectionOf(LoggedInDevices)
   // refreshTokens: LoggedInDevices[];

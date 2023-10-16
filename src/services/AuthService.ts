@@ -38,23 +38,23 @@ export class AuthService {
     return dbEntry.token;
   }
 
-  async validateRefreshToken(refreshToken: string): Promise<string | null> {
-    const tokenRecord = await this.prisma.refreshToken.findUnique({
-      where: { token: refreshToken },
-      select: { userId: true, expiresAt: true }
+  async validateRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
+    const tokenRecord = await this.prisma.refreshToken.findFirst({
+      where: { token: refreshToken, userId: userId },
+      select: { expiresAt: true }
     });
 
     if (!tokenRecord) {
-      return null;
+      return false;
     }
 
     const currentTimestamp = new Date();
     if (tokenRecord.expiresAt <= currentTimestamp) {
       await this.revokeRefreshToken(refreshToken);
-      return null;
+      return false;
     }
 
-    return tokenRecord.userId;
+    return true;
   }
 
   async rotateRefreshToken(token: string): Promise<string> {
@@ -85,8 +85,8 @@ export class AuthService {
     return bcrypt.compare(plainTextPassword, hashedPassword);
   }
 
-  generateToken(userId: string, userRole: string) {
-    return jwt.sign({ sub: userId, role: userRole }, this.envService.jwtSecret, {
+  generateToken(userId: string, userRole: string, sessionId: string) {
+    return jwt.sign({ sub: userId, role: userRole, sessionId: sessionId }, this.envService.jwtSecret, {
       expiresIn: this.envService.jwtTokenLifetime,
       issuer: this.envService.jwtIssuer,
       audience: this.envService.jwtAudience
