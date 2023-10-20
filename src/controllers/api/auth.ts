@@ -1,9 +1,8 @@
-import { BodyParams, Controller, Cookies, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
+import { BodyParams, Controller, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
-import { Groups, In, Returns, Security } from "@tsed/schema";
+import { Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
-import { session } from "passport";
 import {
   AccountInfo,
   Credentials,
@@ -14,6 +13,7 @@ import {
   Session
 } from "~/models";
 import { AuthService, EnvService, UsersService } from "~/services";
+import { timeStringToSeconds } from "~/utils/time";
 
 @Controller("/auth")
 export class AuthController {
@@ -103,7 +103,7 @@ export class AuthController {
       email: user.email,
       role: user.role,
       access_token: token,
-      access_token_expires_in: Date.now() + 360
+      access_token_expires_in: timeStringToSeconds(this.envService.jwtTokenLifetime)
 
       // refresh_token: newRefreshToken,
       // refresh_token_expires_in: Date.now() + 360 * 1000000

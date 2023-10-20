@@ -1,11 +1,14 @@
 import { PrismaClient } from "@prisma/client";
+import { Agenda, Define, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
+import { Job } from "agenda";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils/time";
 
 @Service()
+@Agenda({ namespace: "authentication" })
 export class AuthService {
   @Inject()
   envService: EnvService;
@@ -19,6 +22,18 @@ export class AuthService {
   // Utility function to generate a random token for refresh tokens
   private generateRandomToken(): string {
     return require("crypto").randomBytes(48).toString("hex");
+  }
+  @Every("1 minutes", {
+    name: "Delete expired sessions"
+  })
+  async deleteExpiredSessions(job: Job) {
+    await this.prisma.session.deleteMany({
+      where: {
+        expiresAt: {
+          lte: new Date()
+        }
+      }
+    });
   }
 
   async createRefreshToken(userId: string, userAgent: string): Promise<string> {

@@ -1,4 +1,5 @@
 // /!\ keep this import
+import "@tsed/agenda";
 import "@tsed/ajv";
 import { PlatformApplication } from "@tsed/common";
 import { Configuration, Inject } from "@tsed/di";
@@ -29,6 +30,9 @@ import * as pages from "./controllers/pages/index";
     "json-parser",
     { use: "urlencoded-parser", options: { extended: true } }
   ],
+  agenda: {
+    enabled: true
+  },
 
   exclude: ["**/*.spec.ts"]
 })
