@@ -2,7 +2,7 @@ import { CollectionOf, Format, Optional, Property } from "@tsed/schema";
 
 export class Session {
   @Property()
-  id: string;
+  id: string = "";
 
   @Property()
   @Optional()

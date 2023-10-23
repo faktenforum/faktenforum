@@ -2,13 +2,13 @@ import { Optional, Property } from "@tsed/schema";
 
 export class PassportUser {
   @Property()
-  id: string;
+  id: string = "";
 
   @Property()
-  email: string;
+  email: string = "";
 
   @Property()
-  role: string;
+  role: string = "";
 
   @Property()
   @Optional()
