@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Agenda, Define, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
+import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Job } from "agenda";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";

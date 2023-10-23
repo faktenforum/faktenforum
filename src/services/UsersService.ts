@@ -1,5 +1,6 @@
 import { PrismaClient, Session, User, UserRole } from "@prisma/client";
 import { Service } from "@tsed/di";
+import { Forbidden, NotFound } from "@tsed/exceptions";
 import bcrypt from "bcrypt";
 
 @Service()
@@ -34,6 +35,14 @@ export class UsersService {
     return this.prisma.session.findMany({ where: { userId: id } });
   }
 
+  async deleteUserSession(userId: string, sessionId: string): Promise<void> {
+    const session = await this.prisma.session.findUnique({ where: { id: sessionId } });
+    if (!session) throw new NotFound("Session not found");
+    if (session.userId !== userId) throw new Forbidden("Session does not belong to user");
+    await this.prisma.session.delete({ where: { id: sessionId } });
+    return;
+  }
+
   async getUserByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email: email }
@@ -58,7 +67,7 @@ export class UsersService {
       select: { password: true }
     });
     if (data?.password !== oldHash) {
-      throw new Error("Old password is incorrect");
+      throw new Forbidden("Old password is incorrect");
     }
     return this.prisma.user.update({
       where: { id },

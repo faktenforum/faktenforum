@@ -14,6 +14,11 @@ export class AccessControlMiddleware implements MiddlewareMethods {
       // passport.js method to check auth
       throw new Unauthorized("Unauthorized");
     }
+    if (!options.role || options.role === "ALL") {
+      // if no role is given, we assume that the route is accessible to all
+      // if role is ALL, we assume that the route is accessible to all
+      return;
+    }
     const user = request.user as any;
     switch (options.role) {
       // This Route is only accessible to Admins

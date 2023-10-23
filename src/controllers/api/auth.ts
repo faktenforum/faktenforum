@@ -3,6 +3,7 @@ import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
+import { AccessControlDecorator } from "~/decorators";
 import {
   AccountInfo,
   Credentials,
@@ -77,10 +78,7 @@ export class AuthController {
   //   return { token };
   // }
 
-  @Security("jwt")
-  @Authenticate("jwt", { session: false })
-  @Returns(401, Unauthorized).Description("Unauthorized")
-  @Returns(403, Forbidden).Description("Forbidden")
+  @AccessControlDecorator({ role: "ALL" })
   @Returns(200, AccountInfo)
   @Get("/session")
   async account(@Req() request: Request) {
@@ -92,7 +90,6 @@ export class AuthController {
       throw new Unauthorized("Invalid token session id");
     }
     const user = await this.usersService.getUserById(id);
-    const sessions = await this.usersService.getUserSessions(id);
 
     if (!user) throw new Unauthorized("Invalid User");
     console.log(user);
@@ -110,10 +107,7 @@ export class AuthController {
     };
     return resData;
   }
-  @Security("jwt")
-  @Authenticate("jwt", { session: false })
-  @Returns(401, Unauthorized).Description("Unauthorized")
-  @Returns(403, Forbidden).Description("Forbidden")
+  @AccessControlDecorator({ role: "ALL" })
   @Post("/logout")
   async logout(@Req() request: Request) {
     const { sessionId } = request.user as PassportUser;
@@ -133,55 +127,5 @@ export class AuthController {
       id: user.id,
       email: user.email
     };
-  }
-
-  @Security("jwt")
-  @Authenticate("jwt", { session: false })
-  @Returns(401, Unauthorized).Description("Unauthorized")
-  @Returns(403, Forbidden).Description("Forbidden")
-  @Returns(200, Array).Of(Session)
-  @Get("/account/sessions")
-  async sessions(@Req() request: Request) {
-    const { id } = request.user as PassportUser;
-
-    const sessions = await this.usersService.getUserSessions(id);
-    return sessions?.map((session) => ({
-      id: session.id,
-      userAgent: session.userAgent,
-      expiresAt: session.expiresAt,
-      createdAt: session.createdAt,
-      updatedAt: session.updatedAt
-    }));
-  }
-
-  @Security("jwt")
-  @Authenticate("jwt", { session: false })
-  @Returns(401, Unauthorized).Description("Unauthorized")
-  @Returns(403, Forbidden).Description("Forbidden")
-  @Returns(200)
-  @Post("/account/email")
-  async updateEmail(@Req() request: Request, @BodyParams() body: Email) {
-    const { id } = request.user as PassportUser;
-
-    const user = await this.usersService.updateEmail(id, body.email);
-    if (!user) throw new Error("User not found");
-    return {};
-  }
-
-  @Security("jwt")
-  @Authenticate("jwt", { session: false })
-  @Returns(401, Unauthorized).Description("Unauthorized")
-  @Returns(403, Forbidden).Description("Forbidden")
-  @Returns(200)
-  @Post("/account/password")
-  async updatePassword(@Req() request: Request, @BodyParams() body: PasswordUpdate) {
-    const { id } = request.user as PassportUser;
-
-    const user = await this.usersService.updatePassword(id, {
-      oldPass: body.oldPassword,
-      newPass: body.newPassword
-    });
-    if (!user) throw new Error("User not found");
-    return {};
   }
 }
