@@ -1,6 +1,7 @@
-import { Property } from "@tsed/schema";
+import { Property, Required } from "@tsed/schema";
 
 export class LoginResponse {
   @Property()
-  token: string = "";
+  @Required()
+  token!: string;
 }

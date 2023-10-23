@@ -1,14 +1,17 @@
-import { Optional, Property } from "@tsed/schema";
+import { Optional, Property, Required } from "@tsed/schema";
 
 export class PassportUser {
   @Property()
-  id: string = "";
+  @Required()
+  id: string;
 
   @Property()
-  email: string = "";
+  @Required()
+  email: string;
 
   @Property()
-  role: string = "";
+  @Required()
+  role: string;
 
   @Property()
   @Optional()

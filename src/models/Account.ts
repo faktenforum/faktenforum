@@ -1,20 +1,24 @@
-import { CollectionOf, Format, Optional, Property } from "@tsed/schema";
+import { CollectionOf, Format, Optional, Property, Required } from "@tsed/schema";
 
 export class Session {
   @Property()
-  id: string = "";
+  @Required()
+  id: string;
 
   @Property()
   @Optional()
   userAgent: string | null;
 
   @Format("date-time")
+  @Required()
   expiresAt: Date;
 
   @Format("date-time")
+  @Required()
   createdAt: Date;
 
   @Format("date-time")
+  @Required()
   updatedAt: Date;
 }
 export class AccountInfo {
