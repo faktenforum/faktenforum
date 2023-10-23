@@ -28,6 +28,7 @@ export class AuthService {
     name: "Delete expired sessions"
   })
   async deleteExpiredSessions(job: Job) {
+    console.log("deleteExpiredSessions");
     await this.prisma.session.deleteMany({
       where: {
         expiresAt: {

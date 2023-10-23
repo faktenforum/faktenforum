@@ -31,7 +31,11 @@ import * as pages from "./controllers/pages/index";
     { use: "urlencoded-parser", options: { extended: true } }
   ],
   agenda: {
-    enabled: true
+    enabled: true,
+    db: {
+      address: `mongodb://${process.env.MONGODB_AGENDA_USER}:${process.env.MONGODB_AGENDA_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_AGENDA_DB}`,
+      collection: "agendaJobs"
+    }
   },
 
   exclude: ["**/*.spec.ts"]
