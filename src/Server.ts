@@ -1,4 +1,5 @@
 // /!\ keep this import
+import "@tsed/agenda";
 import "@tsed/ajv";
 import { PlatformApplication } from "@tsed/common";
 import { Configuration, Inject } from "@tsed/di";
@@ -29,6 +30,13 @@ import * as pages from "./controllers/pages/index";
     "json-parser",
     { use: "urlencoded-parser", options: { extended: true } }
   ],
+  agenda: {
+    enabled: true,
+    db: {
+      address: `mongodb://${process.env.MONGODB_AGENDA_USER}:${process.env.MONGODB_AGENDA_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_AGENDA_DB}`,
+      collection: "agendaJobs"
+    }
+  },
 
   exclude: ["**/*.spec.ts"]
 })

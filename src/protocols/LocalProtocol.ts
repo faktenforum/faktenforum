@@ -11,7 +11,7 @@ import { AuthService, UsersService } from "~/services";
   name: "local",
   useStrategy: Strategy,
   settings: {
-    usernameField: "email",
+    usernameField: "username",
     passwordField: "password"
   }
 })
@@ -37,9 +37,9 @@ export class LocalProtocol implements OnVerify, OnInstall, BeforeInstall {
   }
 
   async $onVerify(@Req() request: Req, @BodyParams() credentials: Credentials) {
-    const { email, password } = credentials;
+    const { username, password } = credentials;
 
-    const user = await this.usersService.getUserByEmail(email);
+    const user = await this.usersService.getUserByEmail(username);
 
     if (!user) {
       return false;

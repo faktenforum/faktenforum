@@ -1,11 +1,14 @@
-import { Format, MinLength, Property } from "@tsed/schema";
+import { Format, MinLength, Property, Required } from "@tsed/schema";
+import { PasswordFormatDecorator } from "~/decorators";
 
 export class Credentials {
   @Property()
+  @Required()
   @Format("email")
-  email: string;
+  username: string;
 
   @Property()
-  @MinLength(3)
+  @Required()
+  @PasswordFormatDecorator()
   password: string;
 }

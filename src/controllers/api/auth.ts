@@ -1,10 +1,20 @@
-import { BodyParams, Controller, Cookies, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
+import { BodyParams, Controller, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
-import { Groups, In, Returns, Security } from "@tsed/schema";
+import { Returns, Security } from "@tsed/schema";
 import { Request, Response } from "express";
-import { AccountInfo, Credentials, LoginResponse, PassportUser } from "~/models";
+import { AccessControlDecorator } from "~/decorators";
+import {
+  AccountInfo,
+  Credentials,
+  Email,
+  LoginResponse,
+  PassportUser,
+  PasswordUpdate,
+  Session
+} from "~/models";
 import { AuthService, EnvService, UsersService } from "~/services";
+import { timeStringToSeconds } from "~/utils/time";
 
 @Controller("/auth")
 export class AuthController {
@@ -33,59 +43,80 @@ export class AuthController {
   ) {
     // FACADE
     const user = req.user as PassportUser;
-    const refreshToken = await this.authService.createRefreshToken(user.id, userAgent);
-    this.setRefreshTokenCookie(response, refreshToken);
-    const token = this.authService.generateToken(user.id, user.role);
+    const sessionId = await this.authService.createRefreshToken(user.id, userAgent);
+    // this.setRefreshTokenCookie(response, sessionId);
+    const token = this.authService.generateToken(user.id, user.role, sessionId);
 
     return { token };
   }
+  // TODO: Implement refresh token rotation in the future
+  // @Post("/refresh")
+  // async refreshToken(@Req() request: Request, @Res() response: Response) {
+  //   const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
+  //   if (!refreshToken) {
+  //     throw new Error("Refresh token not provided");
+  //   }
 
-  @Post("/refresh")
-  async refreshToken(@Res() response: Response, @Cookies("refreshToken") refreshToken: string) {
-    if (!refreshToken) {
+  //   const userId = await this.authService.validateRefreshToken(refreshToken);
+
+  //   if (!userId) {
+  //     throw new Error("Invalid refresh token");
+  //   }
+  //   const user = await this.usersService.getUserById(userId);
+  //   if (!user) {
+  //     throw new Error("User not found");
+  //   }
+
+  //   // Refresh Token Rotation
+  //   const newRefreshToken = await this.authService.rotateRefreshToken(refreshToken);
+
+  //   // generate new JWT
+  //   const token = this.authService.generateToken(user.id, user.role, newRefreshToken);
+
+  //   this.setRefreshTokenCookie(response, newRefreshToken);
+
+  //   return { token };
+  // }
+
+  @AccessControlDecorator({ role: "ALL" })
+  @Returns(200, AccountInfo)
+  @Get("/session")
+  async account(@Req() request: Request) {
+    const { id, sessionId } = request.user as PassportUser;
+    if (!sessionId) {
+      throw new Error("Session id not found");
+    }
+    if (!(await this.authService.validateRefreshToken(id, sessionId))) {
+      throw new Unauthorized("Invalid token session id");
+    }
+    const user = await this.usersService.getUserById(id);
+
+    if (!user) throw new Unauthorized("Invalid User");
+    console.log(user);
+    const token = this.authService.generateToken(user.id, user.role, sessionId);
+
+    const resData: AccountInfo = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      access_token: token,
+      access_token_expires_in: timeStringToSeconds(this.envService.jwtTokenLifetime)
+
+      // refresh_token: newRefreshToken,
+      // refresh_token_expires_in: Date.now() + 360 * 1000000
+    };
+    return resData;
+  }
+  @AccessControlDecorator({ role: "ALL" })
+  @Post("/logout")
+  async logout(@Req() request: Request) {
+    const { sessionId } = request.user as PassportUser;
+    if (!sessionId) {
       throw new Error("Refresh token not provided");
     }
-
-    const userId = await this.authService.validateRefreshToken(refreshToken);
-
-    if (!userId) {
-      throw new Error("Invalid refresh token");
-    }
-    const user = await this.usersService.getUserById(userId);
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Refresh Token Rotation
-    const newRefreshToken = await this.authService.rotateRefreshToken(refreshToken);
-
-    // generate new JWT
-    const token = this.authService.generateToken(user.id, user.role);
-
-    this.setRefreshTokenCookie(response, newRefreshToken);
-
-    return { token };
-  }
-
-  @Security("jwt")
-  @Authenticate("jwt", { session: false })
-  @Returns(401, Unauthorized).Description("Unauthorized")
-  @Returns(403, Forbidden).Description("Forbidden")
-  @Returns(200, AccountInfo)
-  @Get("/account")
-  async account(@Req() request: Request, @Res() response: Response) {
-    const { id } = request.user as PassportUser;
-    const user = await this.usersService.getUserById(id, { refreshTokens: true });
-    console.log(user);
-    return user;
-  }
-
-  @Get("/logout")
-  async logout(@Req() request: Request, @Res() response: Response) {
-    const refreshToken = request.cookies.refreshToken; // Extract refresh token from cookies
-    await this.authService.revokeRefreshToken(refreshToken);
+    await this.authService.revokeRefreshToken(sessionId);
     // Clear the refreshToken cookie
-    response.clearCookie("refreshToken");
+    // response.clearCookie("refreshToken");
     return { message: "Logged out successfully" };
   }
 
