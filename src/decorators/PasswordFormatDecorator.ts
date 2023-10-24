@@ -1,7 +1,10 @@
 import { useDecorators } from "@tsed/core";
 import { CollectionOf, Format, MinLength, Pattern, Property, Required } from "@tsed/schema";
 
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-])[A-Za-z\d!@#$%^&*()_+{}\[\]:;<>,.?~\\-]+$/;
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function PasswordFormatDecorator(): Function {
-  return useDecorators(MinLength(8), Pattern(/^[A-Za-z0-9]+$/));
+  return useDecorators(MinLength(8), Pattern(passwordRegex));
 }
