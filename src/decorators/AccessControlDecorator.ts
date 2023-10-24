@@ -17,7 +17,6 @@ export function AccessControlDecorator(options: AccessControlDecoratorOptions = 
     Returns(403, Forbidden).Description("Forbidden"),
     UseAuth(AccessControlMiddleware, options),
     Authenticate("jwt", { session: false }),
-    Security("jwt"),
-    In("header").Name("Authorization").Type(String).Required(true)
+    Security("jwt")
   );
 }
