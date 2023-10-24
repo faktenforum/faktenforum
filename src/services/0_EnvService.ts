@@ -30,7 +30,7 @@ export class EnvService {
     return process.env.JWT_TOKEN_TOKEN_LIFETIME;
   }
 
-  get(): string {
+  get jwtIssuer(): string {
     if (!process.env.JWT_ISSUER) {
       $log.error("JWT_ISSUER is not set!");
       process.exit(1);

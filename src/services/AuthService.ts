@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { Agenda, Define, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
@@ -100,6 +100,27 @@ export class AuthService {
 
   async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainTextPassword, hashedPassword);
+  }
+
+  async updatePassword(
+    id: string,
+    { oldPass, newPass }: { oldPass: string; newPass: string }
+  ): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { password: true }
+    });
+    if (!user) {
+      throw new Forbidden("User not found!");
+    }
+    if (!(await bcrypt.compare(oldPass, user.password))) {
+      throw new Forbidden("Old password is incorrect");
+    }
+    const newHash = await bcrypt.hash(newPass, 10); // 10 is the saltRounds; adjust as necessary
+    await this.prisma.user.update({
+      where: { id },
+      data: { password: newHash }
+    });
   }
 
   generateToken(userId: string, userRole: string, sessionId: string) {
