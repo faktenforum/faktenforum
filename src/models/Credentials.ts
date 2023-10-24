@@ -1,4 +1,5 @@
 import { Format, MinLength, Property, Required } from "@tsed/schema";
+import { PasswordFormatDecorator } from "~/decorators";
 
 export class Credentials {
   @Property()
@@ -8,6 +9,6 @@ export class Credentials {
 
   @Property()
   @Required()
-  @MinLength(3)
+  @PasswordFormatDecorator()
   password: string;
 }

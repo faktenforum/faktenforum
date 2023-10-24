@@ -1,4 +1,5 @@
 import { CollectionOf, Format, Optional, Property, Required } from "@tsed/schema";
+import { PasswordFormatDecorator } from "~/decorators";
 
 export class Session {
   @Property()
@@ -51,7 +52,9 @@ export class Email {
 
 export class PasswordUpdate {
   @Property()
+  @PasswordFormatDecorator()
   oldPassword: string;
   @Property()
+  @PasswordFormatDecorator()
   newPassword: string;
 }

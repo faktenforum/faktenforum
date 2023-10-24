@@ -24,11 +24,10 @@ export class AuthService {
   private generateRandomToken(): string {
     return require("crypto").randomBytes(48).toString("hex");
   }
-  @Every("1 minutes", {
+  @Every("15 minutes", {
     name: "Delete expired sessions"
   })
   async deleteExpiredSessions(job: Job) {
-    console.log("deleteExpiredSessions");
     await this.prisma.session.deleteMany({
       where: {
         expiresAt: {
