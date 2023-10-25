@@ -6,3 +6,4 @@ export * from "./Account";
 export * from "./Credentials";
 export * from "./LoginResponse";
 export * from "./PassportCustomUser";
+export * from "./UserDTO";

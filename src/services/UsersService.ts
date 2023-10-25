@@ -31,6 +31,17 @@ export class UsersService {
     });
   }
 
+  async updateUserById(id: string, data: Partial<User>): Promise<User> {
+    return this.prisma.user.update({
+      where: { id: id },
+      data: data
+    });
+  }
+
+  async deleteUserById(id: string): Promise<User> {
+    return this.prisma.user.delete({ where: { id: id } });
+  }
+
   async getUserSessions(id: string): Promise<Session[] | null> {
     return this.prisma.session.findMany({ where: { userId: id } });
   }
@@ -53,25 +64,6 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id: userId },
       data: { email }
-    });
-  }
-
-  async updatePassword(
-    id: string,
-    { oldPass, newPass }: { oldPass: string; newPass: string }
-  ): Promise<User> {
-    const oldHash = await bcrypt.hash(oldPass, 10); // 10 is the saltRounds; adjust as necessary
-    const newHash = await bcrypt.hash(newPass, 10); // 10 is the saltRounds; adjust as necessary
-    const data = await this.prisma.user.findUnique({
-      where: { id },
-      select: { password: true }
-    });
-    if (data?.password !== oldHash) {
-      throw new Forbidden("Old password is incorrect");
-    }
-    return this.prisma.user.update({
-      where: { id },
-      data: { password: newHash }
     });
   }
 }

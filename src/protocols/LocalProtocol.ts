@@ -45,8 +45,8 @@ export class LocalProtocol implements OnVerify, OnInstall, BeforeInstall {
       return false;
       // OR throw new NotAuthorized("Wrong credentials")
     }
-
-    if (!this.authService.verifyPassword(password, user.password)) {
+    const result = await this.authService.verifyPassword(password, user.password);
+    if (!result) {
       return false;
       // OR throw new NotAuthorized("Wrong credentials")
     }

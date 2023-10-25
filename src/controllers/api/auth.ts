@@ -13,6 +13,7 @@ import {
   PasswordUpdate,
   Session
 } from "~/models";
+import { UserDTO } from "~/models/UserDTO";
 import { AuthService, EnvService, UsersService } from "~/services";
 import { timeStringToSeconds } from "~/utils/time";
 
@@ -43,6 +44,7 @@ export class AuthController {
   ) {
     // FACADE
     const user = req.user as PassportUser;
+
     const sessionId = await this.authService.createRefreshToken(user.id, userAgent);
     // this.setRefreshTokenCookie(response, sessionId);
     const token = this.authService.generateToken(user.id, user.role, sessionId);
@@ -121,11 +123,15 @@ export class AuthController {
   }
 
   @Post("/register")
+  @Returns(200, UserDTO)
   async register(@BodyParams("email") email: string, @BodyParams("password") password: string) {
     const user = await this.usersService.createUser(email, password);
     return {
       id: user.id,
-      email: user.email
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     };
   }
 }
