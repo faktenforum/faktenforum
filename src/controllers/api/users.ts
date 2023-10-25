@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import { BodyParams, Controller, Get, Inject, PathParams, Post, Put } from "@tsed/common";
+import { BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
 import { Returns } from "@tsed/schema";
 import { AccessControlDecorator } from "~/decorators";
@@ -61,6 +61,21 @@ export class UserController {
   @Returns(200, UserDTO)
   async updateUserById(@PathParams("id") id: string, @BodyParams() body: UserUpdateDTO) {
     const user = await this.usersService.updateUserById(id, body);
+    if (!user) throw new NotFound("User not found");
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+  }
+
+  @AccessControlDecorator({ role: "ADMIN" })
+  @Delete("/:id")
+  @Returns(200, UserDTO)
+  async deleteUserById(@PathParams("id") id: string) {
+    const user = await this.usersService.deleteUserById(id);
     if (!user) throw new NotFound("User not found");
     return {
       id: user.id,
