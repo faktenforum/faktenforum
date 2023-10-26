@@ -87,6 +87,17 @@ model Claim {
     submittedAt       DateTime            @default(now())
     tags              String[]
     CheckableResource CheckableResource[]
+
+    ClaimSubmitToken ClaimSubmissionToken[]
+}
+
+model ClaimSubmissionToken {
+    id        String   @id @default(uuid())
+    token     String   @unique
+    claimId   String
+    claim     Claim    @relation(fields: [claimId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model User {
