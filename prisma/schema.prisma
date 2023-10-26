@@ -12,26 +12,31 @@ generator erd {
     includeRelationFromFields = true
 }
 
+generator erdPdf {
+    provider                  = "prisma-erd-generator"
+    output                    = "../docs/ERD.pdf"
+    includeRelationFromFields = true
+}
+
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
 model File {
-    id                  String             @id @default(uuid())
-    submitter           User?              @relation(references: [id], fields: [submitterId])
-    submitterId         String?
-    submittedAt         DateTime           @default(now())
-    path                String
-    type                FileType
-    md5                 String
-    transcription       String?
-    CheckableResource   CheckableResource? @relation(fields: [checkableResourceId], references: [id])
-    checkableResourceId String?
-    ResourceTikTok      ResourceTikTok?
+    id              String         @id @default(uuid())
+    submitter       User?          @relation(references: [id], fields: [submitterId])
+    submitterId     String?
+    submittedAt     DateTime       @default(now())
+    path            String
+    type            FileType
+    md5             String
+    transcription   String?
+    ClaimResource   ClaimResource? @relation(fields: [ClaimResourceId], references: [id])
+    ClaimResourceId String?
 }
 
-model CheckableResource {
+model ClaimResource {
     id                       String               @id @default(uuid())
     submitter                User?                @relation(references: [id], fields: [submitterId])
     submitterId              String?
@@ -40,40 +45,18 @@ model CheckableResource {
     description              String?
     claim                    Claim                @relation(fields: [claimId], references: [id])
     claimId                  String
-    type                     ResourceType
-    ResourceTikTok           ResourceTikTok?
-    ResourceTwitter          ResourceTwitter?
     firstResourceSimilarity  ResourceSimilarity[] @relation("firstResourceSimilarity")
     secondResourceSimilarity ResourceSimilarity[] @relation("secondResourceSimilarity")
 }
 
-model ResourceTikTok {
-    parentResource   CheckableResource @relation(fields: [parentResourceId], references: [id])
-    parentResourceId String            @id
-    videoFile        File              @relation(fields: [fileId], references: [id])
-    fileId           String            @unique
-    poster           String
-    likes            Int
-    bookmarks        Int
-    shares           Int
-}
-
-model ResourceTwitter {
-    parentResource   CheckableResource @relation(fields: [parentResourceId], references: [id])
-    parentResourceId String            @id
-    tweetText        String
-    poster           String
-    retweets         Int
-}
-
 model ResourceSimilarity {
-    firstResource       CheckableResource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
+    firstResource       ClaimResource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
     firstResourceId     String
-    secondResource      CheckableResource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
+    secondResource      ClaimResource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
     secondResourceId    String
     similarityScore     Float
     manuallyConfirmed   Boolean
-    manuallyConfirmedBy User?             @relation(references: [id], fields: [confirmerId])
+    manuallyConfirmedBy User?         @relation(references: [id], fields: [confirmerId])
     confirmerId         String?
     manuallyConfirmedAt DateTime?
 
@@ -81,12 +64,14 @@ model ResourceSimilarity {
 }
 
 model Claim {
-    id                String              @id @default(uuid())
-    submitter         User?               @relation(references: [id], fields: [submitterId])
-    submitterId       String?
-    submittedAt       DateTime            @default(now())
-    tags              String[]
-    CheckableResource CheckableResource[]
+    id            String          @id @default(uuid())
+    submitter     User?           @relation(references: [id], fields: [submitterId])
+    submitterId   String?
+    submittedAt   DateTime        @default(now())
+    title         String?
+    description   String?
+    tags          String[]
+    ClaimResource ClaimResource[]
 
     ClaimSubmitToken ClaimSubmissionToken[]
 }
@@ -102,17 +87,17 @@ model ClaimSubmissionToken {
 }
 
 model User {
-    id                         String               @id @default(uuid())
-    submittedFiles             File[]
-    submittedCheckableResource CheckableResource[]
-    submittedClaims            Claim[]
-    ResourceSimilarity         ResourceSimilarity[]
-    email                      String               @unique
-    password                   String
-    role                       UserRole             @default(USER)
-    sessions                   Session[] // This is the reverse relation field
-    createdAt                  DateTime             @default(now())
-    updatedAt                  DateTime             @updatedAt
+    id                     String               @id @default(uuid())
+    submittedFiles         File[]
+    submittedClaimResource ClaimResource[]
+    submittedClaims        Claim[]
+    ResourceSimilarity     ResourceSimilarity[]
+    email                  String               @unique
+    password               String
+    role                   UserRole             @default(USER)
+    sessions               Session[] // This is the reverse relation field
+    createdAt              DateTime             @default(now())
+    updatedAt              DateTime             @updatedAt
 }
 
 model Session {
@@ -136,11 +121,5 @@ enum FileType {
     IMAGE
     VIDEO
     DOCUMENT
-    OTHER
-}
-
-enum ResourceType {
-    TIKTOK
-    TWITTER
     OTHER
 }
