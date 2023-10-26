@@ -96,6 +96,7 @@ model ClaimSubmissionToken {
     token     String   @unique
     claimId   String
     claim     Claim    @relation(fields: [claimId], references: [id])
+    expiresAt DateTime
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
