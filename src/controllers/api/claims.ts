@@ -11,7 +11,7 @@ export class ClaimsController {
   async getClaims() {
     const claims = await prisma.claim.findMany({
       include: {
-        CheckableResource: true
+        ClaimResource: true
       }
     });
     return claims;

@@ -4,7 +4,7 @@ import { Inject, Service } from "@tsed/di";
 import { Forbidden, NotFound } from "@tsed/exceptions";
 import { Job } from "agenda";
 import crypto from "crypto";
-import { ClaimDTO, CreateClaimDTO } from "~/models/ClaimDTO";
+import { ClaimCreateDTO, ClaimDTO } from "~/models/ClaimDTO";
 import { AuthService, ClaimService, EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils";
 
@@ -42,7 +42,7 @@ export class SubmissionService {
     });
   }
 
-  async submitClaim(claim: CreateClaimDTO) {
+  async submitClaim(claim: ClaimCreateDTO) {
     const { id: claimId } = await this.claimService.createClaim(claim);
 
     const expiration = new Date();
@@ -52,7 +52,7 @@ export class SubmissionService {
 
     const { token } = await this.prisma.claimSubmissionToken.create({
       data: {
-        token: this.authService.generateRandomToken(),
+        token: this.authService.generateRandomToken(24),
         expiresAt: expiration,
         claimId
       }

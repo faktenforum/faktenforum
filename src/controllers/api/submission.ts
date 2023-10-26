@@ -4,7 +4,7 @@ import { BodyParams, PathParams } from "@tsed/platform-params";
 import { Get, Post, Put, Returns, string } from "@tsed/schema";
 import prisma from "src";
 import { AccessControlDecorator } from "~/decorators";
-import { ClaimDTO, CreateClaimDTO } from "~/models";
+import { ClaimCreateDTO, ClaimDTO } from "~/models";
 import { SubmissionResponse } from "~/models/Submission";
 import { ClaimService, SubmissionService } from "~/services";
 
@@ -18,12 +18,11 @@ export class SubmissionController {
 
   @Post()
   @Returns(200, SubmissionResponse)
-  async submitClaim(@BodyParams() body: CreateClaimDTO) {
+  async submitClaim(@BodyParams() body: ClaimCreateDTO) {
     const { claimId, token } = await this.submissionService.submitClaim(body);
     return { token };
   }
 
-  @AccessControlDecorator({ role: "ADMIN" })
   @Get("/:token")
   @Returns(200, ClaimDTO)
   async getSubmission(@PathParams("token") token: string) {
@@ -37,7 +36,7 @@ export class SubmissionController {
 
   @Put("/:token")
   @Returns(200, ClaimDTO)
-  async updateSubmission(@PathParams("token") token: string, @BodyParams() body: CreateClaimDTO) {
+  async updateSubmission(@PathParams("token") token: string, @BodyParams() body: ClaimCreateDTO) {
     const id = await this.submissionService.getClaimIdByToken(token);
     const claim = await this.claimService.updateClaimById(id, body);
     if (!claim) {

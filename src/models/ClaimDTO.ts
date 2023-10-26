@@ -3,7 +3,7 @@ import type { UserRole as UserRoleType } from "@prisma/client";
 import { Enum, Format, Optional, Property, Required } from "@tsed/schema";
 import { PasswordFormatDecorator } from "~/decorators";
 
-export class CreateClaimDTO {
+export class ClaimCreateDTO {
   @Property()
   @Optional()
   title: string;

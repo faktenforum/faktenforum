@@ -23,7 +23,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model File {
+model ClaimFile {
     id              String         @id @default(uuid())
     submitter       User?          @relation(references: [id], fields: [submitterId])
     submitterId     String?
@@ -41,7 +41,7 @@ model ClaimResource {
     submitter                User?                @relation(references: [id], fields: [submitterId])
     submitterId              String?
     originalUrl              String?
-    screenshots              File[]
+    files                    ClaimFile[]
     description              String?
     claim                    Claim                @relation(fields: [claimId], references: [id])
     claimId                  String
@@ -88,7 +88,7 @@ model ClaimSubmissionToken {
 
 model User {
     id                     String               @id @default(uuid())
-    submittedFiles         File[]
+    submittedFiles         ClaimFile[]
     submittedClaimResource ClaimResource[]
     submittedClaims        Claim[]
     ResourceSimilarity     ResourceSimilarity[]

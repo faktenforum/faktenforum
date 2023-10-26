@@ -22,8 +22,8 @@ export class AuthService {
   }
 
   // Utility function to generate a random token for refresh tokens
-  generateRandomToken(): string {
-    return crypto.randomBytes(48).toString("hex");
+  generateRandomToken(length = 48): string {
+    return crypto.randomBytes(length).toString("hex");
   }
   @Every("15 minutes", {
     name: "Delete expired sessions"

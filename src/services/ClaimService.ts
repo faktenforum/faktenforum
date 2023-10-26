@@ -1,7 +1,7 @@
 import { Claim, PrismaClient, Session } from "@prisma/client";
 import { Service } from "@tsed/di";
 import { Forbidden, NotFound } from "@tsed/exceptions";
-import { CreateClaimDTO } from "~/models/ClaimDTO";
+import { ClaimCreateDTO } from "~/models/ClaimDTO";
 
 @Service()
 export class ClaimService {
@@ -14,7 +14,7 @@ export class ClaimService {
     return this.prisma.claim.findMany();
   }
 
-  async createClaim(claim: CreateClaimDTO): Promise<Claim> {
+  async createClaim(claim: ClaimCreateDTO): Promise<Claim> {
     return this.prisma.claim.create({
       data: claim
     });
