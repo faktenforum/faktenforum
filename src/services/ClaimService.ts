@@ -14,15 +14,43 @@ export class ClaimService {
     return this.prisma.claim.findMany();
   }
 
-  async createClaim(claim: ClaimCreateDTO): Promise<Claim> {
-    return this.prisma.claim.create({
-      data: claim
+  async createClaim(claimData: ClaimCreateDTO): Promise<Claim> {
+    const { title, description, resources } = claimData;
+
+    // Start a transaction
+    const result = await this.prisma.claim.create({
+      data: {
+        title: title,
+        description: description,
+        claimResources: {
+          create: resources.map((resource) => ({
+            originalUrl: resource.url,
+            files: {
+              create: resource.files.map((file) => ({
+                path: file,
+                md5: "resource.md5",
+                type: "OTHER"
+              }))
+            }
+          }))
+        }
+        // Additional fields can be added if needed
+      }
     });
+
+    return result;
   }
 
   async getClaimById(id: string): Promise<Claim | null> {
     return this.prisma.claim.findUnique({
-      where: { id: id }
+      where: { id: id },
+      include: {
+        claimResources: {
+          include: {
+            files: true
+          }
+        }
+      }
     });
   }
 

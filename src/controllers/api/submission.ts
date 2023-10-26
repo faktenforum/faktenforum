@@ -19,6 +19,7 @@ export class SubmissionController {
   @Post()
   @Returns(200, SubmissionResponse)
   async submitClaim(@BodyParams() body: ClaimCreateDTO) {
+    console.log("submit claim body", body);
     const { claimId, token } = await this.submissionService.submitClaim(body);
     return { token };
   }
@@ -28,6 +29,7 @@ export class SubmissionController {
   async getSubmission(@PathParams("token") token: string) {
     const id = await this.submissionService.getClaimIdByToken(token);
     const claim = await this.claimService.getClaimById(id);
+    console.log("claim", claim);
     if (!claim) {
       throw new NotFound("Claim not found");
     }
@@ -39,6 +41,7 @@ export class SubmissionController {
   async updateSubmission(@PathParams("token") token: string, @BodyParams() body: ClaimCreateDTO) {
     const id = await this.submissionService.getClaimIdByToken(token);
     const claim = await this.claimService.updateClaimById(id, body);
+
     if (!claim) {
       throw new NotFound("Claim not found");
     }

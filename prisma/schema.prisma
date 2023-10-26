@@ -32,8 +32,8 @@ model ClaimFile {
     type            FileType
     md5             String
     transcription   String?
-    ClaimResource   ClaimResource? @relation(fields: [ClaimResourceId], references: [id])
-    ClaimResourceId String?
+    claimResource   ClaimResource? @relation(fields: [claimResourceId], references: [id])
+    claimResourceId String?
 }
 
 model ClaimResource {
@@ -49,6 +49,18 @@ model ClaimResource {
     secondResourceSimilarity ResourceSimilarity[] @relation("secondResourceSimilarity")
 }
 
+model Claim {
+    id               String                 @id @default(uuid())
+    submitter        User?                  @relation(references: [id], fields: [submitterId])
+    submitterId      String?
+    submittedAt      DateTime               @default(now())
+    title            String?
+    description      String?
+    tags             String[]
+    claimResources   ClaimResource[]
+    claimSubmitToken ClaimSubmissionToken[]
+}
+
 model ResourceSimilarity {
     firstResource       ClaimResource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
     firstResourceId     String
@@ -61,19 +73,6 @@ model ResourceSimilarity {
     manuallyConfirmedAt DateTime?
 
     @@id([firstResourceId, secondResourceId])
-}
-
-model Claim {
-    id            String          @id @default(uuid())
-    submitter     User?           @relation(references: [id], fields: [submitterId])
-    submitterId   String?
-    submittedAt   DateTime        @default(now())
-    title         String?
-    description   String?
-    tags          String[]
-    ClaimResource ClaimResource[]
-
-    ClaimSubmitToken ClaimSubmissionToken[]
 }
 
 model ClaimSubmissionToken {
@@ -91,7 +90,7 @@ model User {
     submittedFiles         ClaimFile[]
     submittedClaimResource ClaimResource[]
     submittedClaims        Claim[]
-    ResourceSimilarity     ResourceSimilarity[]
+    resourceSimilarity     ResourceSimilarity[]
     email                  String               @unique
     password               String
     role                   UserRole             @default(USER)
