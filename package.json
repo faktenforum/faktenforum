@@ -11,6 +11,7 @@
     "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test jest",
     "test:coverage": "npm run test:unit",
+    "prisma": "npm run prisma:generate && npm run prisma:migrate",
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate",
     "test:lint": "eslint '**/*.{ts,js}'",

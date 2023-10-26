@@ -4,6 +4,7 @@ import { Inject, Service } from "@tsed/di";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Job } from "agenda";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils/time";
@@ -21,8 +22,8 @@ export class AuthService {
   }
 
   // Utility function to generate a random token for refresh tokens
-  private generateRandomToken(): string {
-    return require("crypto").randomBytes(48).toString("hex");
+  generateRandomToken(): string {
+    return crypto.randomBytes(48).toString("hex");
   }
   @Every("15 minutes", {
     name: "Delete expired sessions"

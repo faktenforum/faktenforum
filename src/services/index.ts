@@ -4,4 +4,7 @@
 
 export * from "./0_EnvService";
 export * from "./AuthService";
+export * from "./ClaimService";
+export * from "./FileService";
+export * from "./SubmissionService";
 export * from "./UsersService";
