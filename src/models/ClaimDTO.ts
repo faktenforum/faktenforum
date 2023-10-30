@@ -27,7 +27,6 @@ export class ClaimCreateDTO {
   description: string;
 
   @Property()
-  @Optional()
   @ArrayOf(ClaimResourceDTO)
   resources: ClaimResourceDTO[];
 }

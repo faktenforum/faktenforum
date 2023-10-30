@@ -22,9 +22,9 @@ export class ClaimService {
       data: {
         title: title,
         description: description,
-        claimResources: {
+        resources: {
           create: resources.map((resource) => ({
-            originalUrl: resource.url,
+            originalUrl: resource.originalUrl,
             files: {
               create: resource.files.map((file) => ({
                 path: file,
@@ -45,7 +45,7 @@ export class ClaimService {
     return this.prisma.claim.findUnique({
       where: { id: id },
       include: {
-        claimResources: {
+        resources: {
           include: {
             files: true
           }

@@ -6,6 +6,7 @@ import { Configuration, Inject } from "@tsed/di";
 import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
+import { join } from "path";
 import "~/protocols";
 
 import { config } from "./config/index";

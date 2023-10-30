@@ -1,7 +1,10 @@
+import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { Get, Post, Put, Returns, string } from "@tsed/schema";
+import { plainToClass } from "class-transformer";
+import { validate } from "class-validator";
 import prisma from "src";
 import { AccessControlDecorator } from "~/decorators";
 import { ClaimCreateDTO, ClaimDTO } from "~/models";
@@ -18,10 +21,22 @@ export class SubmissionController {
 
   @Post()
   @Returns(200, SubmissionResponse)
-  async submitClaim(@BodyParams() body: ClaimCreateDTO) {
-    console.log("submit claim body", body);
-    const { claimId, token } = await this.submissionService.submitClaim(body);
-    return { token };
+  async submitClaim(
+    @BodyParams() body: { payload: string },
+    @MultipartFile("files", 100) files: PlatformMulterFile[]
+  ) {
+    const payload = plainToClass(ClaimCreateDTO, JSON.parse(body.payload));
+    const errors = await validate(payload);
+    console.log('errors',errors);
+    if (errors.length > 0) {
+      throw new BadRequest("Validation failed!");
+    }
+    console.log("payload", payload);
+    console.log("files", files);
+    // const { claimId, token } = await this.submissionService.submitClaim(body);
+    // return { token };
+    throw new NotFound("assdf");
+    return { token: "ysdsfsf" };
   }
 
   @Get("/:token")
@@ -29,7 +44,6 @@ export class SubmissionController {
   async getSubmission(@PathParams("token") token: string) {
     const id = await this.submissionService.getClaimIdByToken(token);
     const claim = await this.claimService.getClaimById(id);
-    console.log("claim", claim);
     if (!claim) {
       throw new NotFound("Claim not found");
     }
