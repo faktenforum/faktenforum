@@ -3,6 +3,7 @@ import "@tsed/agenda";
 import "@tsed/ajv";
 import { PlatformApplication } from "@tsed/common";
 import { Configuration, Inject } from "@tsed/di";
+import { $log } from "@tsed/logger";
 import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
@@ -12,6 +13,7 @@ import "~/protocols";
 import { config } from "./config/index";
 import * as api from "./controllers/api/index";
 import * as pages from "./controllers/pages/index";
+import { FileService } from "./services";
 
 @Configuration({
   ...config,
@@ -47,4 +49,15 @@ export class Server {
 
   @Configuration()
   protected settings: Configuration;
+
+  @Inject()
+  protected fileService: FileService; // Inject the FileService
+
+  async $onReady() {
+    try {
+      await this.fileService.ensureBucketExists();
+    } catch (error) {
+      $log.error("Error checking or creating the bucket:", error);
+    }
+  }
 }

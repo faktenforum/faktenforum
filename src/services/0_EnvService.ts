@@ -17,13 +17,18 @@ export class EnvService {
     }
     return process.env.MINIO_HOST;
   }
-  get minioApiPort(): string {
+  get minioApiPort(): number {
     if (!process.env.MINIO_API_PORT) {
       $log.error("MINIO_API_PORT is not set!");
       process.exit(1);
     }
-    return process.env.MINIO_API_PORT;
+    return parseInt(process.env.MINIO_API_PORT);
   }
+
+  get minioEndpoint(): string {
+    return `http://${this.minioHost}:${this.minioApiPort}`;
+  }
+
   get minioBucketName(): string {
     if (!process.env.MINIO_BUCKET_NAME) {
       $log.error("MINIO_BUCKET_NAME is not set!");
