@@ -1,9 +1,17 @@
 import { S3Client } from "@aws-sdk/client-s3";
+import type { PlatformMulterFile } from "@tsed/common";
 import AWS from "aws-sdk";
 import multerS3 from "multer-s3";
 import { v4 as uuidv4 } from "uuid";
 
 export const bucket = process.env.MINIO_BUCKET_NAME!;
+export type Metadata = {
+  fieldName: string;
+  originalName: string;
+  size: number;
+  user: string;
+};
+export type S3MulterFile = PlatformMulterFile & { key: string; etag: string; metadata: Metadata };
 
 const s3 = new S3Client({
   credentials: {
@@ -23,8 +31,7 @@ const storage = multerS3({
     console.log("USer", req.user);
     cb(null, {
       fieldName: file.fieldname,
-      originalname: file.originalname,
-      mimetype: file.mimetype,
+      originalName: file.originalname,
       size: file.size,
       user: req.user && req.user.id
     });

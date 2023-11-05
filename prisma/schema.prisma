@@ -28,12 +28,16 @@ model ClaimFile {
     submitter       User?          @relation(references: [id], fields: [submitterId])
     submitterId     String?
     submittedAt     DateTime       @default(now())
-    path            String
-    type            FileType
+    key             String
+    name            String
+    mimeType        String
     md5             String
+    size            Int            @default(1234)
     transcription   String?
     claimResource   ClaimResource? @relation(fields: [claimResourceId], references: [id])
     claimResourceId String?
+
+    @@index([key])
 }
 
 model ClaimResource {

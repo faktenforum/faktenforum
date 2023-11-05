@@ -1,6 +1,7 @@
 import { Inject, Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
 import * as Minio from "minio";
+import { Readable } from "stream";
 import { EnvService } from "~/services";
 
 @Service()
@@ -35,16 +36,15 @@ export class FileService {
       throw error;
     }
   }
+
+  // async storeFile(bucketName: string, fileName: string, fileContent: Buffer | ReadableStream, metaData: any) {
+  //   await this.minioClient.putObject(bucketName, fileName, fileContent, metaData);
+  // }
+
+  getFileStream(key: string): Promise<Readable> {
+    return this.minioClient.getObject(this.envService.minioBucketName, key);
+  }
 }
-
-//   async storeFile(bucketName: string, fileName: string, fileContent: Buffer | ReadableStream, metaData: any) {
-//     await this.minioClient.putObject(bucketName, fileName, fileContent, metaData);
-//   }
-
-//   getFile(bucketName: string, fileName: string): Promise<ReadableStream> {
-//     //return this.minioClient.fGetObject(bucketName, fileName);
-//   }
-
 //   async getPresignedURL(
 //     bucketName: string,
 //     fileName: string,

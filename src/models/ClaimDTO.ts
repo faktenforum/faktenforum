@@ -3,6 +3,23 @@ import type { UserRole as UserRoleType } from "@prisma/client";
 import { ArrayOf, Enum, Format, Optional, Property, Required } from "@tsed/schema";
 import { PasswordFormatDecorator } from "~/decorators";
 
+class ClaimFileDTO {
+  @Property()
+  @Optional()
+  name: string;
+
+  @Property()
+  url: string;
+
+  @Property()
+  @Optional()
+  size: number;
+
+  @Property()
+  @Optional()
+  mimeType: number;
+}
+
 class ClaimResourceDTO {
   @Property()
   @Optional()
@@ -14,8 +31,8 @@ class ClaimResourceDTO {
 
   @Property()
   @Optional()
-  @ArrayOf(String)
-  files: string[];
+  @ArrayOf(ClaimFileDTO)
+  files: ClaimFileDTO[];
 }
 
 export class ClaimCreateDTO {

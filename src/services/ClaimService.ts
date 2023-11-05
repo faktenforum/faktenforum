@@ -1,8 +1,25 @@
-import { Claim, PrismaClient, Session } from "@prisma/client";
+import { Claim, ClaimFile, ClaimResource, PrismaClient, Session } from "@prisma/client";
 import { Service } from "@tsed/di";
 import { Forbidden, NotFound } from "@tsed/exceptions";
 import { ClaimCreateDTO } from "~/models/ClaimDTO";
 
+type ClaimCreateDM = {
+  title: string;
+  description: string;
+  resources: {
+    originalUrl: string;
+    files: {
+      path: string;
+      key: string;
+      md5: string;
+      mimeType: string;
+      name: string;
+    }[];
+  }[];
+};
+type ClaimWithResources = Claim & {
+  resources: Array<ClaimResource & { files: ClaimFile[] }>;
+};
 @Service()
 export class ClaimService {
   private prisma: PrismaClient;
@@ -14,7 +31,7 @@ export class ClaimService {
     return this.prisma.claim.findMany();
   }
 
-  async createClaim(claimData: ClaimCreateDTO): Promise<Claim> {
+  async createClaim(claimData: ClaimCreateDM, userId: string): Promise<Claim> {
     const { title, description, resources } = claimData;
 
     // Start a transaction
@@ -24,12 +41,14 @@ export class ClaimService {
         description: description,
         resources: {
           create: resources.map((resource) => ({
-            originalUrl: resource.originalUrl,
+            originalUrl: userId,
             files: {
               create: resource.files.map((file) => ({
-                path: file,
-                md5: "resource.md5",
-                type: "OTHER"
+                submitterId: userId,
+                key: file.key,
+                md5: file.md5,
+                mimeType: file.mimeType,
+                name: file.name
               }))
             }
           }))
@@ -41,7 +60,7 @@ export class ClaimService {
     return result;
   }
 
-  async getClaimById(id: string): Promise<Claim | null> {
+  async getClaimById(id: string): Promise<ClaimWithResources | null> {
     return this.prisma.claim.findUnique({
       where: { id: id },
       include: {
@@ -63,5 +82,16 @@ export class ClaimService {
 
   async deleteClaimById(id: string): Promise<Claim> {
     return this.prisma.claim.delete({ where: { id: id } });
+  }
+
+  async getClaimFileByIds(claimId: string, fileId: string): Promise<ClaimFile | null> {
+    return this.prisma.claimFile.findFirst({
+      where: {
+        id: fileId,
+        claimResource: {
+          claimId: claimId
+        }
+      }
+    });
   }
 }
