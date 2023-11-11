@@ -32,7 +32,7 @@ model ClaimFile {
     name            String
     mimeType        String
     md5             String
-    size            Int            @default(1234)
+    size            Int
     transcription   String?
     claimResource   ClaimResource? @relation(fields: [claimResourceId], references: [id])
     claimResourceId String?
@@ -51,6 +51,8 @@ model ClaimResource {
     claimId                  String
     firstResourceSimilarity  ResourceSimilarity[] @relation("firstResourceSimilarity")
     secondResourceSimilarity ResourceSimilarity[] @relation("secondResourceSimilarity")
+
+    @@unique([id, claimId])
 }
 
 model Claim {

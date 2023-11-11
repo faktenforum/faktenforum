@@ -11,6 +11,7 @@ import { ClaimCreateDTO, ClaimDTO, PassportUser } from "~/models";
 import { SubmissionResponse } from "~/models/Submission";
 import { ClaimService, EnvService, FileService, SubmissionService } from "~/services";
 
+const ajv = new Ajv();
 @Controller("/submission")
 export class SubmissionController {
   @Inject()
@@ -35,8 +36,7 @@ export class SubmissionController {
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
     const claim: ClaimCreateDTO = JSON.parse(body.payload);
-    const ajv = new Ajv();
-
+    console.log("files", JSON.stringify(files));
     const jsonSchema = getJsonSchema(ClaimCreateDTO);
     const isValid = ajv.validate(jsonSchema, claim);
 
@@ -56,12 +56,15 @@ export class SubmissionController {
     if (!claim) {
       throw new NotFound("Claim not found");
     }
+    console.log("Claim", JSON.stringify(claim, null, 2));
     const response = {
       title: claim.title,
       description: claim.description,
       resources: claim.resources.map((resource) => ({
+        id: resource.id,
         originalUrl: resource.originalUrl,
         files: resource.files.map((file) => ({
+          id: file.id,
           name: file.name,
           size: file.size,
           mimeType: file.mimeType,
@@ -78,8 +81,8 @@ export class SubmissionController {
   async getSubmissionFile(
     @PathParams("token") token: string,
     @PathParams("fileId") fileId: string,
-    @Res() response: Response,
-    @Next() next: Function
+    @Res() response: Response & { set: (object: any) => void },
+    @Next() next: (error: any) => void
   ) {
     try {
       const id = await this.submissionService.getClaimIdByToken(token);
@@ -93,7 +96,7 @@ export class SubmissionController {
         // "Content-Disposition": `attachment; filename="${claimFile.name}"` // if you want it to be downloaded
       });
 
-      stream.pipe(response); //pipe the file to the response
+      stream.pipe(response as any); //pipe the file to the response
     } catch (error) {
       next(error); // Pass errors to Express.
     }
@@ -101,13 +104,25 @@ export class SubmissionController {
 
   @Put("/:token")
   @Returns(200, ClaimDTO)
-  async updateSubmission(@PathParams("token") token: string, @BodyParams() body: ClaimCreateDTO) {
-    const id = await this.submissionService.getClaimIdByToken(token);
-    const claim = await this.claimService.updateClaimById(id, body);
+  async updateSubmission(
+    @PathParams("token") token: string,
+    @BodyParams() body: { payload: string },
+    @MultipartFile("files", 100) files: S3MulterFile[]
+  ) {
+    const claim: ClaimCreateDTO = JSON.parse(body.payload);
+    console.log("files", JSON.stringify(files));
+    const jsonSchema = getJsonSchema(ClaimCreateDTO);
+    const isValid = ajv.validate(jsonSchema, claim);
 
-    if (!claim) {
+    if (!isValid) {
+      throw new BadRequest("Validation failed!");
+    }
+    const id = await this.submissionService.getClaimIdByToken(token);
+    const response = await this.claimService.updateClaimById(id, body, files);
+
+    if (!response) {
       throw new NotFound("Claim not found");
     }
-    return claim;
+    return response;
   }
 }

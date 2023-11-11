@@ -14,6 +14,7 @@ type ClaimCreateDM = {
       md5: string;
       mimeType: string;
       name: string;
+      size: number;
     }[];
   }[];
 };
@@ -48,7 +49,8 @@ export class ClaimService {
                 key: file.key,
                 md5: file.md5,
                 mimeType: file.mimeType,
-                name: file.name
+                name: file.name,
+                size: file.size
               }))
             }
           }))
@@ -77,6 +79,22 @@ export class ClaimService {
     return this.prisma.claim.update({
       where: { id: id },
       data: data
+    });
+  }
+
+  async updateClaimResourceById(
+    claimId: string,
+    resourceId: string,
+    data: Partial<ClaimResource>
+  ): Promise<ClaimResource> {
+    return this.prisma.claimResource.update({
+      where: {
+        id_claimId: {
+          id: resourceId,
+          claimId: claimId
+        }
+      },
+      data
     });
   }
 

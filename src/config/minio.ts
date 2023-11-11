@@ -28,11 +28,11 @@ const storage = multerS3({
   bucket,
   contentType: multerS3.AUTO_CONTENT_TYPE,
   metadata: (req, file, cb) => {
-    console.log("USer", req.user);
+    console.log("File", file);
     cb(null, {
       fieldName: file.fieldname,
       originalName: file.originalname,
-      size: file.size,
+
       user: req.user && req.user.id
     });
   },
