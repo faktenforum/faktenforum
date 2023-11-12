@@ -3,7 +3,7 @@ import type { UserRole as UserRoleType } from "@prisma/client";
 import { ArrayOf, Enum, Format, Optional, Property, Required } from "@tsed/schema";
 import { PasswordFormatDecorator } from "~/decorators";
 
-class ClaimFileDTO {
+export class ClaimFileDTO {
   @Property()
   @Optional()
   name: string;
@@ -17,14 +17,18 @@ class ClaimFileDTO {
 
   @Property()
   @Optional()
+  key: number;
+
+  @Property()
+  @Optional()
+  md5: number;
+
+  @Property()
+  @Optional()
   mimeType: number;
 }
 
-class ClaimResourceDTO {
-  @Property()
-  @Optional()
-  id: string;
-
+export class ClaimResourceCreateDTO {
   @Property()
   @Optional()
   originalUrl: string;
@@ -33,6 +37,12 @@ class ClaimResourceDTO {
   @Optional()
   @ArrayOf(ClaimFileDTO)
   files: ClaimFileDTO[];
+}
+
+export class ClaimResourceDTO extends ClaimResourceCreateDTO{
+  @Property()
+  @Optional()
+  id: string;
 }
 
 export class ClaimCreateDTO {

@@ -10,6 +10,7 @@ export type Metadata = {
   originalName: string;
   size: number;
   user: string;
+
 };
 export type S3MulterFile = PlatformMulterFile & { key: string; etag: string; metadata: Metadata };
 
@@ -18,7 +19,7 @@ const s3 = new S3Client({
     accessKeyId: process.env.MINIO_ACCESS_KEY!,
     secretAccessKey: process.env.MINIO_SECRET_KEY!
   },
-
+  region: process.env.MINIO_REGION,
   endpoint: `http://${process.env.MINIO_HOST}:${process.env.MINIO_API_PORT}`,
   forcePathStyle: true
 });

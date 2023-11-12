@@ -32,6 +32,13 @@ export class EnvService {
     }
     return parseInt(process.env.MINIO_API_PORT);
   }
+  get minioRegion(): string {
+    if (!process.env.MINIO_REGION) {
+      $log.error("MINIO_REGION is not set!");
+      process.exit(1);
+    }
+    return process.env.MINIO_REGION;
+  }
 
   get minioEndpoint(): string {
     return `http://${this.minioHost}:${this.minioApiPort}`;
@@ -147,6 +154,7 @@ export class EnvService {
     this.minioBucketName;
     this.minioHost;
     this.minioSecretKey;
+    this.minioRegion;
 
     // TODO add check for string format of Token lifetimes
     // check if env is one of the following values: development, production or undefined

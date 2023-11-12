@@ -1,7 +1,6 @@
 import { Claim, ClaimFile, ClaimResource, PrismaClient, Session } from "@prisma/client";
+import {ClaimResourceCreateDTO} from "~/models/ClaimDTO";
 import { Service } from "@tsed/di";
-import { Forbidden, NotFound } from "@tsed/exceptions";
-import { ClaimCreateDTO } from "~/models/ClaimDTO";
 
 type ClaimCreateDM = {
   title: string;
@@ -42,7 +41,8 @@ export class ClaimService {
         description: description,
         resources: {
           create: resources.map((resource) => ({
-            originalUrl: userId,
+            userId: userId,
+            originalUrl: resource.originalUrl,
             files: {
               create: resource.files.map((file) => ({
                 submitterId: userId,
@@ -76,6 +76,7 @@ export class ClaimService {
   }
 
   async updateClaimById(id: string, data: Partial<Claim>): Promise<Claim> {
+
     return this.prisma.claim.update({
       where: { id: id },
       data: data
@@ -95,6 +96,26 @@ export class ClaimService {
         }
       },
       data
+    });
+  }
+
+  async createClaimResource(claimId: string, resource: Partial<ClaimResourceCreateDTO>, userId?: string): Promise<ClaimResource> {
+
+    return this.prisma.claimResource.create({
+      data: {
+        claimId: claimId,
+        originalUrl: resource.originalUrl,
+        files: {
+          create: (resource.files || []).map((file) => ({
+            submitterId: userId,
+            key: file.key,
+            md5: file.md5,
+            mimeType: file.mimeType,
+            name: file.name,
+            size: file.size
+          }))
+        }
+      }
     });
   }
 

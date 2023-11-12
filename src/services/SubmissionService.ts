@@ -86,43 +86,42 @@ export class SubmissionService {
   }
 
   async updateSubmissionById(id: string, data: ClaimCreateDTO, files: S3MulterFile[], userId?: string) {
+    console.log()
     const claim = await this.claimService.getClaimById(id);
+    if(!claim) throw new NotFound("Claim not found");
     // update claim data
-    await this.claimService.updateClaimById(id, { title: claim.title, description: claim.description });
-    // update existing resources
-    await Promise.all(data.resources.map((resource) => {}));
-
-    if (resource.files && resource.files.length > 0) {
-      const claimResource = claimId.resources.find((r) => r.originalUrl === resource.originalUrl);
-      if (claimResource) {
-        return this.claimService.updateClaimResourceById(claimId.id, claimResource.id, {
-          originalUrl: resource.originalUrl
-        });
-      }
-    }
-
-    const dbData = {
-      title: claim.title,
-      description: claim.description,
-      resources: claim.resources.map((resource) => ({
-        originalUrl: resource.originalUrl,
-        files: resource.files.map((claimFile) => {
-          if (claimFile.url.startsWith("file-")) {
-            const index = parseInt(claimFile.url.substring(5));
-            const file = files[index];
-
-            return {
-              key: file.key,
-              mimeType: file.mimetype,
-              md5: file.etag.replace(/"/g, ""),
-              name: file.metadata.originalName,
-              size: file.size
-            };
-          } else {
+    await this.claimService.updateClaimById(id, { title: data.title, description: data.description });
+    
+    console.log('data', JSON.stringify(data, null, 3))
+    await Promise.all(data.resources.map((resource) => {
+      if (resource.id) {
+        // update existing resource
+        return this.claimService.updateClaimResourceById(id, resource.id, { originalUrl: resource.originalUrl});
+      } else {
+        // create new resource
+        const resourceDbData = 
+          {
+            originalUrl: resource.originalUrl,
+            files: resource.files.map((claimFile) => {
+              if (claimFile.url.startsWith("file-")) {
+                const index = parseInt(claimFile.url.substring(5));
+                const file = files[index];
+    
+                return {
+                  key: file.key,
+                  mimeType: file.mimetype,
+                  md5: file.etag.replace(/"/g, ""),
+                  name: file.metadata.originalName,
+                  size: file.size
+                };
+              }
+            })
           }
-        })
-      }))
-    };
+          return this.claimService.createClaimResource(id, resourceDbData)
+      }
+      
+    }));
+    
   }
 
   async getClaimIdByToken(token: string): Promise<string> {

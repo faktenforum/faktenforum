@@ -12,6 +12,7 @@ import { SubmissionResponse } from "~/models/Submission";
 import { ClaimService, EnvService, FileService, SubmissionService } from "~/services";
 
 const ajv = new Ajv();
+const ClaimCreateDtoJsonSchema = getJsonSchema(ClaimCreateDTO);
 @Controller("/submission")
 export class SubmissionController {
   @Inject()
@@ -36,9 +37,7 @@ export class SubmissionController {
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
     const claim: ClaimCreateDTO = JSON.parse(body.payload);
-    console.log("files", JSON.stringify(files));
-    const jsonSchema = getJsonSchema(ClaimCreateDTO);
-    const isValid = ajv.validate(jsonSchema, claim);
+    const isValid = ajv.validate(ClaimCreateDtoJsonSchema, claim);
 
     if (!isValid) {
       throw new BadRequest("Validation failed!");
@@ -110,19 +109,18 @@ export class SubmissionController {
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
     const claim: ClaimCreateDTO = JSON.parse(body.payload);
-    console.log("files", JSON.stringify(files));
-    const jsonSchema = getJsonSchema(ClaimCreateDTO);
-    const isValid = ajv.validate(jsonSchema, claim);
+
+    const isValid = ajv.validate(ClaimCreateDtoJsonSchema, claim);
 
     if (!isValid) {
       throw new BadRequest("Validation failed!");
     }
     const id = await this.submissionService.getClaimIdByToken(token);
-    const response = await this.claimService.updateClaimById(id, body, files);
-
-    if (!response) {
-      throw new NotFound("Claim not found");
+    if (!id) {
+      throw new NotFound("Claim not found by token");
     }
+    const response = await this.submissionService.updateSubmissionById(id, claim, files);
+    
     return response;
   }
 }
