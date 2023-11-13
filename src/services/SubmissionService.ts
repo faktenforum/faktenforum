@@ -93,14 +93,14 @@ export class SubmissionService {
     return { claimId, token };
   }
 
-  async updateSubmissionById(id: string, data: ClaimCreateDTO, files: S3MulterFile[], userId?: string) {
+  async updateSubmissionById(id: string, data: Partial<ClaimDTO>, files: S3MulterFile[], userId?: string) {
     const claim = await this.claimService.getClaimById(id);
     if (!claim) throw new NotFound("Claim not found");
     // update claim data
     await this.claimService.updateClaimById(id, { title: data.title, description: data.description });
 
     await Promise.all(
-      data.resources.map((resource) => {
+      (data.resources || []).map((resource) => {
         if (resource.id) {
           // update existing resource
           return this.claimService.updateClaimResourceById(id, resource.id, {
@@ -110,8 +110,9 @@ export class SubmissionService {
           // create new resource
           const resourceDbData = {
             originalUrl: resource.originalUrl,
-            files: resource.files.map((claimFile) => {
-              if (claimFile.url.startsWith("file-")) {
+            files: (resource.files || [])
+              .filter((file) => file.url.startsWith("file-"))
+              .map((claimFile) => {
                 const index = parseInt(claimFile.url.substring(5));
                 const file = files[index];
 
@@ -122,8 +123,7 @@ export class SubmissionService {
                   name: file.metadata.originalName,
                   size: file.size
                 };
-              }
-            })
+              })
           };
           return this.claimService.createClaimResource(id, resourceDbData);
         }

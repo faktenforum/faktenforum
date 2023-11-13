@@ -1,15 +1,9 @@
-import { UserRole } from "@prisma/client";
-import type { UserRole as UserRoleType } from "@prisma/client";
-import { ArrayOf, Enum, Format, Optional, Property, Required } from "@tsed/schema";
-import { PasswordFormatDecorator } from "~/decorators";
+import { ArrayOf, Optional, Property, Required } from "@tsed/schema";
 
-export class ClaimFileDTO {
+export class ClaimFileCreateDTO {
   @Property()
   @Optional()
   name: string;
-
-  @Property()
-  url: string;
 
   @Property()
   @Optional()
@@ -17,15 +11,20 @@ export class ClaimFileDTO {
 
   @Property()
   @Optional()
-  key: number;
+  key: string;
 
   @Property()
   @Optional()
-  md5: number;
+  md5: string;
 
   @Property()
   @Optional()
-  mimeType: number;
+  mimeType: string;
+}
+export class ClaimFileDTO extends ClaimFileCreateDTO {
+  @Property()
+  @Optional()
+  url: string;
 }
 
 export class ClaimResourceCreateDTO {
@@ -35,14 +34,19 @@ export class ClaimResourceCreateDTO {
 
   @Property()
   @Optional()
-  @ArrayOf(ClaimFileDTO)
-  files: ClaimFileDTO[];
+  @ArrayOf(ClaimFileCreateDTO)
+  files: ClaimFileCreateDTO[];
 }
 
-export class ClaimResourceDTO extends ClaimResourceCreateDTO{
+export class ClaimResourceDTO extends ClaimResourceCreateDTO {
   @Property()
   @Optional()
   id: string;
+
+  @Property()
+  @Optional()
+  @ArrayOf(ClaimFileDTO)
+  declare files: ClaimFileDTO[];
 }
 
 export class ClaimCreateDTO {
