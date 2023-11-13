@@ -14,7 +14,7 @@
     "prisma": "npm run prisma:generate && npm run prisma:migrate",
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate",
-    "prisma:erd": "prisma generate --schema=prisma/schema.erd.prisma",
+    "prisma:erd": "npx prisma generate --generator erdPdf erd",
     "test:lint": "eslint '**/*.{ts,js}'",
     "test:lint:fix": "eslint '**/*.{ts,js}' --fix",
     "prettier": "prettier '**/*.{ts,js,json,md,yml,yaml}' --write"
