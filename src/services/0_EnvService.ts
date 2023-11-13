@@ -10,6 +10,64 @@ export class EnvService {
     this.validate();
   }
 
+  get hostUrl(): string {
+    if (!process.env.HOST_URL) {
+      $log.error("HOST_URL is not set!");
+      process.exit(1);
+    }
+    return process.env.HOST_URL;
+  }
+
+  get minioHost(): string {
+    if (!process.env.MINIO_HOST) {
+      $log.error("MINIO_HOST is not set!");
+      process.exit(1);
+    }
+    return process.env.MINIO_HOST;
+  }
+  get minioApiPort(): number {
+    if (!process.env.MINIO_API_PORT) {
+      $log.error("MINIO_API_PORT is not set!");
+      process.exit(1);
+    }
+    return parseInt(process.env.MINIO_API_PORT);
+  }
+  get minioRegion(): string {
+    if (!process.env.MINIO_REGION) {
+      $log.error("MINIO_REGION is not set!");
+      process.exit(1);
+    }
+    return process.env.MINIO_REGION;
+  }
+
+  get minioEndpoint(): string {
+    return `http://${this.minioHost}:${this.minioApiPort}`;
+  }
+
+  get minioBucketName(): string {
+    if (!process.env.MINIO_BUCKET_NAME) {
+      $log.error("MINIO_BUCKET_NAME is not set!");
+      process.exit(1);
+    }
+    return process.env.MINIO_BUCKET_NAME;
+  }
+
+  get minioAccessKey(): string {
+    if (!process.env.MINIO_ACCESS_KEY) {
+      $log.error("MINIO_ACCESS_KEY is not set!");
+      process.exit(1);
+    }
+    return process.env.MINIO_ACCESS_KEY;
+  }
+
+  get minioSecretKey(): string {
+    if (!process.env.MINIO_SECRET_KEY) {
+      $log.error("MINIO_SECRET_KEY is not set!");
+      process.exit(1);
+    }
+    return process.env.MINIO_SECRET_KEY;
+  }
+
   get jwtSecret(): string {
     return process.env.JWT_SECRET!;
   }
@@ -30,6 +88,13 @@ export class EnvService {
     return process.env.JWT_TOKEN_TOKEN_LIFETIME;
   }
 
+  get claimSubmissionTokenLifeTime(): string {
+    if (!process.env.JWT_TOKEN_TOKEN_LIFETIME) {
+      $log.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
+      process.exit(1);
+    }
+    return process.env.JWT_TOKEN_TOKEN_LIFETIME;
+  }
   get jwtIssuer(): string {
     if (!process.env.JWT_ISSUER) {
       $log.error("JWT_ISSUER is not set!");
@@ -77,13 +142,19 @@ export class EnvService {
       $log.error("JWT_SECRET is not set!");
       process.exit(1);
     }
-
+    this.hostUrl;
     this.jwtRefreshTokenLifetime;
     this.jwtTokenLifetime;
     this.jwtAudience;
     this.jwtAudience;
-
     this.mongoDBUri;
+    this.claimSubmissionTokenLifeTime;
+    this.minioAccessKey;
+    this.minioApiPort;
+    this.minioBucketName;
+    this.minioHost;
+    this.minioSecretKey;
+    this.minioRegion;
 
     // TODO add check for string format of Token lifetimes
     // check if env is one of the following values: development, production or undefined
