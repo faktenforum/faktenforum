@@ -1,6 +1,6 @@
-import { Claim, ClaimFile, ClaimResource, PrismaClient, Session } from "@prisma/client";
-import {ClaimResourceCreateDTO} from "~/models/ClaimDTO";
+import { Claim, ClaimFile, ClaimResource, PrismaClient } from "@prisma/client";
 import { Service } from "@tsed/di";
+import { ClaimResourceCreateDTO } from "~/models/ClaimDTO";
 
 type ClaimCreateDM = {
   title: string;
@@ -8,7 +8,6 @@ type ClaimCreateDM = {
   resources: {
     originalUrl: string;
     files: {
-      path: string;
       key: string;
       md5: string;
       mimeType: string;
@@ -31,7 +30,7 @@ export class ClaimService {
     return this.prisma.claim.findMany();
   }
 
-  async createClaim(claimData: ClaimCreateDM, userId: string): Promise<Claim> {
+  async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<Claim> {
     const { title, description, resources } = claimData;
 
     // Start a transaction
@@ -76,7 +75,6 @@ export class ClaimService {
   }
 
   async updateClaimById(id: string, data: Partial<Claim>): Promise<Claim> {
-
     return this.prisma.claim.update({
       where: { id: id },
       data: data
@@ -99,8 +97,11 @@ export class ClaimService {
     });
   }
 
-  async createClaimResource(claimId: string, resource: Partial<ClaimResourceCreateDTO>, userId?: string): Promise<ClaimResource> {
-
+  async createClaimResource(
+    claimId: string,
+    resource: Partial<ClaimResourceCreateDTO>,
+    userId?: string
+  ): Promise<ClaimResource> {
     return this.prisma.claimResource.create({
       data: {
         claimId: claimId,

@@ -71,7 +71,6 @@ export class SubmissionController {
         }))
       }))
     };
-    console.log("response", JSON.stringify(response));
     return response;
   }
 

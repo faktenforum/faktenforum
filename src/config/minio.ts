@@ -3,6 +3,7 @@ import type { PlatformMulterFile } from "@tsed/common";
 import AWS from "aws-sdk";
 import multerS3 from "multer-s3";
 import { v4 as uuidv4 } from "uuid";
+import { PassportUser } from "~/models/PassportCustomUser";
 
 export const bucket = process.env.MINIO_BUCKET_NAME!;
 export type Metadata = {
@@ -10,7 +11,6 @@ export type Metadata = {
   originalName: string;
   size: number;
   user: string;
-
 };
 export type S3MulterFile = PlatformMulterFile & { key: string; etag: string; metadata: Metadata };
 
@@ -30,11 +30,12 @@ const storage = multerS3({
   contentType: multerS3.AUTO_CONTENT_TYPE,
   metadata: (req, file, cb) => {
     console.log("File", file);
+    const user = req.user as PassportUser;
     cb(null, {
       fieldName: file.fieldname,
       originalName: file.originalname,
 
-      user: req.user && req.user.id
+      user: user && user.id
     });
   },
   key: (req, file, cb) => {
