@@ -43,6 +43,14 @@ export class SubmissionService {
     });
   }
 
+  async endSubmission(token: string) {
+    const claimId = await this.getClaimIdByToken(token);
+    await this.prisma.claimSubmissionToken.delete({
+      where: { token }
+    });
+    return claimId;
+  }
+
   async submitClaim(claim: ClaimCreateDTO, files: S3MulterFile[], userId?: string) {
     const rawToken = crypto.randomBytes(24).toString("hex");
     const dbData = {
@@ -86,27 +94,27 @@ export class SubmissionService {
   }
 
   async updateSubmissionById(id: string, data: ClaimCreateDTO, files: S3MulterFile[], userId?: string) {
-    console.log()
     const claim = await this.claimService.getClaimById(id);
-    if(!claim) throw new NotFound("Claim not found");
+    if (!claim) throw new NotFound("Claim not found");
     // update claim data
     await this.claimService.updateClaimById(id, { title: data.title, description: data.description });
-    
-    console.log('data', JSON.stringify(data, null, 3))
-    await Promise.all(data.resources.map((resource) => {
-      if (resource.id) {
-        // update existing resource
-        return this.claimService.updateClaimResourceById(id, resource.id, { originalUrl: resource.originalUrl});
-      } else {
-        // create new resource
-        const resourceDbData = 
-          {
+
+    await Promise.all(
+      data.resources.map((resource) => {
+        if (resource.id) {
+          // update existing resource
+          return this.claimService.updateClaimResourceById(id, resource.id, {
+            originalUrl: resource.originalUrl
+          });
+        } else {
+          // create new resource
+          const resourceDbData = {
             originalUrl: resource.originalUrl,
             files: resource.files.map((claimFile) => {
               if (claimFile.url.startsWith("file-")) {
                 const index = parseInt(claimFile.url.substring(5));
                 const file = files[index];
-    
+
                 return {
                   key: file.key,
                   mimeType: file.mimetype,
@@ -116,12 +124,11 @@ export class SubmissionService {
                 };
               }
             })
-          }
-          return this.claimService.createClaimResource(id, resourceDbData)
-      }
-      
-    }));
-    
+          };
+          return this.claimService.createClaimResource(id, resourceDbData);
+        }
+      })
+    );
   }
 
   async getClaimIdByToken(token: string): Promise<string> {

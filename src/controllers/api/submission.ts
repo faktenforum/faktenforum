@@ -120,7 +120,7 @@ export class SubmissionController {
       throw new NotFound("Claim not found by token");
     }
     const response = await this.submissionService.updateSubmissionById(id, claim, files);
-    
+    await this.submissionService.endSubmission(token);
     return response;
   }
 }
