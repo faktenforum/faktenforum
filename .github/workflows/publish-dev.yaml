@@ -17,7 +17,7 @@ jobs:
         uses: tibdex/github-app-token@v2
         with:
           app_id: ${{ secrets.PUBLISH_APP_ID }}
-          private_key: $${{ steps.decode_pem.outputs.private_key }}
+          private_key: ${{ steps.decode_pem.outputs.private_key }}
 
       - run: "echo 'The created token is masked: ${{ steps.create_token.outputs.token }}'"
       # Use the token for subsequent steps
