@@ -8,15 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      # Generate a token for the GitHub App
+      # Generate a token for the GitHub App 
       - name: Generate GitHub App Token
         id: create_token
         uses: tibdex/github-app-token@v2
         with:
           app_id: ${{ secrets.PUBLISH_APP_ID }}
           private_key: ${{ secrets.PUBLISH_APP_PRIVATE_KEY }}
-
       - run: "echo 'The created token is masked: ${{ steps.create_token.outputs.token }}'"
       # Use the token for subsequent steps
       - name: Docker Login
