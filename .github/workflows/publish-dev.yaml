@@ -8,9 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Decode PEM File
-        run: |
-          echo "${{ secrets.PUBLISH_APP_PRIVATE_KEY }}" | base64 -d > private-key.pem     
+
       # Generate a token for the GitHub App
       - name: Generate GitHub App Token
         id: create_token
