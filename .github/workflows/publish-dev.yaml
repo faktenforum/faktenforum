@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
+      - run: "echo 'Show APP ID: ${{ secrets.PUBLISH_APP_ID }}'"
+      - run: "echo 'Show APP SECRET: ${{ secrets.PUBLISH_APP_PRIVATE_KEY }}'"
       # Generate a token for the GitHub App
       - name: Generate GitHub App Token
         id: create_token
