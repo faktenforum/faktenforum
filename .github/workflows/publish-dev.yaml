@@ -24,7 +24,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ steps.generate_token.outputs.token }}
-
+      # publish the image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
