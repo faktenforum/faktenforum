@@ -1,0 +1,34 @@
+name: Build and Push DEV Docker Images
+on:
+  push:
+    branches: [16-publish-images-to-ghcr]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Generate a token for the GitHub App
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.PUBLISH_APP_ID }}
+          private_key: ${{ secrets.PUBLISH_APP_PRIVATE_KEY }}
+
+      # Use the token for subsequent steps
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ steps.generate_token.outputs.token }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/myservice-api:${{ env.VERSION }}-dev
