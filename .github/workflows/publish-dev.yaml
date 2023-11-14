@@ -11,19 +11,20 @@ jobs:
 
       # Generate a token for the GitHub App
       - name: Generate GitHub App Token
-        id: generate_token
+        id: create_token
         uses: tibdex/github-app-token@v2
         with:
           app_id: ${{ secrets.PUBLISH_APP_ID }}
           private_key: ${{ secrets.PUBLISH_APP_PRIVATE_KEY }}
 
+      - run: "echo 'The created token is masked: ${{ steps.create_token.outputs.token }}'"
       # Use the token for subsequent steps
       - name: Docker Login
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ steps.generate_token.outputs.token }}
+          password: ${{ steps.create_token.outputs.token }}
       # publish the image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
