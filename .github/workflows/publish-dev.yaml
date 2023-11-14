@@ -9,6 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       # Generate a token for the GitHub App 
+      - name: Extract Version from package.json
+        run: echo "VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_ENV
+        env:
+          PACKAGE_JSON_PATH: './package.json'
       - name: Generate GitHub App Token
         id: create_token
         uses: tibdex/github-app-token@v2
