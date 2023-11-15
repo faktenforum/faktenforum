@@ -27,8 +27,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ steps.create_token.outputs.token }}
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+
       # publish the image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
