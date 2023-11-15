@@ -9,10 +9,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       # Generate a token for the GitHub App 
-      - name: Extract Version from package.json
-        run: echo "VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_ENV
-        env:
-          PACKAGE_JSON_PATH: './package.json'
+      # Set tags for the main branch
+      - name: Set Production Tags
+        if: github.ref == 'refs/heads/production'
+        run: |
+          echo "VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_ENV
+          echo "TAGS=ghcr.io/${{ github.repository_owner }}/faktenforum-api:$VERSION,ghcr.io/${{ github.repository_owner }}/faktenforum-api:latest" >> $GITHUB_ENV
+
+      # Set tag for development branches
+      - name: Set Dev Tag
+        if: github.ref != 'refs/heads/production'
+        run: echo "TAGS=ghcr.io/${{ github.repository_owner }}/faktenforum-api:latest-dev" >> $GITHUB_ENV
+
+  
 
       # Login into ghcr.io as action
       - name: Docker Login
@@ -29,6 +38,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/faktenforum-api:${{ env.VERSION }}-dev
-            ghcr.io/${{ github.repository_owner }}/faktenforum-api:latest-dev
+          tags: ${{ env.TAGS }}
