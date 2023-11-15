@@ -34,4 +34,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/myservice-api:${{ env.VERSION }}-dev
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/faktenforum-api:${{ env.VERSION }}-dev
+            ghcr.io/${{ github.repository_owner }}/faktenforum-api:latest-dev
