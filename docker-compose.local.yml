@@ -1,28 +1,5 @@
 version: "3.5"
 services:
-  faktenforum-api:
-    image: ghcr.io/faktenforum/faktenforum-api:latest-dev
-    ports:
-      - 8083:8083
-    environment:
-      HOST_URL: ${HOST_URL}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
-      JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
-      JWT_ISSUER: ${JWT_ISSUER}
-      JWT_AUDIENCE: ${JWT_AUDIENCE}
-      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
-      MINIO_HOST: ${MINIO_HOST}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_REGION: ${MINIO_REGION}
-  faktenforum-frontend:
-    image: ghcr.io/faktenforum/faktenforum-frontend:latest-dev
-    ports:
-      - 8080:3000
-    environment:
-      VUE_APP_API_URL: ${VUE_APP_API_URL}
-    
   db:
     image: postgres:15.2
     ports:
@@ -58,7 +35,17 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
-
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    volumes:
+      - mailhog-data:/home/mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /home/mailhog
 volumes:
   db_data:
   minio_data:

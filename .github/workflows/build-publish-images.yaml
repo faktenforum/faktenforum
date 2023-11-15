@@ -1,14 +1,14 @@
 name: Build and Push DEV Docker Images
 on:
   push:
-    branches: [main, production]
+    branches: [main, production, 16-publish-images-to-ghcr]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # Generate a token for the GitHub App 
+      # Generate a token for the GitHub App
       # Set tags for the main branch
       - name: Set Production Tags
         if: github.ref == 'refs/heads/production'
@@ -20,8 +20,6 @@ jobs:
       - name: Set Dev Tag
         if: github.ref != 'refs/heads/production'
         run: echo "TAGS=ghcr.io/${{ github.repository_owner }}/faktenforum-api:latest-dev" >> $GITHUB_ENV
-
-  
 
       # Login into ghcr.io as action
       - name: Docker Login
