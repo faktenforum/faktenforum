@@ -29,6 +29,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/faktenforum-api:${{ env.VERSION }}-dev
-            ghcr.io/${{ github.repository_owner }}/faktenforum-api:latest-dev
+          tags: faktenforum/faktenforum-api:latest-dev
