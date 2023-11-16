@@ -3,7 +3,7 @@ services:
   faktenforum-api:
     image: ghcr.io/faktenforum/faktenforum-api:latest-dev
     ports:
-      - 8083:8083
+      - 8783:8083
     environment:
       HOST_URL: ${HOST_URL}
       JWT_SECRET: ${JWT_SECRET}
@@ -19,10 +19,7 @@ services:
   faktenforum-frontend:
     image: ghcr.io/faktenforum/faktenforum-frontend:latest-dev
     ports:
-      - 8080:3000
-    environment:
-      VUE_APP_API_URL: ${VUE_APP_API_URL}
-    
+      - 8780:3000
   db:
     image: postgres:15.2
     ports:
