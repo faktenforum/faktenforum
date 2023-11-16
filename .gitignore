@@ -57,6 +57,3 @@ test/**/*.js.map
 
 # minio Seed data
 minio/resources/*
-
-# for faster dev ignore migrations
-prisma/migrations/*

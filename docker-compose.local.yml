@@ -1,5 +1,42 @@
 version: "3.5"
 services:
+  faktenforum-api:
+    build: .
+    ports:
+      - 8783:8083
+    restart: always
+    environment:
+      HOST_URL: ${HOST_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
+      JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
+      MONGODB_HOST: ${MONGODB_HOST}
+      MONGODB_PORT: ${MONGODB_PORT}
+      MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
+      MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
+      MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
+      MINIO_HOST: ${MINIO_HOST}
+      MINIO_API_PORT: ${MINIO_API_PORT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      DATABASE_URL: ${DATABASE_URL}
+  faktenforum-frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        API_BASE_URL: "http://localhost:8783/api"
+    # ports:
+    #   - 8780:3000
+    restart: always
+    network_mode: host
+    environment:
+      PORT: 8780
   db:
     image: postgres:15.2
     ports:
@@ -25,7 +62,7 @@ services:
       MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
 
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     ports:
       - "${MINIO_API_PORT}:${MINIO_API_PORT}"
       - "${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}"
@@ -35,19 +72,23 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
-  mailhog:
-    image: mailhog/mailhog:v1.0.1
-    volumes:
-      - mailhog-data:/home/mailhog
-    restart: unless-stopped
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-    environment:
-      MH_STORAGE: maildir
-      MH_MAILDIR_PATH: /home/mailhog
+  # mailhog:
+  #   image: mailhog/mailhog:v1.0.1
+  #   volumes:
+  #     - mailhog-data:/home/mailhog
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1025:1025"
+  #     - "8025:8025"
+  #   environment:
+  #     MH_STORAGE: maildir
+  #     MH_MAILDIR_PATH: /home/mailhog
 volumes:
   db_data:
   minio_data:
   mailhog-data:
   mongodb_data:
+
+networks:
+  default:
+    name: faktenforum
