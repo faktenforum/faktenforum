@@ -2,8 +2,9 @@ version: "3.5"
 services:
   faktenforum-api:
     image: ghcr.io/faktenforum/faktenforum-api:latest-dev
+    platform: linux/arm64
     ports:
-      - 8783:8083
+      - 8083:8083
     environment:
       API_BASE_URL: ${API_BASE_URL}
       JWT_SECRET: ${JWT_SECRET}
@@ -24,10 +25,12 @@ services:
       MINIO_REGION: ${MINIO_REGION}
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
       DATABASE_URL: ${DATABASE_URL}
+
   faktenforum-frontend:
     image: ghcr.io/faktenforum/faktenforum-frontend:latest-dev
+    platform: linux/arm64
     ports:
-      - 8780:3000
+      - 3000:3000
 
   postgresDb:
     image: postgres:15.2
@@ -39,6 +42,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+
   mongodb: # Add a MongoDB instance
     image: mongo:latest # Use a minimal version of MongoDB
     ports:
@@ -64,6 +68,7 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+
   minio-client:
     image: minio/mc
     depends_on:
