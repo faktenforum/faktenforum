@@ -1,7 +1,7 @@
-name: Build and Push DEV Docker Images
+name: Faktenforum-API | Build and Push Docker Images
 on:
   push:
-    branches: [main, production, origin/16-publish-images-to-ghcr]
+    branches: [main, production, 16-publish-images-to-ghcr]
 
 jobs:
   build-and-push:
