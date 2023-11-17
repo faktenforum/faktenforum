@@ -73,7 +73,7 @@ export class UsersService {
     const adminUser = await this.prisma.user.findFirst();
     if (!adminUser) {
       const userEmail = "admin@email.de";
-      const userPassword = crypto.randomBytes(32).toString("hex");
+      const userPassword = crypto.randomBytes(32).toString("hex") + "!K";
       await this.createUser(userEmail, userPassword, UserRole.ADMIN);
       $log.info(`Created first admin user with email ${userEmail} and password ${userPassword}`);
     }
