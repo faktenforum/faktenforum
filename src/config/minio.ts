@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PassportUser } from "~/models/PassportCustomUser";
 
 export const bucket = process.env.MINIO_BUCKET_NAME!;
+
 export type Metadata = {
   fieldName: string;
   originalName: string;

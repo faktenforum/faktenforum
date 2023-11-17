@@ -1,7 +1,7 @@
 name: Build and Push DEV Docker Images
 on:
   push:
-    branches: [main, production]
+    branches: [main, production, origin/16-publish-images-to-ghcr]
 
 jobs:
   build-and-push:

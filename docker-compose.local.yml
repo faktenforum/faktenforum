@@ -3,10 +3,10 @@ services:
   faktenforum-api:
     build: .
     ports:
-      - 8783:8083
+      - 8083:8083
     restart: always
     environment:
-      HOST_URL: ${HOST_URL}
+      API_BASE_URL: ${API_BASE_URL}
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
       JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
@@ -30,14 +30,14 @@ services:
       context: ../frontend
       dockerfile: Dockerfile
       args:
-        API_BASE_URL: "http://localhost:8783/api"
+        API_BASE_URL: ${API_BASE_URL}
     # ports:
     #   - 8780:3000
     restart: always
     network_mode: host
     environment:
-      PORT: 8780
-  db:
+      PORT: 3000
+  postgresDb:
     image: postgres:15.2
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
@@ -72,6 +72,19 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+  # minio-client inits minio with a service account and a bucket
+  minio-client:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MinIO to be ready...' &&
+      sleep 5 &&
+      mc alias set myminio http://minio:${MINIO_API_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc admin user svcacct add  myminio ${MINIO_ROOT_USER} --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} &&
+      mc mb myminio/${MINIO_BUCKET_NAME} &&
+      echo 'Service account and bucket created in MinIO'"
   # mailhog:
   #   image: mailhog/mailhog:v1.0.1
   #   volumes:

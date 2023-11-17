@@ -5,7 +5,7 @@ services:
   #   ports:
   #     - 8783:8083
   #   environment:
-  #     HOST_URL: ${HOST_URL}
+  #     API_BASE_URL: ${API_BASE_URL}
   #     JWT_SECRET: ${JWT_SECRET}
   #     JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
   #     JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}

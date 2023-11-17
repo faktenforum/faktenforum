@@ -10,12 +10,12 @@ export class EnvService {
     this.validate();
   }
 
-  get hostUrl(): string {
-    if (!process.env.HOST_URL) {
-      $log.error("HOST_URL is not set!");
+  get baseUrl(): string {
+    if (!process.env.API_BASE_URL) {
+      $log.error("API_BASE_URL is not set!");
       process.exit(1);
     }
-    return process.env.HOST_URL;
+    return process.env.API_BASE_URL;
   }
 
   get minioHost(): string {
@@ -143,7 +143,7 @@ export class EnvService {
       $log.error("JWT_SECRET is not set!");
       process.exit(1);
     }
-    this.hostUrl;
+    this.baseUrl;
     this.jwtRefreshTokenLifetime;
     this.jwtTokenLifetime;
     this.jwtAudience;

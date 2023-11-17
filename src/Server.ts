@@ -11,7 +11,7 @@ import { join } from "path";
 import "~/protocols";
 
 import { config } from "./config/index";
-import * as api from "./controllers/api/index";
+import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
 import { FileService } from "./services";
 
@@ -22,7 +22,7 @@ import { FileService } from "./services";
   httpsPort: false, // CHANGE
   disableComponentsScan: true,
   mount: {
-    "/api": [...Object.values(api)],
+    "/api/v1": [...Object.values(apiV1)],
     "/": [...Object.values(pages)]
   },
   middlewares: [
