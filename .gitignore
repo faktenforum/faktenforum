@@ -54,6 +54,7 @@ test/**/*.js.map
 .env.local
 .env.development
 .env
+*.env
 
 # minio Seed data
 minio/resources/*

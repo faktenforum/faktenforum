@@ -1,33 +1,35 @@
 version: "3.5"
 services:
-  # faktenforum-api:
-  #   image: ghcr.io/faktenforum/faktenforum-api:latest-dev
-  #   ports:
-  #     - 8783:8083
-  #   environment:
-  #     API_BASE_URL: ${API_BASE_URL}
-  #     JWT_SECRET: ${JWT_SECRET}
-  #     JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
-  #     JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
-  #     JWT_ISSUER: ${JWT_ISSUER}
-  #     JWT_AUDIENCE: ${JWT_AUDIENCE}
-  #     CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
-  #     MONGODB_HOST: ${MONGODB_HOST}
-  #     MONGODB_PORT: ${MONGODB_PORT}
-  #     MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
-  #     MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
-  #     MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
-  #     MINIO_HOST: ${MINIO_HOST}
-  #     MINIO_API_PORT: ${MINIO_API_PORT}
-  #     MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-  #     MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-  #     MINIO_REGION: ${MINIO_REGION}
-  #     MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
-  # # faktenforum-frontend:
-  # #   image: ghcr.io/faktenforum/faktenforum-frontend:latest-dev
-  # #   ports:
-  # #     - 8780:3000
-  db:
+  faktenforum-api:
+    image: ghcr.io/faktenforum/faktenforum-api:latest-dev
+    ports:
+      - 8783:8083
+    environment:
+      API_BASE_URL: ${API_BASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
+      JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
+      MONGODB_HOST: ${MONGODB_HOST}
+      MONGODB_PORT: ${MONGODB_PORT}
+      MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
+      MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
+      MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
+      MINIO_HOST: ${MINIO_HOST}
+      MINIO_API_PORT: ${MINIO_API_PORT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      DATABASE_URL: ${DATABASE_URL}
+  faktenforum-frontend:
+    image: ghcr.io/faktenforum/faktenforum-frontend:latest-dev
+    ports:
+      - 8780:3000
+
+  postgresDb:
     image: postgres:15.2
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
