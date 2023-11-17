@@ -85,7 +85,7 @@ services:
       mc admin user svcacct add  myminio ${MINIO_ROOT_USER} --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} &&
       mc mb myminio/${MINIO_BUCKET_NAME} &&
       echo 'Service account and bucket created in MinIO'"
-  # mailhog:
+  # #mailhog:
   #   image: mailhog/mailhog:v1.0.1
   #   volumes:
   #     - mailhog-data:/home/mailhog
