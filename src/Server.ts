@@ -13,7 +13,7 @@ import "~/protocols";
 import { config } from "./config/index";
 import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
-import { FileService } from "./services";
+import { FileService, UsersService } from "./services";
 
 @Configuration({
   ...config,
@@ -51,11 +51,15 @@ export class Server {
   protected settings: Configuration;
 
   @Inject()
-  protected fileService: FileService; // Inject the FileService
+  protected fileService: FileService;
+
+  @Inject()
+  protected userService: UsersService;
 
   async $onReady() {
     try {
       await this.fileService.ensureBucketExists();
+      await this.userService.createFistAdminUser();
     } catch (error) {
       $log.error("Error checking or creating the bucket:", error);
     }

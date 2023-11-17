@@ -3,8 +3,8 @@
  */
 
 export * from "./0_EnvService";
-export * from "./AuthService";
-export * from "./ClaimService";
-export * from "./FileService";
-export * from "./SubmissionService";
-export * from "./UsersService";
+export * from "./1_AuthService";
+export * from "./1_ClaimService";
+export * from "./1_FileService";
+export * from "./1_UsersService";
+export * from "./2_SubmissionService";
