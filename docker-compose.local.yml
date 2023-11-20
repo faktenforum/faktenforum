@@ -1,0 +1,137 @@
+version: "3.5"
+services:
+  faktenforum-api:
+    build: .
+    ports:
+      - 8083:8083
+    restart: always
+    environment:
+      API_BASE_URL: ${API_BASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
+      JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
+      MONGODB_HOST: ${MONGODB_HOST}
+      MONGODB_PORT: ${MONGODB_PORT}
+      MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
+      MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
+      MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
+      MINIO_HOST: ${MINIO_HOST}
+      MINIO_API_PORT: ${MINIO_API_PORT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      DATABASE_URL: ${DATABASE_URL}
+  # faktenforum-frontend:
+  #   build:
+  #     context: ../frontend
+  #     dockerfile: Dockerfile
+  #     args:
+  #       API_BASE_URL: ${API_BASE_URL}
+  #   ports:
+  #     - 8780:3000
+  #   restart: always
+  #   network_mode: host
+  #   environment:
+  #     PORT: 3000
+  postgresDb:
+    image: postgres:15.2
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+
+  mongodb: # Add a MongoDB instance
+    image: mongo:latest # Use a minimal version of MongoDB
+    ports:
+      - "${MONGODB_PORT}:27017"
+    volumes:
+      - mongodb_data:/data/db # Store MongoDB data in a volume
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+
+  mongodb-sh:
+    image: ghcr.io/faktenforum/mongosb-sh:latest
+    depends_on:
+      - mongodb
+    environment:
+      MONGODB_ROOT_USER: ${MONGODB_ROOT_USER}
+      MONGODB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+      MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
+      MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
+      MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
+      MONGODB_HOST: ${MONGODB_HOST}
+      MONGODB_PORT: ${MONGODB_PORT}
+
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MongoDB to be ready...' &&
+      until mongosh --quiet -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin mongodb://mongodb:${MONGODB_PORT} --eval 'db.runCommand({ ping: 1 })'; do
+        sleep 1
+      done &&
+      echo 'MongoDB is ready. Creating user and setting up database...' &&
+      mongosh -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin mongodb://mongodb:${MONGODB_PORT} --eval '
+        db = db.getSiblingDB(\"${MONGODB_AGENDA_DB}\");
+        db.createUser({
+          user: \"${MONGODB_AGENDA_USER}\",
+          pwd: \"${MONGODB_AGENDA_PASSWORD}\",
+          roles: [{ role: \"readWrite\", db: \"${MONGODB_AGENDA_DB}\" },
+                  { role: \"dbOwner\", db: \"${MONGODB_AGENDA_DB}\" }]
+        });
+      '"
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "${MINIO_API_PORT}:${MINIO_API_PORT}"
+      - "${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}"
+    environment:
+      MINIO_SERVER_PORT: ${MINIO_API_PORT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+  # minio-client inits minio with a service account and a bucket
+  minio-client:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MinIO to be ready...' &&
+      sleep 5 &&
+      mc alias set myminio http://minio:${MINIO_API_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc admin user svcacct add  myminio ${MINIO_ROOT_USER} --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} &&
+      mc mb myminio/${MINIO_BUCKET_NAME} &&
+      echo 'Service account and bucket created in MinIO'"
+
+  # mailhog:
+  # image: mailhog/mailhog:v1.0.1
+  # volumes:
+  #   - mailhog-data:/home/mailhog
+  # restart: unless-stopped
+  # ports:
+  #   - "1025:1025"
+  #   - "8025:8025"
+  # environment:
+  #   MH_STORAGE: maildir
+  #   MH_MAILDIR_PATH: /home/mailhog
+volumes:
+  db_data:
+  minio_data:
+  mailhog-data:
+  mongodb_data:
+
+networks:
+  default:
+    name: faktenforum

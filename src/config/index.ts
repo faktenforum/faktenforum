@@ -35,7 +35,7 @@ export const config: Partial<TsED.Configuration> = {
     userInfoModel: PassportUser
   },
   views: {
-    root: join(process.cwd(), "../views"),
+    root: "./views",
     extensions: {
       ejs: "ejs"
     }

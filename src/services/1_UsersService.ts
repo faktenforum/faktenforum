@@ -2,6 +2,8 @@ import { PrismaClient, Session, User, UserRole } from "@prisma/client";
 import { Service } from "@tsed/di";
 import { Forbidden, NotFound } from "@tsed/exceptions";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+import { $log } from "@tsed/logger";
 
 @Service()
 export class UsersService {
@@ -65,5 +67,15 @@ export class UsersService {
       where: { id: userId },
       data: { email }
     });
+  }
+
+  async createFistAdminUser(): Promise<void> {
+    const adminUser = await this.prisma.user.findFirst();
+    if (!adminUser) {
+      const userEmail = "admin@email.de";
+      const userPassword = crypto.randomBytes(32).toString("hex") + "!K";
+      await this.createUser(userEmail, userPassword, UserRole.ADMIN);
+      $log.info(`Created first admin user with email ${userEmail} and password ${userPassword}`);
+    }
   }
 }

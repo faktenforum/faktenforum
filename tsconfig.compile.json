@@ -3,6 +3,7 @@
   "exclude": ["prisma", "minio"],
   "compilerOptions": {
     "baseUrl": ".",
+   
     "outDir": "./dist",
     "moduleResolution": "node",
     "declaration": true,

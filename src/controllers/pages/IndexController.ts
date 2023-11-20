@@ -14,13 +14,13 @@ export class IndexController {
   @View("swagger.ejs")
   @Returns(200, String).ContentType("text/html")
   get(@HeaderParams("x-forwarded-proto") protocol: string, @HeaderParams("host") host: string) {
-    const hostUrl = `${protocol || "http"}://${host}`;
+    const baseUrl = `${protocol || "http"}://${host}`;
 
     return {
-      BASE_URL: hostUrl,
+      BASE_URL: baseUrl,
       docs: this.swagger.map((conf) => {
         return {
-          url: hostUrl + conf.path,
+          url: baseUrl + conf.path,
           ...conf
         };
       })

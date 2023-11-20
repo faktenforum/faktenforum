@@ -27,7 +27,7 @@ export class SubmissionController {
   fileService: FileService;
 
   private createClaimFileUrl(token: string, fileId: string) {
-    return `${this.envService.hostUrl}/api/submission/${token}/files/${fileId}`;
+    return `${this.envService.baseUrl}/api/v1/submission/${token}/files/${fileId}`;
   }
 
   @Post()

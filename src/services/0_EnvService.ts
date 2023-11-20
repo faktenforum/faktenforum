@@ -10,12 +10,12 @@ export class EnvService {
     this.validate();
   }
 
-  get hostUrl(): string {
-    if (!process.env.HOST_URL) {
-      $log.error("HOST_URL is not set!");
+  get baseUrl(): string {
+    if (!process.env.API_BASE_URL) {
+      $log.error("API_BASE_URL is not set!");
       process.exit(1);
     }
-    return process.env.HOST_URL;
+    return process.env.API_BASE_URL;
   }
 
   get minioHost(): string {
@@ -122,15 +122,16 @@ export class EnvService {
       $log.error("MONGODB_AGENDA_DB is not set!");
       process.exit(1);
     }
-    if (!process.env.MONGODB_ROOT_USER) {
+
+    if (!process.env.MONGODB_AGENDA_USER) {
       $log.error("MONGODB_ROOT_USER is not set!");
       process.exit(1);
     }
-    if (!process.env.MONGODB_ROOT_PASSWORD) {
+    if (!process.env.MONGODB_AGENDA_PASSWORD) {
       $log.error("MONGODB_ROOT_PASSWORD is not set!");
       process.exit(1);
     }
-    return `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_AGENDA_DB}`;
+    return `mongodb://${process.env.MONGODB_AGENDA_USER}:${process.env.MONGODB_AGENDA_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_AGENDA_DB}`;
   }
 
   get env(): Environment {
@@ -142,7 +143,7 @@ export class EnvService {
       $log.error("JWT_SECRET is not set!");
       process.exit(1);
     }
-    this.hostUrl;
+    this.baseUrl;
     this.jwtRefreshTokenLifetime;
     this.jwtTokenLifetime;
     this.jwtAudience;

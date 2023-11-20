@@ -17,17 +17,17 @@
 ARG NODE_VERSION=20.9
 
 # Build stage
-FROM node:${NODE_VERSION}-alpine as build
-WORKDIR /opt
+FROM node:${NODE_VERSION}-alpine as builder
+WORKDIR /app
 
 # Copy package.json and lock file
 COPY package.json package-lock.json tsconfig.json tsconfig.compile.json .barrelsby.json ./
 
 # Install dependencies
-RUN npm install --pure-lockfile
+# RUN npm install --pure-lockfile
 
 # Copy Prisma schema and generate Prisma client
-COPY prisma ./prisma
+COPY ./prisma ./prisma
 ENV SKIP_ERD_GENERATION="true"
 RUN npx prisma generate --generator client tsed
 
@@ -39,26 +39,29 @@ RUN npm run build
 
 # Runtime stage
 FROM node:${NODE_VERSION}-alpine as runtime
-ENV WORKDIR /opt
+ENV WORKDIR /app
 WORKDIR $WORKDIR
 
 # Install system dependencies
-RUN apk update && apk add build-base git curl
-RUN npm install -g pm2
+# RUN apk update && apk add build-base git curl
+# RUN npm install -g pm2
 
 # Copy built assets from the build stage
-COPY --from=build /opt .
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY ./views ./views
+
 
 # Install production node modules
 RUN npm install --pure-lockfile --production
 
-# Copy remaining necessary files
-COPY ./views ./views
-COPY processes.config.js .
 
-EXPOSE 8081
-ENV PORT 8081
+
+EXPOSE 8083
+ENV PORT 8083
 ENV NODE_ENV production
 
 # Start the application
-CMD ["pm2-runtime", "start", "processes.config.js", "--env", "production"]
+CMD [  "npm", "run", "start:migrate:prod" ]

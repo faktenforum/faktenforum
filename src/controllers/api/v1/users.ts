@@ -4,7 +4,7 @@ import { NotFound } from "@tsed/exceptions";
 import { Returns } from "@tsed/schema";
 import { AccessControlDecorator } from "~/decorators";
 import { UserCreateDTO, UserDTO, UserUpdateDTO } from "~/models/UserDTO";
-import { UsersService } from "~/services/UsersService";
+import { UsersService } from "~/services";
 
 // Import the generated type
 

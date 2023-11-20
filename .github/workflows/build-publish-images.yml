@@ -1,0 +1,58 @@
+name: "FF-API | Build & Push Docker Images"
+on:
+  push:
+    branches: [main, production]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Extract the git commit hash
+      - name: Get commit hash
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      # Image Base name
+      - name: "Set Image Base Name"
+        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/faktenforum-api" >> $GITHUB_ENV
+
+      # Extract Version
+      - name: "Extract Version from package.json"
+        run: echo "PACKAGE_VERSION=ghcr.io/${{ github.repository_owner }}/faktenforum" >> $GITHUB_ENV
+
+      # Set tags for the main branch
+      - name: Set Production Tags
+        if: github.ref == 'refs/heads/production'
+        run: echo "TAGS=${{ env.IMAGE_NAME }}:${{env.COMMIT_HASH}},${{ env.IMAGE_NAME }}:v${{env.PACKAGE_VERSION}},${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
+
+      # Set tag for development branches
+      - name: Set Dev Tag
+        if: github.ref != 'refs/heads/production'
+        run: echo "TAGS=${{ env.IMAGE_NAME }}:${{env.COMMIT_HASH}}-dev,${{ env.IMAGE_NAME }}:latest-dev" >> $GITHUB_ENV
+
+      # Login into ghcr.io as action
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # Set up QEMU: necessary for emulation of different architectures.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      # Set up Docker Buildx
+      - name: Create a new builder instance
+        run: docker buildx create --use --name mybuilder --driver docker-container --buildkitd-flags '--debug'
+      # Inspect the builder for debugging
+      - name: Inspect the builder
+        run: docker buildx inspect mybuilder --bootstrap
+
+      # build & publish  image  for arm64 and amd64
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64, linux/arm64
+          tags: ${{ env.TAGS }}
