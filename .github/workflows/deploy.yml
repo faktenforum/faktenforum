@@ -1,6 +1,8 @@
 name: FF-API | Deploy
 
 on:
+  push:
+    branches: [main, production, 16-publish-images-to-ghcr]
   workflow_run:
     workflows: ["FF-API | Build & Push Docker Images"]
     types:
