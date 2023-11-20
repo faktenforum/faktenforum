@@ -1,4 +1,4 @@
-name: "build"
+name: "FF-API | Build & Push Docker Images"
 on:
   push:
     branches: [main, production, 16-publish-images-to-ghcr]
@@ -56,3 +56,28 @@ jobs:
       #     push: true
       #     platforms: linux/amd64, linux/arm64
       #     tags: ${{ env.TAGS }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print portainer url
+        run: echo ${{vars.DEV_PORTAINER_URL}}
+
+      - name: Deploy to DEV Environment
+        if: github.ref != 'refs/heads/production'
+        uses: jonasschatz/portami@main
+        with:
+          endpoint: ${{vars.DEV_PORTAINER_URL}}
+          access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
+          stack_name: "faktenforum"
+          prune: true
+          pull: true
+
+      - name: Deploy to Production Environment
+        if: github.ref == 'refs/heads/production'
+        uses: jonasschatz/portami@main
+        with:
+          endpoint: ${{vars.PORTAINER_URL}}
+          access_token: ${{ secrets.PORTAINER_ACCESSTOKEN }}
+          stack_name: "faktenforum"
+          prune: true
+          pull: true
