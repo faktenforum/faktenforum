@@ -1,4 +1,4 @@
-name: FF-API | Build and Push Docker Images
+name: "FF-API | Build & Push Docker Images"
 on:
   push:
     branches: [main, production, 16-publish-images-to-ghcr]

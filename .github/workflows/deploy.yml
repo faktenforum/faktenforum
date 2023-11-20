@@ -2,7 +2,7 @@ name: FF-API | Deploy
 
 on:
   workflow_run:
-    workflows: ["FF-API | Build and Push Docker Images"]
+    workflows: ["FF-API | Build & Push Docker Images"]
     types:
       - completed
 
