@@ -48,11 +48,11 @@ jobs:
         run: docker buildx inspect mybuilder --bootstrap
 
       # build & publish  image  for arm64 and amd64
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          platforms: linux/amd64, linux/arm64
-          tags: ${{ env.TAGS }}
+      # - name: Build and Push Docker Image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile
+      #     push: true
+      #     platforms: linux/amd64, linux/arm64
+      #     tags: ${{ env.TAGS }}
