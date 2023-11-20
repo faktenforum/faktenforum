@@ -1,0 +1,35 @@
+version: "3.5"
+services:
+  mongodb-sh:
+    image: ghcr.io/faktenforum/mongosb-sh:latest
+
+    environment:
+      MONGODB_ROOT_USER: ${MONGODB_ROOT_USER}
+      MONGODB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+      MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
+      MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
+      MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
+      MONGODB_HOST: ${MONGODB_HOST}
+      MONGODB_PORT: ${MONGODB_PORT}
+
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MongoDB to be ready...' &&
+      until mongosh --quiet -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin mongodb://mongodb:${MONGODB_PORT} --eval 'db.runCommand({ ping: 1 })'; do
+        sleep 1
+      done &&
+      echo 'MongoDB is ready. Creating user and setting up database...' &&
+      mongosh -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin mongodb://mongodb:${MONGODB_PORT} --eval '
+        db = db.getSiblingDB(\"${MONGODB_AGENDA_DB}\");
+        db.createUser({
+          user: \"${MONGODB_AGENDA_USER}\",
+          pwd: \"${MONGODB_AGENDA_PASSWORD}\",
+          roles: [{ role: \"readWrite\", db: \"${MONGODB_AGENDA_DB}\" },
+                  { role: \"dbOwner\", db: \"${MONGODB_AGENDA_DB}\" }]
+        });
+
+      '"
+
+networks:
+  default:
+    name: faktenforum

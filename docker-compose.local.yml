@@ -47,20 +47,17 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
 
   mongodb: # Add a MongoDB instance
     image: mongo:latest # Use a minimal version of MongoDB
     ports:
-      - "${MONGODB_PORT}:${MONGODB_PORT}"
+      - "${MONGODB_PORT}:27017"
     volumes:
-      - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
       - mongodb_data:/data/db # Store MongoDB data in a volume
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
-      MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
-      MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
-      MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
 
   mongodb-sh:
     image: ghcr.io/faktenforum/mongosb-sh:latest
@@ -77,19 +74,20 @@ services:
 
     entrypoint: >
       /bin/sh -c "
-      echo 'Waiting for mongodb to be ready...' &&
-      sleep 5 &&
-      set -e
-      mongosh -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_USER} --authenticationDatabase admin mongodb://${MONGODB_HOST}:${MONGODB_PORT}<<EOF
-      use ${MONGODB_AGENDA_DB}
-
-      db.createUser({
-        user: '${MONGODB_AGENDA_USER}',
-        pwd: '${MONGODB_AGENDA_PASSWORD}',
-        roles: [{ role: 'readWrite', db: '${MONGODB_AGENDA_DB}' },
-        { role: 'dbOwner', db: '${MONGODB_AGENDA_DB}' }],
-      });
-      EOF"
+      echo 'Waiting for MongoDB to be ready...' &&
+      until mongosh --quiet -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin mongodb://mongodb:${MONGODB_PORT} --eval 'db.runCommand({ ping: 1 })'; do
+        sleep 1
+      done &&
+      echo 'MongoDB is ready. Creating user and setting up database...' &&
+      mongosh -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin mongodb://mongodb:${MONGODB_PORT} --eval '
+        db = db.getSiblingDB(\"${MONGODB_AGENDA_DB}\");
+        db.createUser({
+          user: \"${MONGODB_AGENDA_USER}\",
+          pwd: \"${MONGODB_AGENDA_PASSWORD}\",
+          roles: [{ role: \"readWrite\", db: \"${MONGODB_AGENDA_DB}\" },
+                  { role: \"dbOwner\", db: \"${MONGODB_AGENDA_DB}\" }]
+        });
+      '"
 
   minio:
     image: minio/minio:latest
@@ -97,6 +95,7 @@ services:
       - "${MINIO_API_PORT}:${MINIO_API_PORT}"
       - "${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}"
     environment:
+      MINIO_SERVER_PORT: ${MINIO_API_PORT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
