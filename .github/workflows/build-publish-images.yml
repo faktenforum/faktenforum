@@ -66,7 +66,7 @@ jobs:
         if: github.ref != 'refs/heads/production'
         uses: jonasschatz/portami@main
         with:
-          endpoint: "${{ vars.DEV_PORTAINER_URL }}""
+          endpoint: "${{ vars.DEV_PORTAINER_URL }}"
           access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
           stack_name: "faktenforum"
           prune: true
