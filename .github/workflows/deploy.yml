@@ -2,7 +2,7 @@ name: FF-API | Deploy
 
 on:
   workflow_run:
-    workflows: [build]
+    workflows: [build-publish-images]
     types: [completed]
     branches: [main, production, 16-publish-images-to-ghcr]
 
