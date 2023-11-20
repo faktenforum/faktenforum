@@ -60,13 +60,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print portainer url
-        run: echo "${{vars.DEV_PORTAINER_URL}}"
+        run: echo "${{ vars.DEV_PORTAINER_URL }}"
 
       - name: Deploy to DEV Environment
         if: github.ref != 'refs/heads/production'
         uses: jonasschatz/portami@main
         with:
-          endpoint: ${{vars.DEV_PORTAINER_URL}}
+          endpoint: "${{ vars.DEV_PORTAINER_URL }}""
           access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
           stack_name: "faktenforum"
           prune: true
@@ -76,7 +76,7 @@ jobs:
         if: github.ref == 'refs/heads/production'
         uses: jonasschatz/portami@main
         with:
-          endpoint: ${{vars.PORTAINER_URL}}
+          endpoint: ${{ vars.PORTAINER_URL }}
           access_token: ${{ secrets.PORTAINER_ACCESSTOKEN }}
           stack_name: "faktenforum"
           prune: true
