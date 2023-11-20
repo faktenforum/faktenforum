@@ -1,10 +1,8 @@
 name: FF-API | Deploy
 
 on:
-  push:
-    branches: [main, production, 16-publish-images-to-ghcr]
   workflow_run:
-    workflows: ["FF-API | Build & Push Docker Images"]
+    workflows: [FF-API | Build & Push Docker Images]
     types:
       - completed
 
@@ -12,6 +10,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Print portainer url
+        run: echo ${{vars.DEV_PORTAINER_URL}}
+
       - name: Deploy to DEV Environment
         if: github.ref != 'refs/heads/production'
         uses: jonasschatz/portami@main
