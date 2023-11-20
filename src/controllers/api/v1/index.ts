@@ -7,3 +7,4 @@ export * from "./auth";
 export * from "./claims";
 export * from "./submission";
 export * from "./users";
+export * from "./version";
