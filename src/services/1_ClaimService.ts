@@ -1,4 +1,4 @@
-import { Claim, ClaimFile, ClaimResource, PrismaClient } from "@prisma/client";
+import { Claim, ClaimFile, ClaimResource, Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "@tsed/di";
 import { ClaimResourceCreateDTO } from "~/models/ClaimDTO";
 
@@ -19,6 +19,21 @@ type ClaimCreateDM = {
 type ClaimWithResources = Claim & {
   resources: Array<ClaimResource & { files: ClaimFile[] }>;
 };
+
+type PaginatedClaimsResult = {
+  data: Claim[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+};
+
+type ClaimQueryParams = {
+  page?: number;
+  pageSize?: number;
+  sortBy?: "createdAt" | "updatedAt";
+  sortOrder?: "asc" | "desc";
+  search?: string;
+};
 @Service()
 export class ClaimService {
   private prisma: PrismaClient;
@@ -26,8 +41,39 @@ export class ClaimService {
   constructor() {
     this.prisma = new PrismaClient();
   }
-  async getAllClaims(): Promise<Claim[]> {
-    return this.prisma.claim.findMany();
+
+  async getAllClaims(params: ClaimQueryParams): Promise<PaginatedClaimsResult> {
+    const { page = 1, pageSize = 10, sortBy = "createdAt", sortOrder = "asc", search = "" } = params;
+    const skip = (page - 1) * pageSize;
+    const orderBy = { [sortBy]: sortOrder };
+
+    const whereCondition: Prisma.ClaimWhereInput = {
+      OR: [
+        search ? { title: { contains: search, mode: "insensitive" as Prisma.QueryMode } } : {},
+        search ? { description: { contains: search, mode: "insensitive" as Prisma.QueryMode } } : {}
+      ].filter((condition) => Object.keys(condition).length > 0)
+    };
+
+    // Get paginated claims
+    const claims = await this.prisma.claim.findMany({
+      skip,
+      take: pageSize,
+      orderBy,
+      where: whereCondition
+    });
+
+    // Count total claims matching the search criteria
+    const totalItems = await this.prisma.claim.count({ where: whereCondition });
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+      data: claims,
+      totalItems,
+      totalPages,
+      currentPage: page
+    };
   }
 
   async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<Claim> {
