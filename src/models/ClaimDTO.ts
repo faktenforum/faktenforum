@@ -1,5 +1,21 @@
-import { ArrayOf, Optional, Property, Required } from "@tsed/schema";
+import { Maximum, Minimum, ArrayOf, Optional, Property, Required } from "@tsed/schema";
 
+export class ClaimQueryParams {
+  @Property()
+  @Minimum(1)
+  page: number = 1;
+
+  @Property()
+  @Minimum(1)
+  @Maximum(100)
+  pageSize: number = 10;
+
+  @Property()
+  sortOrder: "asc" | "desc" = "asc";
+
+  @Property()
+  search: string = "";
+}
 export class ClaimFileCreateDTO {
   @Property()
   @Optional()
