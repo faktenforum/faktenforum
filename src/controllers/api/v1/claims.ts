@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams } from "@tsed/platform-params";
 import { QueryParams } from "@tsed/platform-params";
-import { Get } from "@tsed/schema";
+import { Get, Returns } from "@tsed/schema";
 import { AccessControlDecorator } from "~/decorators";
 import { ClaimQueryParams } from "~/models";
 import { ClaimService } from "~/services";
@@ -13,6 +13,7 @@ export class ClaimsController {
 
   // @AccessControlDecorator({ role: "ADMIN" })
   @Get()
+  @Returns(200, SubmissionResponse)
   async getClaims(@QueryParams() params: ClaimQueryParams) {
     const claims = await this.claimService.getClaims(params);
     return claims;

@@ -1,5 +1,5 @@
 import { Maximum, Minimum, ArrayOf, Optional, Property, Required } from "@tsed/schema";
-
+import ListResponse from "./ListDTO";
 export class ClaimQueryParams {
   @Property()
   @Minimum(1)
@@ -90,4 +90,10 @@ export class ClaimDTO extends ClaimCreateDTO {
   @Property()
   @Required()
   updatedAt: Date;
+}
+
+export class ClaimWithResources extends ClaimDTO {
+  @Property()
+  @Required()
+  declare resources: ClaimResourceDTO[];
 }
