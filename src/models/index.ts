@@ -5,6 +5,7 @@
 export * from "./Account";
 export * from "./ClaimDTO";
 export * from "./Credentials";
+export * from "./ListDTO";
 export * from "./LoginResponse";
 export * from "./PassportCustomUser";
 export * from "./Submission";
