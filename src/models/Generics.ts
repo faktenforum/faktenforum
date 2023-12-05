@@ -1,8 +1,10 @@
-import { CollectionOf, Format, Optional, Property, Required } from "@tsed/schema";
+import { Generics, ArrayOf, CollectionOf, Format, Optional, Property, Required } from "@tsed/schema";
 
-export class ListResponse<T> {
+@Generics("T")
+export class Pagination<T> {
   @Property()
   @Required()
+  @CollectionOf("T")
   data: T[];
 
   @Property()
