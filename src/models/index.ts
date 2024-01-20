@@ -8,5 +8,5 @@ export * from "./Credentials";
 export * from "./Generics";
 export * from "./LoginResponse";
 export * from "./PassportCustomUser";
-export * from "./Submission";
+export * from "./SubmissionDTO";
 export * from "./UserDTO";
