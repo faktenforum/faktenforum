@@ -21,7 +21,7 @@ type ClaimWithResources = Claim & {
 };
 
 type PaginatedClaimsResult = {
-  data: Claim[];
+  data: ClaimWithResources[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -100,6 +100,7 @@ export class ClaimService {
             }
           }))
         }
+
         // Additional fields can be added if needed
       }
     });
