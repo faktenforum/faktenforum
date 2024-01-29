@@ -27,7 +27,7 @@
     "lib": ["es7", "dom", "ESNext.AsyncIterable"],
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src", "prisma", "minio"],
+  "include": ["src", "prisma", "minio", "scripts"],
   "exclude": ["node_modules", "dist"],
   "linterOptions": {
     "exclude": []
