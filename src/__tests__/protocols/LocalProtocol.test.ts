@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 import { LocalProtocol } from "~/protocols/LocalProtocol";
 import { UsersService } from "~/services/1_UsersService";
 import { AuthService } from "~/services/1_AuthService";
-import { PassportUser, Credentials } from "~/models";
+import { Credentials } from "~/models";
+import { Req } from "@tsed/common";
 
 jest.mock("~/services/1_UsersService");
 jest.mock("~/services/1_AuthService");
@@ -36,7 +37,7 @@ describe("LocalProtocol", () => {
     usersService.getUserByEmail.mockResolvedValue(user);
     authService.verifyPassword.mockResolvedValue(true);
 
-    const result = await localProtocol.$onVerify({} as any, credentials);
+    const result = await localProtocol.$onVerify({} as Req, credentials);
 
     expect(result).toEqual({
       id: user.id,
@@ -60,7 +61,7 @@ describe("LocalProtocol", () => {
     usersService.getUserByEmail.mockResolvedValue(user);
     authService.verifyPassword.mockResolvedValue(false);
 
-    const result = await localProtocol.$onVerify({} as any, credentials);
+    const result = await localProtocol.$onVerify({} as Req, credentials);
 
     expect(result).toBe(false);
   });
@@ -70,7 +71,7 @@ describe("LocalProtocol", () => {
 
     usersService.getUserByEmail.mockResolvedValue(null);
 
-    const result = await localProtocol.$onVerify({} as any, credentials);
+    const result = await localProtocol.$onVerify({} as Req, credentials);
 
     expect(result).toBe(false);
   });

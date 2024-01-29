@@ -3,6 +3,7 @@ import { UserRole } from "@prisma/client";
 import type { JwtPayload } from "~/protocols/JwtProtocol";
 import { JwtProtocol } from "~/protocols/JwtProtocol";
 import { UsersService } from "~/services/1_UsersService";
+import { Req } from "@tsed/common";
 
 jest.mock("~/services/1_UsersService");
 
@@ -36,7 +37,7 @@ describe("JwtProtocol", () => {
 
     usersService.getUserById.mockResolvedValue(expectedUser);
 
-    await expect(jwtProtocol.$onVerify({} as any, jwtPayload)).resolves.toMatchObject({
+    await expect(jwtProtocol.$onVerify({} as Req, jwtPayload)).resolves.toMatchObject({
       id: expectedUser.id,
       email: expectedUser.email,
       role: expectedUser.role,
@@ -55,7 +56,7 @@ describe("JwtProtocol", () => {
 
     usersService.getUserById.mockResolvedValue(null);
 
-    await expect(jwtProtocol.$onVerify({} as any, jwtPayload)).rejects.toThrow(Unauthorized);
+    await expect(jwtProtocol.$onVerify({} as Req, jwtPayload)).rejects.toThrow(Unauthorized);
   });
 
   // Add more tests as needed

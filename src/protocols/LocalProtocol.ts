@@ -7,6 +7,14 @@ import { PassportUser } from "~/models";
 import { Credentials } from "~/models/";
 import { AuthService, UsersService } from "~/services";
 
+interface JwtSettings {
+  secretOrKey: string;
+  issuer?: string;
+  audience?: string;
+  expiresIn?: string | number;
+  // include other relevant properties as needed
+}
+
 @Protocol<IStrategyOptions>({
   name: "local",
   useStrategy: Strategy,
@@ -22,7 +30,7 @@ export class LocalProtocol implements OnVerify, OnInstall, BeforeInstall {
   authService: AuthService;
 
   @Constant("passport.protocols.jwt.settings")
-  jwtSettings: any;
+  jwtSettings: JwtSettings;
 
   // hook added with v6.99.0
   async $beforeInstall(settings: IStrategyOptions): Promise<IStrategyOptions> {

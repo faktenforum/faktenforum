@@ -3,6 +3,7 @@ import { Req } from "@tsed/common";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Middleware, MiddlewareMethods } from "@tsed/platform-middlewares";
 import { Context } from "@tsed/platform-params";
+import { UserDTO } from "~/models";
 
 @Middleware()
 export class AccessControlMiddleware implements MiddlewareMethods {
@@ -19,7 +20,7 @@ export class AccessControlMiddleware implements MiddlewareMethods {
       // if role is ALL, we assume that the route is accessible to all
       return;
     }
-    const user = request.user as any;
+    const user = request.user as UserDTO;
     switch (options.role) {
       // This Route is only accessible to Admins
       case UserRole.ADMIN:
