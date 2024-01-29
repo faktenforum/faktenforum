@@ -1,5 +1,5 @@
 dist
 coverage
 minio
-jest.config.js
+vitest.config.js
 processes.config.js

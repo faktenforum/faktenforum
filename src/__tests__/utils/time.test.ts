@@ -1,5 +1,5 @@
 import { timeStringToSeconds } from "../../utils/time"; // adjust the import path as needed
-
+import { describe, it, expect } from "vitest";
 describe("timeStringToSeconds", () => {
   it("converts seconds correctly", () => {
     expect(timeStringToSeconds("30s")).toBe(30);

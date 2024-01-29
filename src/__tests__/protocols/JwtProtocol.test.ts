@@ -4,17 +4,21 @@ import type { JwtPayload } from "~/protocols/JwtProtocol";
 import { JwtProtocol } from "~/protocols/JwtProtocol";
 import { UsersService } from "~/services/1_UsersService";
 import { Req } from "@tsed/common";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 
-jest.mock("~/services/1_UsersService");
+vi.mock("~/services/1_UsersService");
 
 describe("JwtProtocol", () => {
   let jwtProtocol: JwtProtocol;
-  let usersService: jest.Mocked<UsersService>;
+  let usersService: UsersService;
 
   beforeEach(() => {
-    usersService = new UsersService() as jest.Mocked<UsersService>;
+    usersService = new UsersService() as unknown as UsersService;
     jwtProtocol = new JwtProtocol();
     jwtProtocol.usersService = usersService;
+
+    // Resetting mocks
+    usersService.getUserById = vi.fn();
   });
 
   it("should return user details for a valid JWT", async () => {
@@ -35,7 +39,7 @@ describe("JwtProtocol", () => {
       updatedAt: new Date()
     };
 
-    usersService.getUserById.mockResolvedValue(expectedUser);
+    usersService.getUserById = vi.fn().mockResolvedValue(expectedUser);
 
     await expect(jwtProtocol.$onVerify({} as Req, jwtPayload)).resolves.toMatchObject({
       id: expectedUser.id,
@@ -54,7 +58,7 @@ describe("JwtProtocol", () => {
       sessionId: "session123"
     };
 
-    usersService.getUserById.mockResolvedValue(null);
+    usersService.getUserById = vi.fn().mockResolvedValue(null);
 
     await expect(jwtProtocol.$onVerify({} as Req, jwtPayload)).rejects.toThrow(Unauthorized);
   });

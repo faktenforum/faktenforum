@@ -5,18 +5,24 @@ import { UsersService } from "~/services/1_UsersService";
 import { AuthService } from "~/services/1_AuthService";
 import { Credentials } from "~/models";
 import { Req } from "@tsed/common";
-
-jest.mock("~/services/1_UsersService");
-jest.mock("~/services/1_AuthService");
+import { describe, it, expect, beforeEach, vi } from "vitest";
+vi.mock("~/services/1_UsersService");
+vi.mock("~/services/1_AuthService");
 
 describe("LocalProtocol", () => {
   let localProtocol: LocalProtocol;
-  let usersService: jest.Mocked<UsersService>;
-  let authService: jest.Mocked<AuthService>;
+  let usersService: UsersService;
+  let authService: AuthService;
 
   beforeEach(() => {
-    usersService = new UsersService() as jest.Mocked<UsersService>;
-    authService = new AuthService() as jest.Mocked<AuthService>;
+    // Create mock instances
+    usersService = new UsersService() as unknown as UsersService;
+    authService = new AuthService() as unknown as AuthService;
+
+    // Assign mock functions
+    usersService.getUserByEmail = vi.fn();
+    authService.verifyPassword = vi.fn();
+
     localProtocol = new LocalProtocol();
     localProtocol.usersService = usersService;
     localProtocol.authService = authService;
@@ -34,8 +40,8 @@ describe("LocalProtocol", () => {
       updatedAt: new Date()
     };
 
-    usersService.getUserByEmail.mockResolvedValue(user);
-    authService.verifyPassword.mockResolvedValue(true);
+    usersService.getUserByEmail = vi.fn().mockResolvedValue(user);
+    authService.verifyPassword = vi.fn().mockResolvedValue(true);
 
     const result = await localProtocol.$onVerify({} as Req, credentials);
 
@@ -58,8 +64,8 @@ describe("LocalProtocol", () => {
       updatedAt: new Date()
     };
 
-    usersService.getUserByEmail.mockResolvedValue(user);
-    authService.verifyPassword.mockResolvedValue(false);
+    usersService.getUserByEmail = vi.fn().mockResolvedValue(user);
+    authService.verifyPassword = vi.fn().mockResolvedValue(false);
 
     const result = await localProtocol.$onVerify({} as Req, credentials);
 
@@ -69,7 +75,7 @@ describe("LocalProtocol", () => {
   it("should return false for non-existing user", async () => {
     const credentials: Credentials = { username: "nonexistent@example.com", password: "password123" };
 
-    usersService.getUserByEmail.mockResolvedValue(null);
+    usersService.getUserByEmail = vi.fn().mockResolvedValue(null);
 
     const result = await localProtocol.$onVerify({} as Req, credentials);
 
