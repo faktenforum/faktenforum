@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+# Install Hasura CLI
+RUN apk add --no-cache curl bash
+RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+
+# Copy migrations and metadata
+COPY ./migrations /migrations
+COPY ./metadata /metadata
+
+# Startup script
+COPY apply-migrations.sh /apply-migrations.sh
+RUN chmod +x /apply-migrations.sh
+
+CMD ["/apply-migrations.sh"]
