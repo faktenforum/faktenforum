@@ -58,3 +58,7 @@ test/**/*.js.map
 
 # minio Seed data
 minio/resources/*
+
+#.vscode settings
+.vscode/launch.json
+.vscode/settings.json
