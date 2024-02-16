@@ -7,12 +7,12 @@ import Ajv from "ajv";
 import prisma from "src";
 import { S3MulterFile } from "~/config/minio";
 import { AccessControlDecorator } from "~/decorators";
-import { ClaimCreateDTO, ClaimDTO, PassportUser } from "~/models";
-import { SubmissionResponse } from "~/models/Submission";
+import { SubmissionCreateDTO, SubmissionDTO, PassportUser } from "~/models";
+import { SubmissionResponse } from "~/models";
 import { ClaimService, EnvService, FileService, SubmissionService } from "~/services";
 
 const ajv = new Ajv();
-const ClaimCreateDtoJsonSchema = getJsonSchema(ClaimCreateDTO);
+const SubmissionCreateDtoJsonSchema = getJsonSchema(SubmissionCreateDTO);
 @Controller("/submission")
 export class SubmissionController {
   @Inject()
@@ -36,8 +36,9 @@ export class SubmissionController {
     @BodyParams() body: { payload: string },
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
-    const claim: ClaimCreateDTO = JSON.parse(body.payload);
-    const isValid = ajv.validate(ClaimCreateDtoJsonSchema, claim);
+    const claim: SubmissionCreateDTO = JSON.parse(body.payload);
+    console.log(body.payload);
+    const isValid = ajv.validate(SubmissionCreateDtoJsonSchema, claim);
 
     if (!isValid) {
       throw new BadRequest("Validation failed!");
@@ -48,7 +49,7 @@ export class SubmissionController {
   }
 
   @Get("/:token")
-  @Returns(200, ClaimDTO)
+  @Returns(200, SubmissionDTO)
   async getSubmission(@PathParams("token") token: string) {
     const id = await this.submissionService.getClaimIdByToken(token);
     const claim = await this.claimService.getClaimById(id);
@@ -101,15 +102,15 @@ export class SubmissionController {
   }
 
   @Put("/:token")
-  @Returns(200, ClaimDTO)
+  @Returns(200, SubmissionDTO)
   async updateSubmission(
     @PathParams("token") token: string,
     @BodyParams() body: { payload: string },
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
-    const claim: ClaimCreateDTO = JSON.parse(body.payload);
+    const claim: SubmissionCreateDTO = JSON.parse(body.payload);
 
-    const isValid = ajv.validate(ClaimCreateDtoJsonSchema, claim);
+    const isValid = ajv.validate(SubmissionCreateDtoJsonSchema, claim);
 
     if (!isValid) {
       throw new BadRequest("Validation failed!");

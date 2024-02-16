@@ -15,20 +15,20 @@ jobs:
 
       - name: Deploy to DEV Environment
         if: github.ref != 'refs/heads/production'
-        uses: jonasschatz/portami@main
+        uses: faktenforum/portami@main
         with:
           endpoint: "${{ vars.DEV_PORTAINER_URL }}"
           access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
           stack_name: "faktenforum"
-          prune: true
+          prune: false
           pull: true
 
       - name: Deploy to Production Environment
         if: github.ref == 'refs/heads/production'
-        uses: jonasschatz/portami@main
+        uses: faktenforum/portami@main
         with:
           endpoint: ${{ vars.PROD_PORTAINER_URL }}
           access_token: ${{ secrets.PROD_PORTAINER_ACCESSTOKEN }}
           stack_name: "faktenforum"
-          prune: true
+          prune: false
           pull: true

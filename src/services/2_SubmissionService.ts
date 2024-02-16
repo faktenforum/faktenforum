@@ -5,6 +5,7 @@ import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { Job } from "agenda";
 import crypto from "crypto";
 import { S3MulterFile } from "~/config/minio";
+import { SubmissionDTO, SubmissionCreateDTO } from "~/models";
 import { ClaimCreateDTO, ClaimDTO } from "~/models/ClaimDTO";
 import { AuthService, ClaimService, EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils";
@@ -51,7 +52,7 @@ export class SubmissionService {
     return claimId;
   }
 
-  async submitClaim(claim: ClaimCreateDTO, files: S3MulterFile[], userId?: string) {
+  async submitClaim(claim: SubmissionCreateDTO, files: S3MulterFile[], userId?: string) {
     const rawToken = crypto.randomBytes(24).toString("hex");
     const dbData = {
       title: claim.title,
@@ -93,7 +94,7 @@ export class SubmissionService {
     return { claimId, token };
   }
 
-  async updateSubmissionById(id: string, data: Partial<ClaimDTO>, files: S3MulterFile[], userId?: string) {
+  async updateSubmissionById(id: string, data: Partial<SubmissionDTO>, files: S3MulterFile[], userId?: string) {
     const claim = await this.claimService.getClaimById(id);
     if (!claim) throw new NotFound("Claim not found");
     // update claim data
