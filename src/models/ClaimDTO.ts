@@ -119,11 +119,6 @@ export class ClaimDTO extends ClaimCreateDTO {
   submittedAt: Date;
 }
 
-export class ClaimWithResources extends ClaimDTO {
-  @Property()
-  @Required()
-  declare resources: ClaimResourceDTO[];
-}
 
 export class ClaimWithResources extends ClaimDTO {
   @Property()
