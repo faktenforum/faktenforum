@@ -4,18 +4,25 @@ export function timeStringToSeconds(timeStr: string): number {
   const units: Record<TimeUnit, number> = {
     s: 1,
     m: 60,
-    h: 3600, // corrected from 360 to 3600 for hours
+    h: 3600,
     d: 24 * 3600
   };
 
-  const unit = timeStr.slice(-1) as TimeUnit;
-  if (["s", "m", "h", "d"].indexOf(unit) === -1) {
-    throw new Error(`Invalid time unit: ${unit}`);
-  }
-  const value = parseInt(timeStr.slice(0, -1), 10);
+  // Use regex to match the number and unit parts
+  const regex = /^(\d+)(s|m|h|d)$/;
+  const match = timeStr.match(regex);
 
-  if (!isNaN(value) && units[unit] !== undefined) {
-    return value * units[unit];
+  if (!match) {
+    throw new Error(`Invalid time string format: ${timeStr}`);
   }
-  throw new Error(`Invalid time string: ${timeStr}`);
+
+  // Extract the value and unit from regex match
+  const value = parseInt(match[1], 10);
+  const unit = match[2] as TimeUnit;
+
+  if (!isNaN(value) && units[unit]) {
+    return value * units[unit];
+  } else {
+    throw new Error(`Invalid time string forma: ${timeStr}`);
+  }
 }

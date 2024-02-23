@@ -1,0 +1,26 @@
+name: Run Tests on Pull Requests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - production
+
+jobs:
+  test:
+    runs-on: ubuntu-latest # Or another OS of your choice
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18" # Specify the Node.js version
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test # Replace with your test command

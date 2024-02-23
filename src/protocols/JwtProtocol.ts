@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { PassportUser } from "~/models";
 import { UsersService } from "~/services";
 
-interface JwtPayload {
+export interface JwtPayload {
   sub: string; // Subject ( user id)
   iat: number; // Issued at timestamp
   exp: number; // Expiration timestamp
