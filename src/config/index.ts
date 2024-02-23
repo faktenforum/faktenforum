@@ -1,5 +1,4 @@
 import { readFileSync } from "fs";
-import { join } from "path";
 import { PassportUser } from "~/models";
 
 import { envs } from "./envs/index";

@@ -3,7 +3,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-async function setAdmin(email) {
+async function setAdmin(email: string) {
   try {
     const updatedUser = await prisma.user.update({
       where: { email: email },

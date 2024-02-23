@@ -1,4 +1,4 @@
-import { Format, MinLength, Property, Required } from "@tsed/schema";
+import { Format, Property, Required } from "@tsed/schema";
 import { PasswordFormatDecorator } from "~/decorators";
 
 export class Credentials {

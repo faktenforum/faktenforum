@@ -1,12 +1,11 @@
-import { PrismaClient, Session, User, UserRole } from "@prisma/client";
-import { Agenda, Define, Every } from "@tsed/agenda";
+import { PrismaClient, User } from "@prisma/client";
+import { Agenda, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
-import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
-import { Job } from "agenda";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+
 import crypto from "crypto";
 import { S3MulterFile } from "~/config/minio";
 import { SubmissionDTO, SubmissionCreateDTO } from "~/models";
-import { ClaimCreateDTO, ClaimDTO } from "~/models/ClaimDTO";
 import { AuthService, ClaimService, EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils";
 
@@ -34,7 +33,7 @@ export class SubmissionService {
   @Every("5 minutes", {
     name: "Delete expired sessions"
   })
-  async deleteExpiredClaimSubmissionTokens(job: Job) {
+  async deleteExpiredClaimSubmissionTokens() {
     await this.prisma.claimSubmissionToken.deleteMany({
       where: {
         expiresAt: {
@@ -94,7 +93,7 @@ export class SubmissionService {
     return { claimId, token };
   }
 
-  async updateSubmissionById(id: string, data: Partial<SubmissionDTO>, files: S3MulterFile[], userId?: string) {
+  async updateSubmissionById(id: string, data: Partial<SubmissionDTO>, files: S3MulterFile[]) {
     const claim = await this.claimService.getClaimById(id);
     if (!claim) throw new NotFound("Claim not found");
     // update claim data

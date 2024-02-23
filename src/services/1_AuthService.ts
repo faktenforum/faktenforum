@@ -1,8 +1,7 @@
-import { PrismaClient, User } from "@prisma/client";
-import { Agenda, Define, Every } from "@tsed/agenda";
+import { PrismaClient } from "@prisma/client";
+import { Agenda, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
-import { Forbidden, Unauthorized } from "@tsed/exceptions";
-import { Job } from "agenda";
+import { Forbidden } from "@tsed/exceptions";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -28,7 +27,7 @@ export class AuthService {
   @Every("15 minutes", {
     name: "Delete expired sessions"
   })
-  async deleteExpiredSessions(job: Job) {
+  async deleteExpiredSessions() {
     await this.prisma.session.deleteMany({
       where: {
         expiresAt: {

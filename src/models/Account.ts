@@ -1,4 +1,4 @@
-import { CollectionOf, Format, Optional, Property, Required } from "@tsed/schema";
+import { Format, Optional, Property, Required } from "@tsed/schema";
 import { PasswordFormatDecorator } from "~/decorators";
 
 export class Session {

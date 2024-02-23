@@ -48,7 +48,7 @@ export class ClaimFileDTO extends ClaimFileCreateDTO {
 
   @Property()
   @Optional()
-  subittedAt: string;
+  submittedAt: string;
 
   @Property()
   @Optional()

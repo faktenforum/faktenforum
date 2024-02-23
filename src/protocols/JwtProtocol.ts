@@ -17,7 +17,7 @@ export interface JwtPayload {
   useStrategy: Strategy,
   settings: {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET,
+    secretOrKey: process.env.JWT_SECRET || "default Secret Key",
     issuer: process.env.JWT_ISSUER,
     audience: process.env.JWT_AUDIENCE
   }

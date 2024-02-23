@@ -1,18 +1,10 @@
 import { BodyParams, Controller, Get, HeaderParams, Inject, Post, Req, Res } from "@tsed/common";
-import { Forbidden, Unauthorized } from "@tsed/exceptions";
+import { Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
-import { Returns, Security } from "@tsed/schema";
+import { Returns } from "@tsed/schema";
 import { Request, Response } from "express";
 import { AccessControlDecorator } from "~/decorators";
-import {
-  AccountInfo,
-  Credentials,
-  Email,
-  LoginResponse,
-  PassportUser,
-  PasswordUpdate,
-  Session
-} from "~/models";
+import { AccountInfo, Credentials, LoginResponse, PassportUser } from "~/models";
 import { UserDTO } from "~/models/UserDTO";
 import { AuthService, EnvService, UsersService } from "~/services";
 import { timeStringToSeconds } from "~/utils/time";
@@ -39,7 +31,9 @@ export class AuthController {
   async login(
     @Req() req: Req,
     @HeaderParams("user-agent") userAgent: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @BodyParams() credentials: Credentials,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Res() response: Response
   ) {
     // FACADE

@@ -1,5 +1,5 @@
 import { useDecorators } from "@tsed/core";
-import { CollectionOf, Format, MinLength, Pattern, Property, Required } from "@tsed/schema";
+import { MinLength, Pattern } from "@tsed/schema";
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-])[A-Za-z\d!@#$%^&*()_+{}\[\]:;<>,.?~\\-]+$/;
