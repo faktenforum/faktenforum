@@ -24,10 +24,4 @@ describe("timeStringToSeconds", () => {
   it("throws an error for invalid format", () => {
     expect(() => timeStringToSeconds("hour")).toThrow("Invalid time string format: hour");
   });
-
-  it("throws an error for invalid format", () => {
-    expect(() => timeStringToSeconds("hour")).toThrow("Invalid time string format: hour");
-  });
-
-  // Add more test cases as needed to thoroughly test your function
 });
