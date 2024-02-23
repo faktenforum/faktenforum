@@ -19,8 +19,8 @@ jobs:
         with:
           endpoint: "${{ vars.DEV_PORTAINER_URL }}"
           access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
-          stack_name: "faktenforum"
-          prune: false
+          stack_name: "${{ vars.DEV_PORTAINER_STACK_NAME }}"
+          prune: true
           pull: true
 
       - name: Deploy to Production Environment
@@ -29,6 +29,6 @@ jobs:
         with:
           endpoint: ${{ vars.PROD_PORTAINER_URL }}
           access_token: ${{ secrets.PROD_PORTAINER_ACCESSTOKEN }}
-          stack_name: "faktenforum"
-          prune: false
+          stack_name: "${{ vars.PROD_PORTAINER_STACK_NAME }}"
+          prune: true
           pull: true
