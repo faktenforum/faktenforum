@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print portainer url
+        if: github.ref != 'refs/heads/production'
         run: echo "${{ vars.DEV_PORTAINER_URL }}"
-
+      - name: Print portainer url
+        if: github.ref == 'refs/heads/production'
+        run: echo "${{ vars.PROD_PORTAINER_URL }}"
       - name: Deploy to DEV Environment
         if: github.ref != 'refs/heads/production'
         uses: faktenforum/portami@main
