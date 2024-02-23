@@ -1,7 +1,7 @@
 name: "FF-API | Build & Push Docker Images"
 on:
   push:
-    branches: [main, production, 25-fix-github-actions-build]
+    branches: [main, production]
 
 jobs:
   build-and-push:
