@@ -37,7 +37,7 @@ describe("AccessControlMiddleware", () => {
     expect(() => middleware.use(request, context)).toThrow(Unauthorized);
   });
 
-  it("should allow accesd route ALL route ", () => {
+  it("should allow access route ALL route ", () => {
     const request = {
       isAuthenticated: () => true
     } as unknown as Req;
