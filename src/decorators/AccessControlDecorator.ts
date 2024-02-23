@@ -2,7 +2,7 @@ import { useDecorators } from "@tsed/core";
 import { Forbidden, Unauthorized } from "@tsed/exceptions";
 import { Authenticate } from "@tsed/passport";
 import { UseAuth } from "@tsed/platform-middlewares";
-import { In, Returns, Security } from "@tsed/schema";
+import { Returns, Security } from "@tsed/schema";
 import { AccessControlMiddleware } from "~/middlewares";
 
 export interface AccessControlDecoratorOptions extends Record<string, unknown> {

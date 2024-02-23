@@ -1,14 +1,12 @@
-import { MultipartFile, Next, Req, Res } from "@tsed/common";
+import { MultipartFile, Next, Res } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { Get, Post, Put, Returns, getJsonSchema, string } from "@tsed/schema";
+import { Get, Post, Put, Returns, getJsonSchema } from "@tsed/schema";
 import Ajv from "ajv";
 import { NextFunction, Response } from "express";
-import prisma from "src";
 import { S3MulterFile } from "~/config/minio";
-import { AccessControlDecorator } from "~/decorators";
-import { SubmissionCreateDTO, SubmissionDTO, PassportUser } from "~/models";
+import { SubmissionCreateDTO, SubmissionDTO } from "~/models";
 import { SubmissionResponse } from "~/models";
 import { ClaimService, EnvService, FileService, SubmissionService } from "~/services";
 
@@ -45,7 +43,7 @@ export class SubmissionController {
       throw new BadRequest("Validation failed!");
     }
 
-    const { claimId, token } = await this.submissionService.submitClaim(claim, files);
+    const { token } = await this.submissionService.submitClaim(claim, files);
     return { token };
   }
 

@@ -1,6 +1,5 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import type { PlatformMulterFile } from "@tsed/common";
-import AWS from "aws-sdk";
 import multerS3 from "multer-s3";
 import { v4 as uuidv4 } from "uuid";
 import { PassportUser } from "~/models/PassportCustomUser";

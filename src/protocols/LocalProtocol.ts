@@ -40,6 +40,7 @@ export class LocalProtocol implements OnVerify, OnInstall, BeforeInstall {
     return settings;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   $onInstall(strategy: Strategy): void {
     // intercept the strategy instance to adding extra configuration
   }
