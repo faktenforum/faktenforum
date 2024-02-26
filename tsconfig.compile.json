@@ -1,11 +1,13 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["prisma", "minio","node_modules","dist"],
+  "exclude": ["prisma", "minio","src/__tests__"],
   "compilerOptions": {
+    "paths": {
+      "~/*": ["src/*"]
+    },
     "baseUrl": ".",
-    "module": "ES2022",
     "outDir": "./dist",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "declaration": true,
     "noResolve": false,
     "preserveConstEnums": true,
