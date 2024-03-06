@@ -1,7 +1,7 @@
-name: "FF-API | Build & Push Docker Images "
+name: "FF-API | Build & Push Docker Images"
 on:
   push:
-    branches: [main, production, 22-add-hasura-to-backend]
+    branches: [main, production]
     paths:
       - 'package.json'
       - 'src/**'
