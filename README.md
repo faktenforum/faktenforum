@@ -20,32 +20,47 @@ This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to genera
 
 Edit `.barreslby.json` to customize it:
 
-```json
+````json
 {
   "directory": ["./src/controllers/rest", "./src/controllers/pages"],
   "exclude": ["__mock__", "__mocks__", ".spec.ts"],
   "delete": true
 }
+
+
 ```
 
+### Hasura CLI
+To install hasura cli look [here](https://hasura.io/docs/latest/hasura-cli/install-hasura-cli/)
+For Linux use ```bash
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash```
 ## Serve
 
 ### From the Command Line
 
-```
+````
+
 $ npm start
 
 # build for production
+
 $ npm build
 $ npm start:prod
+
 ```
 
 ### Docker
 
 ```
+
 # build docker image
+
 docker compose build
 
 # start docker image
+
 docker compose up
+
+```
+
 ```

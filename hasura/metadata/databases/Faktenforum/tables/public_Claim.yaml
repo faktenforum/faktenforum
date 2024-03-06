@@ -1,0 +1,22 @@
+table:
+  name: Claim
+  schema: public
+object_relationships:
+  - name: User
+    using:
+      foreign_key_constraint_on: submitterId
+array_relationships:
+  - name: ClaimResources
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: ClaimResource
+          schema: public
+  - name: ClaimSubmissionTokens
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: ClaimSubmissionToken
+          schema: public

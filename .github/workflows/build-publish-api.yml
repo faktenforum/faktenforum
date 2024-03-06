@@ -2,6 +2,11 @@ name: "FF-API | Build & Push Docker Images"
 on:
   push:
     branches: [main, production]
+    paths:
+      - 'package.json'
+      - 'src/**'
+      - 'prisma/**'
+      - 'views/**'
 
 jobs:
   build-and-push:
@@ -37,15 +42,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # # Set up QEMU: necessary for emulation of different architectures.
-      # - name: Set up QEMU
-      #   uses: docker/setup-qemu-action@v3
-      # # Set up Docker Buildx
-      # - name: Create a new builder instance
-      #   run: docker buildx create --use --name mybuilder --driver docker-container --buildkitd-flags '--debug'
-      # # Inspect the builder for debugging
-      # - name: Inspect the builder
-      #   run: docker buildx inspect mybuilder --bootstrap
 
       # build & publish  image  for arm64 and amd64
       - name: Build and Push Docker Image

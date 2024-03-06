@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <script>
+     window.__env = {
+       consoleMode: "server",
+       urlPrefix: "/console",
+       consolePath: "/console",
+       isAccessKeySet: true,
+       isAdminSecretSet: true,
+       enableTelemetry: true,
+       assetsPath: "https://graphql-engine-cdn.hasura.io/console/assets",
+       assetsVersion: "channel/versioned/v2.36.0-ce",
+       cdnAssets: true,
+       serverVersion: "v2.36.0-ce",
+       consoleType: "oss",
+       consoleSentryDsn: ""
+     };
+     window.__env.versionedAssetsPath = window.__env.assetsPath;
+    </script>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <style>
+    .mainContent {
+      display: 'none';
+      opacity: 0;
+      transition: opacity .20s linear;
+    }
+    .mainContent.show {
+      display: 'block';
+      opacity: 1;
+      transition: opacity .20s linear;
+    }
+    </style>
+
+    <div id="loading">
+      <div class="page-loading" style="
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      font-family: sans-serif;
+      justify-content: center;
+      ">
+        <span class="" style="
+        font-size: 2em;
+        margin-top: -3em;
+        color: #848484;
+        ">
+        Loading...
+      </span>
+      </div>
+    </div>
+    <div id="content" class="mainContent"></div>
+
+    <script type="module">
+     // helper functions
+     const loadIcon = (url) => {
+       const linkElem = document.createElement('link');
+       linkElem.rel = 'icon';
+       linkElem.type = 'image/png';
+       linkElem.href = url;
+       document.head.append(linkElem);
+     };
+     const loadCSS = (url) => {
+       const linkElem = document.createElement('link');
+       linkElem.rel = 'stylesheet';
+       linkElem.charset = 'UTF-8';
+       linkElem.href = url;
+       document.body.append(linkElem);
+     };
+     const loadScript = (url) => {
+       const scriptElem = document.createElement('script');
+       scriptElem.charset = 'UTF-8';
+       scriptElem.src = url;
+       document.body.append(scriptElem);
+     };
+     const prependSlash = (str) => str === '' ? '' : '/' + str;
+     const loadAssets = async () => {
+       loadIcon(window.__env.assetsPath + '/common/img/favicon_green.png');
+       await import(window.__env.versionedAssetsPath + '/assetLoader.js.gz');
+       window.__loadConsoleAssetsFromBasePath(window.__env.versionedAssetsPath + '/');
+     };
+
+     // if cdnAssets is set to false, load assets from server instead of cdn
+     if (window.__env.cdnAssets === false) {
+       window.__env.assetsPath =
+         window.location.pathname.slice(
+           0, window.location.pathname.lastIndexOf(window.__env.consolePath)
+         ) + '/console/assets';
+       // set the path to get versioned assets from server
+       window.__env.versionedAssetsPath = window.__env.assetsPath + '/versioned';
+
+     // otherwise load from cdn itself
+     } else {
+       // set the path (cdn-based) to get assets from
+       window.__env.versionedAssetsPath = window.__env.assetsPath + prependSlash(window.__env.assetsVersion);
+     }
+     // load the assets now
+     loadAssets();
+    </script>
+  </body>
+</html>
+
