@@ -1,0 +1,14 @@
+http: 
+  routers:
+    app:
+      entryPoints:
+        - web
+      rule: host(`app.localhost`)
+      service: app
+
+  services:
+    app:
+      loadBalancer:
+        servers:
+        - url: http://docker-host:4000
+
