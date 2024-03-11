@@ -1,0 +1,20 @@
+http: 
+  routers:
+    hasura:
+      entryPoints:
+        - web
+      rule: host(`api.localhost`) && PathPrefix(`/api/v1/graphql`)
+      service: hasura
+      middlewares:
+        - hasura
+
+  services:
+    hasura:
+      loadBalancer:
+        servers:
+        - url: http://graphql-engine:8080
+  middlewares:
+    hasura:
+      stripPrefix:
+        prefixes:
+        - /api

@@ -14,14 +14,14 @@ services:
     image: traefik:latest
     command:
       - "--api.insecure=true"
-      - "--providers.docker=true"
+      - "--providers.docker=false"
       - "--providers.file.directory=/etc/traefik/dynamic_conf"
       - "--entryPoints.web.address=:80"
     ports:
       - "8000:80"
       - "8181:8080" # The Traefik dashboard
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/dynamic_conf:/etc/traefik/dynamic_conf"
       
     networks:
@@ -47,21 +47,12 @@ services:
       - "8080:8080"
     restart: always
     environment:
-      ## postgres database to store Hasura metadata
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}
-      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
       PG_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}
-
-      ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
-      #Disable 
       HASURA_GRAPHQL_READ_ONLY_MODE: "false"
-      ## enable debugging mode. It is recommended to disable this in production
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
-      # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
-      ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
     depends_on:
@@ -70,14 +61,8 @@ services:
     networks:
       - faktenforum
       - traefik-ingress
-    labels: 
-      - "traefik.docker.network=traefik-ingress"
-      - "traefik.enable=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hasura.entryPoints=web"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hasura.rule=Host(`api.localhost`) && PathPrefix(`/api/v1/graphql`)"
-      - "traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-hasura.stripprefix.prefixes=/api"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hasura.middlewares=${COMPOSE_PROJECT_NAME}-hasura"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-hasura.loadbalancer.server.port=8080"
+  
+
   data-connector-agent:
     image: hasura/graphql-data-connector:v2.36.0
     restart: always
