@@ -1,41 +1,32 @@
 version: "3.5"
 services:
-  # faktenforum-api:
-  #   build: .
-  #   ports:
-  #     - 8083:8083
-  #   restart: always
-  #   environment:
-  #     API_BASE_URL: ${API_BASE_URL}
-  #     JWT_SECRET: ${JWT_SECRET}
-  #     JWT_REFRESH_TOKEN_LIFETIME: ${JWT_REFRESH_TOKEN_LIFETIME}
-  #     JWT_TOKEN_TOKEN_LIFETIME: ${JWT_TOKEN_TOKEN_LIFETIME}
-  #     JWT_ISSUER: ${JWT_ISSUER}
-  #     JWT_AUDIENCE: ${JWT_AUDIENCE}
-  #     CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
-  #     MONGODB_HOST: ${MONGODB_HOST}
-  #     MONGODB_PORT: ${MONGODB_PORT}
-  #     MONGODB_AGENDA_USER: ${MONGODB_AGENDA_USER}
-  #     MONGODB_AGENDA_PASSWORD: ${MONGODB_AGENDA_PASSWORD}
-  #     MONGODB_AGENDA_DB: ${MONGODB_AGENDA_DB}
-  #     MINIO_HOST: ${MINIO_HOST}
-  #     MINIO_API_PORT: ${MINIO_API_PORT}
-  #     MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-  #     MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-  #     MINIO_REGION: ${MINIO_REGION}
-  #     MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
-  #     DATABASE_URL: ${DATABASE_URL}
-  # faktenforum-frontend:
-  #   build:
-  #     context: ../frontend
-  #     dockerfile: Dockerfile
-  #     args:
-  #       API_BASE_URL: ${API_BASE_URL}
-  #   ports:
-  #     - 8780:3000
-  #   restart: always
-  #   environment:
-  #     PORT: 3000
+  # This container is needet so traefik can access the host network via docker.host 
+  # for local dev servers of backend, landing and frontend
+  docker-host:
+    image: qoomon/docker-host
+    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+    mem_limit: 8M
+    restart: on-failure
+    networks:
+    - traefik-ingress
+
+  traefik:
+    image: traefik:latest
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf"
+      - "--entryPoints.web.address=:80"
+    ports:
+      - "8000:80"
+      - "8181:8080" # The Traefik dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./traefik/dynamic_conf:/etc/traefik/dynamic_conf"
+      
+    networks:
+     - traefik-ingress
+
   postgresDb:
     image: postgres:15.2
     ports:
@@ -47,6 +38,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: ${POSTGRES_PORT}
+    networks:
+      - faktenforum
 
   graphql-engine:
     image: hasura/graphql-engine:v2.36.0-ce
@@ -74,6 +67,17 @@ services:
     depends_on:
       data-connector-agent:
         condition: service_healthy
+    networks:
+      - faktenforum
+      - traefik-ingress
+    labels: 
+      - "traefik.docker.network=traefik-ingress"
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hasura.entryPoints=web"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hasura.rule=Host(`api.localhost`) && PathPrefix(`/api/v1/graphql`)"
+      - "traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-hasura.stripprefix.prefixes=/api"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hasura.middlewares=${COMPOSE_PROJECT_NAME}-hasura"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-hasura.loadbalancer.server.port=8080"
   data-connector-agent:
     image: hasura/graphql-data-connector:v2.36.0
     restart: always
@@ -90,9 +94,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 5s
+    networks:
+      - faktenforum
   hasura-migrate:
     build: 
-      context: ./hasura-migrate
+      context: ./hasura
       dockerfile: Dockerfile.hasura-migrate
     depends_on:
       - graphql-engine
@@ -100,6 +106,8 @@ services:
       HASURA_ENDPOINT: "http://graphql-engine:8080"
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       APPLY_METADATA: "true"
+    networks:
+      - faktenforum  
   mongodb: # Add a MongoDB instance
     image: mongo:latest # Use a minimal version of MongoDB
     ports:
@@ -109,7 +117,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
-
+    networks:
+      - faktenforum
   mongodb-sh:
     image: ghcr.io/faktenforum/mongosb-sh:latest
     depends_on:
@@ -139,7 +148,8 @@ services:
                   { role: \"dbOwner\", db: \"${MONGODB_AGENDA_DB}\" }]
         });
       '"
-
+    networks:
+      - faktenforum
   minio:
     image: minio/minio:latest
     ports:
@@ -152,6 +162,8 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+    networks:
+      - faktenforum
   # minio-client inits minio with a service account and a bucket
   minio-client:
     image: minio/mc
@@ -165,7 +177,9 @@ services:
       mc admin user svcacct add  myminio ${MINIO_ROOT_USER} --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} &&
       mc mb myminio/${MINIO_BUCKET_NAME} &&
       echo 'Service account and bucket created in MinIO'"
-
+    networks:
+      - faktenforum
+ 
   # mailhog:
   # image: mailhog/mailhog:v1.0.1
   # volumes:
@@ -184,5 +198,8 @@ volumes:
   mongodb_data:
 
 networks:
-  default:
-    name: faktenforum
+  faktenforum:
+    driver: bridge
+  traefik-ingress:
+    driver: bridge
+
