@@ -65,7 +65,6 @@ model Claim {
     updatedAt        DateTime               @updatedAt
     createdBy        String?
     user             User?                  @relation(fields: [createdBy], references: [id])
-    FactResource     FactResource[]
     Comment          Comment[]
     Virality         Virality[]
 }
@@ -98,20 +97,21 @@ model File {
     updatedAt     DateTime        @updatedAt
     createdBy     String
     user          User            @relation(fields: [createdBy], references: [id])
-    ClaimResource ClaimResource[]
-    FactResource  FactResource[]
+    claimResource ClaimResource[]
+    factResource  FactResource[]
 
     @@index([key])
 }
 
 model Fact {
-    id          String   @id @default(uuid())
+    id          String         @id @default(uuid())
     title       String?
     description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    createdAt   DateTime       @default(now())
+    updatedAt   DateTime       @updatedAt
     createdBy   String
-    user        User     @relation(fields: [createdBy], references: [id])
+    user        User           @relation(fields: [createdBy], references: [id])
+    resources   FactResource[]
 }
 
 model FactResource {
@@ -121,11 +121,12 @@ model FactResource {
     fileId      String?
     file        File?    @relation(fields: [fileId], references: [id])
     factId      String
-    fact        Claim    @relation(fields: [factId], references: [id])
+    fact        Fact     @relation(fields: [factId], references: [id])
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     createdBy   String
     user        User     @relation(fields: [createdBy], references: [id])
+    claimId     String?
 }
 
 model Comment {
@@ -175,8 +176,8 @@ model User {
     sessions               Session[] // This is the reverse relation field
     createdAt              DateTime        @default(now())
     updatedAt              DateTime        @updatedAt
-    Fact                   Fact[]
-    FactResource           FactResource[]
+    fact                   Fact[]
+    factResource           FactResource[]
     Comment                Comment[]
 }
 
