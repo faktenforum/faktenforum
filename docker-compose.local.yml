@@ -1,14 +1,6 @@
 version: "3.5"
 services:
-  # This container is needet so traefik can access the host network via docker.host 
-  # for local dev servers of backend, landing and frontend
-  docker-host:
-    image: qoomon/docker-host
-    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
-    mem_limit: 8M
-    restart: on-failure
-    networks:
-    - traefik-ingress
+
 
   traefik:
     image: traefik:latest
@@ -26,6 +18,8 @@ services:
       
     networks:
      - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   postgresDb:
     image: postgres:16
@@ -220,4 +214,5 @@ networks:
     driver: bridge
   traefik-ingress:
     driver: bridge
+
 

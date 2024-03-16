@@ -1,4 +1,4 @@
-http: 
+http:
   routers:
     app:
       entryPoints:
@@ -10,4 +10,4 @@ http:
     app:
       loadBalancer:
         servers:
-        - url: http://docker-host:4000
+          - url: http://host.docker.internal:4000
