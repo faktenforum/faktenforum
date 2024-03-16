@@ -15,7 +15,7 @@ generator erd {
 generator erdPdf {
     provider                  = "prisma-erd-generator"
     output                    = "../docs/ERD.pdf"
-    includeRelationFromFields = true
+    includeRelationFromFields = false
 }
 
 datasource db {
@@ -65,8 +65,9 @@ model Claim {
     updatedAt        DateTime               @updatedAt
     createdBy        String?
     user             User?                  @relation(fields: [createdBy], references: [id])
-    Comment          Comment[]
+    comment          Comment[]
     Virality         Virality[]
+    ClaimFact        ClaimFact[]
 }
 
 model ClaimResource {
@@ -112,6 +113,7 @@ model Fact {
     createdBy   String
     user        User           @relation(fields: [createdBy], references: [id])
     resources   FactResource[]
+    ClaimFact   ClaimFact[]
 }
 
 model FactResource {
@@ -127,6 +129,18 @@ model FactResource {
     createdBy   String
     user        User     @relation(fields: [createdBy], references: [id])
     claimId     String?
+}
+
+model ClaimFact {
+    id        String   @id @default(uuid())
+    claimId   String
+    claim     Claim    @relation(fields: [claimId], references: [id])
+    factId    String
+    fact      Fact     @relation(fields: [factId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    createdBy String
+    user      User     @relation(fields: [createdBy], references: [id])
 }
 
 model Comment {
@@ -178,7 +192,8 @@ model User {
     updatedAt              DateTime        @updatedAt
     fact                   Fact[]
     factResource           FactResource[]
-    Comment                Comment[]
+    comment                Comment[]
+    ClaimFact              ClaimFact[]
 }
 
 model Session {
