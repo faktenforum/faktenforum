@@ -10,5 +10,5 @@ http:
     landing:
       loadBalancer:
         servers:
-        - url: http://docker-host:3000
+        - url: http://docker-host:4000
 

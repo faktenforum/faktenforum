@@ -28,16 +28,18 @@ services:
      - traefik-ingress
 
   postgresDb:
-    image: postgres:15.2
+    image: postgres:16
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: ${POSTGRES_PORT}
+
     networks:
       - faktenforum
 
@@ -91,6 +93,8 @@ services:
       HASURA_ENDPOINT: "http://graphql-engine:8080"
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       APPLY_METADATA: "true"
+    volumes:
+      - ./hasura/:/app
     networks:
       - faktenforum  
   mongodb: # Add a MongoDB instance
@@ -164,18 +168,47 @@ services:
       echo 'Service account and bucket created in MinIO'"
     networks:
       - faktenforum
- 
-  # mailhog:
-  # image: mailhog/mailhog:v1.0.1
-  # volumes:
-  #   - mailhog-data:/home/mailhog
-  # restart: unless-stopped
-  # ports:
-  #   - "1025:1025"
-  #   - "8025:8025"
-  # environment:
-  #   MH_STORAGE: maildir
-  #   MH_MAILDIR_PATH: /home/mailhog
+  kratos-migrate:
+    image: oryd/kratos:v1.1
+    depends_on:
+      - postgresDb
+    environment:
+      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&max_conns=20&max_idle_conns=4&search_path=kratos
+    volumes:
+      - type: bind
+        source: ./kratos/
+        target: /etc/config/kratos
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+  kratos:
+    image: oryd/kratos:v1.1
+    depends_on:
+      - kratos-migrate
+    environment:
+      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&max_conns=20&max_idle_conns=4&search_path=kratos
+    volumes:
+      - type: bind
+        source: ./kratos/
+        target: /etc/config/kratos
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    ports:
+      - '4433:4433' # public
+      - '4434:4434' # admin
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - '4436:4436'
+      - '4437:4437'
+    networks:
+      - faktenforum
+      - traefik-ingress
 volumes:
   db_data:
   minio_data:

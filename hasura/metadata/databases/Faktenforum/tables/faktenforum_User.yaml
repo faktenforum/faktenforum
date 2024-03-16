@@ -1,0 +1,39 @@
+table:
+  name: User
+  schema: faktenforum
+array_relationships:
+  - name: ClaimFiles
+    using:
+      foreign_key_constraint_on:
+        column: submitterId
+        table:
+          name: ClaimFile
+          schema: faktenforum
+  - name: ClaimResources
+    using:
+      foreign_key_constraint_on:
+        column: submitterId
+        table:
+          name: ClaimResource
+          schema: faktenforum
+  - name: Claims
+    using:
+      foreign_key_constraint_on:
+        column: submitterId
+        table:
+          name: Claim
+          schema: faktenforum
+  - name: ResourceSimilarities
+    using:
+      foreign_key_constraint_on:
+        column: confirmerId
+        table:
+          name: ResourceSimilarity
+          schema: faktenforum
+  - name: Sessions
+    using:
+      foreign_key_constraint_on:
+        column: userId
+        table:
+          name: Session
+          schema: faktenforum
