@@ -15,6 +15,20 @@ To set up the Faktenforum Backend for development, follow the instructions below
 - docker version >= 20.10.0
 - local firewall disabled or make sure the docker bridge interface can reach the host machine
 
+### Identify your docker bridge
+
+In ubuntu follow this instructions
+
+```bash
+# show all network interfaces
+ip addr show
+
+# should be a name like br-dffd01a9178f for bridge device
+# create allow rule
+sudo ufw allow in on br-dffd01a9178f
+
+```
+
 ## Environment
 
 First create .env file by copying .env.example to .env
