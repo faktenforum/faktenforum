@@ -22,6 +22,7 @@
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
   },
   "dependencies": {
+    "@ory/client": "^1.9.0",
     "@prisma/client": "^5.10.2",
     "@tsed/agenda": "7.61.2",
     "@tsed/ajv": "^7.61.2",

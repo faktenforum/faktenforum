@@ -7,7 +7,6 @@ import { $log } from "@tsed/logger";
 import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
-import "~/protocols";
 
 import { config } from "./config/index";
 import * as apiV1 from "./controllers/api/v1/index";
@@ -22,7 +21,7 @@ import { FileService, UsersService } from "./services";
   disableComponentsScan: true,
   mount: {
     "/api/v1": [...Object.values(apiV1)],
-    "/": [...Object.values(pages)]
+    "/api/": [...Object.values(pages)]
   },
   middlewares: [
     "cors",

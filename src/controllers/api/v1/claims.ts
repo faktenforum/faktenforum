@@ -15,7 +15,7 @@ export class ClaimsController {
   @Inject()
   fileService: FileService;
 
-  // @AccessControlDecorator({ role: "ADMIN" })
+  @AccessControlDecorator({ role: "ALL" })
   @Get()
   @Returns(200, Pagination).Of(ClaimWithResources)
   async getClaims(@QueryParams() params: ClaimQueryParams) {

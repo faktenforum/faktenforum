@@ -10,4 +10,4 @@ http:
     landing:
       loadBalancer:
         servers:
-          - url: http://host.docker.internal:4000
+          - url: http://host.docker.internal:3000

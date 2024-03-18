@@ -5,16 +5,27 @@ import { Middleware, MiddlewareMethods } from "@tsed/platform-middlewares";
 import { Context } from "@tsed/platform-params";
 import { UserDTO } from "~/models";
 
+import type { Session } from "@ory/client";
+import { FrontendApi, Configuration } from "@ory/client";
+
+const ory = new FrontendApi(
+  new Configuration({
+    basePath: process.env.ORY_SDK_URL || "http://app.localhost:8000/api/v1/kratos"
+  })
+);
+
 @Middleware()
 export class AccessControlMiddleware implements MiddlewareMethods {
-  public use(@Req() request: Req, @Context() ctx: Context) {
+  public async use(@Req() request: Req, @Context() ctx: Context) {
     // retrieve options given to the @UseAuth decorator
     const options = ctx.endpoint.get(AccessControlMiddleware) || {};
-
-    if (!request.isAuthenticated()) {
-      // passport.js method to check auth
+    try {
+      const session = await ory.toSession({ cookie: request.header("cookie") });
+      request.user = session.data.id;
+    } catch (error) {
       throw new Unauthorized("Unauthorized");
     }
+
     if (!options.role || options.role === "ALL") {
       // if no role is given, we assume that the route is accessible to all
       // if role is ALL, we assume that the route is accessible to all
