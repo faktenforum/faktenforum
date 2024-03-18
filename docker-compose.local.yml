@@ -8,13 +8,20 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=false"
       - "--providers.file.directory=/etc/traefik/dynamic_conf"
+      - "--accesslog=true"
+      - "--accesslog.fields.headers.defaultmode=keep"
+      - "--accesslog.fields.headers.names.User-Agent=drop"
+      - "--accesslog.fields.headers.names.Content-Type=drop"
       - "--entryPoints.web.address=:80"
+      - "--log.filePath=/logs/traefik.log"
+      - "--log.filePath=/logs/access.log"
     ports:
       - "8000:80"
       - "8181:8080" # The Traefik dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/dynamic_conf:/etc/traefik/dynamic_conf"
+      - "./traefik/logs:/logs"
       
     networks:
      - traefik-ingress
