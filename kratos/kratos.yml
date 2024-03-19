@@ -13,9 +13,9 @@ serve:
 selfservice:
   default_browser_return_url: http://app.localhost:8000/
   allowed_return_urls:
-    - http://app.localhost:8000/app
-    - http://localhost:19006/Callback
-    - exp://localhost:8081/--/Callback
+    - http://app.localhost:8000/
+    # - http://localhost:19006/Callback
+    # - exp://localhost:8081/--/Callback
 
   methods:
     password:
