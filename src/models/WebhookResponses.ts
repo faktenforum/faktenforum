@@ -1,3 +1,4 @@
+import { OnSerialize } from "@tsed/json-mapper";
 import { Property, Required } from "@tsed/schema";
 
 export class SessionResponse {
@@ -7,13 +8,13 @@ export class SessionResponse {
 
   @Property()
   @Required()
-  "X-Hasura-Role": string;
+  "XHasuraRole": string;
 
   @Property()
   @Required()
-  "Cache-Control": string;
+  "CacheControl": string;
 
   @Property()
   @Required()
-  "Mon, 30 Mar 2026 13:25:18 GMT": string;
+  "Expires": string;
 }

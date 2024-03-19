@@ -1,21 +1,21 @@
 import { Controller } from "@tsed/di";
 import { Get, Returns } from "@tsed/schema";
-import { SessionResponse } from "~/models/";
+import { SessionResponse } from "~/models/WebhookResponses";
 const packageJSON = require("../../../../package.json"); // adjust the path as necessary
 
 @Controller("/webhooks")
 export class WebHookController {
   @Get("/session")
-  @Returns(200, SessionResponse)
+  @Returns(200, String).ContentType(" application/json") // S
   async getSessions() {
     console.log("get session");
 
-    return {
+    return JSON.stringify({
       "X-Hasura-User-Id": "27",
       "X-Hasura-Role": "user",
       "Cache-Control": "max-age=60",
       Expires: "Mon, 30 Mar 2026 13:25:18 GMT"
-    };
+    });
     //   return {        // Extract token from request
     // var token = request.get('Authorization');
     // // Fetch user_id that is associated with this token

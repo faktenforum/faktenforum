@@ -13,8 +13,7 @@ services:
       - "--accesslog.fields.headers.names.User-Agent=drop"
       - "--accesslog.fields.headers.names.Content-Type=drop"
       - "--entryPoints.web.address=:80"
-      - "--log.filePath=/logs/traefik.log"
-      - "--log.filePath=/logs/access.log"
+
     ports:
       - "8000:80"
       - "8181:8080" # The Traefik dashboard
@@ -22,9 +21,9 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/dynamic_conf:/etc/traefik/dynamic_conf"
       - "./traefik/logs:/logs"
-      
     networks:
      - traefik-ingress
+     - faktenforum
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -58,13 +57,18 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
+      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_GRAPHQL_AUTH_HOOK}
+      HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
+
     depends_on:
       data-connector-agent:
         condition: service_healthy
     networks:
       - faktenforum
       - traefik-ingress
-  
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 
   data-connector-agent:
     image: hasura/graphql-data-connector:v2.36.0

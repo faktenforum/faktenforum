@@ -5,6 +5,7 @@ const packageJSON = require("../../../../package.json"); // adjust the path as n
 @Controller("/version")
 export class VersionController {
   @Get()
+  
   async getVersion() {
     return {
       version: packageJSON.version
