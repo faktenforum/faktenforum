@@ -10,3 +10,4 @@ export * from "./LoginResponse";
 export * from "./PassportCustomUser";
 export * from "./SubmissionDTO";
 export * from "./UserDTO";
+export * from "./WebhookResponses";

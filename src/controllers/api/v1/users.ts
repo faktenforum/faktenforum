@@ -13,7 +13,7 @@ export class UserController {
   @Inject()
   usersService: UsersService;
 
-  @AccessControlDecorator({ role: "ADMIN" })
+  @AccessControlDecorator({ role: "ALL" })
   @Get("/")
   @Returns(200, Array).Of(UserDTO)
   async getAllUsers() {
@@ -27,7 +27,7 @@ export class UserController {
     }));
   }
 
-  @AccessControlDecorator({ role: "ADMIN" })
+  @AccessControlDecorator({ role: "ALL" })
   @Post("/")
   @Returns(200, UserDTO)
   async createUser(@BodyParams() body: UserCreateDTO) {
