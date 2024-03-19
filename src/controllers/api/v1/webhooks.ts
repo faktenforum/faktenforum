@@ -6,7 +6,7 @@ const packageJSON = require("../../../../package.json"); // adjust the path as n
 @Controller("/webhooks")
 export class WebHookController {
   @Get("/session")
-  @Returns(200, String).ContentType(" application/json") // S
+  @Returns(200, String).ContentType("application/json") // S
   async getSessions() {
     console.log("get session");
 

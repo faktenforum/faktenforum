@@ -1,3 +1,15 @@
 table:
   name: ClaimSubmissionToken
   schema: faktenforum
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - claimId
+        - id
+        - token
+        - createdAt
+        - expiresAt
+        - updatedAt
+      filter: {}
+    comment: ""

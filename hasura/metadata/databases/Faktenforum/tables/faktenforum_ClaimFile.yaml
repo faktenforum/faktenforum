@@ -8,3 +8,20 @@ object_relationships:
   - name: User
     using:
       foreign_key_constraint_on: submitterId
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - size
+        - claimResourceId
+        - id
+        - key
+        - md5
+        - mimeType
+        - name
+        - submitterId
+        - transcription
+        - submittedAt
+      filter: {}
+      allow_aggregations: true
+    comment: ""

@@ -30,3 +30,15 @@ array_relationships:
         table:
           name: ResourceSimilarity
           schema: faktenforum
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - claimId
+        - description
+        - id
+        - originalUrl
+        - submitterId
+      filter: {}
+      allow_aggregations: true
+    comment: ""

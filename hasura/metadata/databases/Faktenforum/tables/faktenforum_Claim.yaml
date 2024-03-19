@@ -20,3 +20,53 @@ array_relationships:
         table:
           name: ClaimSubmissionToken
           schema: faktenforum
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - description
+        - submittedAt
+        - submitterId
+        - tags
+        - title
+    comment: ""
+select_permissions:
+  - role: newbie
+    permission:
+      columns:
+        - tags
+        - description
+        - id
+        - submitterId
+        - title
+        - submittedAt
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - tags
+        - description
+        - id
+        - submitterId
+        - title
+        - submittedAt
+      filter: {}
+      limit: 150
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - description
+        - submittedAt
+        - submitterId
+        - tags
+        - title
+      filter: {}
+      check:
+        submitterId:
+          _eq: X-Hasura-User-Id
+    comment: ""
