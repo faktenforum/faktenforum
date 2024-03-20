@@ -206,6 +206,8 @@ services:
     networks:
       - faktenforum
       - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:

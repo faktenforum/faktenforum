@@ -15,7 +15,7 @@ generator erd {
 generator erdPdf {
     provider                  = "prisma-erd-generator"
     output                    = "../docs/ERD.pdf"
-    includeRelationFromFields = true
+    includeRelationFromFields = false
 }
 
 datasource db {
@@ -23,62 +23,150 @@ datasource db {
     url      = env("PRISMA_DATABASE_URL")
 }
 
-model ClaimFile {
-    id              String         @id @default(uuid())
-    submitter       User?          @relation(references: [id], fields: [submitterId])
-    submitterId     String?
-    submittedAt     DateTime       @default(now())
-    key             String
-    name            String
-    mimeType        String
-    md5             String
-    size            Int
-    transcription   String?
-    claimResource   ClaimResource? @relation(fields: [claimResourceId], references: [id])
-    claimResourceId String?
-
-    @@index([key])
+enum UserRole {
+    ADMIN
+    USER
 }
 
-model ClaimResource {
-    id                       String               @id @default(uuid())
-    submitter                User?                @relation(references: [id], fields: [submitterId])
-    submitterId              String?
-    originalUrl              String?
-    files                    ClaimFile[]
-    description              String?
-    claim                    Claim                @relation(fields: [claimId], references: [id])
-    claimId                  String
-    firstResourceSimilarity  ResourceSimilarity[] @relation("firstResourceSimilarity")
-    secondResourceSimilarity ResourceSimilarity[] @relation("secondResourceSimilarity")
+enum FileType {
+    IMAGE
+    VIDEO
+    DOCUMENT
+    OTHER
+}
 
-    @@unique([id, claimId])
+enum ClaimLabel {
+    FALSE
+    MISSLEADING
+    TRUE
+}
+
+enum ClaimStatus {
+    SUBMITTED
+    READYT_TO_CHECK
+    IN_PROGRESS
+    ARCHIVED
+    SPAM
+    CLOSED
+    CHECKED
+    PUBLISHED
 }
 
 model Claim {
     id               String                 @id @default(uuid())
-    submitter        User?                  @relation(references: [id], fields: [submitterId])
-    submitterId      String?
-    submittedAt      DateTime               @default(now())
     title            String?
     description      String?
-    tags             String[]
+    tags             String[]               @default([])
+    label            ClaimLabel?
+    status           ClaimStatus            @default(SUBMITTED)
     resources        ClaimResource[]
     claimSubmitToken ClaimSubmissionToken[]
+    createdAt        DateTime               @default(now())
+    updatedAt        DateTime               @updatedAt
+    createdBy        String?
+    user             User?                  @relation(fields: [createdBy], references: [id])
+    comment          Comment[]
+    Virality         Virality[]
+    ClaimFact        ClaimFact[]
 }
 
-model ResourceSimilarity {
-    firstResource       ClaimResource @relation("firstResourceSimilarity", fields: [firstResourceId], references: [id])
-    firstResourceId     String
-    secondResource      ClaimResource @relation("secondResourceSimilarity", fields: [secondResourceId], references: [id])
-    secondResourceId    String
-    similarityScore     Float
-    manuallyConfirmed   Boolean
-    manuallyConfirmedBy User?         @relation(references: [id], fields: [confirmerId])
-    confirmerId         String?
-    manuallyConfirmedAt DateTime?
+model ClaimResource {
+    id          String   @id @default(uuid())
+    originalUrl String?
+    description String?
+    fileId      String?
+    file        File?    @relation(fields: [fileId], references: [id])
+    claimId     String
+    claim       Claim    @relation(fields: [claimId], references: [id])
+    archiveId   String?
+    archiveAt   DateTime
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    createdBy   String
+    user        User     @relation(fields: [createdBy], references: [id])
+}
 
-    @@id([firstResourceId, secondResourceId])
+model File {
+    id            String          @id @default(uuid())
+    key           String
+    name          String
+    mimeType      String
+    md5           String
+    size          Int
+    transcription String?
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    createdBy     String
+    user          User            @relation(fields: [createdBy], references: [id])
+    claimResource ClaimResource[]
+    factResource  FactResource[]
+
+    @@index([key])
+}
+
+model Fact {
+    id          String         @id @default(uuid())
+    title       String?
+    description String?
+    createdAt   DateTime       @default(now())
+    updatedAt   DateTime       @updatedAt
+    createdBy   String
+    user        User           @relation(fields: [createdBy], references: [id])
+    resources   FactResource[]
+    ClaimFact   ClaimFact[]
+}
+
+model FactResource {
+    id          String   @id @default(uuid())
+    originalUrl String?
+    description String?
+    fileId      String?
+    file        File?    @relation(fields: [fileId], references: [id])
+    factId      String
+    fact        Fact     @relation(fields: [factId], references: [id])
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    createdBy   String
+    user        User     @relation(fields: [createdBy], references: [id])
+    claimId     String?
+}
+
+model ClaimFact {
+    id        String   @id @default(uuid())
+    claimId   String
+    claim     Claim    @relation(fields: [claimId], references: [id])
+    factId    String
+    fact      Fact     @relation(fields: [factId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    createdBy String
+    user      User     @relation(fields: [createdBy], references: [id])
+}
+
+model Comment {
+    id        String   @id @default(uuid())
+    claimId   String
+    claim     Claim    @relation(fields: [claimId], references: [id])
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    createdBy String
+    user      User     @relation(fields: [createdBy], references: [id])
+}
+
+model Virality {
+    id              String   @id @default(uuid())
+    claimId         String
+    claim           Claim    @relation(fields: [claimId], references: [id])
+    facebookLikes   Int?
+    facebookShares  Int?
+    youtubeViews    Int?
+    youtubeLikes    Int?
+    youtubeDislikes Int?
+    instagramLikes  Int?
+    instagramShares Int?
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
 }
 
 model ClaimSubmissionToken {
@@ -92,39 +180,22 @@ model ClaimSubmissionToken {
 }
 
 model User {
-    id                     String               @id @default(uuid())
-    submittedFiles         ClaimFile[]
+    id                     String          @id @default(uuid())
+    email                  String          @unique
+    username               String          @unique
+    firstName              String?
+    lastName               String?
+    pronouns               String?
+    profileImage           String?
+    bio                    String?
+    mobileNumber           String?
+    createdAt              DateTime        @default(now())
+    updatedAt              DateTime        @updatedAt
     submittedClaimResource ClaimResource[]
+    submittedFiles         File[]
     submittedClaims        Claim[]
-    resourceSimilarity     ResourceSimilarity[]
-    email                  String               @unique
-    password               String
-    role                   UserRole             @default(USER)
-    sessions               Session[] // This is the reverse relation field
-    createdAt              DateTime             @default(now())
-    updatedAt              DateTime             @updatedAt
-}
-
-model Session {
-    id        String    @id @default(uuid())
-    token     String    @unique
-    userId    String
-    user      User      @relation(fields: [userId], references: [id])
-    userAgent String? // Optional: store user-agent string for reference
-    expiresAt DateTime
-    lastLogin DateTime? @default(now())
-    updatedAt DateTime  @updatedAt
-    createdAt DateTime  @default(now())
-}
-
-enum UserRole {
-    ADMIN
-    USER
-}
-
-enum FileType {
-    IMAGE
-    VIDEO
-    DOCUMENT
-    OTHER
+    fact                   Fact[]
+    factResource           FactResource[]
+    comment                Comment[]
+    ClaimFact              ClaimFact[]
 }

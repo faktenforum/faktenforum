@@ -1,5 +1,6 @@
 import { Controller } from "@tsed/di";
-import { Get, Returns } from "@tsed/schema";
+import { BodyParams } from "@tsed/platform-params";
+import { Get, Post, Returns } from "@tsed/schema";
 import { SessionResponse } from "~/models/WebhookResponses";
 const packageJSON = require("../../../../package.json"); // adjust the path as necessary
 
@@ -27,6 +28,14 @@ export class WebHookController {
     //   };
     //   response.json(hasuraVariables);
     // });
+    return {};
+  }
+
+  @Post("/finalize-account")
+  @Returns(200, String).ContentType("application/json") // S
+  async postFinalizeAcount(@BodyParams() body: unknown) {
+    console.log("finalize account", body);
+    throw new Error("Not implemented");
     return {};
   }
 }

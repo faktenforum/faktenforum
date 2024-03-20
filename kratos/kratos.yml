@@ -1,5 +1,4 @@
 version: v0.13.0
-
 dsn: memory
 
 serve:
@@ -66,8 +65,13 @@ selfservice:
       after:
         password:
           hooks:
-            # - hook: session do not send session after registration
             - hook: show_verification_ui
+            - hook: web_hook
+              config:
+                url: http://host.docker.internal:8083/api/v1/webhooks/finalize-account
+                method: POST
+                can_interrupt: false
+                body: /etc/config/kratos/jsonnet/finalize-account.jsonnet
 
 log:
   level: debug

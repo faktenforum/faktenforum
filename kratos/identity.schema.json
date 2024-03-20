@@ -26,22 +26,15 @@
             }
           }
         },
-        "name": {
-          "type": "object",
-          "properties": {
-            "first": {
-              "title": "First Name",
-              "type": "string"
-            },
-            "last": {
-              "title": "Last Name",
-              "type": "string"
-            }
-          }
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "minLength": 3
         }
       },
       "required": [
-        "email"
+        "email",
+        "username"
       ],
       "additionalProperties": false
     }
