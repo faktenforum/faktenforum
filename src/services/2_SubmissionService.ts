@@ -105,7 +105,7 @@ export class SubmissionService {
     if (!claim) throw new NotFound("Claim not found");
     // update claim data
     await this.claimService.updateClaimById(id, { title: data.title, description: data.description });
-
+    console.log("data.resources", data.resources);
     await Promise.all(
       (data.resources || []).map((resource) => {
         if (resource.id) {
@@ -127,6 +127,8 @@ export class SubmissionService {
               name: file.metadata.originalName,
               size: file.size
             };
+
+            console.log("Claim File: ", JSON.stringify(claimFile));
           }
           const resourceDbData = {
             originalUrl: resource.originalUrl,

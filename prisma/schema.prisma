@@ -61,6 +61,8 @@ model Claim {
     status           ClaimStatus            @default(SUBMITTED)
     resources        ClaimResource[]
     claimSubmitToken ClaimSubmissionToken[]
+    archiveId        String?
+    archiveAt        DateTime?
     createdAt        DateTime               @default(now())
     updatedAt        DateTime               @updatedAt
     createdBy        String?
@@ -71,19 +73,17 @@ model Claim {
 }
 
 model ClaimResource {
-    id          String    @id @default(uuid())
+    id          String   @id @default(uuid())
     originalUrl String?
     description String?
     fileId      String?
-    file        File?     @relation(fields: [fileId], references: [id])
+    file        File?    @relation(fields: [fileId], references: [id])
     claimId     String
-    claim       Claim     @relation(fields: [claimId], references: [id])
-    archiveId   String?
-    archiveAt   DateTime?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+    claim       Claim    @relation(fields: [claimId], references: [id])
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
     createdBy   String?
-    user        User?     @relation(fields: [createdBy], references: [id])
+    user        User?    @relation(fields: [createdBy], references: [id])
 }
 
 model File {

@@ -17,7 +17,7 @@ type ClaimCreateDM = {
   }[];
 };
 type ClaimWithResources = Claim & {
-  resources: Array<ClaimResource & { file: File | undefined }>;
+  resources: Array<ClaimResource & { file: File | undefined | null }>;
 };
 
 type PaginatedClaimsResult = {
@@ -108,22 +108,30 @@ export class ClaimService {
     resource: Partial<ClaimResourceCreateDTO>,
     userId?: string
   ): Promise<ClaimResource> {
+    console.log("resource", JSON.stringify(resource));
+    console.log("userId", userId);
+    let dbfile;
+    if (resource.file) {
+      dbfile = await this.prisma.file.create({
+        data: {
+          createdBy: userId,
+          key: resource.file.key,
+          md5: resource.file.md5,
+          mimeType: resource.file.mimeType,
+          name: resource.file.name,
+          size: resource.file.size
+        }
+      });
+    }
     return this.prisma.claimResource.create({
+      include: {
+        file: !!resource.file
+      },
       data: {
         claimId: claimId,
-        originalUrl: resource.originalUrl,
-        description: resource.description,
         createdBy: userId,
-        file: {
-          create: {
-            key: resource.file.key,
-            md5: resource.file.md5,
-            mimeType: resource.file.mimeType,
-            name: resource.file.name,
-            size: resource.file.size,
-            createdBy: userId
-          }
-        }
+        originalUrl: resource.originalUrl,
+        fileId
       }
     });
   }
