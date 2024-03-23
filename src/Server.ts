@@ -57,7 +57,6 @@ export class Server {
   async $onReady() {
     try {
       await this.fileService.ensureBucketExists();
-      await this.userService.createFistAdminUser();
     } catch (error) {
       $log.error("Error checking or creating the bucket:", error);
     }

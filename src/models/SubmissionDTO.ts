@@ -40,8 +40,7 @@ export class SubmissionResourceCreateDTO {
 
   @Property()
   @Optional()
-  @ArrayOf(SubmissionFileCreateDTO)
-  files: SubmissionFileCreateDTO[];
+  file: SubmissionFileCreateDTO;
 }
 
 export class SubmissionResourceDTO extends SubmissionResourceCreateDTO {
@@ -51,8 +50,7 @@ export class SubmissionResourceDTO extends SubmissionResourceCreateDTO {
 
   @Property()
   @Optional()
-  @ArrayOf(SubmissionFileDTO)
-  declare files: SubmissionFileDTO[];
+  declare file: SubmissionFileDTO;
 }
 
 export class SubmissionCreateDTO {

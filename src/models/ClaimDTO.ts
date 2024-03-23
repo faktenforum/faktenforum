@@ -44,11 +44,13 @@ export class ClaimFileDTO extends ClaimFileCreateDTO {
 
   @Property()
   @Optional()
-  submitterId: string;
+  createdBy: string;
 
   @Property()
-  @Optional()
-  submittedAt: string;
+  createdAt: string;
+
+  @Property()
+  updatedAt: string;
 
   @Property()
   @Optional()
@@ -70,8 +72,7 @@ export class ClaimResourceCreateDTO {
 
   @Property()
   @Optional()
-  @ArrayOf(ClaimFileCreateDTO)
-  files: ClaimFileCreateDTO[];
+  file: ClaimFileCreateDTO;
 }
 
 export class ClaimResourceDTO extends ClaimResourceCreateDTO {
@@ -83,12 +84,14 @@ export class ClaimResourceDTO extends ClaimResourceCreateDTO {
   claimId: string;
   @Property()
   @Optional()
-  submitterId: null;
-
+  createdBy: null;
+  @Property()
+  createdAt: string;
+  @Property()
+  updatedAt: string;
   @Property()
   @Required()
-  @ArrayOf(ClaimFileDTO)
-  declare files: ClaimFileDTO[];
+  declare file: ClaimFileDTO;
 
   @Property()
   @Optional()
@@ -114,9 +117,14 @@ export class ClaimDTO extends ClaimCreateDTO {
   @Required()
   id: string;
 
+  @Optional()
+  createdBy: null;
+
   @Property()
-  @Required()
-  submittedAt: Date;
+  createdAt: string;
+
+  @Property()
+  updatedAt: string;
 }
 
 export class ClaimWithResources extends ClaimDTO {

@@ -62,13 +62,15 @@ export class SubmissionController {
       resources: claim.resources.map((resource) => ({
         id: resource.id,
         originalUrl: resource.originalUrl,
-        files: resource.files.map((file) => ({
-          id: file.id,
-          name: file.name,
-          size: file.size,
-          mimeType: file.mimeType,
-          url: this.createClaimFileUrl(token, file.id)
-        }))
+        file: resource.file
+          ? {
+              id: resource.file.id,
+              name: resource.file.name,
+              size: resource.file.size,
+              mimeType: resource.file.mimeType,
+              url: this.createClaimFileUrl(token, resource.file.id)
+            }
+          : null
       }))
     };
     return response;
@@ -84,7 +86,7 @@ export class SubmissionController {
   ) {
     try {
       const id = await this.submissionService.getClaimIdByToken(token);
-      const claimFile = await this.claimService.getClaimFileByIds(id, fileId);
+      const claimFile = await this.claimService.getFileByIds(id, fileId);
       if (!claimFile) {
         throw new NotFound("ClaimFile not found");
       }
