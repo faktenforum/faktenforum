@@ -49,6 +49,21 @@ To install hasura cli look [here](https://hasura.io/docs/latest/hasura-cli/insta
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 ```
 
+### To export Medata
+
+Change to the hasura folder and use hasura cli to export the metadata after
+changes in the hasura console
+
+```bash
+ hasura metadata  --admin-secret "ENTER_YOUR_ADMIN_SECRET_HERE" export
+```
+
+to apply use:
+
+```bash
+ hasura metadata  --admin-secret "ENTER_YOUR_ADMIN_SECRET_HERE" apply
+```
+
 ## Traefik, PostgreSQL, Mino, MongoDB, Hasura
 
 This servieces will be started via docker.

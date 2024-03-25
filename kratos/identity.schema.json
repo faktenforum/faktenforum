@@ -37,6 +37,22 @@
         "username"
       ],
       "additionalProperties": false
+    },
+    "metadata_public": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "default": "user",
+          "enum": [
+            "user",
+            "admin",
+            "newbie"
+          ]
+        },
+        "additionalProperties": false
+      }
     }
   }
 }

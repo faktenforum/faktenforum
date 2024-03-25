@@ -1,9 +1,5 @@
-import { PrismaClient, Session, User, UserRole } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { Service } from "@tsed/di";
-import { Forbidden, NotFound } from "@tsed/exceptions";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-import { $log } from "@tsed/logger";
 
 @Service()
 export class UsersService {
@@ -12,17 +8,9 @@ export class UsersService {
   constructor() {
     this.prisma = new PrismaClient();
   }
-  async getAllUsers(): Promise<User[]> {
-    return this.prisma.user.findMany();
-  }
-
-  async createUser(id: string, email: string, username: string): Promise<User> {
+  async createUser(data: Partial<User> & { email: string; username: string }): Promise<User> {
     return this.prisma.user.create({
-      data: {
-        id,
-        email,
-        username
-      }
+      data: { ...data }
     });
   }
 

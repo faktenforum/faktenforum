@@ -1,11 +1,13 @@
-import { Controller } from "@tsed/di";
+import { Controller, Inject } from "@tsed/di";
 import { BodyParams } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
-import { SessionResponse } from "~/models/WebhookResponses";
-const packageJSON = require("../../../../package.json"); // adjust the path as necessary
+import { FinalizeAccountDTO } from "~/models";
+import { UsersService } from "~/services";
 
 @Controller("/webhooks")
 export class WebHookController {
+  @Inject(UsersService)
+  usersService: UsersService;
   @Get("/session")
   @Returns(200, String).ContentType("application/json") // S
   async getSessions() {
@@ -32,10 +34,22 @@ export class WebHookController {
   }
 
   @Post("/finalize-account")
-  @Returns(200, String).ContentType("application/json") // S
-  async postFinalizeAcount(@BodyParams() body: unknown) {
+  @Returns(200, String).ContentType("application/json")
+  async postFinalizeAcount(@BodyParams() body: FinalizeAccountDTO) {
     console.log("finalize account", body);
-    throw new Error("Not implemented");
-    return {};
+    await this.usersService.createUser({
+      id: body.id,
+      email: body.traits.email,
+      username: body.traits.username,
+      firstName: body.transient_payload.firstName,
+      lastName: body.transient_payload.lastName
+    });
+    return {
+      identity: {
+        metadata_public: {
+          role: "user"
+        }
+      }
+    };
   }
 }

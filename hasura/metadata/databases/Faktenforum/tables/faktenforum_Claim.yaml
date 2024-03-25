@@ -4,8 +4,15 @@ table:
 object_relationships:
   - name: User
     using:
-      foreign_key_constraint_on: submitterId
+      foreign_key_constraint_on: createdBy
 array_relationships:
+  - name: ClaimFacts
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: ClaimFact
+          schema: faktenforum
   - name: ClaimResources
     using:
       foreign_key_constraint_on:
@@ -13,60 +20,65 @@ array_relationships:
         table:
           name: ClaimResource
           schema: faktenforum
-  - name: ClaimSubmissionTokens
+  - name: Comments
     using:
       foreign_key_constraint_on:
         column: claimId
         table:
-          name: ClaimSubmissionToken
+          name: Comment
+          schema: faktenforum
+  - name: Viralities
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: Virality
           schema: faktenforum
 insert_permissions:
   - role: user
     permission:
       check: {}
       columns:
+        - archiveId
         - description
-        - submittedAt
-        - submitterId
         - tags
         - title
     comment: ""
 select_permissions:
-  - role: newbie
-    permission:
-      columns:
-        - tags
-        - description
-        - id
-        - submitterId
-        - title
-        - submittedAt
-      filter: {}
-    comment: ""
   - role: user
     permission:
       columns:
         - tags
+        - archiveId
+        - createdBy
         - description
         - id
-        - submitterId
         - title
-        - submittedAt
+        - archiveAt
+        - createdAt
+        - updatedAt
+        - label
+        - status
       filter: {}
-      limit: 150
-      allow_aggregations: true
     comment: ""
 update_permissions:
   - role: user
     permission:
       columns:
         - description
-        - submittedAt
-        - submitterId
+        - label
+        - status
         - tags
         - title
-      filter: {}
-      check:
-        submitterId:
+      filter:
+        createdBy:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        createdBy:
           _eq: X-Hasura-User-Id
     comment: ""

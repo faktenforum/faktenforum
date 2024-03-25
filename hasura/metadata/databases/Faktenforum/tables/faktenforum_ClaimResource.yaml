@@ -5,40 +5,23 @@ object_relationships:
   - name: Claim
     using:
       foreign_key_constraint_on: claimId
+  - name: File
+    using:
+      foreign_key_constraint_on: fileId
   - name: User
     using:
-      foreign_key_constraint_on: submitterId
-array_relationships:
-  - name: ClaimFiles
-    using:
-      foreign_key_constraint_on:
-        column: claimResourceId
-        table:
-          name: ClaimFile
-          schema: faktenforum
-  - name: ResourceSimilarities
-    using:
-      foreign_key_constraint_on:
-        column: firstResourceId
-        table:
-          name: ResourceSimilarity
-          schema: faktenforum
-  - name: resourceSimilaritiesBySecondresourceid
-    using:
-      foreign_key_constraint_on:
-        column: secondResourceId
-        table:
-          name: ResourceSimilarity
-          schema: faktenforum
+      foreign_key_constraint_on: createdBy
 select_permissions:
   - role: user
     permission:
       columns:
         - claimId
+        - createdAt
+        - createdBy
         - description
+        - fileId
         - id
         - originalUrl
-        - submitterId
+        - updatedAt
       filter: {}
-      allow_aggregations: true
     comment: ""

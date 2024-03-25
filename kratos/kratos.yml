@@ -70,8 +70,10 @@ selfservice:
               config:
                 url: http://host.docker.internal:8083/api/v1/webhooks/finalize-account
                 method: POST
-                can_interrupt: false
+                can_interrupt: true
                 body: /etc/config/kratos/jsonnet/finalize-account.jsonnet
+                response:
+                  parse: true
 
 log:
   level: debug

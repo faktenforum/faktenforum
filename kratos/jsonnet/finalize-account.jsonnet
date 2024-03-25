@@ -1,4 +1,5 @@
 function(ctx) {
-  userId: ctx.identity.id,
-  email: ctx.identity.traits.email,
+  id: ctx.identity.id,
+  traits: ctx.identity.traits,
+  transient_payload: ctx.flow.transient_payload,
 }

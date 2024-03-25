@@ -6,5 +6,4 @@
         from_env: PG_DATABASE_URL
       isolation_level: read-committed
       use_prepared_statements: false
-    extensions_schema: faktenforum
   tables: "!include Faktenforum/tables/tables.yaml"

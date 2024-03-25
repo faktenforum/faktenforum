@@ -4,10 +4,6 @@
 
 export * from "./Account";
 export * from "./ClaimDTO";
-export * from "./Credentials";
 export * from "./Generics";
-export * from "./LoginResponse";
-export * from "./PassportCustomUser";
 export * from "./SubmissionDTO";
-export * from "./UserDTO";
-export * from "./WebhookResponses";
+export * from "./WebhookResponseDTO";

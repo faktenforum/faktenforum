@@ -131,7 +131,7 @@ export class ClaimService {
         claimId: claimId,
         createdBy: userId,
         originalUrl: resource.originalUrl,
-        fileId
+        fileId: dbfile?.id
       }
     });
   }

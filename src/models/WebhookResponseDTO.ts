@@ -1,14 +1,21 @@
-import { Format, Optional, Property, Required } from "@tsed/schema";
+import { Enum, Format, Optional, Property, Required } from "@tsed/schema";
 import { PasswordFormatDecorator } from "~/decorators";
 
-class KratosTraitsDTO {
+class KratosMetadataPublicDTO {
   @Required()
   @Property()
-  email: string;
+  role: "user" | "admin" | "newbie";
+}
+class KratosIdentityDTO {
+  @Required()
+  @Property()
+  metadata_public: KratosMetadataPublicDTO;
+}
 
+export class FinalizeAccountResponseDTO {
   @Required()
   @Property()
-  username: string;
+  identity: KratosIdentityDTO;
 }
 
 class KratosTransientPayloadDTO {
@@ -26,9 +33,6 @@ export class FinalizeAccountDTO {
   @Property()
   id: string;
 
-  @Required()
-  @Property()
-  traits: KratosTraitsDTO;
   @Required()
   @Property()
   transient_payload: KratosTransientPayloadDTO;
