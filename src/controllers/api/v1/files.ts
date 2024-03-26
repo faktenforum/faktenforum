@@ -46,7 +46,7 @@ export class ClaimsController {
     try {
       const fileMetaData = await this.fileService.getClaimFileMetaData(factId, fileId);
       if (!fileMetaData) {
-        throw new NotFound("ClaimFile not found");
+        throw new NotFound("FactFile not found");
       }
       const stream = await this.fileService.getFileStream(fileMetaData.key);
       response.set({
