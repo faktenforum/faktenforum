@@ -1,132 +1,44 @@
-import { PrismaClient } from "@prisma/client";
-import { Agenda, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
-import { Forbidden } from "@tsed/exceptions";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-import jwt from "jsonwebtoken";
+import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
-import { timeStringToSeconds } from "~/utils/time";
+import type { Session } from "@ory/client";
+import type { UserRole } from "~/models";
+type ValidatedSession = Session & { identity: { metadata_public: { role: UserRole } }; expires_at: string };
 
 @Service()
-@Agenda({ namespace: "authentication" })
 export class AuthService {
   @Inject()
   envService: EnvService;
 
-  private prisma: PrismaClient;
+  kratosSessionUrl: URL;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.kratosSessionUrl = new URL(`${this.envService.kratosBaseUrl}/sessions/whoami`);
   }
 
-  // Utility function to generate a random token for refresh tokens
-  generateRandomToken(length = 48): string {
-    return crypto.randomBytes(length).toString("hex");
-  }
-  @Every("15 minutes", {
-    name: "Delete expired sessions"
-  })
-  async deleteExpiredSessions() {
-    await this.prisma.session.deleteMany({
-      where: {
-        expiresAt: {
-          lte: new Date()
-        }
+  async getKratosSession(sessionCookie: string): Promise<ValidatedSession> {
+    const response = await fetch(this.kratosSessionUrl, {
+      method: "GET",
+      headers: { cookie: `ory_kratos_session=${sessionCookie};` }
+    });
+    if (response.status === 200) {
+      const session: Session = await response.json();
+
+      if ((session.identity?.metadata_public as { role?: string })?.role === undefined) {
+        throw new Exception(500, "Kratos response error: Role not found in session metadata");
       }
-    });
-  }
-
-  async createRefreshToken(userId: string, userAgent: string): Promise<string> {
-    const expiration = new Date();
-    expiration.setSeconds(
-      expiration.getSeconds() + timeStringToSeconds(this.envService.jwtRefreshTokenLifetime)
-    );
-
-    const dbEntry = await this.prisma.session.create({
-      data: {
-        userId: userId,
-        token: this.generateRandomToken(),
-        expiresAt: expiration,
-        userAgent: userAgent
+      if (session.expires_at === undefined) {
+        throw new Exception(500, "Kratos response error: Expires_at not found in session");
       }
-    });
-    return dbEntry.token;
-  }
-
-  async validateRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
-    const tokenRecord = await this.prisma.session.findFirst({
-      where: { token: refreshToken, userId: userId },
-      select: { expiresAt: true }
-    });
-
-    if (!tokenRecord) {
-      return false;
+      return session as ValidatedSession;
     }
-
-    const currentTimestamp = new Date();
-    if (tokenRecord.expiresAt <= currentTimestamp) {
-      await this.revokeRefreshToken(refreshToken);
-      return false;
+    if (response.status === 401) {
+      throw new Unauthorized("Unauthorized");
     }
-
-    return true;
-  }
-
-  async rotateRefreshToken(token: string): Promise<string> {
-    const tokenRecord = await this.prisma.session.findUnique({
-      where: { token: token }
-    });
-
-    if (!tokenRecord) {
-      throw new Error("Invalid refresh token");
+    if (response.status === 403) {
+      throw new Forbidden("Forbidden");
+    } else {
+      throw new Exception(response.status, `Kratos error: ${response.statusText}`);
     }
-
-    const newToken = this.generateRandomToken();
-    await this.prisma.session.update({
-      where: { token: token },
-      data: { token: newToken }
-    });
-
-    return newToken;
-  }
-
-  async revokeRefreshToken(token: string): Promise<void> {
-    await this.prisma.session.delete({
-      where: { token: token }
-    });
-  }
-
-  async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
-    return bcrypt.compare(plainTextPassword, hashedPassword);
-  }
-
-  async updatePassword(
-    id: string,
-    { oldPass, newPass }: { oldPass: string; newPass: string }
-  ): Promise<void> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: { password: true }
-    });
-    if (!user) {
-      throw new Forbidden("User not found!");
-    }
-    if (!(await bcrypt.compare(oldPass, user.password))) {
-      throw new Forbidden("Old password is incorrect");
-    }
-    const newHash = await bcrypt.hash(newPass, 10); // 10 is the saltRounds; adjust as necessary
-    await this.prisma.user.update({
-      where: { id },
-      data: { password: newHash }
-    });
-  }
-
-  generateToken(userId: string, userRole: string, sessionId: string) {
-    return jwt.sign({ sub: userId, role: userRole, sessionId: sessionId }, this.envService.jwtSecret, {
-      expiresIn: this.envService.jwtTokenLifetime,
-      issuer: this.envService.jwtIssuer,
-      audience: this.envService.jwtAudience
-    });
   }
 }

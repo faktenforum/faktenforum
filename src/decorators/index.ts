@@ -3,4 +3,3 @@
  */
 
 export * from "./AccessControlDecorator";
-export * from "./PasswordFormatDecorator";

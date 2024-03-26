@@ -1,6 +1,6 @@
-import { Claim, File, ClaimResource, Prisma, PrismaClient } from "@prisma/client";
+import { Claim, File, ClaimResource, PrismaClient } from "@prisma/client";
 import { Service } from "@tsed/di";
-import { ClaimQueryParams, ClaimResourceCreateDTO } from "~/models/ClaimDTO";
+import { ClaimResourceCreateDTO } from "~/models/ClaimDTO";
 
 type ClaimCreateDM = {
   title: string;

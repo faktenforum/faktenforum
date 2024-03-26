@@ -4,4 +4,5 @@
 
 export * from "./ClaimDTO";
 export * from "./FinalizeAccountDTO";
+export * from "./SessionDTO";
 export * from "./SubmissionDTO";

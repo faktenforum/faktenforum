@@ -68,47 +68,14 @@ export class EnvService {
     return process.env.MINIO_SECRET_KEY;
   }
 
-  get jwtSecret(): string {
-    return process.env.JWT_SECRET!;
+  get kratosBaseUrl(): string {
+    if (!process.env.KRATOS_BASE_URL) {
+      $log.error("KRATOS_BASE_URL is not set!");
+      process.exit(1);
+    }
+    return process.env.KRATOS_BASE_URL;
   }
 
-  get jwtRefreshTokenLifetime(): string {
-    if (!process.env.JWT_REFRESH_TOKEN_LIFETIME) {
-      $log.error("JWT_REFRESH_TOKEN_LIFETIME is not set!");
-      process.exit(1);
-    }
-    return process.env.JWT_REFRESH_TOKEN_LIFETIME;
-  }
-
-  get jwtTokenLifetime(): string {
-    if (!process.env.JWT_TOKEN_TOKEN_LIFETIME) {
-      $log.error("JWT_TOKEN_TOKEN_LIFETIME is not set!");
-      process.exit(1);
-    }
-    return process.env.JWT_TOKEN_TOKEN_LIFETIME;
-  }
-
-  get claimSubmissionTokenLifeTime(): string {
-    if (!process.env.JWT_TOKEN_TOKEN_LIFETIME) {
-      $log.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
-      process.exit(1);
-    }
-    return process.env.JWT_TOKEN_TOKEN_LIFETIME;
-  }
-  get jwtIssuer(): string {
-    if (!process.env.JWT_ISSUER) {
-      $log.error("JWT_ISSUER is not set!");
-      process.exit(1);
-    }
-    return process.env.JWT_ISSUER;
-  }
-  get jwtAudience(): string {
-    if (!process.env.JWT_AUDIENCE) {
-      $log.error("JWT_AUDIENCE is not set!");
-      process.exit(1);
-    }
-    return process.env.JWT_AUDIENCE;
-  }
   get mongoDBUri(): string {
     if (!process.env.MONGODB_HOST) {
       $log.error("MONGODB_HOST is not set!");
@@ -139,17 +106,9 @@ export class EnvService {
   }
 
   private validate() {
-    if (!this.jwtSecret) {
-      $log.error("JWT_SECRET is not set!");
-      process.exit(1);
-    }
     this.baseUrl;
-    this.jwtRefreshTokenLifetime;
-    this.jwtTokenLifetime;
-    this.jwtAudience;
-    this.jwtAudience;
     this.mongoDBUri;
-    this.claimSubmissionTokenLifeTime;
+    this.kratosBaseUrl;
     this.minioAccessKey;
     this.minioApiPort;
     this.minioBucketName;

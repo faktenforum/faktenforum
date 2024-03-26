@@ -1,5 +1,4 @@
-import { Format, Optional, Property, Required } from "@tsed/schema";
-import { PasswordFormatDecorator } from "~/decorators";
+import { Optional, Property, Required } from "@tsed/schema";
 
 class KratosTraitsDTO {
   @Required()
