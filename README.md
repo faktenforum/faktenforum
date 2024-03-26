@@ -55,13 +55,13 @@ Change to the hasura folder and use hasura cli to export the metadata after
 changes in the hasura console
 
 ```bash
- hasura metadata  --admin-secret "ENTER_YOUR_ADMIN_SECRET_HERE" export
+ hasura metadata  --admin-secret "faktenforum" export
 ```
 
 to apply use:
 
 ```bash
- hasura metadata  --admin-secret "ENTER_YOUR_ADMIN_SECRET_HERE" apply
+ hasura metadata  --admin-secret "faktenforum" apply
 ```
 
 ## Traefik, PostgreSQL, Mino, MongoDB, Hasura
