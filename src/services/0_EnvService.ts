@@ -18,6 +18,14 @@ export class EnvService {
     return process.env.API_BASE_URL;
   }
 
+  get claimSubmissionTokenLifeTime(): string {
+    if (!process.env.JWT_TOKEN_TOKEN_LIFETIME) {
+      $log.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
+      process.exit(1);
+    }
+    return process.env.JWT_TOKEN_TOKEN_LIFETIME;
+  }
+
   get minioHost(): string {
     if (!process.env.MINIO_HOST) {
       $log.error("MINIO_HOST is not set!");
