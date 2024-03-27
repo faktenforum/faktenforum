@@ -113,6 +113,22 @@ export class EnvService {
     return (process.env.NODE_ENV || "development") as Environment;
   }
 
+  get apiKeys(): { kratos: string; hasura: string } {
+    if (!process.env.KRATOS_API_KEY) {
+      $log.error("KRATOS_API_KEY is not set!");
+      process.exit(1);
+    }
+
+    if (!process.env.HASURA_API_KEY) {
+      $log.error("HASURA_API_KEY is not set!");
+      process.exit(1);
+    }
+
+    return {
+      kratos: process.env.KRATOS_API_KEY
+    };
+  }
+
   private validate() {
     this.baseUrl;
     this.mongoDBUri;

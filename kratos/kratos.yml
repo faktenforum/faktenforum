@@ -66,7 +66,6 @@ selfservice:
       after:
         password:
           hooks:
-            - hook: show_verification_ui
             - hook: web_hook
               config:
                 url: http://host.docker.internal:8083/api/v1/webhooks/registration-metadata
@@ -75,6 +74,12 @@ selfservice:
                 body: /etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: true
+                auth:
+                  type: api_key
+                  config:
+                    name: x-api-key
+                    value: KRATOS_API_KEY_VALUE
+                    in: header # alternatively "cookie"
             - hook: web_hook
               config:
                 url: http://host.docker.internal:8083/api/v1/webhooks/registration-creation
@@ -83,6 +88,13 @@ selfservice:
                 body: /etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: false
+                auth:
+                  type: api_key
+                  config:
+                    name: x-api-key
+                    value: KRATOS_API_KEY_VALUE
+                    in: header # alternatively "cookie"
+            - hook: show_verification_ui
 
 log:
   level: debug
@@ -93,7 +105,7 @@ secrets:
   cookie:
     - PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
   cipher:
-    - 32-LONG-SECRET-NOT-SECURE-AT-ALL
+    - PLEASE-CHANGE-ME-I-AM-VERY-INSEC
 
 ciphers:
   algorithm: xchacha20-poly1305

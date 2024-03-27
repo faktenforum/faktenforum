@@ -178,7 +178,8 @@ services:
     depends_on:
       - postgresDb
     environment:
-      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&max_conns=20&max_idle_conns=4&search_path=kratos
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&max_conns=20&max_idle_conns=4&search_path=kratos
+
     volumes:
       - type: bind
         source: ./kratos/
@@ -193,7 +194,12 @@ services:
     depends_on:
       - kratos-migrate
     environment:
-      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&max_conns=20&max_idle_conns=4&search_path=kratos
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&max_conns=20&max_idle_conns=4&search_path=kratos
+      SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_0_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_1_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SECRETS_COOKIE: ${KRATOS_SECRETS_COOKIE}
+      SECRETS_CIPHER: ${KRATOS_SECRETS_CIPHER}
+       
     volumes:
       - type: bind
         source: ./kratos/

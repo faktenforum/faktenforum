@@ -1,6 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams, Cookies } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
+import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, UsersService } from "~/services";
 
@@ -24,6 +25,7 @@ export class WebHookController {
   }
 
   @Post("/registration-creation")
+  @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, String).ContentType("application/json")
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
     await this.usersService.createUser({
@@ -37,6 +39,7 @@ export class WebHookController {
   }
 
   @Post("/registration-metadata")
+  @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, RegistrationPreResponse)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async preFinalizeAccount(@BodyParams() body: RegistrationRequest) {

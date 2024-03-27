@@ -29,7 +29,15 @@
         "username": {
           "type": "string",
           "title": "Username",
-          "minLength": 3
+          "minLength": 3,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              }
+            }
+    
+          }
         }
       },
       "required": [
