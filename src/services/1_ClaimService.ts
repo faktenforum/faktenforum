@@ -1,6 +1,6 @@
-import { Claim, File, ClaimResource, Prisma, PrismaClient } from "@prisma/client";
+import { Claim, File, ClaimResource, PrismaClient } from "@prisma/client";
 import { Service } from "@tsed/di";
-import { ClaimQueryParams, ClaimResourceCreateDTO } from "~/models/ClaimDTO";
+import { ClaimResourceCreate } from "~/models/Claim";
 
 type ClaimCreateDM = {
   title: string;
@@ -18,13 +18,6 @@ type ClaimCreateDM = {
 };
 type ClaimWithResources = Claim & {
   resources: Array<ClaimResource & { file: File | undefined | null }>;
-};
-
-type PaginatedClaimsResult = {
-  data: ClaimWithResources[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
 };
 
 @Service()
@@ -105,7 +98,7 @@ export class ClaimService {
 
   async createClaimResource(
     claimId: string,
-    resource: Partial<ClaimResourceCreateDTO>,
+    resource: Partial<ClaimResourceCreate>,
     userId?: string
   ): Promise<ClaimResource> {
     console.log("resource", JSON.stringify(resource));

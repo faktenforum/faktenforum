@@ -16,7 +16,7 @@ export class ClaimQueryParams {
   @Property()
   search: string = "";
 }
-export class ClaimFileCreateDTO {
+export class ClaimFileCreate {
   @Property()
   @Required()
   name: string;
@@ -37,7 +37,7 @@ export class ClaimFileCreateDTO {
   @Required()
   mimeType: string;
 }
-export class ClaimFileDTO extends ClaimFileCreateDTO {
+export class ClaimFile extends ClaimFileCreate {
   @Property()
   @Required()
   id: string;
@@ -61,7 +61,7 @@ export class ClaimFileDTO extends ClaimFileCreateDTO {
   claimResourceId: string;
 }
 
-export class ClaimResourceCreateDTO {
+export class ClaimResourceCreate {
   @Property()
   @Optional()
   originalUrl: string;
@@ -72,10 +72,10 @@ export class ClaimResourceCreateDTO {
 
   @Property()
   @Optional()
-  file: ClaimFileCreateDTO;
+  file: ClaimFileCreate;
 }
 
-export class ClaimResourceDTO extends ClaimResourceCreateDTO {
+export class ClaimResource extends ClaimResourceCreate {
   @Property()
   @Required()
   id: string;
@@ -91,14 +91,14 @@ export class ClaimResourceDTO extends ClaimResourceCreateDTO {
   updatedAt: string;
   @Property()
   @Required()
-  declare file: ClaimFileDTO;
+  declare file: ClaimFile;
 
   @Property()
   @Optional()
   url: string;
 }
 
-export class ClaimCreateDTO {
+export class ClaimCreate {
   @Property()
   @Optional()
   title: string;
@@ -107,12 +107,12 @@ export class ClaimCreateDTO {
   description: string;
 
   @Property()
-  @ArrayOf(ClaimResourceDTO)
+  @ArrayOf(ClaimResource)
   @Required()
-  resources: ClaimResourceDTO[];
+  resources: ClaimResource[];
 }
 
-export class ClaimDTO extends ClaimCreateDTO {
+export class Claim extends ClaimCreate {
   @Property()
   @Required()
   id: string;
@@ -127,8 +127,8 @@ export class ClaimDTO extends ClaimCreateDTO {
   updatedAt: string;
 }
 
-export class ClaimWithResources extends ClaimDTO {
+export class ClaimWithResources extends Claim {
   @Property()
   @Required()
-  declare resources: ClaimResourceDTO[];
+  declare resources: ClaimResource[];
 }

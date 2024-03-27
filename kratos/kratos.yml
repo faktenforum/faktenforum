@@ -62,18 +62,27 @@ selfservice:
     registration:
       lifespan: 10m
       ui_url: http://app.localhost:8000/registration
+
       after:
         password:
           hooks:
             - hook: show_verification_ui
             - hook: web_hook
               config:
-                url: http://host.docker.internal:8083/api/v1/webhooks/finalize-account
+                url: http://host.docker.internal:8083/api/v1/webhooks/registration-metadata
                 method: POST
                 can_interrupt: true
-                body: /etc/config/kratos/jsonnet/finalize-account.jsonnet
+                body: /etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: true
+            - hook: web_hook
+              config:
+                url: http://host.docker.internal:8083/api/v1/webhooks/registration-creation
+                method: POST
+                can_interrupt: false
+                body: /etc/config/kratos/jsonnet/register.jsonnet
+                response:
+                  parse: false
 
 log:
   level: debug

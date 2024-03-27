@@ -1,6 +1,6 @@
 import { Optional, Property, Required } from "@tsed/schema";
 
-class KratosTraitsDTO {
+class KratosTraits {
   @Required()
   @Property()
   email: string;
@@ -10,7 +10,7 @@ class KratosTraitsDTO {
   username: string;
 }
 
-class KratosTransientPayloadDTO {
+class KratosTransientPayload {
   @Optional()
   @Property()
   firstName?: string;
@@ -20,15 +20,15 @@ class KratosTransientPayloadDTO {
   lastName?: string;
 }
 
-export class FinalizeAccountDTO {
+export class RegistrationRequest {
   @Required()
   @Property()
   id: string;
 
   @Required()
   @Property()
-  traits: KratosTraitsDTO;
+  traits: KratosTraits;
   @Required()
   @Property()
-  transient_payload: KratosTransientPayloadDTO;
+  transient_payload: KratosTransientPayload;
 }

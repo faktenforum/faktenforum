@@ -7,7 +7,7 @@ export enum UserRole {
   NEWBIE = "newbie"
 }
 
-export class SessionDTO {
+export class Session {
   @Required()
   @Property()
   userId: string;

@@ -1,6 +1,6 @@
 import { Inject, Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
-import { Claim, File, ClaimResource, PrismaClient } from "@prisma/client";
+import { File, PrismaClient } from "@prisma/client";
 
 import * as Minio from "minio";
 import { Readable } from "stream";

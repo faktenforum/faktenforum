@@ -2,7 +2,7 @@ import { Inject, Req } from "@tsed/common";
 import { Forbidden } from "@tsed/exceptions";
 import { Middleware, MiddlewareMethods } from "@tsed/platform-middlewares";
 import { Context } from "@tsed/platform-params";
-import type { SessionDTO } from "~/models";
+import type { Session } from "~/models";
 import { UserRole } from "~/models";
 import { AuthService } from "~/services";
 
@@ -16,7 +16,7 @@ export class AccessControlMiddleware implements MiddlewareMethods {
 
     const session = await this.authService.getKratosSession(request.cookies["ory_kratos_session"]);
 
-    const user: SessionDTO = {
+    const user: Session = {
       userId: session.id,
       role: session.identity.metadata_public.role
     };

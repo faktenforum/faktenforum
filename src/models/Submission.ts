@@ -1,12 +1,6 @@
 import { ArrayOf, Optional, Property, Required } from "@tsed/schema";
 
-export class SubmissionResponse {
-  @Property()
-  @Required()
-  token: string;
-}
-
-export class SubmissionFileCreateDTO {
+export class SubmissionFileCreate {
   @Property()
   @Optional()
   name: string;
@@ -27,33 +21,33 @@ export class SubmissionFileCreateDTO {
   @Optional()
   mimeType: string;
 }
-export class SubmissionFileDTO extends SubmissionFileCreateDTO {
+export class SubmissionFile extends SubmissionFileCreate {
   @Property()
   @Optional()
   url: string;
 }
 
-export class SubmissionResourceCreateDTO {
+export class SubmissionResourceCreate {
   @Property()
   @Optional()
   originalUrl: string;
 
   @Property()
   @Optional()
-  file: SubmissionFileCreateDTO;
+  file: SubmissionFileCreate;
 }
 
-export class SubmissionResourceDTO extends SubmissionResourceCreateDTO {
+export class SubmissionResource extends SubmissionResourceCreate {
   @Property()
   @Optional()
   id: string;
 
   @Property()
   @Optional()
-  declare file: SubmissionFileDTO;
+  declare file: SubmissionFile;
 }
 
-export class SubmissionCreateDTO {
+export class SubmissionCreate {
   @Property()
   @Optional()
   title: string;
@@ -62,11 +56,11 @@ export class SubmissionCreateDTO {
   description: string;
 
   @Property()
-  @ArrayOf(SubmissionResourceDTO)
-  resources: SubmissionResourceDTO[];
+  @ArrayOf(SubmissionResource)
+  resources: SubmissionResource[];
 }
 
-export class SubmissionDTO extends SubmissionCreateDTO {
+export class Submission extends SubmissionCreate {
   @Property()
   @Required()
   id: string;

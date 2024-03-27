@@ -6,12 +6,12 @@ import { Get, Post, Put, Returns, getJsonSchema } from "@tsed/schema";
 import Ajv from "ajv";
 import { NextFunction, Response } from "express";
 import { S3MulterFile } from "~/config/minio";
-import { SubmissionCreateDTO, SubmissionDTO } from "~/models";
-import { SubmissionResponse } from "~/models";
+import { SubmissionCreate, Submission } from "~/models";
+import { SubmissionCreateResponse } from "~/models";
 import { ClaimService, EnvService, FileService, SubmissionService } from "~/services";
 
 const ajv = new Ajv();
-const SubmissionCreateDtoJsonSchema = getJsonSchema(SubmissionCreateDTO);
+const SubmissionCreateDtoJsonSchema = getJsonSchema(SubmissionCreate);
 @Controller("/submission")
 export class SubmissionController {
   @Inject()
@@ -30,12 +30,12 @@ export class SubmissionController {
   }
 
   @Post()
-  @Returns(200, SubmissionResponse)
+  @Returns(200, SubmissionCreateResponse)
   async submitClaim(
     @BodyParams() body: { payload: string },
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
-    const claim: SubmissionCreateDTO = JSON.parse(body.payload);
+    const claim: SubmissionCreate = JSON.parse(body.payload);
     console.log(body.payload);
     const isValid = ajv.validate(SubmissionCreateDtoJsonSchema, claim);
 
@@ -48,7 +48,7 @@ export class SubmissionController {
   }
 
   @Get("/:token")
-  @Returns(200, SubmissionDTO)
+  @Returns(200, Submission)
   async getSubmission(@PathParams("token") token: string) {
     const id = await this.submissionService.getClaimIdByToken(token);
     const claim = await this.claimService.getClaimById(id);
@@ -103,13 +103,13 @@ export class SubmissionController {
   }
 
   @Put("/:token")
-  @Returns(200, SubmissionDTO)
+  @Returns(200, Submission)
   async updateSubmission(
     @PathParams("token") token: string,
     @BodyParams() body: { payload: string },
     @MultipartFile("files", 100) files: S3MulterFile[]
   ) {
-    const claim: SubmissionCreateDTO = JSON.parse(body.payload);
+    const claim: SubmissionCreate = JSON.parse(body.payload);
 
     const isValid = ajv.validate(SubmissionCreateDtoJsonSchema, claim);
 
