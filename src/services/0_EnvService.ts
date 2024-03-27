@@ -19,11 +19,11 @@ export class EnvService {
   }
 
   get claimSubmissionTokenLifeTime(): string {
-    if (!process.env.JWT_TOKEN_TOKEN_LIFETIME) {
+    if (!process.env.CLAIM_SUBMISSION_TOKEN_LIFETIME) {
       $log.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
       process.exit(1);
     }
-    return process.env.JWT_TOKEN_TOKEN_LIFETIME;
+    return process.env.CLAIM_SUBMISSION_TOKEN_LIFETIME;
   }
 
   get minioHost(): string {
@@ -117,6 +117,7 @@ export class EnvService {
     this.baseUrl;
     this.mongoDBUri;
     this.kratosBaseUrl;
+    this.claimSubmissionTokenLifeTime;
     this.minioAccessKey;
     this.minioApiPort;
     this.minioBucketName;

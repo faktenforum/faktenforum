@@ -2,7 +2,8 @@ import { Inject, Req } from "@tsed/common";
 import { Forbidden } from "@tsed/exceptions";
 import { Middleware, MiddlewareMethods } from "@tsed/platform-middlewares";
 import { Context } from "@tsed/platform-params";
-import type { SessionDTO, UserRole } from "~/models";
+import type { SessionDTO } from "~/models";
+import { UserRole } from "~/models";
 import { AuthService } from "~/services";
 
 @Middleware()

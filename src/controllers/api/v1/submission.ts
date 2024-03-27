@@ -86,7 +86,7 @@ export class SubmissionController {
   ) {
     try {
       const id = await this.submissionService.getClaimIdByToken(token);
-      const claimFile = await this.claimService.getFileByIds(id, fileId);
+      const claimFile = await this.fileService.getClaimFileMetaData(id, fileId);
       if (!claimFile) {
         throw new NotFound("ClaimFile not found");
       }

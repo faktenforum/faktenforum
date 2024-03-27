@@ -12,8 +12,8 @@ export class AuthService {
 
   kratosSessionUrl: URL;
 
-  constructor() {
-    this.kratosSessionUrl = new URL(`${this.envService.kratosBaseUrl}/sessions/whoami`);
+  constructor(envService: EnvService) {
+    this.kratosSessionUrl = new URL(`${envService.kratosBaseUrl}/sessions/whoami`);
   }
 
   async getKratosSession(sessionCookie: string): Promise<ValidatedSession> {

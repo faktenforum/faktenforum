@@ -3,6 +3,7 @@ import { BodyParams, Cookies } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
 import { FinalizeAccountDTO } from "~/models";
 import { AuthService, UsersService } from "~/services";
+import { $log } from "@tsed/common";
 
 @Controller("/webhooks")
 export class WebHookController {
@@ -14,6 +15,7 @@ export class WebHookController {
   @Get("/session")
   @Returns(200, String).ContentType("application/json") // Returns not a DTO because of It crashes on '-' in body response key values
   async getSessions(@Cookies("ory_kratos_session") sessionCookie: string) {
+    $log.info("Session cookie", sessionCookie);
     const session = await this.authService.getKratosSession(sessionCookie);
     const hasuraSession = {
       "X-Hasura-User-Id": session.id,
