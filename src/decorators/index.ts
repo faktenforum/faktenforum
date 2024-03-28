@@ -3,4 +3,4 @@
  */
 
 export * from "./AccessControlDecorator";
-export * from "./PasswordFormatDecorator";
+export * from "./ApiKeyAccessControlDecorator";

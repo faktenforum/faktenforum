@@ -1,0 +1,13 @@
+http:
+  routers:
+    mail:
+      entryPoints:
+        - web
+      rule: host(`mail.localhost`)
+      service: mail
+
+  services:
+    mail:
+      loadBalancer:
+        servers:
+          - url: http://mailslurper:4436

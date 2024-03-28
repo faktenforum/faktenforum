@@ -1,26 +1,32 @@
-import { UserRole } from "@prisma/client";
-import { Req } from "@tsed/common";
-import { Forbidden, Unauthorized } from "@tsed/exceptions";
+import { Inject, Req } from "@tsed/common";
+import { Forbidden } from "@tsed/exceptions";
 import { Middleware, MiddlewareMethods } from "@tsed/platform-middlewares";
 import { Context } from "@tsed/platform-params";
-import { UserDTO } from "~/models";
+import type { Session } from "~/models";
+import { UserRole } from "~/models";
+import { AuthService } from "~/services";
 
 @Middleware()
 export class AccessControlMiddleware implements MiddlewareMethods {
-  public use(@Req() request: Req, @Context() ctx: Context) {
+  @Inject(AuthService)
+  authService: AuthService;
+  public async use(@Req() request: Req, @Context() ctx: Context) {
     // retrieve options given to the @UseAuth decorator
     const options = ctx.endpoint.get(AccessControlMiddleware) || {};
 
-    if (!request.isAuthenticated()) {
-      // passport.js method to check auth
-      throw new Unauthorized("Unauthorized");
-    }
+    const session = await this.authService.getKratosSession(request.cookies["ory_kratos_session"]);
+
+    const user: Session = {
+      userId: session.id,
+      role: session.identity.metadata_public.role
+    };
+    request.user = user;
+
     if (!options.role || options.role === "ALL") {
       // if no role is given, we assume that the route is accessible to all
       // if role is ALL, we assume that the route is accessible to all
       return;
     }
-    const user = request.user as UserDTO;
     switch (options.role) {
       // This Route is only accessible to Admins
       case UserRole.ADMIN:
@@ -31,6 +37,12 @@ export class AccessControlMiddleware implements MiddlewareMethods {
       // This Route is accessible to Users and Admins
       case UserRole.USER:
         if (user.role === UserRole.USER || user.role === UserRole.ADMIN) {
+          return;
+        }
+        break;
+
+      case UserRole.NEWBIE:
+        if (user.role === UserRole.NEWBIE || user.role === UserRole.USER || user.role === UserRole.ADMIN) {
           return;
         }
         break;

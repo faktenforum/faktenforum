@@ -3,3 +3,4 @@
  */
 
 export * from "./AccessControlMiddleware";
+export * from "./ApiKeyAccessControlMiddleware";

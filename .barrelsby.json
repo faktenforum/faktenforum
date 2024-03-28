@@ -5,7 +5,6 @@
     "./src/services",
     "./src/decorators",
     "./src/middlewares",
-    "./src/protocols",
     "./src/models",
     "./src/utils"
   ],

@@ -1,14 +1,12 @@
-http: 
+http:
   routers:
     backend:
       entryPoints:
         - web
-      rule: host(`api.localhost`)
+      rule: host(`app.localhost`) && PathPrefix(`/api`)
       service: backend
-
   services:
     backend:
       loadBalancer:
         servers:
-        - url: http://docker-host:8083
-
+          - url: http://host.docker.internal:8083

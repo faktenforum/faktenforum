@@ -5,7 +5,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 
 import crypto from "crypto";
 import { S3MulterFile } from "~/config/minio";
-import { SubmissionDTO, SubmissionCreateDTO } from "~/models";
+import { Submission, SubmissionCreate } from "~/models";
 import { AuthService, ClaimService, EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils";
 
@@ -51,30 +51,37 @@ export class SubmissionService {
     return claimId;
   }
 
-  async submitClaim(claim: SubmissionCreateDTO, files: S3MulterFile[], userId?: string) {
+  async submitClaim(claim: SubmissionCreate, files: S3MulterFile[], userId?: string) {
     const rawToken = crypto.randomBytes(24).toString("hex");
     const dbData = {
       title: claim.title,
       description: claim.description,
-      resources: claim.resources.map((resource) => ({
-        originalUrl: resource.originalUrl,
-        files: resource.files.map((claimFile) => {
-          if (claimFile.url.startsWith("file-")) {
-            const index = parseInt(claimFile.url.substring(5));
-            const file = files[index];
+      resources: claim.resources.map((resource) => {
+        if (!resource.file) {
+          return {
+            originalUrl: resource.originalUrl
+          };
+        }
+        if (resource.file.url.startsWith("file-")) {
+          const index = parseInt(resource.file.url.substring(5));
+          const file = files[index];
 
-            return {
-              key: file.key,
-              mimeType: file.mimetype,
-              md5: file.etag.replace(/"/g, ""),
-              name: file.metadata.originalName,
-              size: file.size
-            };
-          } else {
-            throw new BadRequest("Invalid file URL");
-          }
-        })
-      }))
+          const claimFile = {
+            key: file.key,
+            mimeType: file.mimetype,
+            md5: file.etag.replace(/"/g, ""),
+            name: file.metadata.originalName,
+            size: file.size
+          };
+
+          return {
+            originalUrl: resource.originalUrl,
+            file: claimFile
+          };
+        } else {
+          throw new BadRequest("Invalid file URL");
+        }
+      })
     };
     const { id: claimId } = await this.claimService.createClaim(dbData, userId);
 
@@ -93,12 +100,12 @@ export class SubmissionService {
     return { claimId, token };
   }
 
-  async updateSubmissionById(id: string, data: Partial<SubmissionDTO>, files: S3MulterFile[]) {
+  async updateSubmissionById(id: string, data: Partial<Submission>, files: S3MulterFile[]) {
     const claim = await this.claimService.getClaimById(id);
     if (!claim) throw new NotFound("Claim not found");
     // update claim data
     await this.claimService.updateClaimById(id, { title: data.title, description: data.description });
-
+    console.log("data.resources", data.resources);
     await Promise.all(
       (data.resources || []).map((resource) => {
         if (resource.id) {
@@ -108,22 +115,24 @@ export class SubmissionService {
           });
         } else {
           // create new resource
+          let claimFile;
+          if (resource.file && resource.file.url.startsWith("file-")) {
+            const index = parseInt(resource.file.url.substring(5));
+            const file = files[index];
+
+            claimFile = {
+              key: file.key,
+              mimeType: file.mimetype,
+              md5: file.etag.replace(/"/g, ""),
+              name: file.metadata.originalName,
+              size: file.size
+            };
+
+            console.log("Claim File: ", JSON.stringify(claimFile));
+          }
           const resourceDbData = {
             originalUrl: resource.originalUrl,
-            files: (resource.files || [])
-              .filter((file) => file.url.startsWith("file-"))
-              .map((claimFile) => {
-                const index = parseInt(claimFile.url.substring(5));
-                const file = files[index];
-
-                return {
-                  key: file.key,
-                  mimeType: file.mimetype,
-                  md5: file.etag.replace(/"/g, ""),
-                  name: file.metadata.originalName,
-                  size: file.size
-                };
-              })
+            file: claimFile
           };
           return this.claimService.createClaimResource(id, resourceDbData);
         }
