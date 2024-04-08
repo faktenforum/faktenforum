@@ -100,6 +100,15 @@ Install dependencies:
 npm install
 ```
 
+Start docker containers with help of docker-compose.local.yml
+An run primsa migration to update or init the database shema
+
+```bash
+npm run pisma
+```
+
+Now docker-compose down and up again to bringt hasura metata up to date
+
 This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to generate index files to import the controllers.
 Edit `.barreslby.json` to customize it
 
