@@ -2,31 +2,101 @@ table:
   name: User
   schema: public
 array_relationships:
-  - name: ClaimFiles
+  - name: ClaimFacts
     using:
       foreign_key_constraint_on:
-        column: submitterId
+        column: createdBy
         table:
-          name: ClaimFile
+          name: ClaimFact
           schema: public
   - name: ClaimResources
     using:
       foreign_key_constraint_on:
-        column: submitterId
+        column: createdBy
         table:
           name: ClaimResource
           schema: public
   - name: Claims
     using:
       foreign_key_constraint_on:
-        column: submitterId
+        column: createdBy
         table:
           name: Claim
           schema: public
-  - name: Sessions
+  - name: Comments
     using:
       foreign_key_constraint_on:
-        column: userId
+        column: createdBy
         table:
-          name: Session
+          name: Comment
+          schema: public
+  - name: FactResources
+    using:
+      foreign_key_constraint_on:
+        column: createdBy
+        table:
+          name: FactResource
+          schema: public
+  - name: Facts
+    using:
+      foreign_key_constraint_on:
+        column: createdBy
+        table:
+          name: Fact
+          schema: public
+  - name: Files
+    using:
+      foreign_key_constraint_on:
+        column: createdBy
+        table:
+          name: File
+          schema: public
+  - name: claimFactsByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: ClaimFact
+          schema: public
+  - name: claimResourcesByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: ClaimResource
+          schema: public
+  - name: claimsByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: Claim
+          schema: public
+  - name: commentsByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: Comment
+          schema: public
+  - name: factResourcesByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: FactResource
+          schema: public
+  - name: factsByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: Fact
+          schema: public
+  - name: filesByUpdatedby
+    using:
+      foreign_key_constraint_on:
+        column: updatedBy
+        table:
+          name: File
           schema: public

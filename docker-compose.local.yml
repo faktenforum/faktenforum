@@ -103,8 +103,8 @@ services:
   #     PGHOST: postgres-db
   #     PGPORT: ${POSTGRES_PORT}
 
-    networks:
-      - faktenforum
+  # networks:
+  #   - faktenforum
   mongodb: # Add a MongoDB instance
     image: mongo:latest # Use a minimal version of MongoDB
     ports:

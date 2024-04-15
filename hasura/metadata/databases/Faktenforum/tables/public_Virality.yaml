@@ -1,6 +1,6 @@
 table:
-  name: Comment
-  schema: faktenforum
+  name: Virality
+  schema: public
 object_relationships:
   - name: Claim
     using:

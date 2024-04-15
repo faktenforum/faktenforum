@@ -1,10 +1,13 @@
 table:
   name: File
-  schema: faktenforum
+  schema: public
 object_relationships:
   - name: User
     using:
       foreign_key_constraint_on: createdBy
+  - name: userByUpdatedby
+    using:
+      foreign_key_constraint_on: updatedBy
 array_relationships:
   - name: ClaimResources
     using:
@@ -12,27 +15,11 @@ array_relationships:
         column: fileId
         table:
           name: ClaimResource
-          schema: faktenforum
+          schema: public
   - name: FactResources
     using:
       foreign_key_constraint_on:
         column: fileId
         table:
           name: FactResource
-          schema: faktenforum
-select_permissions:
-  - role: user
-    permission:
-      columns:
-        - size
-        - createdBy
-        - id
-        - key
-        - md5
-        - mimeType
-        - name
-        - transcription
-        - createdAt
-        - updatedAt
-      filter: {}
-    comment: ""
+          schema: public

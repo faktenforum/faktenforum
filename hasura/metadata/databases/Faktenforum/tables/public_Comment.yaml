@@ -1,13 +1,10 @@
 table:
-  name: ClaimResource
+  name: Comment
   schema: public
 object_relationships:
   - name: Claim
     using:
       foreign_key_constraint_on: claimId
-  - name: File
-    using:
-      foreign_key_constraint_on: fileId
   - name: User
     using:
       foreign_key_constraint_on: createdBy

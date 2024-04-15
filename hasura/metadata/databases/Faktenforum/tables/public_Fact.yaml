@@ -1,10 +1,13 @@
 table:
   name: Fact
-  schema: faktenforum
+  schema: public
 object_relationships:
   - name: User
     using:
       foreign_key_constraint_on: createdBy
+  - name: userByUpdatedby
+    using:
+      foreign_key_constraint_on: updatedBy
 array_relationships:
   - name: ClaimFacts
     using:
@@ -12,11 +15,11 @@ array_relationships:
         column: factId
         table:
           name: ClaimFact
-          schema: faktenforum
+          schema: public
   - name: FactResources
     using:
       foreign_key_constraint_on:
         column: factId
         table:
           name: FactResource
-          schema: faktenforum
+          schema: public

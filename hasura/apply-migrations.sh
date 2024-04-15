@@ -29,6 +29,13 @@ fi
 
 # Apply seeds if enabled
 
+# Apply metadata if enabled
+if [ "$APPLY_METADATA" = "true" ]; then
+    echo "Applying metadata..."
+    hasura metadata apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
+else
+    echo "Skipping metadata."
+fi
 
 # Apply migrations if enabled
 if [ "$APPLY_MIGRATIONS" = "true" ]; then
@@ -45,11 +52,5 @@ else
     echo "Skipping seeds."
 fi
 
-# Apply metadata if enabled
-if [ "$APPLY_METADATA" = "true" ]; then
-    echo "Applying metadata..."
-    hasura metadata apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
-else
-    echo "Skipping metadata."
-fi
+
 

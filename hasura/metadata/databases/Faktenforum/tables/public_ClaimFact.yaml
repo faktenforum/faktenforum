@@ -1,13 +1,13 @@
 table:
-  name: ClaimResource
+  name: ClaimFact
   schema: public
 object_relationships:
   - name: Claim
     using:
       foreign_key_constraint_on: claimId
-  - name: File
+  - name: Fact
     using:
-      foreign_key_constraint_on: fileId
+      foreign_key_constraint_on: factId
   - name: User
     using:
       foreign_key_constraint_on: createdBy

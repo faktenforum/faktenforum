@@ -4,8 +4,18 @@ table:
 object_relationships:
   - name: User
     using:
-      foreign_key_constraint_on: submitterId
+      foreign_key_constraint_on: createdBy
+  - name: userByUpdatedby
+    using:
+      foreign_key_constraint_on: updatedBy
 array_relationships:
+  - name: ClaimFacts
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: ClaimFact
+          schema: public
   - name: ClaimResources
     using:
       foreign_key_constraint_on:
@@ -19,4 +29,18 @@ array_relationships:
         column: claimId
         table:
           name: ClaimSubmissionToken
+          schema: public
+  - name: Comments
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: Comment
+          schema: public
+  - name: Viralities
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: Virality
           schema: public

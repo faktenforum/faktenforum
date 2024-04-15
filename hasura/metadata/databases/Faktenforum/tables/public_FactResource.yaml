@@ -1,6 +1,6 @@
 table:
   name: FactResource
-  schema: faktenforum
+  schema: public
 object_relationships:
   - name: Fact
     using:
@@ -11,3 +11,6 @@ object_relationships:
   - name: User
     using:
       foreign_key_constraint_on: createdBy
+  - name: userByUpdatedby
+    using:
+      foreign_key_constraint_on: updatedBy
