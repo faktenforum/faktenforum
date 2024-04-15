@@ -52,5 +52,12 @@ else
     echo "Skipping seeds."
 fi
 
+# Apply metadata second time if migrations have been missing chicken egg problem
+if [ "$APPLY_MIGRATIONS" = "true" ]; then
+    echo "Applying metadata again after migrations..."
+    hasura metadata apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
+else
+    echo "Skipping metadata second round."
+fi
 
 

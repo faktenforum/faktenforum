@@ -57,7 +57,7 @@ CREATE TABLE public."Claim" (
     status public."ClaimStatus" DEFAULT 'SUBMITTED'::public."ClaimStatus" NOT NULL,
     "archiveId" uuid,
     "archiveAt" timestamp(3) without time zone,
-    "createdBy" uuid NOT NULL,
+    "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
@@ -67,7 +67,7 @@ CREATE TABLE public."ClaimFact" (
     id uuid NOT NULL,
     "claimId" uuid NOT NULL,
     "factId" uuid NOT NULL,
-    "createdBy" uuid NOT NULL,
+    "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
@@ -79,7 +79,7 @@ CREATE TABLE public."ClaimResource" (
     description text,
     "fileId" uuid,
     "claimId" uuid NOT NULL,
-    "createdBy" uuid NOT NULL,
+    "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
@@ -108,7 +108,7 @@ CREATE TABLE public."Fact" (
     id uuid NOT NULL,
     title text,
     description text,
-    "createdBy" uuid NOT NULL,
+    "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
@@ -120,7 +120,7 @@ CREATE TABLE public."FactResource" (
     description text,
     "fileId" uuid,
     "factId" uuid NOT NULL,
-    "createdBy" uuid NOT NULL,
+    "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
@@ -134,7 +134,7 @@ CREATE TABLE public."File" (
     md5 text NOT NULL,
     size integer NOT NULL,
     transcription text,
-    "createdBy" uuid NOT NULL,
+    "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
@@ -239,7 +239,7 @@ ALTER TABLE ONLY public."Claim"
 ALTER TABLE ONLY public."Comment"
     ADD CONSTRAINT "Comment_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+    ADD CONSTRAINT "Comment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."Comment"
     ADD CONSTRAINT "Comment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."FactResource"

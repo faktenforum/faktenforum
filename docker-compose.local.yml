@@ -87,24 +87,20 @@ services:
       start_period: 5s
     networks:
       - faktenforum
-  # db-migrate:
-  #   build:
-  #     context: ./database
-  #     dockerfile: Dockerfile.db-migrate
-  #   depends_on:
-  #     - postgres-db
-  #     - graphql-engine
-  #   environment:
-  #     HASURA_ENDPOINT: "http://graphql-engine:8080"
-  #     HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
-  #     APPLY_METADATA: "true"
-  #     PGADMIN: ${POSTGRES_USER}
-  #     PGPASSWORD: ${POSTGRES_PASSWORD}
-  #     PGHOST: postgres-db
-  #     PGPORT: ${POSTGRES_PORT}
-
-  # networks:
-  #   - faktenforum
+  db-migrate:
+    build:
+      context: ./hasura
+      dockerfile: Dockerfile.hasura-migrate
+    depends_on:
+      - postgres-db
+      - graphql-engine
+    environment:
+      HASURA_ENDPOINT: "http://graphql-engine:8080"
+      HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
+      APPLY_METADATA: true
+      APPLY_MIGRATIONS: true
+    networks:
+      - faktenforum
   mongodb: # Add a MongoDB instance
     image: mongo:latest # Use a minimal version of MongoDB
     ports:
