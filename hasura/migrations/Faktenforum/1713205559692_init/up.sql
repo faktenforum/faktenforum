@@ -215,50 +215,50 @@ COMMENT ON TRIGGER "set_public_User_updatedAt" ON public."User" IS 'trigger to s
 CREATE TRIGGER "set_public_Virality_updatedAt" BEFORE UPDATE ON public."Virality" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
 COMMENT ON TRIGGER "set_public_Virality_updatedAt" ON public."Virality" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
 ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "ClaimFact_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "ClaimFact_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_factId_fkey" FOREIGN KEY ("factId") REFERENCES public."Fact"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "ClaimFact_factId_fkey" FOREIGN KEY ("factId") REFERENCES public."Fact"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."ClaimFact"
     ADD CONSTRAINT "ClaimFact_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "ClaimResource_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "ClaimResource_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."ClaimResource"
     ADD CONSTRAINT "ClaimResource_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES public."File"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."ClaimResource"
     ADD CONSTRAINT "ClaimResource_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."ClaimSubmissionToken"
-    ADD CONSTRAINT "ClaimSubmissionToken_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "ClaimSubmissionToken_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."Claim"
-    ADD CONSTRAINT "Claim_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "Claim_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."Claim"
     ADD CONSTRAINT "Claim_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "Comment_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "Comment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."Comment"
     ADD CONSTRAINT "Comment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "FactResource_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_factId_fkey" FOREIGN KEY ("factId") REFERENCES public."Fact"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "FactResource_factId_fkey" FOREIGN KEY ("factId") REFERENCES public."Fact"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public."FactResource"
     ADD CONSTRAINT "FactResource_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES public."File"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."FactResource"
     ADD CONSTRAINT "FactResource_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."Fact"
-    ADD CONSTRAINT "Fact_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "Fact_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."Fact"
     ADD CONSTRAINT "Fact_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."File"
-    ADD CONSTRAINT "File_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "File_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."File"
     ADD CONSTRAINT "File_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public."Virality"
-    ADD CONSTRAINT "Virality_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT "Virality_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
