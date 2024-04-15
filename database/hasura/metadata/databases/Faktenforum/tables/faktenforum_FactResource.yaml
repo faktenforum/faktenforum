@@ -1,0 +1,13 @@
+table:
+  name: FactResource
+  schema: faktenforum
+object_relationships:
+  - name: Fact
+    using:
+      foreign_key_constraint_on: factId
+  - name: File
+    using:
+      foreign_key_constraint_on: fileId
+  - name: User
+    using:
+      foreign_key_constraint_on: createdBy

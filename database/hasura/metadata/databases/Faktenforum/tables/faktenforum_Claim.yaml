@@ -1,0 +1,84 @@
+table:
+  name: Claim
+  schema: faktenforum
+object_relationships:
+  - name: User
+    using:
+      foreign_key_constraint_on: createdBy
+array_relationships:
+  - name: ClaimFacts
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: ClaimFact
+          schema: faktenforum
+  - name: ClaimResources
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: ClaimResource
+          schema: faktenforum
+  - name: Comments
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: Comment
+          schema: faktenforum
+  - name: Viralities
+    using:
+      foreign_key_constraint_on:
+        column: claimId
+        table:
+          name: Virality
+          schema: faktenforum
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - archiveId
+        - description
+        - tags
+        - title
+    comment: ""
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - tags
+        - archiveId
+        - createdBy
+        - description
+        - id
+        - title
+        - archiveAt
+        - createdAt
+        - updatedAt
+        - label
+        - status
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - description
+        - label
+        - status
+        - tags
+        - title
+      filter:
+        createdBy:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        createdBy:
+          _eq: X-Hasura-User-Id
+    comment: ""

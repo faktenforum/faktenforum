@@ -1,0 +1,3 @@
+table:
+  name: _prisma_migrations
+  schema: faktenforum

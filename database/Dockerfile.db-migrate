@@ -1,0 +1,24 @@
+# Use the latest debian image apline does't not work with hasura cli
+FROM debian:bookworm-slim
+
+# Install Hasura CLI
+RUN apt update && apt install -y curl postgresql-client \
+    && curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir /app
+WORKDIR /app
+# Copy db initi script
+COPY ./initdb.sh .
+COPY ./apply-migrations.sh .
+
+# Copy migrations and metadata
+COPY ./hasura/migrations ./migrations
+COPY ./hasura/metadata ./metadata
+COPY ./hasura/config.yaml .
+
+# set executable flag
+RUN chmod +x initdb.sh
+RUN chmod +x apply-migrations.sh
+
+# Startup script
+CMD ["./initdb.sh"]
