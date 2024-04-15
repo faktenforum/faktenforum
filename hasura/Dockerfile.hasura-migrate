@@ -11,6 +11,7 @@ WORKDIR /app
 # Copy migrations and metadata
 COPY ./migrations ./migrations
 COPY ./metadata ./metadata
+COPY ./seeds ./seeds
 COPY /config.yaml .
 # Startup script
 COPY apply-migrations.sh .

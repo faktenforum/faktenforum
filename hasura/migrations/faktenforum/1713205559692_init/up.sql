@@ -16,15 +16,13 @@ CREATE TYPE public."ClaimStatus" AS ENUM (
     'CHECKED',
     'PUBLISHED'
 );
-CREATE TYPE public."FileType" AS ENUM (
-    'IMAGE',
-    'VIDEO',
-    'DOCUMENT',
-    'OTHER'
-);
+
 CREATE TYPE public."UserRole" AS ENUM (
     'ADMIN',
-    'USER'
+    'MODERATOR',
+    'SENIOR',
+    'INTERMEDIATE',
+    'JUNIOR'
 );
 CREATE FUNCTION public."set_current_timestamp_updatedAt"() RETURNS trigger
     LANGUAGE plpgsql

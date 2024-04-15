@@ -40,14 +40,14 @@ fi
 # Apply migrations if enabled
 if [ "$APPLY_MIGRATIONS" = "true" ]; then
     echo "Applying migrations..."
-    hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
+    hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --all-databases --disable-interactive true
 else
     echo "Skipping migrations."
 fi
 
 if [ "$APPLY_SEEDS" = "true" ]; then
     echo "Applying seeds..."
-    hasura seed apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
+    hasura seed apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --all-databases
 else
     echo "Skipping seeds."
 fi
