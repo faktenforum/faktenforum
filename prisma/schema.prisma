@@ -53,7 +53,7 @@ enum ClaimStatus {
 }
 
 model Claim {
-    id               String                 @id @default(uuid())
+    id               String                 @id @default(uuid()) @db.Uuid
     title            String?
     description      String?
     tags             String[]               @default([])
@@ -61,33 +61,37 @@ model Claim {
     status           ClaimStatus            @default(SUBMITTED)
     resources        ClaimResource[]
     claimSubmitToken ClaimSubmissionToken[]
-    archiveId        String?
+    archiveId        String?                @db.Uuid
     archiveAt        DateTime?
     createdAt        DateTime               @default(now())
     updatedAt        DateTime               @updatedAt
-    createdBy        String?
-    user             User?                  @relation(fields: [createdBy], references: [id])
+    createdBy        String                 @db.Uuid
+    updatedBy        String?                @db.Uuid
+    creater          User                   @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater          User?                  @relation(name: "Updater", fields: [updatedBy], references: [id])
     comment          Comment[]
     Virality         Virality[]
     ClaimFact        ClaimFact[]
 }
 
 model ClaimResource {
-    id          String   @id @default(uuid())
+    id          String   @id @default(uuid()) @db.Uuid
     originalUrl String?
     description String?
-    fileId      String?
+    fileId      String?  @db.Uuid
     file        File?    @relation(fields: [fileId], references: [id])
-    claimId     String
+    claimId     String   @db.Uuid
     claim       Claim    @relation(fields: [claimId], references: [id])
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    createdBy   String?
-    user        User?    @relation(fields: [createdBy], references: [id])
+    createdBy   String   @db.Uuid
+    updatedBy   String?  @db.Uuid
+    creater     User     @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater     User?    @relation(name: "Updater", fields: [updatedBy], references: [id])
 }
 
 model File {
-    id            String          @id @default(uuid())
+    id            String          @id @default(uuid()) @db.Uuid
     key           String
     name          String
     mimeType      String
@@ -96,8 +100,10 @@ model File {
     transcription String?
     createdAt     DateTime        @default(now())
     updatedAt     DateTime        @updatedAt
-    createdBy     String?
-    user          User?           @relation(fields: [createdBy], references: [id])
+    createdBy     String          @db.Uuid
+    updatedBy     String?         @db.Uuid
+    creater       User            @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater       User?           @relation(name: "Updater", fields: [updatedBy], references: [id])
     claimResource ClaimResource[]
     factResource  FactResource[]
 
@@ -105,58 +111,65 @@ model File {
 }
 
 model Fact {
-    id          String         @id @default(uuid())
+    id          String         @id @default(uuid()) @db.Uuid
     title       String?
     description String?
     createdAt   DateTime       @default(now())
     updatedAt   DateTime       @updatedAt
-    createdBy   String
-    user        User           @relation(fields: [createdBy], references: [id])
+    createdBy   String         @db.Uuid
+    updatedBy   String?        @db.Uuid
+    creater     User           @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater     User?          @relation(name: "Updater", fields: [updatedBy], references: [id])
     resources   FactResource[]
     ClaimFact   ClaimFact[]
 }
 
 model FactResource {
-    id          String   @id @default(uuid())
+    id          String   @id @default(uuid()) @db.Uuid
     originalUrl String?
     description String?
-    fileId      String?
+    fileId      String?  @db.Uuid
     file        File?    @relation(fields: [fileId], references: [id])
-    factId      String
+    factId      String   @db.Uuid
     fact        Fact     @relation(fields: [factId], references: [id])
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    createdBy   String
-    user        User     @relation(fields: [createdBy], references: [id])
-    claimId     String?
+    createdBy   String   @db.Uuid
+    updatedBy   String?  @db.Uuid
+    creater     User     @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater     User?    @relation(name: "Updater", fields: [updatedBy], references: [id])
 }
 
 model ClaimFact {
-    id        String   @id @default(uuid())
-    claimId   String
+    id        String   @id @default(uuid()) @db.Uuid
+    claimId   String   @db.Uuid
     claim     Claim    @relation(fields: [claimId], references: [id])
-    factId    String
+    factId    String   @db.Uuid
     fact      Fact     @relation(fields: [factId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    createdBy String
-    user      User     @relation(fields: [createdBy], references: [id])
+    createdBy String   @db.Uuid
+    updatedBy String?  @db.Uuid
+    creater   User     @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater   User?    @relation(name: "Updater", fields: [updatedBy], references: [id])
 }
 
 model Comment {
-    id        String   @id @default(uuid())
-    claimId   String
+    id        String   @id @default(uuid()) @db.Uuid
+    claimId   String   @db.Uuid
     claim     Claim    @relation(fields: [claimId], references: [id])
     content   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    createdBy String
-    user      User     @relation(fields: [createdBy], references: [id])
+    createdBy String   @db.Uuid
+    updatedBy String?  @db.Uuid
+    creater   User     @relation(name: "Creater", fields: [createdBy], references: [id])
+    updater   User?    @relation(name: "Updater", fields: [updatedBy], references: [id])
 }
 
 model Virality {
-    id              String   @id @default(uuid())
-    claimId         String
+    id              String   @id @default(uuid()) @db.Uuid
+    claimId         String   @db.Uuid
     claim           Claim    @relation(fields: [claimId], references: [id])
     facebookLikes   Int?
     facebookShares  Int?
@@ -170,9 +183,9 @@ model Virality {
 }
 
 model ClaimSubmissionToken {
-    id        String   @id @default(uuid())
+    id        String   @id @default(uuid()) @db.Uuid
     token     String   @unique
-    claimId   String
+    claimId   String   @db.Uuid
     claim     Claim    @relation(fields: [claimId], references: [id])
     expiresAt DateTime
     createdAt DateTime @default(now())
@@ -180,22 +193,30 @@ model ClaimSubmissionToken {
 }
 
 model User {
-    id                     String          @id @default(uuid())
-    email                  String          @unique
-    username               String          @unique
-    firstName              String?
-    lastName               String?
-    pronouns               String?
-    profileImage           String?
-    bio                    String?
-    mobileNumber           String?
-    createdAt              DateTime        @default(now())
-    updatedAt              DateTime        @updatedAt
-    submittedClaimResource ClaimResource[]
-    submittedFiles         File[]
-    submittedClaims        Claim[]
-    fact                   Fact[]
-    factResource           FactResource[]
-    comment                Comment[]
-    ClaimFact              ClaimFact[]
+    id           String   @id @default(uuid()) @db.Uuid
+    email        String   @unique
+    username     String   @unique
+    firstName    String?
+    lastName     String?
+    pronouns     String?
+    profileImage String?
+    bio          String?
+    mobileNumber String?
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    createdComments       Comment[]       @relation(name: "Creater")
+    updatedComments       Comment[]       @relation(name: "Updater")
+    createdClaims         Claim[]         @relation(name: "Creater")
+    updatedClaims         Claim[]         @relation(name: "Updater")
+    createdFacts          Fact[]          @relation(name: "Creater")
+    updatedFacts          Fact[]          @relation(name: "Updater")
+    createdClaimFacts     ClaimFact[]     @relation(name: "Creater")
+    updatedClaimFacts     ClaimFact[]     @relation(name: "Updater")
+    createdClaimResources ClaimResource[] @relation(name: "Creater")
+    updatedClaimResources ClaimResource[] @relation(name: "Updater")
+    createdFactResources  FactResource[]  @relation(name: "Creater")
+    updatedFactResources  FactResource[]  @relation(name: "Updater")
+    createdFiles          File[]          @relation(name: "Creater")
+    updatedFiles          File[]          @relation(name: "Updater")
 }
