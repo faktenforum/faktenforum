@@ -54,7 +54,7 @@ export class FileService {
     return this.prisma.file.findFirst({
       where: {
         id: fileId,
-        claimResource: {
+        ClaimResource: {
           some: {
             claimId
           }
@@ -67,7 +67,7 @@ export class FileService {
     return this.prisma.file.findFirst({
       where: {
         id: fileId,
-        factResource: {
+        FactResource: {
           some: {
             factId
           }

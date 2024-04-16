@@ -17,7 +17,7 @@ type ClaimCreateDM = {
   }[];
 };
 type ClaimWithResources = Claim & {
-  resources: Array<ClaimResource & { file: File | undefined | null }>;
+  ClaimResource: Array<ClaimResource & { File: File | undefined | null }>;
 };
 
 @Service()
@@ -30,25 +30,26 @@ export class ClaimService {
 
   async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<Claim> {
     const { title, description, resources } = claimData;
+    console.log("Claim Data:", JSON.stringify(claimData, null, 2));
 
     // Start a transaction
     const result = await this.prisma.claim.create({
       data: {
         title: title,
         description: description,
-        resources: {
+        ClaimResource: {
           create: resources.map((resource) => ({
             createdBy: userId,
             originalUrl: resource.originalUrl,
-            file: resource.file
+            File: resource.File
               ? {
                   create: {
                     createdBy: userId,
-                    key: resource.file.key,
-                    md5: resource.file.md5,
-                    mimeType: resource.file.mimeType,
-                    name: resource.file.name,
-                    size: resource.file.size
+                    key: resource.File.key,
+                    md5: resource.File.md5,
+                    mimeType: resource.File.mimeType,
+                    name: resource.File.name,
+                    size: resource.File.size
                   }
                 }
               : undefined
@@ -66,9 +67,9 @@ export class ClaimService {
     return await this.prisma.claim.findUnique({
       where: { id: id },
       include: {
-        resources: {
+        ClaimResource: {
           include: {
-            file: true
+            File: true
           }
         }
       }
@@ -76,9 +77,11 @@ export class ClaimService {
   }
 
   async updateClaimById(id: string, data: Partial<Claim>): Promise<Claim> {
+    console.log(data);
+    console.log(id);
     return this.prisma.claim.update({
       where: { id: id },
-      data: data
+      data: { title: "NEW TITLE" }
     });
   }
 
@@ -118,7 +121,7 @@ export class ClaimService {
     }
     return this.prisma.claimResource.create({
       include: {
-        file: !!resource.file
+        File: !!resource.file
       },
       data: {
         claimId: claimId,

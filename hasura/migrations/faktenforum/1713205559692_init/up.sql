@@ -47,7 +47,7 @@ BEGIN
 END;
 $$;
 CREATE TABLE public."Claim" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     title text,
     description text,
     tags text[] DEFAULT ARRAY[]::text[],
@@ -59,20 +59,20 @@ CREATE TABLE public."Claim" (
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."ClaimFact" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     "claimId" uuid NOT NULL,
     "factId" uuid NOT NULL,
     "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."ClaimResource" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     "originalUrl" text,
     description text,
     "fileId" uuid,
@@ -81,39 +81,39 @@ CREATE TABLE public."ClaimResource" (
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."ClaimSubmissionToken" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     token text NOT NULL,
     "claimId" uuid NOT NULL,
     "expiresAt" timestamp(3) without time zone NOT NULL,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."Comment" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     "claimId" uuid NOT NULL,
     content text NOT NULL,
     "createdBy" uuid NOT NULL,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."Fact" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     title text,
     description text,
     "createdBy" uuid,
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."FactResource" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     "originalUrl" text,
     description text,
     "fileId" uuid,
@@ -122,10 +122,10 @@ CREATE TABLE public."FactResource" (
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."File" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     key text NOT NULL,
     name text NOT NULL,
     "mimeType" text NOT NULL,
@@ -136,10 +136,10 @@ CREATE TABLE public."File" (
     "updatedBy" uuid,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."User" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     email text NOT NULL,
     username text NOT NULL,
     "firstName" text,
@@ -150,10 +150,10 @@ CREATE TABLE public."User" (
     "mobileNumber" text,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 CREATE TABLE public."Virality" (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
     "claimId" uuid NOT NULL,
     "facebookLikes" integer,
     "facebookShares" integer,
@@ -164,7 +164,7 @@ CREATE TABLE public."Virality" (
     "instagramShares" integer,
     "createdAt" timestamp with time zone DEFAULT now(),
     "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange NOT NULL 
+    sys_period tstzrange 
 );
 ALTER TABLE ONLY public."ClaimFact"
     ADD CONSTRAINT "ClaimFact_pkey" PRIMARY KEY (id);

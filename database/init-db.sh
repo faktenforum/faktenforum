@@ -21,6 +21,8 @@ EOSQL
     echo "Enabling extensions for: $dbname"
     psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname=$dbname <<-EOSQL
         CREATE EXTENSION IF NOT EXISTS temporal_tables;
+
+
 EOSQL
 }
 
