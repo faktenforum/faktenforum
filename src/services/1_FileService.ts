@@ -1,6 +1,6 @@
 import { Inject, Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
-import { File, PrismaClient } from "@prisma/client";
+import { file, PrismaClient } from "@prisma/client";
 
 import * as Minio from "minio";
 import { Readable } from "stream";
@@ -50,26 +50,26 @@ export class FileService {
     return this.minioClient.getObject(this.envService.minioBucketName, key);
   }
 
-  getClaimFileMetaData(claimId: string, fileId: string): Promise<File | null> {
+  getClaimFileMetaData(claimId: string, fileId: string): Promise<file | null> {
     return this.prisma.file.findFirst({
       where: {
         id: fileId,
-        ClaimResource: {
+        claim_resource: {
           some: {
-            claimId
+            claim_id: claimId
           }
         }
       }
     });
   }
 
-  getFactFileMetaData(factId: string, fileId: string): Promise<File | null> {
+  getFactFileMetaData(factId: string, fileId: string): Promise<file | null> {
     return this.prisma.file.findFirst({
       where: {
         id: fileId,
-        FactResource: {
+        fact_resource: {
           some: {
-            factId
+            fact_id: factId
           }
         }
       }

@@ -81,3 +81,41 @@ INSERT
     OR
 UPDATE
     OR DELETE ON public.claim_fact FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_fact_history', true);
+-- Workaround for sql bug in LIKE operator https://www.postgresql.org/message-id/20150707072942.1186.98151@wrigleys.postgresql.org
+DO $$
+DECLARE current_table_name text;
+current_column_name text;
+current_type text;
+current_data_type text;
+new_type text;
+BEGIN RAISE NOTICE 'Fixing array columns';
+FOR current_table_name IN (
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_name LIKE '%_history'
+) LOOP RAISE NOTICE 'Table %',
+current_table_name;
+FOR current_column_name,
+current_type,
+current_data_type IN (
+    SELECT column_name,
+        udt_name,
+        data_type
+    FROM information_schema.columns
+    WHERE table_name = current_table_name
+        AND data_type LIKE 'ARRAY'
+) LOOP -- Assuming you want to change the number of dimensions to 1 for array columns
+RAISE NOTICE 'Column % in table % has type %',
+current_column_name,
+current_table_name,
+current_type;
+IF current_data_type LIKE 'ARRAY' THEN new_type := substr(current_type, 2) || '[]';
+EXECUTE 'ALTER TABLE ' || current_table_name || ' ALTER COLUMN ' || current_column_name || ' TYPE ' || new_type;
+RAISE NOTICE 'Altered column % in table % to type %',
+current_column_name,
+current_table_name,
+new_type;
+END IF;
+END LOOP;
+END LOOP;
+END $$;

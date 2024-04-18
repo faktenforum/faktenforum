@@ -1,4 +1,4 @@
-import { Claim, File, ClaimResource, PrismaClient } from "@prisma/client";
+import { claim, file, claim_resource, PrismaClient } from "@prisma/client";
 import { Service } from "@tsed/di";
 import { ClaimResourceCreate } from "~/models/Claim";
 
@@ -16,8 +16,8 @@ type ClaimCreateDM = {
     };
   }[];
 };
-type ClaimWithResources = Claim & {
-  ClaimResource: Array<ClaimResource & { File: File | undefined | null }>;
+type ClaimWithResources = claim & {
+  claim_resource: Array<claim_resource & { file: file | undefined | null }>;
 };
 
 @Service()
@@ -28,7 +28,7 @@ export class ClaimService {
     this.prisma = new PrismaClient();
   }
 
-  async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<Claim> {
+  async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<claim> {
     const { title, description, resources } = claimData;
     console.log("Claim Data:", JSON.stringify(claimData, null, 2));
 
@@ -37,19 +37,19 @@ export class ClaimService {
       data: {
         title: title,
         description: description,
-        ClaimResource: {
+        claim_resource: {
           create: resources.map((resource) => ({
-            createdBy: userId,
-            originalUrl: resource.originalUrl,
-            File: resource.File
+            created_by: userId,
+            original_url: resource.originalUrl,
+            file: resource.file
               ? {
                   create: {
-                    createdBy: userId,
-                    key: resource.File.key,
-                    md5: resource.File.md5,
-                    mimeType: resource.File.mimeType,
-                    name: resource.File.name,
-                    size: resource.File.size
+                    created_by: userId,
+                    key: resource.file.key,
+                    md5: resource.file.md5,
+                    mime_type: resource.file.mimeType,
+                    name: resource.file.name,
+                    size: resource.file.size
                   }
                 }
               : undefined
@@ -67,33 +67,33 @@ export class ClaimService {
     return await this.prisma.claim.findUnique({
       where: { id: id },
       include: {
-        ClaimResource: {
+        claim_resource: {
           include: {
-            File: true
+            file: true
           }
         }
       }
     });
   }
 
-  async updateClaimById(id: string, data: Partial<Claim>): Promise<Claim> {
+  async updateClaimById(id: string, data: Partial<claim>): Promise<claim> {
     console.log(data);
     console.log(id);
     return this.prisma.claim.update({
       where: { id: id },
-      data: { title: "NEW TITLE" }
+      data
     });
   }
 
   async updateClaimResourceById(
     claimId: string,
     resourceId: string,
-    data: Partial<ClaimResource>
-  ): Promise<ClaimResource> {
-    return this.prisma.claimResource.update({
+    data: Partial<claim_resource>
+  ): Promise<claim_resource> {
+    return this.prisma.claim_resource.update({
       where: {
         id: resourceId,
-        claimId: claimId
+        claim_id: claimId
       },
       data
     });
@@ -103,36 +103,36 @@ export class ClaimService {
     claimId: string,
     resource: Partial<ClaimResourceCreate>,
     userId?: string
-  ): Promise<ClaimResource> {
+  ): Promise<claim_resource> {
     console.log("resource", JSON.stringify(resource));
     console.log("userId", userId);
     let dbfile;
     if (resource.file) {
       dbfile = await this.prisma.file.create({
         data: {
-          createdBy: userId,
+          created_by: userId,
           key: resource.file.key,
           md5: resource.file.md5,
-          mimeType: resource.file.mimeType,
+          mime_type: resource.file.mimeType,
           name: resource.file.name,
           size: resource.file.size
         }
       });
     }
-    return this.prisma.claimResource.create({
+    return this.prisma.claim_resource.create({
       include: {
-        File: !!resource.file
+        file: !!resource.file
       },
       data: {
-        claimId: claimId,
-        createdBy: userId,
-        originalUrl: resource.originalUrl,
-        fileId: dbfile?.id
+        claim_id: claimId,
+        created_by: userId,
+        original_url: resource.originalUrl,
+        file_id: dbfile?.id
       }
     });
   }
 
-  async deleteClaimById(id: string): Promise<Claim> {
+  async deleteClaimById(id: string): Promise<claim> {
     return this.prisma.claim.delete({ where: { id: id } });
   }
 }
