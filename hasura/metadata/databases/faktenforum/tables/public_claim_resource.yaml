@@ -14,3 +14,20 @@ object_relationships:
   - name: userByUpdatedBy
     using:
       foreign_key_constraint_on: updated_by
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - description
+        - original_url
+        - created_at
+        - updated_at
+        - sys_period
+        - claim_id
+        - created_by
+        - file_id
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""

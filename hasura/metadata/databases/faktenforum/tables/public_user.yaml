@@ -100,3 +100,22 @@ array_relationships:
         table:
           name: file
           schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - sys_period
+        - id
+      filter: {}
+      allow_aggregations: true
+    comment: ""

@@ -11,3 +11,44 @@ object_relationships:
   - name: userByUpdatedBy
     using:
       foreign_key_constraint_on: updated_by
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+    comment: ""
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - content
+        - created_at
+        - updated_at
+        - sys_period
+        - claim_id
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - claim_id
+        - content
+      filter: {}
+      check: null
+      set:
+        created_by: x-hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

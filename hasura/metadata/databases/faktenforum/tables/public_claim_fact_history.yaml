@@ -1,3 +1,19 @@
 table:
   name: claim_fact_history
   schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - created_at
+        - updated_at
+        - sys_period
+        - claim_id
+        - created_by
+        - fact_id
+        - history_id
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""

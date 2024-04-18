@@ -23,3 +23,22 @@ array_relationships:
         table:
           name: fact_resource
           schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - size
+        - key
+        - md5
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
