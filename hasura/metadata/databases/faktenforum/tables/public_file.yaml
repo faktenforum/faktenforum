@@ -1,0 +1,25 @@
+table:
+  name: file
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: created_by
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
+array_relationships:
+  - name: claim_resources
+    using:
+      foreign_key_constraint_on:
+        column: file_id
+        table:
+          name: claim_resource
+          schema: public
+  - name: fact_resources
+    using:
+      foreign_key_constraint_on:
+        column: file_id
+        table:
+          name: fact_resource
+          schema: public

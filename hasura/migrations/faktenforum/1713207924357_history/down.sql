@@ -1,18 +1,17 @@
 -- Drop triggers associated with history versioning
-DROP TRIGGER IF EXISTS versioning_trigger ON public."Claim";
-DROP TRIGGER IF EXISTS versioning_trigger ON public."User";
-DROP TRIGGER IF EXISTS versioning_trigger ON public."File";
-DROP TRIGGER IF EXISTS versioning_trigger ON public."FactResource";
-DROP TRIGGER IF EXISTS versioning_trigger ON public."Comment";
-DROP TRIGGER IF EXISTS versioning_trigger ON public."ClaimResource";
-DROP TRIGGER IF EXISTS versioning_trigger ON public."ClaimFact";
-
+DROP TRIGGER IF EXISTS versioning_trigger ON public.claim;
+DROP TRIGGER IF EXISTS versioning_trigger ON public.user;
+DROP TRIGGER IF EXISTS versioning_trigger ON public.file;
+DROP TRIGGER IF EXISTS versioning_trigger ON public.fact_resource;
+DROP TRIGGER IF EXISTS versioning_trigger ON public.comment;
+DROP TRIGGER IF EXISTS versioning_trigger ON public.claim_resource;
+DROP TRIGGER IF EXISTS versioning_trigger ON public.claim_fact;
 -- Drop history tables
-DROP TABLE IF EXISTS public."ClaimHistory";
-DROP TABLE IF EXISTS public."UserHistory";
-DROP TABLE IF EXISTS public."FileHistory";
-DROP TABLE IF EXISTS public."FactResourceHistory";
-DROP TABLE IF EXISTS public."FactHistory";
-DROP TABLE IF EXISTS public."CommentHistory";
-DROP TABLE IF EXISTS public."ClaimResourceHistory";
-DROP TABLE IF EXISTS public."ClaimFactHistory";
+DROP TABLE IF EXISTS public.claim_history;
+DROP TABLE IF EXISTS public.user_history;
+DROP TABLE IF EXISTS public.file_history;
+DROP TABLE IF EXISTS public.fact_resource_history;
+DROP TABLE IF EXISTS public.fact_history;
+DROP TABLE IF EXISTS public.comment_history;
+DROP TABLE IF EXISTS public.claim_resource_history;
+DROP TABLE IF EXISTS public.claim_fact_history;

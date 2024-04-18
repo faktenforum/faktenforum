@@ -1,3 +1,3 @@
 table:
-  name: ClaimHistory
+  name: user_history
   schema: public

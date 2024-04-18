@@ -1,14 +1,10 @@
 SET check_function_bodies = false;
 CREATE EXTENSION IF NOT EXISTS temporal_tables WITH SCHEMA public;
 COMMENT ON EXTENSION temporal_tables IS 'temporal tables';
-CREATE TYPE public."ClaimLabel" AS ENUM (
-    'FALSE',
-    'MISSLEADING',
-    'TRUE'
-);
-CREATE TYPE public."ClaimStatus" AS ENUM (
+CREATE TYPE public.claim_label AS ENUM ('FALSE', 'MISSLEADING', 'TRUE');
+CREATE TYPE public.claim_status AS ENUM (
     'SUBMITTED',
-    'READYT_TO_CHECK',
+    'READY_TO_CHECK',
     'IN_PROGRESS',
     'ARCHIVED',
     'SPAM',
@@ -16,247 +12,252 @@ CREATE TYPE public."ClaimStatus" AS ENUM (
     'CHECKED',
     'PUBLISHED'
 );
-
-CREATE TYPE public."UserRole" AS ENUM (
+CREATE TYPE public.user_role AS ENUM (
     'ADMIN',
     'MODERATOR',
     'SENIOR',
     'INTERMEDIATE',
     'JUNIOR'
 );
-CREATE FUNCTION public."set_current_timestamp_updatedAt"() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  _new record;
-BEGIN
-  _new := NEW;
-  _new."updatedAt" = NOW();
-  RETURN _new;
+CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE _new record;
+BEGIN _new := NEW;
+_new.updated_at = NOW();
+RETURN _new;
 END;
 $$;
-CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  _new record;
-BEGIN
-  _new := NEW;
-  _new."updated_at" = NOW();
-  RETURN _new;
-END;
-$$;
-CREATE TABLE public."Claim" (
+CREATE TABLE public.claim (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     title text,
     description text,
-    tags text[] DEFAULT ARRAY[]::text[],
-    label public."ClaimLabel",
-    status public."ClaimStatus" DEFAULT 'SUBMITTED'::public."ClaimStatus" NOT NULL,
-    "archiveId" uuid,
-    "archiveAt" timestamp(3) without time zone,
-    "createdBy" uuid,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    tags text [] DEFAULT ARRAY []::text [],
+    label public.claim_label,
+    status public.claim_status DEFAULT 'SUBMITTED'::public.claim_status NOT NULL,
+    archive_id uuid,
+    archive_at timestamp(3) without time zone,
+    created_by uuid,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."ClaimFact" (
+CREATE TABLE public.claim_fact (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    "claimId" uuid NOT NULL,
-    "factId" uuid NOT NULL,
-    "createdBy" uuid,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    claim_id uuid NOT NULL,
+    fact_id uuid NOT NULL,
+    created_by uuid,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."ClaimResource" (
+CREATE TABLE public.claim_resource (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    "originalUrl" text,
+    original_url text,
     description text,
-    "fileId" uuid,
-    "claimId" uuid NOT NULL,
-    "createdBy" uuid,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    file_id uuid,
+    claim_id uuid NOT NULL,
+    created_by uuid,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."ClaimSubmissionToken" (
+CREATE TABLE public.claim_submission_token (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     token text NOT NULL,
-    "claimId" uuid NOT NULL,
-    "expiresAt" timestamp(3) without time zone NOT NULL,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    claim_id uuid NOT NULL,
+    expires_at timestamp(3) without time zone NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."Comment" (
+CREATE TABLE public.comment (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    "claimId" uuid NOT NULL,
+    claim_id uuid NOT NULL,
     content text NOT NULL,
-    "createdBy" uuid NOT NULL,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    created_by uuid NOT NULL,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."Fact" (
+CREATE TABLE public.fact (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     title text,
     description text,
-    "createdBy" uuid,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    created_by uuid,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."FactResource" (
+CREATE TABLE public.fact_resource (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    "originalUrl" text,
+    original_url text,
     description text,
-    "fileId" uuid,
-    "factId" uuid NOT NULL,
-    "createdBy" uuid,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    file_id uuid,
+    fact_id uuid NOT NULL,
+    created_by uuid,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."File" (
+CREATE TABLE public.file (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     key text NOT NULL,
     name text NOT NULL,
-    "mimeType" text NOT NULL,
+    mime_type text NOT NULL,
     md5 text NOT NULL,
     size integer NOT NULL,
     transcription text,
-    "createdBy" uuid,
-    "updatedBy" uuid,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    created_by uuid,
+    updated_by uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."User" (
+CREATE TABLE public.user (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     email text NOT NULL,
     username text NOT NULL,
-    "firstName" text,
-    "lastName" text,
+    first_name text,
+    last_name text,
     pronouns text,
-    "profileImage" text,
+    profile_image text,
     bio text,
-    "mobileNumber" text,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    mobile_number text,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-CREATE TABLE public."Virality" (
+CREATE TABLE public.virality (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    "claimId" uuid NOT NULL,
-    "facebookLikes" integer,
-    "facebookShares" integer,
-    "youtubeViews" integer,
-    "youtubeLikes" integer,
-    "youtubeDislikes" integer,
-    "instagramLikes" integer,
-    "instagramShares" integer,
-    "createdAt" timestamp with time zone DEFAULT now(),
-    "updatedAt" timestamp with time zone DEFAULT now(),
-    sys_period tstzrange 
+    claim_id uuid NOT NULL,
+    facebook_likes integer,
+    facebook_shares integer,
+    youtube_views integer,
+    youtube_likes integer,
+    youtube_dislikes integer,
+    instagram_likes integer,
+    instagram_shares integer,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    sys_period tstzrange
 );
-ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."ClaimSubmissionToken"
-    ADD CONSTRAINT "ClaimSubmissionToken_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."Claim"
-    ADD CONSTRAINT "Claim_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."Fact"
-    ADD CONSTRAINT "Fact_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."File"
-    ADD CONSTRAINT "File_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."User"
-    ADD CONSTRAINT "User_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."Virality"
-    ADD CONSTRAINT "Virality_pkey" PRIMARY KEY (id);
-CREATE UNIQUE INDEX "ClaimSubmissionToken_token_key" ON public."ClaimSubmissionToken" USING btree (token);
-CREATE INDEX "File_key_idx" ON public."File" USING btree (key);
-CREATE UNIQUE INDEX "User_email_key" ON public."User" USING btree (email);
-CREATE UNIQUE INDEX "User_username_key" ON public."User" USING btree (username);
-CREATE TRIGGER "set_public_ClaimFact_updatedAt" BEFORE UPDATE ON public."ClaimFact" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_ClaimFact_updatedAt" ON public."ClaimFact" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_ClaimResource_updatedAt" BEFORE UPDATE ON public."ClaimResource" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_ClaimResource_updatedAt" ON public."ClaimResource" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_ClaimSubmissionToken_updatedAt" BEFORE UPDATE ON public."ClaimSubmissionToken" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_ClaimSubmissionToken_updatedAt" ON public."ClaimSubmissionToken" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_Claim_updatedAt" BEFORE UPDATE ON public."Claim" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_Claim_updatedAt" ON public."Claim" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_Claim_updated_at" BEFORE UPDATE ON public."Claim" FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
-COMMENT ON TRIGGER "set_public_Claim_updated_at" ON public."Claim" IS 'trigger to set value of column "updated_at" to current timestamp on row update';
-CREATE TRIGGER "set_public_Comment_updatedAt" BEFORE UPDATE ON public."Comment" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_Comment_updatedAt" ON public."Comment" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_FactResource_updatedAt" BEFORE UPDATE ON public."FactResource" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_FactResource_updatedAt" ON public."FactResource" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_Fact_updatedAt" BEFORE UPDATE ON public."Fact" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_Fact_updatedAt" ON public."Fact" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_File_updatedAt" BEFORE UPDATE ON public."File" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_File_updatedAt" ON public."File" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_User_updatedAt" BEFORE UPDATE ON public."User" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_User_updatedAt" ON public."User" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-CREATE TRIGGER "set_public_Virality_updatedAt" BEFORE UPDATE ON public."Virality" FOR EACH ROW EXECUTE FUNCTION public."set_current_timestamp_updatedAt"();
-COMMENT ON TRIGGER "set_public_Virality_updatedAt" ON public."Virality" IS 'trigger to set value of column "updatedAt" to current timestamp on row update';
-ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_factId_fkey" FOREIGN KEY ("factId") REFERENCES public."Fact"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."ClaimFact"
-    ADD CONSTRAINT "ClaimFact_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES public."File"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."ClaimResource"
-    ADD CONSTRAINT "ClaimResource_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."ClaimSubmissionToken"
-    ADD CONSTRAINT "ClaimSubmissionToken_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."Claim"
-    ADD CONSTRAINT "Claim_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."Claim"
-    ADD CONSTRAINT "Claim_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."Comment"
-    ADD CONSTRAINT "Comment_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_factId_fkey" FOREIGN KEY ("factId") REFERENCES public."Fact"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES public."File"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."FactResource"
-    ADD CONSTRAINT "FactResource_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."Fact"
-    ADD CONSTRAINT "Fact_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."Fact"
-    ADD CONSTRAINT "Fact_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."File"
-    ADD CONSTRAINT "File_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."File"
-    ADD CONSTRAINT "File_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES public."User"(id) ON UPDATE CASCADE ON DELETE SET NULL;
-ALTER TABLE ONLY public."Virality"
-    ADD CONSTRAINT "Virality_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES public."Claim"(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
+ALTER TABLE ONLY public.claim_fact
+ADD CONSTRAINT claim_fact_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.claim_resource
+ADD CONSTRAINT claim_resource_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.claim_submission_token
+ADD CONSTRAINT claim_submission_token_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.claim
+ADD CONSTRAINT claim_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.comment
+ADD CONSTRAINT comment_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.fact_resource
+ADD CONSTRAINT fact_resource_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.fact
+ADD CONSTRAINT fact_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.file
+ADD CONSTRAINT file_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.user
+ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.virality
+ADD CONSTRAINT virality_pkey PRIMARY KEY (id);
+CREATE UNIQUE INDEX claim_submission_token_token_key ON public.claim_submission_token USING btree (token);
+CREATE INDEX file_key_idx ON public.file USING btree (key);
+CREATE UNIQUE INDEX user_email_key ON public.user USING btree (email);
+CREATE UNIQUE INDEX user_username_key ON public.user USING btree (username);
+CREATE TRIGGER set_public_claim_fact_updated_at BEFORE
+UPDATE ON public.claim_fact FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_claim_fact_updated_at ON public.claim_fact IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_claim_resource_updated_at BEFORE
+UPDATE ON public.claim_resource FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_claim_resource_updated_at ON public.claim_resource IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_claim_submission_token_updated_at BEFORE
+UPDATE ON public.claim_submission_token FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_claim_submission_token_updated_at ON public.claim_submission_token IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_claim_updated_at BEFORE
+UPDATE ON public.claim FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_claim_updated_at ON public.claim IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_comment_updated_at BEFORE
+UPDATE ON public.comment FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_comment_updated_at ON public.comment IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_fact_resource_updated_at BEFORE
+UPDATE ON public.fact_resource FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_fact_resource_updated_at ON public.fact_resource IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_fact_updated_at BEFORE
+UPDATE ON public.fact FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_fact_updated_at ON public.fact IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_file_updated_at BEFORE
+UPDATE ON public.file FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_file_updated_at ON public.file IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_user_updated_at BEFORE
+UPDATE ON public.user FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_user_updated_at ON public.user IS 'trigger to set value of column updated_at to current timestamp on row update';
+CREATE TRIGGER set_public_virality_updated_at BEFORE
+UPDATE ON public.virality FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_virality_updated_at ON public.virality IS 'trigger to set value of column updated_at to current timestamp on row update';
+ALTER TABLE ONLY public.claim_fact
+ADD CONSTRAINT claim_fact_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.claim_fact
+ADD CONSTRAINT claim_fact_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.claim_fact
+ADD CONSTRAINT claim_fact_fact_id_fkey FOREIGN KEY (fact_id) REFERENCES public.fact(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.claim_fact
+ADD CONSTRAINT claim_fact_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.claim_resource
+ADD CONSTRAINT claim_resource_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.claim_resource
+ADD CONSTRAINT claim_resource_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.claim_resource
+ADD CONSTRAINT claim_resource_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.claim_resource
+ADD CONSTRAINT claim_resource_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.claim_submission_token
+ADD CONSTRAINT claim_submission_token_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.claim
+ADD CONSTRAINT claim_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.claim
+ADD CONSTRAINT claim_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.comment
+ADD CONSTRAINT comment_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.comment
+ADD CONSTRAINT comment_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.comment
+ADD CONSTRAINT comment_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.fact_resource
+ADD CONSTRAINT fact_resource_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.fact_resource
+ADD CONSTRAINT fact_resource_fact_id_fkey FOREIGN KEY (fact_id) REFERENCES public.fact(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.fact_resource
+ADD CONSTRAINT fact_resource_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.file(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.fact_resource
+ADD CONSTRAINT fact_resource_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.fact
+ADD CONSTRAINT fact_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.fact
+ADD CONSTRAINT fact_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.file
+ADD CONSTRAINT file_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.file
+ADD CONSTRAINT file_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
+SET NULL;
+ALTER TABLE ONLY public.virality
+ADD CONSTRAINT virality_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;

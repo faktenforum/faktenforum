@@ -1,17 +1,83 @@
-CREATE TABLE public."ClaimHistory" (LIKE public."Claim" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."UserHistory" (LIKE public."User" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."FileHistory" (LIKE public."File" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."FactResourceHistory" (LIKE public."FactResource" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."FactHistory" (LIKE public."Fact" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."CommentHistory" (LIKE public."Comment" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."ClaimResourceHistory" (LIKE public."ClaimResource" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-CREATE TABLE public."ClaimFactHistory" (LIKE public."ClaimFact" , history_id UUID NOT NULL DEFAULT gen_random_uuid(), PRIMARY KEY (history_id));
-
-
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."Claim" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.ClaimHistory', true);
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."User" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.UserHistory', true); 
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."File" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.FileHistory', true); 
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."FactResource" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.FactResourceHistory', true); 
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."Comment" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.CommentHistory', true); 
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."ClaimResource" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.ClaimResourceHistory', true); 
-CREATE TRIGGER versioning_trigger BEFORE INSERT OR UPDATE OR DELETE ON public."ClaimFact" FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.ClaimFactHistory', true); 
+CREATE TABLE public.claim_history (
+    LIKE public.claim,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.user_history (
+    LIKE public.user,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.file_history (
+    LIKE public.file,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.fact_resource_history (
+    LIKE public.fact_resource,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.fact_history (
+    LIKE public.fact,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.comment_history (
+    LIKE public.comment,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.claim_resource_history (
+    LIKE public.claim_resource,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TABLE public.claim_fact_history (
+    LIKE public.claim_fact,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id)
+);
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.claim FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_history', true);
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.user FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.user_history', true);
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.file FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.file_history', true);
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.fact_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
+        'sys_period',
+        'public.fact_resource_history',
+        true
+    );
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.comment FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.comment_history', true);
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.claim_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
+        'sys_period',
+        'public.claim_resource_history',
+        true
+    );
+CREATE TRIGGER versioning_trigger BEFORE
+INSERT
+    OR
+UPDATE
+    OR DELETE ON public.claim_fact FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_fact_history', true);

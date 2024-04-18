@@ -1,0 +1,3 @@
+table:
+  name: ClaimResource_history
+  schema: public

@@ -1,0 +1,3 @@
+table:
+  name: file_history
+  schema: public

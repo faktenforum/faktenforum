@@ -1,0 +1,46 @@
+table:
+  name: claim
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: created_by
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
+array_relationships:
+  - name: claim_facts
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_fact
+          schema: public
+  - name: claim_resources
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_resource
+          schema: public
+  - name: claim_submission_tokens
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_submission_token
+          schema: public
+  - name: comments
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: comment
+          schema: public
+  - name: viralities
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: virality
+          schema: public

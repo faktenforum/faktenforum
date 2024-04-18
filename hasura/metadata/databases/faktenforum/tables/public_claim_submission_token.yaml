@@ -1,0 +1,7 @@
+table:
+  name: claim_submission_token
+  schema: public
+object_relationships:
+  - name: claim
+    using:
+      foreign_key_constraint_on: claim_id
