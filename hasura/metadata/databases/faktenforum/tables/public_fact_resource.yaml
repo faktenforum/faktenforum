@@ -1,0 +1,33 @@
+table:
+  name: fact_resource
+  schema: public
+object_relationships:
+  - name: fact
+    using:
+      foreign_key_constraint_on: fact_id
+  - name: file
+    using:
+      foreign_key_constraint_on: file_id
+  - name: user
+    using:
+      foreign_key_constraint_on: created_by
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - description
+        - original_url
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - fact_id
+        - file_id
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""

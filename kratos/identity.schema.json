@@ -36,7 +36,6 @@
                 "identifier": true
               }
             }
-    
           }
         }
       },
@@ -52,11 +51,13 @@
         "role": {
           "title": "Role",
           "type": "string",
-          "default": "user",
+          "default": "JUNIOR",
           "enum": [
-            "user",
-            "admin",
-            "newbie"
+            "ADMIN",
+            "MODERATOR",
+            "SENIOR",
+            "INTERMEDIATE",
+            "JUNIOR"
           ]
         },
         "additionalProperties": false

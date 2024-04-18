@@ -59,15 +59,15 @@ export class SubmissionController {
     const response = {
       title: claim.title,
       description: claim.description,
-      resources: claim.resources.map((resource) => ({
+      resources: claim.claim_resource.map((resource) => ({
         id: resource.id,
-        originalUrl: resource.originalUrl,
+        originalUrl: resource.original_url,
         file: resource.file
           ? {
               id: resource.file.id,
               name: resource.file.name,
               size: resource.file.size,
-              mimeType: resource.file.mimeType,
+              mimeType: resource.file.mime_type,
               url: this.createClaimFileUrl(token, resource.file.id)
             }
           : null

@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, user } from "@prisma/client";
 import { Agenda, Every } from "@tsed/agenda";
 import { Inject, Service } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -27,16 +27,16 @@ export class SubmissionService {
     this.prisma = new PrismaClient();
   }
 
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers(): Promise<user[]> {
     return this.prisma.user.findMany();
   }
   @Every("5 minutes", {
     name: "Delete expired sessions"
   })
   async deleteExpiredClaimSubmissionTokens() {
-    await this.prisma.claimSubmissionToken.deleteMany({
+    await this.prisma.claim_submission_token.deleteMany({
       where: {
-        expiresAt: {
+        expires_at: {
           lte: new Date()
         }
       }
@@ -45,7 +45,7 @@ export class SubmissionService {
 
   async endSubmission(token: string) {
     const claimId = await this.getClaimIdByToken(token);
-    await this.prisma.claimSubmissionToken.delete({
+    await this.prisma.claim_submission_token.delete({
       where: { token }
     });
     return claimId;
@@ -90,11 +90,11 @@ export class SubmissionService {
       expiration.getSeconds() + timeStringToSeconds(this.envService.claimSubmissionTokenLifeTime)
     );
 
-    const { token } = await this.prisma.claimSubmissionToken.create({
+    const { token } = await this.prisma.claim_submission_token.create({
       data: {
         token: rawToken,
-        expiresAt: expiration,
-        claimId
+        expires_at: expiration,
+        claim_id: claimId
       }
     });
     return { claimId, token };
@@ -111,7 +111,7 @@ export class SubmissionService {
         if (resource.id) {
           // update existing resource
           return this.claimService.updateClaimResourceById(id, resource.id, {
-            originalUrl: resource.originalUrl
+            original_url: resource.originalUrl
           });
         } else {
           // create new resource
@@ -141,10 +141,10 @@ export class SubmissionService {
   }
 
   async getClaimIdByToken(token: string): Promise<string> {
-    const claimSubmissionToken = await this.prisma.claimSubmissionToken.findUnique({
+    const claim_submission_token = await this.prisma.claim_submission_token.findUnique({
       where: { token }
     });
-    if (!claimSubmissionToken) throw new NotFound("Claim submission token not found");
-    return claimSubmissionToken.claimId;
+    if (!claim_submission_token) throw new NotFound("Claim submission token not found");
+    return claim_submission_token.claim_id;
   }
 }

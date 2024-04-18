@@ -1,0 +1,121 @@
+table:
+  name: user
+  schema: public
+array_relationships:
+  - name: claimFactsByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: claim_fact
+          schema: public
+  - name: claimResourcesByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: claim_resource
+          schema: public
+  - name: claim_facts
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: claim_fact
+          schema: public
+  - name: claim_resources
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: claim_resource
+          schema: public
+  - name: claims
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: claim
+          schema: public
+  - name: claimsByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: claim
+          schema: public
+  - name: comments
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: comment
+          schema: public
+  - name: commentsByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: comment
+          schema: public
+  - name: factResourcesByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: fact_resource
+          schema: public
+  - name: fact_resources
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: fact_resource
+          schema: public
+  - name: facts
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: fact
+          schema: public
+  - name: factsByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: fact
+          schema: public
+  - name: files
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: file
+          schema: public
+  - name: filesByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: file
+          schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - sys_period
+        - id
+      filter: {}
+      allow_aggregations: true
+    comment: ""
