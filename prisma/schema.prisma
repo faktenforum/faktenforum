@@ -30,7 +30,7 @@ model claim {
   description                 String?
   tags                        String[]                  @default([])
   label                       claim_label?
-  status                      claim_status              @default(SUBMITTED)
+  status                      claim_status              @default(submitted)
   archive_id                  String?                   @db.Uuid
   archive_at                  DateTime?
   created_by                  String?                   @db.Uuid
@@ -299,26 +299,26 @@ model virality {
 }
 
 enum claim_label {
-  FALSE
-  MISSLEADING
-  TRUE
+  false
+  miss_leading
+  true
 }
 
 enum claim_status {
-  SUBMITTED
-  READY_TO_CHECK
-  IN_PROGRESS
-  ARCHIVED
-  SPAM
-  CLOSED
-  CHECKED
-  PUBLISHED
+  submitted
+  ready_to_check
+  in_progress
+  archived
+  spam
+  closed
+  checked
+  published
 }
 
 enum user_role {
-  ADMIN
-  MODERATOR
-  SENIOR
-  INTERMEDIATE
-  JUNIOR
+  admin
+  moderator
+  senior
+  intermediate
+  junior
 }
