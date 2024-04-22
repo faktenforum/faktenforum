@@ -1,23 +1,23 @@
 SET check_function_bodies = false;
 CREATE EXTENSION IF NOT EXISTS temporal_tables WITH SCHEMA public;
 COMMENT ON EXTENSION temporal_tables IS 'temporal tables';
-CREATE TYPE public.claim_label AS ENUM ('FALSE', 'MISSLEADING', 'TRUE');
+CREATE TYPE public.claim_label AS ENUM ('false', 'miss_leading', 'true');
 CREATE TYPE public.claim_status AS ENUM (
-    'SUBMITTED',
-    'READY_TO_CHECK',
-    'IN_PROGRESS',
-    'ARCHIVED',
-    'SPAM',
-    'CLOSED',
-    'CHECKED',
-    'PUBLISHED'
+    'submitted',
+    'ready_to_check',
+    'in_progress',
+    'archived',
+    'spam',
+    'closed',
+    'checked',
+    'published'
 );
 CREATE TYPE public.user_role AS ENUM (
-    'ADMIN',
-    'MODERATOR',
-    'SENIOR',
-    'INTERMEDIATE',
-    'JUNIOR'
+    'admin',
+    'moderator',
+    'senior',
+    'intermediate',
+    'junior'
 );
 CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE _new record;

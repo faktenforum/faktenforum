@@ -13,11 +13,11 @@ class KratosTraits {
 class KratosTransientPayload {
   @Optional()
   @Property()
-  firstName?: string;
+  first_name?: string;
 
   @Optional()
   @Property()
-  lastName?: string;
+  last_name?: string;
 }
 
 export class RegistrationRequest {
