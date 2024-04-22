@@ -32,7 +32,7 @@ CREATE TABLE public.claim (
     description text,
     tags text [] DEFAULT ARRAY []::text [],
     label public.claim_label,
-    status public.claim_status DEFAULT 'SUBMITTED'::public.claim_status NOT NULL,
+    status public.claim_status DEFAULT 'submitted'::public.claim_status NOT NULL,
     archive_id uuid,
     archive_at timestamp(3) without time zone,
     created_by uuid,
