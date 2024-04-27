@@ -57,7 +57,8 @@ services:
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
       HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_GRAPHQL_AUTH_HOOK}
       HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
-
+      HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: "naming_convention"
+      HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION: "graphql-default"
     depends_on:
       data-connector-agent:
         condition: service_healthy
@@ -97,9 +98,9 @@ services:
     environment:
       HASURA_ENDPOINT: "http://graphql-engine:8080"
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
-      APPLY_METADATA: true
-      APPLY_MIGRATIONS: true
-      
+      APPLY_METADATA: "true"
+      APPLY_MIGRATIONS: "true"
+
     # import current files as volume so a rebuild is no required on database/metada changes
     volumes:
       - ./hasura:/app
