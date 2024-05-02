@@ -1,0 +1,9 @@
+query getFileById($id: uuid!) {
+  fileByPk(id: $id) {
+    id
+    key
+    mimeType
+    name
+    size
+  }
+}
