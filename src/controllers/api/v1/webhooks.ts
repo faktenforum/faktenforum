@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
-import { Get, Header, Post, Returns } from "@tsed/schema";
+import { Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, UsersService } from "~/services";
@@ -16,7 +16,6 @@ export class WebHookController {
   @Returns(200, String).ContentType("application/json") // Returns not a  because of It crashes on '-' in body response key values
   async getSessions(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session"); // return host header || "";
-    console.log("Session Cookie:", sessionCookie);
 
     const session = await this.authService.getKratosSession(sessionCookie);
     console.log("Session:", session);

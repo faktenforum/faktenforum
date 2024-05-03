@@ -12,7 +12,7 @@ export class HasuraService {
 
   graphQLClient: GraphQLClient;
 
-  constructor(envService: EnvService) {
+  constructor() {
     this.graphQLClient = new GraphQLClient("http://app.localhost:8000/api/v1/graphql", {});
   }
   async clientRequest<T, V extends Variables = Variables>(

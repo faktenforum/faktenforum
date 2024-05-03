@@ -14,7 +14,7 @@ export class ClaimsController {
   @Inject()
   hasuraService: HasuraService;
 
-  @Get("/files/:fileId")
+  @Get("/:fileId")
   @Returns(200, String).ContentType("*/*").Description("File content")
   @Returns(400, String).Description("Bad request. The request or parameters are incorrect.")
   @Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.")
