@@ -1,9 +1,10 @@
 query getFileById($id: uuid!) {
-  fileByPk(id: $id) {
+  file: fileByPk(id: $id) {
     id
     key
     mimeType
     name
     size
+    updatedAt
   }
 }

@@ -53,7 +53,7 @@ export class WebHookController {
     return {
       identity: {
         metadata_public: {
-          role: "user"
+          role: "junior"
         }
       }
     };

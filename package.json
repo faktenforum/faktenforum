@@ -3,11 +3,10 @@
   "version": "0.0.2",
   "description": "",
   "scripts": {
-    "build": "npm run barrels && tsc --project tsconfig.compile.json && tsc-alias -p tsconfig.compile.json",
+    "build": "npm run graphql && npm run barrels && tsc --project tsconfig.compile.json && tsc-alias -p tsconfig.compile.json",
     "barrels": "barrelsby --config .barrelsby.json",
-    "start": "npm run barrels && npm run prisma:pull && npm run prisma && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
-    "start:migrate:prod": "prisma migrate deploy && npm run start:prod",
-    "start:prod": "cross-env NODE_ENV=production node dist/index.js",
+    "start": "npm run graphql && npm run barrels && npm run prisma:pull && npm run prisma && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start:prod": "npm run graphql && cross-env NODE_ENV=production node dist/index.js",
     "prepare:dev": "docker-compose -f docker-compose.local.yml up -d",
     "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test vitest run",
@@ -19,9 +18,14 @@
     "test:lint": "eslint '**/*.{ts,js}'",
     "test:lint:fix": "eslint '**/*.{ts,js}' --fix",
     "prettier": "prettier '**/*.{ts,js,json,md,yml,yaml}' --write",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
+    "graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-graphql-request": "^6.1.0",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
     "@ory/client": "^1.9.0",
     "@prisma/client": "^5.11.0",
     "@tsed/agenda": "7.64.0",
@@ -64,6 +68,8 @@
     "express": "^4.18.3",
     "express-session": "^1.18.0",
     "g": "^2.0.1",
+    "graphql": "^16.7.1",
+    "graphql-request": "^6.1.0",
     "import": "^0.0.6",
     "jsonwebtoken": "^9.0.2",
     "method-override": "^3.0.0",
@@ -79,7 +85,8 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^10.8.0",
+    "@mermaid-js/mermaid-cli": "^10.ldd --version8.0",
+    "@parcel/watcher": "^2.4.np1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@tsed/cli": "^5.1.1",
     "@tsed/cli-plugin-eslint": "5.1.1",

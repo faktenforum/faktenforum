@@ -92,7 +92,7 @@ export class SubmissionController {
       }
       const stream = await this.fileService.getFileStream(claimFile.key);
       response.set({
-        "Content-Type": claimFile.mimeType // or the appropriate MIME type
+        "Content-Type": claimFile.mime_type // or the appropriate MIME type
         // "Content-Disposition": `attachment; filename="${claimFile.name}"` // if you want it to be downloaded
       });
 
