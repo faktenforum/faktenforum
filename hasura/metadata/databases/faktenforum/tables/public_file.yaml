@@ -24,6 +24,40 @@ array_relationships:
           name: fact_resource
           schema: public
 select_permissions:
+  - role: junior
+    permission:
+      columns:
+        - created_by
+        - id
+        - key
+        - md5
+        - mime_type
+        - name
+        - size
+        - transcription
+        - updated_at
+        - updated_by
+      filter:
+        _or:
+          - claim_resources:
+              claim:
+                status:
+                  _in:
+                    - ready_to_check
+                    - in_progress
+                    - checked
+                    - published
+          - fact_resources:
+              fact:
+                claim_facts:
+                  claim:
+                    status:
+                      _in:
+                        - ready_to_check
+                        - in_progress
+                        - checked
+                        - published
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -42,3 +76,41 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - transcription
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""
+event_triggers:
+  - name: delete_file_from_s3
+    definition:
+      delete:
+        columns: '*'
+      enable_manual: false
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/delete-file'
+    headers:
+      - name: api-key
+        value_from_env: HASURA_WEBHOOKS_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "table": {{$body.data.id}}
+          }
+      method: DELETE
+      query_params: {}
+      template_engine: Kriti
+      version: 2

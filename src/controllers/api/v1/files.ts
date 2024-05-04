@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams } from "@tsed/platform-params";
-import { Consumes, Description, Get, Post, Returns, Summary } from "@tsed/schema";
+import { Consumes, Delete, Description, Get, Post, Returns, Summary } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService } from "~/services";
@@ -62,21 +62,28 @@ export class ClaimsController {
   @Returns(200).Description("Returns the ID of the uploaded file")
   @Consumes("multipart/form-data")
   async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request) {
-    const { insertFileOne } = await this.hasuraService.clientRequest<
-      InsertFileMutation,
-      InsertFileMutationVariables
-    >(
-      InsertFileDocument,
-      {
-        key: file.key,
-        mimeType: file.mimetype,
-        name: file.originalname,
-        size: file.size,
-        md5: file.etag // minio uses md5 as etag
-      },
-      request.headers
-    );
+    try {
+      const { insertFileOne } = await this.hasuraService.clientRequest<
+        InsertFileMutation,
+        InsertFileMutationVariables
+      >(
+        InsertFileDocument,
+        {
+          key: file.key,
+          mimeType: file.mimetype,
+          name: file.originalname,
+          size: file.size,
+          md5: file.etag // minio uses md5 as etag
+        },
+        request.headers
+      );
 
-    return { id: insertFileOne?.id };
+      return { id: insertFileOne?.id };
+    } catch (error) {
+      this.fileService.deleteFile(file.key);
+      throw error;
+    }
   }
+
+
 }

@@ -60,6 +60,32 @@ insert_permissions:
         - title
     comment: ""
 select_permissions:
+  - role: junior
+    permission:
+      columns:
+        - tags
+        - description
+        - title
+        - archive_at
+        - created_at
+        - updated_at
+        - sys_period
+        - label
+        - status
+        - archive_id
+        - created_by
+        - id
+        - updated_by
+      filter:
+        status:
+          _in:
+            - ready_to_check
+            - in_progress
+            - archived
+            - checked
+            - published
+      allow_aggregations: true
+    comment: ""
   - role: moderator
     permission:
       columns:

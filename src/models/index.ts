@@ -6,5 +6,6 @@ export * from "./Claim";
 export * from "./Session";
 export * from "./Submission";
 export * from "./requests/RegistrationRequest";
+export * from "./responses/FileUploadResponse";
 export * from "./responses/RegistrationPreResponse";
 export * from "./responses/SubmissionCreateResponse";

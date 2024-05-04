@@ -19,10 +19,13 @@ export class ApiKeyAccessControlMiddleware implements MiddlewareMethods {
     if (options.service === "kratos") {
       if (apiKey === this.envService.apiKeys.kratos) {
         return;
-      } else {
-        throw new Forbidden("Forbidden");
+      }
+    } else if (options.service === "hasura") {
+      if (apiKey === this.envService.apiKeys.hasura) {
+        return;
       }
     }
+
     throw new Forbidden("Forbidden");
   }
 }
