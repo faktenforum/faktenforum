@@ -1,5 +1,5 @@
 import { Inject, Service } from "@tsed/di";
-import type { Variables, RequestDocument } from "graphql-request";
+import type { Variables, RequestDocument, Variab } from "graphql-request";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { ClientError, GraphQLClient } from "graphql-request";
 import { EnvService } from "~/services";

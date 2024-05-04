@@ -1,11 +1,19 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams } from "@tsed/platform-params";
-import { Get, Returns } from "@tsed/schema";
+import { Consumes, Description, Get, Post, Returns, Summary } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
-import { Next, Req, Res } from "@tsed/common";
+import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService } from "~/services";
-import { GetFileByIdDocument } from "~/generated/graphql";
-import type { GetFileByIdQuery, GetFileByIdQueryVariables } from "~/generated/graphql";
+import { GetFileByIdDocument, InsertFileDocument } from "~/generated/graphql";
+import type {
+  GetFileByIdQuery,
+  GetFileByIdQueryVariables,
+  InsertFileMutation,
+  InsertFileMutationVariables
+} from "~/generated/graphql";
+import { S3MulterFile } from "~/config/minio";
+import { FileUploadResponse } from "~/models/responses/FileUploadResponse";
+
 @Controller("/files")
 export class ClaimsController {
   @Inject()
@@ -40,12 +48,35 @@ export class ClaimsController {
         "Content-Disposition": `filename=${fileMetaData?.name}`,
         "Content-Length": fileMetaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
-        ETag: fileMetaData?.id
+        ETag: fileMetaData?.md5
       });
 
       stream.pipe(response as never);
     } catch (error) {
       next(error);
     }
+  }
+
+  @Post("/")
+  @Description("This endpoint allows for uploading a file to the server.")
+  @Returns(200).Description("Returns the ID of the uploaded file")
+  @Consumes("multipart/form-data")
+  async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request) {
+    const { insertFileOne } = await this.hasuraService.clientRequest<
+      InsertFileMutation,
+      InsertFileMutationVariables
+    >(
+      InsertFileDocument,
+      {
+        key: file.key,
+        mimeType: file.mimetype,
+        name: file.originalname,
+        size: file.size,
+        md5: file.etag // minio uses md5 as etag
+      },
+      request.headers
+    );
+
+    return { id: insertFileOne?.id };
   }
 }

@@ -3,4 +3,4 @@ coverage
 minio
 vitest.config.js
 processes.config.js
-src/generated/**
+src/generated/*

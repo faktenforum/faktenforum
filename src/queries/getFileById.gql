@@ -2,6 +2,7 @@ query getFileById($id: uuid!) {
   file: fileByPk(id: $id) {
     id
     key
+    md5
     mimeType
     name
     size

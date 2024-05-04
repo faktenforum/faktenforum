@@ -8345,7 +8345,18 @@ export type GetFileByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetFileByIdQuery = { __typename?: 'query_root', file?: { __typename?: 'File', id: any, key: string, mimeType: string, name: string, size: number, updatedAt?: any | null } | null };
+export type GetFileByIdQuery = { __typename?: 'query_root', file?: { __typename?: 'File', id: any, key: string, md5: string, mimeType: string, name: string, size: number, updatedAt?: any | null } | null };
+
+export type InsertFileMutationVariables = Exact<{
+  key: Scalars['String']['input'];
+  md5: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+}>;
+
+
+export type InsertFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null };
 
 
 export const GetFileByIdDocument = gql`
@@ -8353,10 +8364,20 @@ export const GetFileByIdDocument = gql`
   file: fileByPk(id: $id) {
     id
     key
+    md5
     mimeType
     name
     size
     updatedAt
+  }
+}
+    `;
+export const InsertFileDocument = gql`
+    mutation insertFile($key: String!, $md5: String!, $mimeType: String!, $name: String!, $size: Int!) {
+  insertFileOne(
+    object: {key: $key, md5: $md5, mimeType: $mimeType, name: $name, size: $size}
+  ) {
+    id
   }
 }
     `;
@@ -8370,6 +8391,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     getFileById(variables: GetFileByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetFileByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetFileByIdQuery>(GetFileByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFileById', 'query', variables);
+    },
+    insertFile(variables: InsertFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertFileMutation>(InsertFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFile', 'mutation', variables);
     }
   };
 }

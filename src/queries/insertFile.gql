@@ -1,0 +1,5 @@
+mutation insertFile($key: String!, $md5: String!, $mimeType: String!, $name: String!, $size: Int!) {
+  insertFileOne(object: { key: $key, md5: $md5, mimeType: $mimeType, name: $name, size: $size }) {
+    id
+  }
+}
