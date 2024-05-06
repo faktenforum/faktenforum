@@ -27,21 +27,17 @@ export class ClaimFileCreate {
 
   @Property()
   @Required()
-  key: string;
+  id: string;
 
   @Property()
   @Required()
-  md5: string;
+  eTag: string;
 
   @Property()
   @Required()
   mimeType: string;
 }
 export class ClaimFile extends ClaimFileCreate {
-  @Property()
-  @Required()
-  id: string;
-
   @Property()
   @Optional()
   createdBy: string;

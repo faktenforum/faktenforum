@@ -67,9 +67,9 @@ export class SubmissionService {
           const file = files[index];
 
           const claimFile = {
-            key: file.key,
+            id: file.key,
             mimeType: file.mimetype,
-            md5: file.etag.replace(/"/g, ""),
+            eTag: file.etag.replace(/"/g, ""),
             name: file.metadata.originalName,
             size: file.size
           };
@@ -121,9 +121,9 @@ export class SubmissionService {
             const file = files[index];
 
             claimFile = {
-              key: file.key,
+              id: file.key,
               mimeType: file.mimetype,
-              md5: file.etag.replace(/"/g, ""),
+              eTag: file.etag.replace(/"/g, ""),
               name: file.metadata.originalName,
               size: file.size
             };

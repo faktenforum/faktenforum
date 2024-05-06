@@ -58,6 +58,7 @@
     "barrelsby": "^2.8.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -85,8 +86,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^10.ldd --version8.0",
-    "@parcel/watcher": "^2.4.np1",
+    "@parcel/watcher": "^2.4",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@tsed/cli": "^5.1.1",
     "@tsed/cli-plugin-eslint": "5.1.1",

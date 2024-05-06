@@ -1,5 +1,5 @@
 import { Optional, Property, Required } from "@tsed/schema";
-
+import { IsUUID } from "class-validator";
 class KratosTraits {
   @Required()
   @Property()
@@ -23,6 +23,7 @@ class KratosTransientPayload {
 export class RegistrationRequest {
   @Required()
   @Property()
+  @IsUUID()
   id: string;
 
   @Required()

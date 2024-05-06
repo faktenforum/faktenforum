@@ -35,7 +35,6 @@ export class WebHookController {
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, String).ContentType("application/json")
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
-    console.log("Registration Creation Webhook:", body);
     await this.usersService.createUser({
       id: body.id,
       email: body.traits.email,
@@ -65,7 +64,6 @@ export class WebHookController {
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")
   async deleteFile(@BodyParams() body: { id: string }) {
-    console.log("Delete File Webhook:", body);
     this.fileService.deleteFile(body.id);
     return {}; // Returning an empty object with a 200 status code
   }

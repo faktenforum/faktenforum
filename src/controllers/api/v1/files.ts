@@ -1,10 +1,12 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams } from "@tsed/platform-params";
-import { Consumes, Delete, Description, Get, Post, Returns, Summary } from "@tsed/schema";
+import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService } from "~/services";
 import { GetFileByIdDocument, InsertFileDocument } from "~/generated/graphql";
+import { isUUID } from "class-validator";
+import type { Session } from "~/models";
 import type {
   GetFileByIdQuery,
   GetFileByIdQueryVariables,
@@ -35,6 +37,9 @@ export class ClaimsController {
     @Next() next: (error: unknown) => void
   ) {
     try {
+      if (!isUUID(fileId)) {
+        throw new NotFound("File not found");
+      }
       const { file: fileMetaData } = await this.hasuraService.clientRequest<
         GetFileByIdQuery,
         GetFileByIdQueryVariables
@@ -59,24 +64,21 @@ export class ClaimsController {
 
   @Post("/")
   @Description("This endpoint allows for uploading a file to the server.")
-  @Returns(200).Description("Returns the ID of the uploaded file")
+  @Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")
   @Consumes("multipart/form-data")
-  async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request) {
+  async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request & { user: Session }) {
     try {
-      const { insertFileOne } = await this.hasuraService.clientRequest<
+      const { insertFileOne } = await this.hasuraService.adminRequest<
         InsertFileMutation,
         InsertFileMutationVariables
-      >(
-        InsertFileDocument,
-        {
-          key: file.key,
-          mimeType: file.mimetype,
-          name: file.originalname,
-          size: file.size,
-          md5: file.etag // minio uses md5 as etag
-        },
-        request.headers
-      );
+      >(InsertFileDocument, {
+        id: file.key,
+        mimeType: file.mimetype,
+        name: file.originalname,
+        size: file.size,
+        eTag: file.etag, // minio uses md5 as etag
+        createdBy: request.user.userId
+      });
 
       return { id: insertFileOne?.id };
     } catch (error) {
@@ -84,6 +86,4 @@ export class ClaimsController {
       throw error;
     }
   }
-
-
 }
