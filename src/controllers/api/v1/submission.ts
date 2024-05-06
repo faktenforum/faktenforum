@@ -51,11 +51,13 @@ export class SubmissionController {
   @Returns(200, Submission)
   async getSubmission(@PathParams("token") token: string) {
     const id = await this.submissionService.getClaimIdByToken(token);
+    if (!id) {
+      throw new NotFound("Claim not found by token");
+    }
     const claim = await this.claimService.getClaimById(id);
     if (!claim) {
       throw new NotFound("Claim not found");
     }
-    console.log("Claim", JSON.stringify(claim, null, 2));
     const response = {
       title: claim.title,
       description: claim.description,
@@ -68,6 +70,7 @@ export class SubmissionController {
               name: resource.file.name,
               size: resource.file.size,
               mimeType: resource.file.mime_type,
+              eTag: resource.file.e_tag,
               url: this.createClaimFileUrl(token, resource.file.id)
             }
           : null
@@ -90,7 +93,8 @@ export class SubmissionController {
       if (!claimFile) {
         throw new NotFound("ClaimFile not found");
       }
-      const stream = await this.fileService.getFileStream(claimFile.key);
+      const stream = await this.fileService.getFileStream(claimFile.id);
+      console.log("Claim File:", claimFile);
       response.set({
         "Content-Type": claimFile.mime_type // or the appropriate MIME type
         // "Content-Disposition": `attachment; filename="${claimFile.name}"` // if you want it to be downloaded

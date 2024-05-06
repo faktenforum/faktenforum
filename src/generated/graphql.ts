@@ -3602,13 +3602,12 @@ export type File = {
   claim_resources: Array<ClaimResource>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  eTag: Scalars['String']['output'];
   /** An aggregate relationship */
   factResourcesAggregate: FactResourceAggregate;
   /** An array relationship */
   fact_resources: Array<FactResource>;
   id: Scalars['uuid']['output'];
-  key: Scalars['String']['output'];
-  md5: Scalars['String']['output'];
   mimeType: Scalars['String']['output'];
   name: Scalars['String']['output'];
   size: Scalars['Int']['output'];
@@ -3738,11 +3737,10 @@ export type FileBoolExp = {
   claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
+  eTag?: InputMaybe<StringComparisonExp>;
   fact_resources?: InputMaybe<FactResourceBoolExp>;
   fact_resourcesAggregate?: InputMaybe<FactResourceAggregateBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  key?: InputMaybe<StringComparisonExp>;
-  md5?: InputMaybe<StringComparisonExp>;
   mimeType?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
   size?: InputMaybe<IntComparisonExp>;
@@ -3765,10 +3763,9 @@ export type FileHistory = {
   __typename?: 'FileHistory';
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  eTag: Scalars['String']['output'];
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
-  key: Scalars['String']['output'];
-  md5: Scalars['String']['output'];
   mimeType: Scalars['String']['output'];
   name: Scalars['String']['output'];
   size: Scalars['Int']['output'];
@@ -3821,10 +3818,9 @@ export type FileHistoryBoolExp = {
   _or?: InputMaybe<Array<FileHistoryBoolExp>>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
+  eTag?: InputMaybe<StringComparisonExp>;
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  key?: InputMaybe<StringComparisonExp>;
-  md5?: InputMaybe<StringComparisonExp>;
   mimeType?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
   size?: InputMaybe<IntComparisonExp>;
@@ -3849,10 +3845,9 @@ export type FileHistoryIncInput = {
 export type FileHistoryInsertInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  eTag?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  key?: InputMaybe<Scalars['String']['input']>;
-  md5?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -3867,10 +3862,9 @@ export type FileHistoryMaxFields = {
   __typename?: 'FileHistoryMaxFields';
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  eTag?: Maybe<Scalars['String']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  key?: Maybe<Scalars['String']['output']>;
-  md5?: Maybe<Scalars['String']['output']>;
   mimeType?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   size?: Maybe<Scalars['Int']['output']>;
@@ -3884,10 +3878,9 @@ export type FileHistoryMinFields = {
   __typename?: 'FileHistoryMinFields';
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  eTag?: Maybe<Scalars['String']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  key?: Maybe<Scalars['String']['output']>;
-  md5?: Maybe<Scalars['String']['output']>;
   mimeType?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   size?: Maybe<Scalars['Int']['output']>;
@@ -3916,10 +3909,9 @@ export type FileHistoryOnConflict = {
 export type FileHistoryOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
+  eTag?: InputMaybe<OrderBy>;
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  key?: InputMaybe<OrderBy>;
-  md5?: InputMaybe<OrderBy>;
   mimeType?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   size?: InputMaybe<OrderBy>;
@@ -3941,13 +3933,11 @@ export enum FileHistorySelectColumn {
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
+  ETag = 'eTag',
+  /** column name */
   HistoryId = 'historyId',
   /** column name */
   Id = 'id',
-  /** column name */
-  Key = 'key',
-  /** column name */
-  Md5 = 'md5',
   /** column name */
   MimeType = 'mimeType',
   /** column name */
@@ -3968,10 +3958,9 @@ export enum FileHistorySelectColumn {
 export type FileHistorySetInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  eTag?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  key?: InputMaybe<Scalars['String']['input']>;
-  md5?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -4011,10 +4000,9 @@ export type FileHistoryStreamCursorInput = {
 export type FileHistoryStreamCursorValueInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  eTag?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  key?: InputMaybe<Scalars['String']['input']>;
-  md5?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -4037,13 +4025,11 @@ export enum FileHistoryUpdateColumn {
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
+  ETag = 'eTag',
+  /** column name */
   HistoryId = 'historyId',
   /** column name */
   Id = 'id',
-  /** column name */
-  Key = 'key',
-  /** column name */
-  Md5 = 'md5',
   /** column name */
   MimeType = 'mimeType',
   /** column name */
@@ -4097,10 +4083,9 @@ export type FileInsertInput = {
   claim_resources?: InputMaybe<ClaimResourceArrRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  eTag?: InputMaybe<Scalars['String']['input']>;
   fact_resources?: InputMaybe<FactResourceArrRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  key?: InputMaybe<Scalars['String']['input']>;
-  md5?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -4117,9 +4102,8 @@ export type FileMaxFields = {
   __typename?: 'FileMaxFields';
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  eTag?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  key?: Maybe<Scalars['String']['output']>;
-  md5?: Maybe<Scalars['String']['output']>;
   mimeType?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   size?: Maybe<Scalars['Int']['output']>;
@@ -4132,9 +4116,8 @@ export type FileMaxFields = {
 export type FileMaxOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
+  eTag?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  key?: InputMaybe<OrderBy>;
-  md5?: InputMaybe<OrderBy>;
   mimeType?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   size?: InputMaybe<OrderBy>;
@@ -4148,9 +4131,8 @@ export type FileMinFields = {
   __typename?: 'FileMinFields';
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  eTag?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  key?: Maybe<Scalars['String']['output']>;
-  md5?: Maybe<Scalars['String']['output']>;
   mimeType?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   size?: Maybe<Scalars['Int']['output']>;
@@ -4163,9 +4145,8 @@ export type FileMinFields = {
 export type FileMinOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
+  eTag?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  key?: InputMaybe<OrderBy>;
-  md5?: InputMaybe<OrderBy>;
   mimeType?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   size?: InputMaybe<OrderBy>;
@@ -4202,10 +4183,9 @@ export type FileOrderBy = {
   claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
+  eTag?: InputMaybe<OrderBy>;
   fact_resourcesAggregate?: InputMaybe<FactResourceAggregateOrderBy>;
   id?: InputMaybe<OrderBy>;
-  key?: InputMaybe<OrderBy>;
-  md5?: InputMaybe<OrderBy>;
   mimeType?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   size?: InputMaybe<OrderBy>;
@@ -4229,11 +4209,9 @@ export enum FileSelectColumn {
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
+  ETag = 'eTag',
+  /** column name */
   Id = 'id',
-  /** column name */
-  Key = 'key',
-  /** column name */
-  Md5 = 'md5',
   /** column name */
   MimeType = 'mimeType',
   /** column name */
@@ -4254,9 +4232,8 @@ export enum FileSelectColumn {
 export type FileSetInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  eTag?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  key?: InputMaybe<Scalars['String']['input']>;
-  md5?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -4311,9 +4288,8 @@ export type FileStreamCursorInput = {
 export type FileStreamCursorValueInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  eTag?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  key?: InputMaybe<Scalars['String']['input']>;
-  md5?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -4341,11 +4317,9 @@ export enum FileUpdateColumn {
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
+  ETag = 'eTag',
+  /** column name */
   Id = 'id',
-  /** column name */
-  Key = 'key',
-  /** column name */
-  Md5 = 'md5',
   /** column name */
   MimeType = 'mimeType',
   /** column name */
@@ -8345,14 +8319,15 @@ export type GetFileByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetFileByIdQuery = { __typename?: 'query_root', file?: { __typename?: 'File', id: any, key: string, md5: string, mimeType: string, name: string, size: number, updatedAt?: any | null } | null };
+export type GetFileByIdQuery = { __typename?: 'query_root', file?: { __typename?: 'File', id: any, eTag: string, mimeType: string, name: string, size: number, updatedAt?: any | null } | null };
 
 export type InsertFileMutationVariables = Exact<{
-  key: Scalars['String']['input'];
-  md5: Scalars['String']['input'];
+  id: Scalars['uuid']['input'];
+  eTag: Scalars['String']['input'];
   mimeType: Scalars['String']['input'];
   name: Scalars['String']['input'];
   size: Scalars['Int']['input'];
+  createdBy: Scalars['uuid']['input'];
 }>;
 
 
@@ -8363,8 +8338,7 @@ export const GetFileByIdDocument = gql`
     query getFileById($id: uuid!) {
   file: fileByPk(id: $id) {
     id
-    key
-    md5
+    eTag
     mimeType
     name
     size
@@ -8373,9 +8347,9 @@ export const GetFileByIdDocument = gql`
 }
     `;
 export const InsertFileDocument = gql`
-    mutation insertFile($key: String!, $md5: String!, $mimeType: String!, $name: String!, $size: Int!) {
+    mutation insertFile($id: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $createdBy: uuid!) {
   insertFileOne(
-    object: {key: $key, md5: $md5, mimeType: $mimeType, name: $name, size: $size}
+    object: {id: $id, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size, createdBy: $createdBy}
   ) {
     id
   }
