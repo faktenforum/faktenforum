@@ -106,10 +106,9 @@ CREATE TABLE public.fact_resource (
 );
 CREATE TABLE public.file (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    key text NOT NULL,
     name text NOT NULL,
     mime_type text NOT NULL,
-    md5 text NOT NULL,
+    e_tag text NOT NULL,
     size integer NOT NULL,
     transcription text,
     created_by uuid,
@@ -167,7 +166,6 @@ ADD CONSTRAINT user_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.virality
 ADD CONSTRAINT virality_pkey PRIMARY KEY (id);
 CREATE UNIQUE INDEX claim_submission_token_token_key ON public.claim_submission_token USING btree (token);
-CREATE INDEX file_key_idx ON public.file USING btree (key);
 CREATE UNIQUE INDEX user_email_key ON public.user USING btree (email);
 CREATE UNIQUE INDEX user_username_key ON public.user USING btree (username);
 CREATE TRIGGER set_public_claim_fact_updated_at BEFORE

@@ -6,8 +6,7 @@ select_permissions:
     permission:
       columns:
         - size
-        - key
-        - md5
+        - e_tag
         - mime_type
         - name
         - transcription

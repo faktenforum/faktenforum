@@ -29,8 +29,7 @@ select_permissions:
       columns:
         - created_by
         - id
-        - key
-        - md5
+        - e_tag
         - mime_type
         - name
         - size
@@ -61,17 +60,16 @@ select_permissions:
   - role: moderator
     permission:
       columns:
-        - size
-        - key
-        - md5
-        - mime_type
-        - name
-        - transcription
         - created_at
-        - updated_at
-        - sys_period
         - created_by
         - id
+        - e_tag
+        - mime_type
+        - name
+        - size
+        - sys_period
+        - transcription
+        - updated_at
         - updated_by
       filter: {}
       allow_aggregations: true
@@ -93,22 +91,22 @@ event_triggers:
   - name: delete_file_from_s3
     definition:
       delete:
-        columns: '*'
+        columns: "*"
       enable_manual: false
     retry_conf:
       interval_sec: 10
-      num_retries: 0
+      num_retries: 10
       timeout_sec: 60
-    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/delete-file'
+    webhook: "{{HASURA_WEBHOOKS_BASE_URL}}/delete-file"
     headers:
-      - name: api-key
+      - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY
     request_transform:
       body:
         action: transform
         template: |-
           {
-            "table": {{$body.data.id}}
+            "id": {{$body.id}}
           }
       method: DELETE
       query_params: {}
