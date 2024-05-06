@@ -8,8 +8,8 @@ type ClaimCreateDM = {
   resources: {
     originalUrl: string;
     file?: {
-      key: string;
-      md5: string;
+      id: string;
+      eTag: string;
       mimeType: string;
       name: string;
       size: number;
