@@ -105,7 +105,7 @@ CREATE TABLE public.fact_resource (
     sys_period tstzrange
 );
 CREATE TABLE public.file (
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    id uuid NOT NULL,
     name text NOT NULL,
     mime_type text NOT NULL,
     e_tag text NOT NULL,
