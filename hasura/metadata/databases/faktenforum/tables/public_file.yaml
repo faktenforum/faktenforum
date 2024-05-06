@@ -91,13 +91,13 @@ event_triggers:
   - name: delete_file_from_s3
     definition:
       delete:
-        columns: "*"
+        columns: '*'
       enable_manual: false
     retry_conf:
       interval_sec: 10
       num_retries: 10
       timeout_sec: 60
-    webhook: "{{HASURA_WEBHOOKS_BASE_URL}}/delete-file"
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/delete-file'
     headers:
       - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY

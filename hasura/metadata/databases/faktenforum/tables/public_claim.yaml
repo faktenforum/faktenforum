@@ -63,18 +63,19 @@ select_permissions:
   - role: junior
     permission:
       columns:
-        - tags
-        - description
-        - title
         - archive_at
-        - created_at
-        - updated_at
-        - sys_period
-        - label
-        - status
         - archive_id
+        - created_at
         - created_by
+        - description
         - id
+        - label
+        - process_id
+        - status
+        - sys_period
+        - tags
+        - title
+        - updated_at
         - updated_by
       filter:
         status:
@@ -89,18 +90,19 @@ select_permissions:
   - role: moderator
     permission:
       columns:
-        - tags
-        - description
-        - title
         - archive_at
-        - created_at
-        - updated_at
-        - sys_period
-        - label
-        - status
         - archive_id
+        - created_at
         - created_by
+        - description
         - id
+        - label
+        - process_id
+        - status
+        - sys_period
+        - tags
+        - title
+        - updated_at
         - updated_by
       filter: {}
       allow_aggregations: true
