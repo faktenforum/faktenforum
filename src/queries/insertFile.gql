@@ -1,0 +1,14 @@
+mutation insertFile(
+  $id: uuid!
+  $eTag: String!
+  $mimeType: String!
+  $name: String!
+  $size: Int!
+  $createdBy: uuid!
+) {
+  insertFileOne(
+    object: { id: $id, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size, createdBy: $createdBy }
+  ) {
+    id
+  }
+}

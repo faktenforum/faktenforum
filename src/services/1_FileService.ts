@@ -49,7 +49,10 @@ export class FileService {
   getFileStream(key: string): Promise<Readable> {
     return this.minioClient.getObject(this.envService.minioBucketName, key);
   }
-
+  async deleteFile(key: string) {
+    return this.minioClient.removeObject(this.envService.minioBucketName, key);
+  }
+  // TODO: Replace with Hasura Request
   getClaimFileMetaData(claimId: string, fileId: string): Promise<file | null> {
     return this.prisma.file.findFirst({
       where: {
@@ -57,19 +60,6 @@ export class FileService {
         claim_resource: {
           some: {
             claim_id: claimId
-          }
-        }
-      }
-    });
-  }
-
-  getFactFileMetaData(factId: string, fileId: string): Promise<file | null> {
-    return this.prisma.file.findFirst({
-      where: {
-        id: fileId,
-        fact_resource: {
-          some: {
-            fact_id: factId
           }
         }
       }

@@ -1,63 +1,67 @@
 CREATE TABLE public.claim_history (
     LIKE public.claim,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.claim(id) ON DELETE CASCADE
 );
 CREATE TABLE public.user_history (
     LIKE public.user,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.user(id) ON DELETE CASCADE
 );
 CREATE TABLE public.file_history (
     LIKE public.file,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.file(id) ON DELETE CASCADE
 );
 CREATE TABLE public.fact_resource_history (
     LIKE public.fact_resource,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_fact_resource_history FOREIGN KEY (id) REFERENCES public.fact_resource(id) ON DELETE CASCADE
 );
 CREATE TABLE public.fact_history (
     LIKE public.fact,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_fact_history FOREIGN KEY (id) REFERENCES public.fact(id) ON DELETE CASCADE
 );
 CREATE TABLE public.comment_history (
     LIKE public.comment,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_comment_history FOREIGN KEY (id) REFERENCES public.comment(id) ON DELETE CASCADE
 );
 CREATE TABLE public.claim_resource_history (
     LIKE public.claim_resource,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_claim_resource_history FOREIGN KEY (id) REFERENCES public.claim_resource(id) ON DELETE CASCADE
 );
 CREATE TABLE public.claim_fact_history (
     LIKE public.claim_fact,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id)
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_claim_fact_history FOREIGN KEY (id) REFERENCES public.claim_fact(id) ON DELETE CASCADE
 );
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.claim FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_history', true);
+UPDATE ON public.claim FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_history', true);
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.user FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.user_history', true);
+UPDATE ON public.user FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.user_history', true);
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.file FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.file_history', true);
+UPDATE ON public.file FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.file_history', true);
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.fact_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
+UPDATE ON public.fact_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
         'sys_period',
         'public.fact_resource_history',
         true
@@ -65,13 +69,11 @@ UPDATE
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.comment FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.comment_history', true);
+UPDATE ON public.comment FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.comment_history', true);
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.claim_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
+UPDATE ON public.claim_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
         'sys_period',
         'public.claim_resource_history',
         true
@@ -79,9 +81,9 @@ UPDATE
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE
-    OR DELETE ON public.claim_fact FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_fact_history', true);
+UPDATE ON public.claim_fact FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_fact_history', true);
 -- Workaround for sql bug in LIKE operator https://www.postgresql.org/message-id/20150707072942.1186.98151@wrigleys.postgresql.org
+-- this script iterates over each history table in the database, identifies array columns, and converts them into single-dimensional arrays by altering their data types. It's a way to fix a specific issue related to array columns in the history tables.
 DO $$
 DECLARE current_table_name text;
 current_column_name text;

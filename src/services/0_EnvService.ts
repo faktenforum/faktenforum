@@ -84,6 +84,14 @@ export class EnvService {
     return process.env.KRATOS_BASE_URL;
   }
 
+  get hasuraBaseUrl(): string {
+    if (!process.env.HASURA_BASE_URL) {
+      $log.error("HASURA_BASE_URL is not set!");
+      process.exit(1);
+    }
+    return process.env.HASURA_BASE_URL;
+  }
+
   get mongoDBUri(): string {
     if (!process.env.MONGODB_HOST) {
       $log.error("MONGODB_HOST is not set!");
@@ -125,13 +133,15 @@ export class EnvService {
     }
 
     return {
-      kratos: process.env.KRATOS_API_KEY
+      kratos: process.env.KRATOS_API_KEY,
+      hasura: process.env.HASURA_API_KEY
     };
   }
 
   private validate() {
     this.baseUrl;
     this.mongoDBUri;
+    this.hasuraBaseUrl;
     this.kratosBaseUrl;
     this.claimSubmissionTokenLifeTime;
     this.minioAccessKey;

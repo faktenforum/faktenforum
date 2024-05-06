@@ -45,8 +45,8 @@ export class ClaimService {
               ? {
                   create: {
                     created_by: userId,
-                    key: resource.file.key,
-                    md5: resource.file.md5,
+                    id: resource.file.id,
+                    e_tag: resource.file.eTag,
                     mime_type: resource.file.mimeType,
                     name: resource.file.name,
                     size: resource.file.size
@@ -111,8 +111,8 @@ export class ClaimService {
       dbfile = await this.prisma.file.create({
         data: {
           created_by: userId,
-          key: resource.file.key,
-          md5: resource.file.md5,
+          id: resource.file.id,
+          e_tag: resource.file.eTag,
           mime_type: resource.file.mimeType,
           name: resource.file.name,
           size: resource.file.size

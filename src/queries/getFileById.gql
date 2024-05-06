@@ -1,0 +1,10 @@
+query getFileById($id: uuid!) {
+  file: fileByPk(id: $id) {
+    id
+    eTag
+    mimeType
+    name
+    size
+    updatedAt
+  }
+}
