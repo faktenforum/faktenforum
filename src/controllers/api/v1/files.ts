@@ -47,13 +47,13 @@ export class ClaimsController {
       if (!fileMetaData) {
         throw new NotFound("File not found");
       }
-      const stream = await this.fileService.getFileStream(fileMetaData?.key || "");
+      const stream = await this.fileService.getFileStream(fileMetaData?.id || "");
       response.set({
         "Content-Type": fileMetaData?.mimeType,
         "Content-Disposition": `filename=${fileMetaData?.name}`,
         "Content-Length": fileMetaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
-        ETag: fileMetaData?.md5
+        ETag: fileMetaData?.eTag
       });
 
       stream.pipe(response as never);
