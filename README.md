@@ -49,7 +49,7 @@ To install hasura cli look [here](https://hasura.io/docs/latest/hasura-cli/insta
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 ```
 
-### To export Medata
+### To export Metadata
 
 Change to the hasura folder and use hasura cli to export the metadata after
 changes in the hasura console
@@ -101,10 +101,16 @@ npm install
 ```
 
 Start docker containers with help of docker-compose.local.yml
-An run primsa migration to update or init the database shema
+To update prisma schema run
 
 ```bash
-npm run pisma
+npm run prisma:pull
+```
+
+Graphql type are updated on npm start if you add new queries you can run
+
+```bash
+npm run graphql
 ```
 
 Now docker-compose down and up again to bringt hasura metata up to date
