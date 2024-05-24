@@ -1,0 +1,47 @@
+name: "FF-KRATOS | Build & Push Docker Images"
+on:
+  push:
+    branches: [main, production]
+    paths:
+      - "kratos/**"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Extract the git commit hash
+      - name: Get commit hash
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      # Image Base name
+      - name: "Set Image Base Name"
+        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/faktenforum-kratos-migrate" >> $GITHUB_ENV
+
+      # Set tags for the main branch
+      - name: Set Production Tags
+        if: github.ref == 'refs/heads/production'
+        run: echo "TAGS=${{ env.IMAGE_NAME }}:${{env.COMMIT_HASH}},${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
+
+      # Set tag for development branches
+      - name: Set Dev Tag
+        if: github.ref != 'refs/heads/production'
+        run: echo "TAGS=${{ env.IMAGE_NAME }}:${{env.COMMIT_HASH}}-dev,${{ env.IMAGE_NAME }}:latest-dev" >> $GITHUB_ENV
+
+      # Login into ghcr.io as action
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # build & publish  image  for arm64 and amd64
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./kratos
+          file: ./kratos/Dockerfile.kratos-migrate
+          push: true
+          platforms: linux/amd64 #, linux/arm64
+          tags: ${{ env.TAGS }}

@@ -1,0 +1,8 @@
+# Use the official PostgreSQL image as the base image
+FROM oryd/kratos:v1.1
+
+# Copy initialization scripts to the container
+COPY jsonnet /etc/kratos/jsonnet
+COPY identity.schema.json /etc/kratos/identity.schema.json
+COPY kratos.yml /etc/kratos/kratos.yml
+ENTRYPOINT [kratos]
