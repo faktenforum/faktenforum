@@ -61,35 +61,35 @@ services:
       HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
       HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: "naming_convention"
       HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION: "graphql-default"
-    depends_on:
-      data-connector-agent:
-        condition: service_healthy
+    # depends_on:
+    #   data-connector-agent:
+    #     condition: service_healthy
     networks:
       - faktenforum
       - traefik-ingress
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  data-connector-agent:
-    image: hasura/graphql-data-connector:v2.36.0
-    restart: always
-    depends_on:
-      - postgres-db
-    ports:
-      - 8081:8081
-    environment:
-      QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
-      ## https://quarkus.io/guides/opentelemetry#configuration-reference
-      QUARKUS_OPENTELEMETRY_ENABLED: "false"
-      ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 5s
-    networks:
-      - faktenforum
+  # data-connector-agent:
+  #   image: hasura/graphql-data-connector:v2.36.0
+  #   restart: always
+  #   depends_on:
+  #     - postgres-db
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+  #     ## https://quarkus.io/guides/opentelemetry#configuration-reference
+  #     QUARKUS_OPENTELEMETRY_ENABLED: "false"
+  #     ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 5s
+  #   networks:
+  #     - faktenforum
   db-migrate:
     build:
       context: ./hasura

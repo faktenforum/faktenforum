@@ -49,6 +49,7 @@ export type Claim = {
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   label?: Maybe<Scalars['claim_label']['output']>;
+  processId?: Maybe<Scalars['Int']['output']>;
   status: Scalars['claim_status']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   tags?: Maybe<Array<Scalars['String']['output']>>;
@@ -179,9 +180,17 @@ export type ClaimAggregateBoolExp = {
 /** aggregate fields of "claim" */
 export type ClaimAggregateFields = {
   __typename?: 'ClaimAggregateFields';
+  avg?: Maybe<ClaimAvgFields>;
   count: Scalars['Int']['output'];
   max?: Maybe<ClaimMaxFields>;
   min?: Maybe<ClaimMinFields>;
+  stddev?: Maybe<ClaimStddevFields>;
+  stddevPop?: Maybe<ClaimStddevPopFields>;
+  stddevSamp?: Maybe<ClaimStddevSampFields>;
+  sum?: Maybe<ClaimSumFields>;
+  varPop?: Maybe<ClaimVarPopFields>;
+  varSamp?: Maybe<ClaimVarSampFields>;
+  variance?: Maybe<ClaimVarianceFields>;
 };
 
 
@@ -193,9 +202,17 @@ export type ClaimAggregateFieldsCountArgs = {
 
 /** order by aggregate values of table "claim" */
 export type ClaimAggregateOrderBy = {
+  avg?: InputMaybe<ClaimAvgOrderBy>;
   count?: InputMaybe<OrderBy>;
   max?: InputMaybe<ClaimMaxOrderBy>;
   min?: InputMaybe<ClaimMinOrderBy>;
+  stddev?: InputMaybe<ClaimStddevOrderBy>;
+  stddevPop?: InputMaybe<ClaimStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<ClaimStddevSampOrderBy>;
+  sum?: InputMaybe<ClaimSumOrderBy>;
+  varPop?: InputMaybe<ClaimVarPopOrderBy>;
+  varSamp?: InputMaybe<ClaimVarSampOrderBy>;
+  variance?: InputMaybe<ClaimVarianceOrderBy>;
 };
 
 /** input type for inserting array relation for remote table "claim" */
@@ -203,6 +220,17 @@ export type ClaimArrRelInsertInput = {
   data: Array<ClaimInsertInput>;
   /** upsert condition */
   onConflict?: InputMaybe<ClaimOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type ClaimAvgFields = {
+  __typename?: 'ClaimAvgFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "claim" */
+export type ClaimAvgOrderBy = {
+  processId?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "claim". All fields are combined with a logical 'AND'. */
@@ -225,6 +253,7 @@ export type ClaimBoolExp = {
   description?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   label?: InputMaybe<ClaimLabelComparisonExp>;
+  processId?: InputMaybe<IntComparisonExp>;
   status?: InputMaybe<ClaimStatusComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   tags?: InputMaybe<StringArrayComparisonExp>;
@@ -734,6 +763,7 @@ export type ClaimHistory = {
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
   label?: Maybe<Scalars['claim_label']['output']>;
+  processId?: Maybe<Scalars['Int']['output']>;
   status: Scalars['claim_status']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   tags?: Maybe<Array<Scalars['String']['output']>>;
@@ -752,9 +782,17 @@ export type ClaimHistoryAggregate = {
 /** aggregate fields of "claim_history" */
 export type ClaimHistoryAggregateFields = {
   __typename?: 'ClaimHistoryAggregateFields';
+  avg?: Maybe<ClaimHistoryAvgFields>;
   count: Scalars['Int']['output'];
   max?: Maybe<ClaimHistoryMaxFields>;
   min?: Maybe<ClaimHistoryMinFields>;
+  stddev?: Maybe<ClaimHistoryStddevFields>;
+  stddevPop?: Maybe<ClaimHistoryStddevPopFields>;
+  stddevSamp?: Maybe<ClaimHistoryStddevSampFields>;
+  sum?: Maybe<ClaimHistorySumFields>;
+  varPop?: Maybe<ClaimHistoryVarPopFields>;
+  varSamp?: Maybe<ClaimHistoryVarSampFields>;
+  variance?: Maybe<ClaimHistoryVarianceFields>;
 };
 
 
@@ -762,6 +800,12 @@ export type ClaimHistoryAggregateFields = {
 export type ClaimHistoryAggregateFieldsCountArgs = {
   columns?: InputMaybe<Array<ClaimHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type ClaimHistoryAvgFields = {
+  __typename?: 'ClaimHistoryAvgFields';
+  processId?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Boolean expression to filter rows from the table "claim_history". All fields are combined with a logical 'AND'. */
@@ -777,6 +821,7 @@ export type ClaimHistoryBoolExp = {
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   label?: InputMaybe<ClaimLabelComparisonExp>;
+  processId?: InputMaybe<IntComparisonExp>;
   status?: InputMaybe<ClaimStatusComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   tags?: InputMaybe<StringArrayComparisonExp>;
@@ -791,6 +836,11 @@ export enum ClaimHistoryConstraint {
   ClaimHistoryPkey = 'claim_history_pkey'
 }
 
+/** input type for incrementing numeric columns in table "claim_history" */
+export type ClaimHistoryIncInput = {
+  processId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** input type for inserting data into table "claim_history" */
 export type ClaimHistoryInsertInput = {
   archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
@@ -801,6 +851,7 @@ export type ClaimHistoryInsertInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   label?: InputMaybe<Scalars['claim_label']['input']>;
+  processId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -820,6 +871,7 @@ export type ClaimHistoryMaxFields = {
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   label?: Maybe<Scalars['claim_label']['output']>;
+  processId?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
   tags?: Maybe<Array<Scalars['String']['output']>>;
   title?: Maybe<Scalars['String']['output']>;
@@ -838,6 +890,7 @@ export type ClaimHistoryMinFields = {
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   label?: Maybe<Scalars['claim_label']['output']>;
+  processId?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
   tags?: Maybe<Array<Scalars['String']['output']>>;
   title?: Maybe<Scalars['String']['output']>;
@@ -871,6 +924,7 @@ export type ClaimHistoryOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  processId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   tags?: InputMaybe<OrderBy>;
@@ -903,6 +957,8 @@ export enum ClaimHistorySelectColumn {
   /** column name */
   Label = 'label',
   /** column name */
+  ProcessId = 'processId',
+  /** column name */
   Status = 'status',
   /** column name */
   SysPeriod = 'sysPeriod',
@@ -926,12 +982,31 @@ export type ClaimHistorySetInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   label?: InputMaybe<Scalars['claim_label']['input']>;
+  processId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type ClaimHistoryStddevFields = {
+  __typename?: 'ClaimHistoryStddevFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddevPop on columns */
+export type ClaimHistoryStddevPopFields = {
+  __typename?: 'ClaimHistoryStddevPopFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddevSamp on columns */
+export type ClaimHistoryStddevSampFields = {
+  __typename?: 'ClaimHistoryStddevSampFields';
+  processId?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "claim_history" */
@@ -952,12 +1027,19 @@ export type ClaimHistoryStreamCursorValueInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   label?: InputMaybe<Scalars['claim_label']['input']>;
+  processId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate sum on columns */
+export type ClaimHistorySumFields = {
+  __typename?: 'ClaimHistorySumFields';
+  processId?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "claim_history" */
@@ -979,6 +1061,8 @@ export enum ClaimHistoryUpdateColumn {
   /** column name */
   Label = 'label',
   /** column name */
+  ProcessId = 'processId',
+  /** column name */
   Status = 'status',
   /** column name */
   SysPeriod = 'sysPeriod',
@@ -993,10 +1077,35 @@ export enum ClaimHistoryUpdateColumn {
 }
 
 export type ClaimHistoryUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<ClaimHistoryIncInput>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<ClaimHistorySetInput>;
   /** filter the rows which have to be updated */
   where: ClaimHistoryBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type ClaimHistoryVarPopFields = {
+  __typename?: 'ClaimHistoryVarPopFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate varSamp on columns */
+export type ClaimHistoryVarSampFields = {
+  __typename?: 'ClaimHistoryVarSampFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type ClaimHistoryVarianceFields = {
+  __typename?: 'ClaimHistoryVarianceFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** input type for incrementing numeric columns in table "claim" */
+export type ClaimIncInput = {
+  processId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** input type for inserting data into table "claim" */
@@ -1012,6 +1121,7 @@ export type ClaimInsertInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   label?: InputMaybe<Scalars['claim_label']['input']>;
+  processId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -1046,6 +1156,7 @@ export type ClaimMaxFields = {
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   label?: Maybe<Scalars['claim_label']['output']>;
+  processId?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
   tags?: Maybe<Array<Scalars['String']['output']>>;
   title?: Maybe<Scalars['String']['output']>;
@@ -1062,6 +1173,7 @@ export type ClaimMaxOrderBy = {
   description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  processId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
   tags?: InputMaybe<OrderBy>;
   title?: InputMaybe<OrderBy>;
@@ -1079,6 +1191,7 @@ export type ClaimMinFields = {
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   label?: Maybe<Scalars['claim_label']['output']>;
+  processId?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
   tags?: Maybe<Array<Scalars['String']['output']>>;
   title?: Maybe<Scalars['String']['output']>;
@@ -1095,6 +1208,7 @@ export type ClaimMinOrderBy = {
   description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  processId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
   tags?: InputMaybe<OrderBy>;
   title?: InputMaybe<OrderBy>;
@@ -1138,6 +1252,7 @@ export type ClaimOrderBy = {
   description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  processId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   tags?: InputMaybe<OrderBy>;
@@ -1703,6 +1818,8 @@ export enum ClaimSelectColumn {
   /** column name */
   Label = 'label',
   /** column name */
+  ProcessId = 'processId',
+  /** column name */
   Status = 'status',
   /** column name */
   SysPeriod = 'sysPeriod',
@@ -1725,6 +1842,7 @@ export type ClaimSetInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   label?: InputMaybe<Scalars['claim_label']['input']>;
+  processId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -1746,6 +1864,39 @@ export type ClaimStatusComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['claim_status']['input']>>;
 };
 
+/** aggregate stddev on columns */
+export type ClaimStddevFields = {
+  __typename?: 'ClaimStddevFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "claim" */
+export type ClaimStddevOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type ClaimStddevPopFields = {
+  __typename?: 'ClaimStddevPopFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "claim" */
+export type ClaimStddevPopOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type ClaimStddevSampFields = {
+  __typename?: 'ClaimStddevSampFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "claim" */
+export type ClaimStddevSampOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
 /** Streaming cursor of the table "claim" */
 export type ClaimStreamCursorInput = {
   /** Stream column input with initial value */
@@ -1763,6 +1914,7 @@ export type ClaimStreamCursorValueInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   label?: InputMaybe<Scalars['claim_label']['input']>;
+  processId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -2008,6 +2160,17 @@ export type ClaimSubmissionTokenUpdates = {
   where: ClaimSubmissionTokenBoolExp;
 };
 
+/** aggregate sum on columns */
+export type ClaimSumFields = {
+  __typename?: 'ClaimSumFields';
+  processId?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "claim" */
+export type ClaimSumOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
 /** update columns of table "claim" */
 export enum ClaimUpdateColumn {
   /** column name */
@@ -2025,6 +2188,8 @@ export enum ClaimUpdateColumn {
   /** column name */
   Label = 'label',
   /** column name */
+  ProcessId = 'processId',
+  /** column name */
   Status = 'status',
   /** column name */
   SysPeriod = 'sysPeriod',
@@ -2039,10 +2204,45 @@ export enum ClaimUpdateColumn {
 }
 
 export type ClaimUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<ClaimIncInput>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<ClaimSetInput>;
   /** filter the rows which have to be updated */
   where: ClaimBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type ClaimVarPopFields = {
+  __typename?: 'ClaimVarPopFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "claim" */
+export type ClaimVarPopOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type ClaimVarSampFields = {
+  __typename?: 'ClaimVarSampFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "claim" */
+export type ClaimVarSampOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type ClaimVarianceFields = {
+  __typename?: 'ClaimVarianceFields';
+  processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "claim" */
+export type ClaimVarianceOrderBy = {
+  processId?: InputMaybe<OrderBy>;
 };
 
 /** columns and relationships of "comment" */
@@ -6730,6 +6930,7 @@ export type Mutation_RootInsertViralityOneArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateClaimArgs = {
+  _inc?: InputMaybe<ClaimIncInput>;
   _set?: InputMaybe<ClaimSetInput>;
   where: ClaimBoolExp;
 };
@@ -6737,6 +6938,7 @@ export type Mutation_RootUpdateClaimArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateClaimByPkArgs = {
+  _inc?: InputMaybe<ClaimIncInput>;
   _set?: InputMaybe<ClaimSetInput>;
   pkColumns: ClaimPkColumnsInput;
 };
@@ -6784,6 +6986,7 @@ export type Mutation_RootUpdateClaimFactManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateClaimHistoryArgs = {
+  _inc?: InputMaybe<ClaimHistoryIncInput>;
   _set?: InputMaybe<ClaimHistorySetInput>;
   where: ClaimHistoryBoolExp;
 };
@@ -6791,6 +6994,7 @@ export type Mutation_RootUpdateClaimHistoryArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateClaimHistoryByPkArgs = {
+  _inc?: InputMaybe<ClaimHistoryIncInput>;
   _set?: InputMaybe<ClaimHistorySetInput>;
   pkColumns: ClaimHistoryPkColumnsInput;
 };
