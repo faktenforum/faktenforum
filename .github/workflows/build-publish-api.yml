@@ -3,10 +3,11 @@ on:
   push:
     branches: [main, production]
     paths:
-      - 'package.json'
-      - 'src/**'
-      - 'prisma/**'
-      - 'views/**'
+      - "package.json"
+      - "src/**"
+      - "prisma/**"
+      - "views/**"
+  workflow_dispatch:
 
 jobs:
   build-and-push:

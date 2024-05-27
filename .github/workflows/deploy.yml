@@ -5,6 +5,7 @@ on:
     workflows: [FF-API | Build & Push Docker Images]
     types: [completed]
     branches: [main, production]
+  workflow_dispatch:
 
 jobs:
   deploy:

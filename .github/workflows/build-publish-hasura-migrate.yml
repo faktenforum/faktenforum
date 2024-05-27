@@ -3,8 +3,8 @@ on:
   push:
     branches: [main, production]
     paths:
-      - 'hasura/**'
-
+      - "hasura/**"
+  workflow_dispatch:
 
 jobs:
   build-and-push:
