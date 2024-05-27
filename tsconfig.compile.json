@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["prisma", "minio","src/__tests__"],
+  "exclude": ["node_modules", "prisma", "minio", "src/__tests__"],
   "compilerOptions": {
     "paths": {
       "~/*": ["src/*"]
@@ -14,6 +14,7 @@
     "sourceMap": true,
     "noEmit": false,
     "emitDeclarationOnly": false,
-    "inlineSources": true
+    "inlineSources": true,
+    "skipLibCheck": true
   }
 }

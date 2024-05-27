@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "",
   "scripts": {
-    "build": "npm run graphql && npm run barrels && tsc --project tsconfig.compile.json && tsc-alias -p tsconfig.compile.json",
+    "build": "npm run barrels && tsc --project tsconfig.compile.json && tsc-alias -p tsconfig.compile.json",
     "barrels": "barrelsby --config .barrelsby.json",
     "start": "npm run graphql && npm run barrels && npm run prisma:pull && npm run prisma && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "start:prod": "npm run graphql && cross-env NODE_ENV=production node dist/index.js",
