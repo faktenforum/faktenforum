@@ -2,7 +2,6 @@ import { S3Client } from "@aws-sdk/client-s3";
 import type { PlatformMulterFile } from "@tsed/common";
 import multerS3 from "multer-s3";
 import { v4 as uuidv4 } from "uuid";
-import { PassportUser } from "~/models/PassportCustomUser";
 
 export const bucket = process.env.MINIO_BUCKET_NAME!;
 
@@ -14,6 +13,9 @@ export type Metadata = {
 };
 export type S3MulterFile = PlatformMulterFile & { key: string; etag: string; metadata: Metadata };
 
+type User = {
+  id: string;
+};
 const s3 = new S3Client({
   credentials: {
     accessKeyId: process.env.MINIO_ACCESS_KEY!,
@@ -30,7 +32,7 @@ const storage = multerS3({
   contentType: multerS3.AUTO_CONTENT_TYPE,
   metadata: (req, file, cb) => {
     console.log("File", file);
-    const user = req.user as PassportUser;
+    const user = req.user as User;
     cb(null, {
       fieldName: file.fieldname,
       originalName: file.originalname,

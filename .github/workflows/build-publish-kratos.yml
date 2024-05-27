@@ -41,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./kratos
-          file: ./kratos/Dockerfile.kratos-migrate
+          file: ./kratos/Dockerfile.kratos
           push: true
           platforms: linux/amd64 #, linux/arm64
           tags: ${{ env.TAGS }}
