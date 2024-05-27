@@ -1,0 +1,105 @@
+table:
+  name: comment
+  schema: public
+object_relationships:
+  - name: claim
+    using:
+      foreign_key_constraint_on: claim_id
+  - name: user
+    using:
+      foreign_key_constraint_on: created_by
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
+insert_permissions:
+  - role: junior
+    permission:
+      check:
+        claim:
+          label:
+            _in:
+              - ready_to_check
+              - in_progress
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+    comment: ""
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+    comment: ""
+select_permissions:
+  - role: junior
+    permission:
+      columns:
+        - claim_id
+        - content
+        - created_at
+        - created_by
+        - id
+        - updated_at
+        - updated_by
+      filter:
+        claim:
+          label:
+            _in:
+              - ready_to_check
+              - in_progress
+              - checked
+              - published
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - content
+        - created_at
+        - updated_at
+        - sys_period
+        - claim_id
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: junior
+    permission:
+      columns:
+        - content
+        - updated_by
+      filter:
+        _and:
+          - created_by:
+              _eq: X-Hasura-User-Id
+          - claim:
+              label:
+                _in:
+                  - in_progress
+                  - ready_to_check
+      check: null
+      set:
+        created_by: x-hasura-User-Id
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - claim_id
+        - content
+      filter: {}
+      check: null
+      set:
+        created_by: x-hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

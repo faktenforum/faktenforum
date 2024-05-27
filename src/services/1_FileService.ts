@@ -1,5 +1,7 @@
 import { Inject, Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
+import { file, PrismaClient } from "@prisma/client";
+
 import * as Minio from "minio";
 import { Readable } from "stream";
 import { EnvService } from "~/services";
@@ -8,6 +10,8 @@ import { EnvService } from "~/services";
 export class FileService {
   @Inject()
   envService: EnvService;
+
+  private prisma: PrismaClient;
 
   private minioClient: Minio.Client;
 
@@ -19,6 +23,7 @@ export class FileService {
       accessKey: envService.minioAccessKey,
       secretKey: envService.minioSecretKey
     });
+    this.prisma = new PrismaClient();
   }
 
   async ensureBucketExists(): Promise<void> {
@@ -43,6 +48,22 @@ export class FileService {
 
   getFileStream(key: string): Promise<Readable> {
     return this.minioClient.getObject(this.envService.minioBucketName, key);
+  }
+  async deleteFile(key: string) {
+    return this.minioClient.removeObject(this.envService.minioBucketName, key);
+  }
+  // TODO: Replace with Hasura Request
+  getClaimFileMetaData(claimId: string, fileId: string): Promise<file | null> {
+    return this.prisma.file.findFirst({
+      where: {
+        id: fileId,
+        claim_resource: {
+          some: {
+            claim_id: claimId
+          }
+        }
+      }
+    });
   }
 }
 //   async getPresignedURL(

@@ -10,6 +10,25 @@
 
 To set up the Faktenforum Backend for development, follow the instructions below.
 
+## Requirements
+
+- docker version >= 20.10.0
+- local firewall disabled or make sure the docker bridge interface can reach the host machine
+
+### Identify your docker bridge
+
+In ubuntu follow this instructions
+
+```bash
+# show all network interfaces
+ip addr show
+
+# should be a name like br-dffd01a9178f for bridge device
+# create allow rule
+sudo ufw allow in on br-dffd01a9178f
+
+```
+
 ## Environment
 
 First create .env file by copying .env.example to .env
@@ -28,6 +47,21 @@ To install hasura cli look [here](https://hasura.io/docs/latest/hasura-cli/insta
 
 ```bash
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+```
+
+### To export Metadata
+
+Change to the hasura folder and use hasura cli to export the metadata after
+changes in the hasura console
+
+```bash
+ hasura metadata  --admin-secret "faktenforum" export
+```
+
+to apply use:
+
+```bash
+ hasura metadata  --admin-secret "faktenforum" apply
 ```
 
 ## Traefik, PostgreSQL, Mino, MongoDB, Hasura
@@ -65,6 +99,21 @@ Install dependencies:
 ```bash
 npm install
 ```
+
+Start docker containers with help of docker-compose.local.yml
+To update prisma schema run
+
+```bash
+npm run prisma:pull
+```
+
+Graphql type are updated on npm start if you add new queries you can run
+
+```bash
+npm run graphql
+```
+
+Now docker-compose down and up again to bringt hasura metata up to date
 
 This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to generate index files to import the controllers.
 Edit `.barreslby.json` to customize it

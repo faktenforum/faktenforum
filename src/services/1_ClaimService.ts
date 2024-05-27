@@ -1,30 +1,23 @@
-import { Claim, ClaimFile, ClaimResource, Prisma, PrismaClient } from "@prisma/client";
+import { claim, file, claim_resource, PrismaClient } from "@prisma/client";
 import { Service } from "@tsed/di";
-import { ClaimQueryParams, ClaimResourceCreateDTO } from "~/models/ClaimDTO";
+import { ClaimResourceCreate } from "~/models/Claim";
 
 type ClaimCreateDM = {
   title: string;
   description: string;
   resources: {
     originalUrl: string;
-    files: {
-      key: string;
-      md5: string;
+    file?: {
+      id: string;
+      eTag: string;
       mimeType: string;
       name: string;
       size: number;
-    }[];
+    };
   }[];
 };
-type ClaimWithResources = Claim & {
-  resources: Array<ClaimResource & { files: ClaimFile[] }>;
-};
-
-type PaginatedClaimsResult = {
-  data: ClaimWithResources[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
+type ClaimWithResources = claim & {
+  claim_resource: Array<claim_resource & { file: file | undefined | null }>;
 };
 
 @Service()
@@ -35,69 +28,31 @@ export class ClaimService {
     this.prisma = new PrismaClient();
   }
 
-  async getClaims(params: ClaimQueryParams): Promise<PaginatedClaimsResult> {
-    const { page = 1, pageSize = 10, sortOrder = "asc", search = "" } = params;
-    const skip = (page - 1) * pageSize;
-    const orderBy = { ["submittedAt"]: sortOrder };
-
-    const whereCondition: Prisma.ClaimWhereInput = {
-      OR: [
-        { title: { contains: search, mode: "insensitive" as Prisma.QueryMode } },
-        { description: { contains: search, mode: "insensitive" as Prisma.QueryMode } }
-      ].filter((condition) => Object.keys(condition).length > 0)
-    };
-
-    // Get paginated claims
-    const claims = await this.prisma.claim.findMany({
-      skip,
-      take: pageSize,
-      orderBy,
-      include: {
-        resources: {
-          include: {
-            files: true
-          }
-        }
-      },
-      where: search != "" ? whereCondition : undefined
-    });
-
-    // Count total claims matching the search criteria
-    const totalItems = await this.prisma.claim.count({ where: whereCondition });
-
-    // Calculate total pages
-    const totalPages = Math.ceil(totalItems / pageSize);
-
-    return {
-      data: claims,
-      totalItems,
-      totalPages,
-      currentPage: page
-    };
-  }
-
-  async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<Claim> {
+  async createClaim(claimData: ClaimCreateDM, userId?: string): Promise<claim> {
     const { title, description, resources } = claimData;
+    console.log("Claim Data:", JSON.stringify(claimData, null, 2));
 
     // Start a transaction
     const result = await this.prisma.claim.create({
       data: {
         title: title,
         description: description,
-        resources: {
+        claim_resource: {
           create: resources.map((resource) => ({
-            userId: userId,
-            originalUrl: resource.originalUrl,
-            files: {
-              create: resource.files.map((file) => ({
-                submitterId: userId,
-                key: file.key,
-                md5: file.md5,
-                mimeType: file.mimeType,
-                name: file.name,
-                size: file.size
-              }))
-            }
+            created_by: userId,
+            original_url: resource.originalUrl,
+            file: resource.file
+              ? {
+                  create: {
+                    created_by: userId,
+                    id: resource.file.id,
+                    e_tag: resource.file.eTag,
+                    mime_type: resource.file.mimeType,
+                    name: resource.file.name,
+                    size: resource.file.size
+                  }
+                }
+              : undefined
           }))
         }
 
@@ -109,36 +64,36 @@ export class ClaimService {
   }
 
   async getClaimById(id: string): Promise<ClaimWithResources | null> {
-    return this.prisma.claim.findUnique({
+    return await this.prisma.claim.findUnique({
       where: { id: id },
       include: {
-        resources: {
+        claim_resource: {
           include: {
-            files: true
+            file: true
           }
         }
       }
     });
   }
 
-  async updateClaimById(id: string, data: Partial<Claim>): Promise<Claim> {
+  async updateClaimById(id: string, data: Partial<claim>): Promise<claim> {
+    console.log(data);
+    console.log(id);
     return this.prisma.claim.update({
       where: { id: id },
-      data: data
+      data
     });
   }
 
   async updateClaimResourceById(
     claimId: string,
     resourceId: string,
-    data: Partial<ClaimResource>
-  ): Promise<ClaimResource> {
-    return this.prisma.claimResource.update({
+    data: Partial<claim_resource>
+  ): Promise<claim_resource> {
+    return this.prisma.claim_resource.update({
       where: {
-        id_claimId: {
-          id: resourceId,
-          claimId: claimId
-        }
+        id: resourceId,
+        claim_id: claimId
       },
       data
     });
@@ -146,39 +101,38 @@ export class ClaimService {
 
   async createClaimResource(
     claimId: string,
-    resource: Partial<ClaimResourceCreateDTO>,
+    resource: Partial<ClaimResourceCreate>,
     userId?: string
-  ): Promise<ClaimResource> {
-    return this.prisma.claimResource.create({
+  ): Promise<claim_resource> {
+    console.log("resource", JSON.stringify(resource));
+    console.log("userId", userId);
+    let dbfile;
+    if (resource.file) {
+      dbfile = await this.prisma.file.create({
+        data: {
+          created_by: userId,
+          id: resource.file.id,
+          e_tag: resource.file.eTag,
+          mime_type: resource.file.mimeType,
+          name: resource.file.name,
+          size: resource.file.size
+        }
+      });
+    }
+    return this.prisma.claim_resource.create({
+      include: {
+        file: !!resource.file
+      },
       data: {
-        claimId: claimId,
-        originalUrl: resource.originalUrl,
-        files: {
-          create: (resource.files || []).map((file) => ({
-            submitterId: userId,
-            key: file.key,
-            md5: file.md5,
-            mimeType: file.mimeType,
-            name: file.name,
-            size: file.size
-          }))
-        }
+        claim_id: claimId,
+        created_by: userId,
+        original_url: resource.originalUrl,
+        file_id: dbfile?.id
       }
     });
   }
 
-  async deleteClaimById(id: string): Promise<Claim> {
+  async deleteClaimById(id: string): Promise<claim> {
     return this.prisma.claim.delete({ where: { id: id } });
-  }
-
-  async getClaimFileByIds(claimId: string, fileId: string): Promise<ClaimFile | null> {
-    return this.prisma.claimFile.findFirst({
-      where: {
-        id: fileId,
-        claimResource: {
-          claimId: claimId
-        }
-      }
-    });
   }
 }

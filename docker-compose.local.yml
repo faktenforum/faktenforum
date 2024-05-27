@@ -1,34 +1,34 @@
 version: "3.5"
 services:
-  # This container is needet so traefik can access the host network via docker.host 
-  # for local dev servers of backend, landing and frontend
-  docker-host:
-    image: qoomon/docker-host
-    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
-    mem_limit: 8M
-    restart: on-failure
-    networks:
-    - traefik-ingress
-
   traefik:
     image: traefik:latest
     command:
       - "--api.insecure=true"
       - "--providers.docker=false"
       - "--providers.file.directory=/etc/traefik/dynamic_conf"
+      - "--accesslog=true"
+      - "--accesslog.fields.headers.defaultmode=keep"
+      - "--accesslog.fields.headers.names.User-Agent=drop"
+      - "--accesslog.fields.headers.names.Content-Type=drop"
       - "--entryPoints.web.address=:80"
+
     ports:
       - "8000:80"
       - "8181:8080" # The Traefik dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/dynamic_conf:/etc/traefik/dynamic_conf"
-      
+      - "./traefik/logs:/logs"
     networks:
-     - traefik-ingress
+      - traefik-ingress
+      - faktenforum
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  postgresDb:
-    image: postgres:15.2
+  postgres-db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile.db-postgres
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
@@ -36,8 +36,8 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: ${POSTGRES_PORT}
+
     networks:
       - faktenforum
 
@@ -47,52 +47,67 @@ services:
       - "8080:8080"
     restart: always
     environment:
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}
-      PG_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresDb:${POSTGRES_PORT}/${POSTGRES_DB}
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hasura
+      PGDATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/faktenforum
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       HASURA_GRAPHQL_READ_ONLY_MODE: "false"
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
-    depends_on:
-      data-connector-agent:
-        condition: service_healthy
+      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_WEBHOOKS_BASE_URL}/session
+      HASURA_WEBHOOKS_BASE_URL: ${HASURA_WEBHOOKS_BASE_URL}
+      HASURA_WEBHOOKS_API_KEY: ${HASURA_API_KEY}
+      HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
+      HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: "naming_convention"
+      HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION: "graphql-default"
+    # depends_on:
+    #   data-connector-agent:
+    #     condition: service_healthy
     networks:
       - faktenforum
       - traefik-ingress
-  
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  data-connector-agent:
-    image: hasura/graphql-data-connector:v2.36.0
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
-      ## https://quarkus.io/guides/opentelemetry#configuration-reference
-      QUARKUS_OPENTELEMETRY_ENABLED: "false"
-      ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 5s
-    networks:
-      - faktenforum
-  hasura-migrate:
-    build: 
+  # data-connector-agent:
+  #   image: hasura/graphql-data-connector:v2.36.0
+  #   restart: always
+  #   depends_on:
+  #     - postgres-db
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+  #     ## https://quarkus.io/guides/opentelemetry#configuration-reference
+  #     QUARKUS_OPENTELEMETRY_ENABLED: "false"
+  #     ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 5s
+  #   networks:
+  #     - faktenforum
+  db-migrate:
+    build:
       context: ./hasura
       dockerfile: Dockerfile.hasura-migrate
     depends_on:
+      - postgres-db
       - graphql-engine
     environment:
       HASURA_ENDPOINT: "http://graphql-engine:8080"
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       APPLY_METADATA: "true"
+      APPLY_MIGRATIONS: "true"
+
+    # import current files as volume so a rebuild is no required on database/metada changes
+    volumes:
+      - ./hasura:/app
     networks:
-      - faktenforum  
+      - faktenforum
   mongodb: # Add a MongoDB instance
     image: mongo:latest # Use a minimal version of MongoDB
     ports:
@@ -164,18 +179,56 @@ services:
       echo 'Service account and bucket created in MinIO'"
     networks:
       - faktenforum
- 
-  # mailhog:
-  # image: mailhog/mailhog:v1.0.1
-  # volumes:
-  #   - mailhog-data:/home/mailhog
-  # restart: unless-stopped
-  # ports:
-  #   - "1025:1025"
-  #   - "8025:8025"
-  # environment:
-  #   MH_STORAGE: maildir
-  #   MH_MAILDIR_PATH: /home/mailhog
+
+  kratos-migrate:
+    image: oryd/kratos:v1.1
+    depends_on:
+      - postgres-db
+    environment:
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+
+    volumes:
+      - type: bind
+        source: ./kratos/
+        target: /etc/config/kratos
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+  kratos:
+    image: oryd/kratos:v1.1
+    depends_on:
+      - kratos-migrate
+    environment:
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_0_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_1_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SECRETS_COOKIE: ${KRATOS_SECRETS_COOKIE}
+      SECRETS_CIPHER: ${KRATOS_SECRETS_CIPHER}
+
+    volumes:
+      - type: bind
+        source: ./kratos/
+        target: /etc/config/kratos
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    ports:
+      - "4433:4433" # public
+      - "4434:4434" # admin
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - "4436:4436"
+      - "4437:4437"
+    networks:
+      - faktenforum
+      - traefik-ingress
 volumes:
   db_data:
   minio_data:
@@ -187,4 +240,3 @@ networks:
     driver: bridge
   traefik-ingress:
     driver: bridge
-

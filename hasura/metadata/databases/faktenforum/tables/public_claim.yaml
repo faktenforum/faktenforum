@@ -1,0 +1,130 @@
+table:
+  name: claim
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: created_by
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
+array_relationships:
+  - name: claim_facts
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_fact
+          schema: public
+  - name: claim_resources
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_resource
+          schema: public
+  - name: claim_submission_tokens
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_submission_token
+          schema: public
+  - name: comments
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: comment
+          schema: public
+  - name: viralities
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: virality
+          schema: public
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_at: x-hasura-User-Id
+      columns:
+        - archive_at
+        - archive_id
+        - description
+        - label
+        - status
+        - tags
+        - title
+    comment: ""
+select_permissions:
+  - role: junior
+    permission:
+      columns:
+        - archive_at
+        - archive_id
+        - created_at
+        - created_by
+        - description
+        - id
+        - label
+        - process_id
+        - status
+        - sys_period
+        - tags
+        - title
+        - updated_at
+        - updated_by
+      filter:
+        status:
+          _in:
+            - ready_to_check
+            - in_progress
+            - archived
+            - checked
+            - published
+      allow_aggregations: true
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - archive_at
+        - archive_id
+        - created_at
+        - created_by
+        - description
+        - id
+        - label
+        - process_id
+        - status
+        - sys_period
+        - tags
+        - title
+        - updated_at
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - archive_at
+        - archive_id
+        - description
+        - label
+        - status
+        - tags
+        - title
+      filter: {}
+      check: null
+      set:
+        created_by: x-hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

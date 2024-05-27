@@ -1,0 +1,89 @@
+table:
+  name: fact
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: created_by
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
+array_relationships:
+  - name: claim_facts
+    using:
+      foreign_key_constraint_on:
+        column: fact_id
+        table:
+          name: claim_fact
+          schema: public
+  - name: fact_resources
+    using:
+      foreign_key_constraint_on:
+        column: fact_id
+        table:
+          name: fact_resource
+          schema: public
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - created_by
+        - description
+        - title
+    comment: ""
+select_permissions:
+  - role: junior
+    permission:
+      columns:
+        - description
+        - title
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+      filter:
+        claim_facts:
+          claim:
+            label:
+              _in:
+                - ready_to_check
+                - in_progress
+                - checked
+                - published
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - description
+        - title
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - description
+        - title
+        - updated_by
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

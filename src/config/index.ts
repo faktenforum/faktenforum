@@ -13,7 +13,7 @@ export const config: Partial<TsED.Configuration> = {
   logger: loggerConfig,
   swagger: [
     {
-      path: "/doc",
+      path: "/api/doc",
       specVersion: "3.0.1",
       spec: {
         components: {

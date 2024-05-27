@@ -1,0 +1,21 @@
+table:
+  name: claim_resource_history
+  schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - description
+        - original_url
+        - created_at
+        - updated_at
+        - sys_period
+        - claim_id
+        - created_by
+        - file_id
+        - history_id
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""

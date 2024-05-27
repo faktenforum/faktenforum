@@ -62,3 +62,5 @@ minio/resources/*
 #.vscode settings
 .vscode/launch.json
 .vscode/settings.json
+
+*.code-workspace

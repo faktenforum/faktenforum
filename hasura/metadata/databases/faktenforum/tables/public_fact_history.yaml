@@ -1,0 +1,19 @@
+table:
+  name: fact_history
+  schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - description
+        - title
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - history_id
+        - id
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""

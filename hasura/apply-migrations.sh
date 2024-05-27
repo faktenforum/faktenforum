@@ -29,22 +29,6 @@ fi
 
 # Apply seeds if enabled
 
-
-# Apply migrations if enabled
-if [ "$APPLY_MIGRATIONS" = "true" ]; then
-    echo "Applying migrations..."
-    hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
-else
-    echo "Skipping migrations."
-fi
-
-if [ "$APPLY_SEEDS" = "true" ]; then
-    echo "Applying seeds..."
-    hasura seed apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
-else
-    echo "Skipping seeds."
-fi
-
 # Apply metadata if enabled
 if [ "$APPLY_METADATA" = "true" ]; then
     echo "Applying metadata..."
@@ -52,4 +36,28 @@ if [ "$APPLY_METADATA" = "true" ]; then
 else
     echo "Skipping metadata."
 fi
+
+# Apply migrations if enabled
+if [ "$APPLY_MIGRATIONS" = "true" ]; then
+    echo "Applying migrations..."
+    hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --all-databases --disable-interactive true
+else
+    echo "Skipping migrations."
+fi
+
+if [ "$APPLY_SEEDS" = "true" ]; then
+    echo "Applying seeds..."
+    hasura seed apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --all-databases
+else
+    echo "Skipping seeds."
+fi
+
+# Apply metadata second time if migrations have been missing chicken egg problem
+if [ "$APPLY_MIGRATIONS" = "true" ]; then
+    echo "Applying metadata again after migrations..."
+    hasura metadata apply --endpoint $HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET 
+else
+    echo "Skipping metadata second round."
+fi
+
 
