@@ -1,20 +1,25 @@
-# Use the latest debian image apline does't not work with hasura cli
+# Use the latest debian image as the base
 FROM debian:bookworm-slim
 
 # Install Hasura CLI
 RUN apt update && apt install -y curl \
     && curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir /app
+    && mkdir -p /app/migrations /app/metadata /app/seeds
+
 WORKDIR /app
 
-# Copy migrations and metadata
-COPY ./migrations ./migrations
-COPY ./metadata ./metadata
-COPY ./seeds ./seeds
-COPY /config.yaml .
-# Startup script
-COPY apply-migrations.sh .
-RUN chmod +x apply-migrations.sh
+# Copy migrations, metadata, and seeds
+COPY ./migrations /app/migrations
+COPY ./metadata /app/metadata
+COPY ./seeds /app/seeds
 
+# Copy config file and startup script
+COPY ./config.yaml /app/config.yaml
+COPY ./apply-migrations.sh /app/apply-migrations.sh
+
+# Ensure the startup script is executable
+RUN chmod +x /app/apply-migrations.sh
+
+# Set the command to run the startup script
 CMD ["./apply-migrations.sh"]
