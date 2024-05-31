@@ -1,0 +1,7 @@
+mutation deleteExpiredSubmissionTokens {
+  deleteClaimSubmissionToken(where: { expiresAt: { _lt: now } }) {
+    returning {
+      id
+    }
+  }
+}

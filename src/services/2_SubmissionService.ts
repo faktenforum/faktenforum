@@ -10,7 +10,6 @@ import { AuthService, ClaimService, EnvService } from "~/services";
 import { timeStringToSeconds } from "~/utils";
 
 @Service()
-@Agenda({ namespace: "submission" })
 export class SubmissionService {
   @Inject()
   envService: EnvService;
@@ -25,22 +24,6 @@ export class SubmissionService {
 
   constructor() {
     this.prisma = new PrismaClient();
-  }
-
-  async getAllUsers(): Promise<user[]> {
-    return this.prisma.user.findMany();
-  }
-  @Every("5 minutes", {
-    name: "Delete expired sessions"
-  })
-  async deleteExpiredClaimSubmissionTokens() {
-    await this.prisma.claim_submission_token.deleteMany({
-      where: {
-        expires_at: {
-          lte: new Date()
-        }
-      }
-    });
   }
 
   async endSubmission(token: string) {

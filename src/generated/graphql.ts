@@ -8518,6 +8518,11 @@ export type ViralityAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type DeleteExpiredSubmissionTokensMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteExpiredSubmissionTokensMutation = { __typename?: 'mutation_root', deleteClaimSubmissionToken?: { __typename?: 'ClaimSubmissionTokenMutationResponse', returning: Array<{ __typename?: 'ClaimSubmissionToken', id: any }> } | null };
+
 export type GetFileByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
@@ -8538,6 +8543,15 @@ export type InsertFileMutationVariables = Exact<{
 export type InsertFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null };
 
 
+export const DeleteExpiredSubmissionTokensDocument = gql`
+    mutation deleteExpiredSubmissionTokens {
+  deleteClaimSubmissionToken(where: {expiresAt: {_lt: now}}) {
+    returning {
+      id
+    }
+  }
+}
+    `;
 export const GetFileByIdDocument = gql`
     query getFileById($id: uuid!) {
   file: fileByPk(id: $id) {
@@ -8567,6 +8581,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    deleteExpiredSubmissionTokens(variables?: DeleteExpiredSubmissionTokensMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteExpiredSubmissionTokensMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteExpiredSubmissionTokensMutation>(DeleteExpiredSubmissionTokensDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteExpiredSubmissionTokens', 'mutation', variables);
+    },
     getFileById(variables: GetFileByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetFileByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetFileByIdQuery>(GetFileByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFileById', 'query', variables);
     },
