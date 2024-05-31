@@ -76,12 +76,19 @@ export class EnvService {
     return process.env.MINIO_SECRET_KEY;
   }
 
-  get kratosBaseUrl(): string {
-    if (!process.env.KRATOS_BASE_URL) {
-      $log.error("KRATOS_BASE_URL is not set!");
+  get kratosPublicUrl(): string {
+    if (!process.env.KRATOS_PUBLIC_URL) {
+      $log.error("KRATOS_PUBLIC_URL is not set!");
       process.exit(1);
     }
-    return process.env.KRATOS_BASE_URL;
+    return process.env.KRATOS_PUBLIC_URL;
+  }
+  get kratosAdminUrl(): string {
+    if (!process.env.KRATOS_ADMIN_URL) {
+      $log.error("KRATOS_ADMIN_URL is not set!");
+      process.exit(1);
+    }
+    return process.env.KRATOS_ADMIN_URL;
   }
 
   get hasuraApiUrl(): string {
@@ -116,7 +123,7 @@ export class EnvService {
   private validate() {
     this.baseUrl;
     this.hasuraApiUrl;
-    this.kratosBaseUrl;
+    this.kratosPublicUrl;
     this.claimSubmissionTokenLifeTime;
     this.minioAccessKey;
     this.minioApiPort;
