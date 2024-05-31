@@ -15,6 +15,9 @@ export const config: Partial<TsED.Configuration> = {
       specVersion: "3.0.1"
     }
   ],
+  passport: {
+    disableSession: true
+  },
   views: {
     root: "./views",
     extensions: {
