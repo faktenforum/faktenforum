@@ -64,4 +64,4 @@ ENV PORT 8083
 ENV NODE_ENV production
 
 # Start the application
-CMD [  "npm", "run", "start:migrate:prod" ]
+CMD [  "npm", "run", "start:prod" ]

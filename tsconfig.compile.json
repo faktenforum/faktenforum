@@ -1,6 +1,16 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "prisma", "minio", "src/__tests__"],
+  "exclude": [
+    "node_modules",
+    "prisma",
+    "minio",
+    "src/__tests__",
+    "scripts",
+    "dist",
+    "coverage",
+    "src/__mocks__",
+    "src/__generated__"
+  ],
   "compilerOptions": {
     "paths": {
       "~/*": ["src/*"]
