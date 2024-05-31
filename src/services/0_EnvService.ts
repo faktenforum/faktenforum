@@ -92,31 +92,6 @@ export class EnvService {
     return process.env.HASURA_API_URL;
   }
 
-  get mongoDBUri(): string {
-    if (!process.env.MONGODB_HOST) {
-      $log.error("MONGODB_HOST is not set!");
-      process.exit(1);
-    }
-    if (!process.env.MONGODB_PORT) {
-      $log.error("MONGODB_PORT is not set!");
-      process.exit(1);
-    }
-    if (!process.env.MONGODB_AGENDA_DB) {
-      $log.error("MONGODB_AGENDA_DB is not set!");
-      process.exit(1);
-    }
-
-    if (!process.env.MONGODB_AGENDA_USER) {
-      $log.error("MONGODB_ROOT_USER is not set!");
-      process.exit(1);
-    }
-    if (!process.env.MONGODB_AGENDA_PASSWORD) {
-      $log.error("MONGODB_ROOT_PASSWORD is not set!");
-      process.exit(1);
-    }
-    return `mongodb://${process.env.MONGODB_AGENDA_USER}:${process.env.MONGODB_AGENDA_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_AGENDA_DB}`;
-  }
-
   get env(): Environment {
     return (process.env.NODE_ENV || "development") as Environment;
   }
@@ -140,7 +115,6 @@ export class EnvService {
 
   private validate() {
     this.baseUrl;
-    this.mongoDBUri;
     this.hasuraApiUrl;
     this.kratosBaseUrl;
     this.claimSubmissionTokenLifeTime;
