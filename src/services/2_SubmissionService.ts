@@ -1,4 +1,4 @@
-import { PrismaClient, user } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import { Inject, Service } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";

@@ -2,8 +2,8 @@ import { Controller, Inject } from "@tsed/di";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
-import { RegistrationPreResponse, RegistrationRequest, Submission } from "~/models";
-import { AuthService, FileService, UsersService, SubmissionService, HasuraService } from "~/services";
+import { RegistrationPreResponse, RegistrationRequest } from "~/models";
+import { AuthService, FileService, UsersService, HasuraService } from "~/services";
 import { DeleteExpiredSubmissionTokensDocument } from "~/generated/graphql";
 import type {
   DeleteExpiredSubmissionTokensMutation,
