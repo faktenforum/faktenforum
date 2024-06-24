@@ -1,15 +1,1 @@
-- name: deleteExpiredSubmissionTokens
-  webhook: '{{HASURA_WEBHOOKS_BASE_URL}}'
-  schedule: '*/5 * * * *'
-  include_in_metadata: true
-  payload: {}
-  headers:
-    - name: x-api-key
-      value_from_env: HASURA_WEBHOOKS_API_KEY
-  comment: Delete expired submission tokens
-  request_transform:
-    method: DELETE
-    query_params: {}
-    template_engine: Kriti
-    url: '{{$base_url}}/delete-expired-submission-tokens'
-    version: 2
+[]

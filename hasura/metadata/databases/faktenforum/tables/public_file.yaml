@@ -9,54 +9,28 @@ object_relationships:
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
-  - name: claim_resources
+  - name: fileHistories
     using:
       foreign_key_constraint_on:
-        column: file_id
+        column: id
         table:
-          name: claim_resource
+          name: file_history
           schema: public
-  - name: fact_resources
+  - name: origins
     using:
       foreign_key_constraint_on:
         column: file_id
         table:
-          name: fact_resource
+          name: origin
+          schema: public
+  - name: sources
+    using:
+      foreign_key_constraint_on:
+        column: file_id
+        table:
+          name: source
           schema: public
 select_permissions:
-  - role: junior
-    permission:
-      columns:
-        - created_by
-        - id
-        - e_tag
-        - mime_type
-        - name
-        - size
-        - transcription
-        - updated_at
-        - updated_by
-      filter:
-        _or:
-          - claim_resources:
-              claim:
-                status:
-                  _in:
-                    - ready_to_check
-                    - in_progress
-                    - checked
-                    - published
-          - fact_resources:
-              fact:
-                claim_facts:
-                  claim:
-                    status:
-                      _in:
-                        - ready_to_check
-                        - in_progress
-                        - checked
-                        - published
-    comment: ""
   - role: moderator
     permission:
       columns:

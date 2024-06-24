@@ -1,24 +1,7 @@
 table:
   name: claim_history
   schema: public
-select_permissions:
-  - role: moderator
-    permission:
-      columns:
-        - tags
-        - description
-        - title
-        - archive_at
-        - created_at
-        - updated_at
-        - sys_period
-        - label
-        - status
-        - archive_id
-        - created_by
-        - history_id
-        - id
-        - updated_by
-      filter: {}
-      allow_aggregations: true
-    comment: ""
+object_relationships:
+  - name: claim
+    using:
+      foreign_key_constraint_on: id
