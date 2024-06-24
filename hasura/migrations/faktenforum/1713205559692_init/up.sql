@@ -70,7 +70,7 @@ CREATE TABLE public.claim_category (
 CREATE TABLE public.origin (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     claim_id uuid NOT NULL,
-    index BIGINT,
+    index integer,
     url text,
     excerpt text,
     archive_url text,
@@ -95,6 +95,7 @@ CREATE TABLE public.comment (
 CREATE TABLE public.fact (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     claim_id uuid NOT NULL,
+    index integer,
     text text,
     created_by uuid,
     updated_by uuid,
@@ -105,6 +106,7 @@ CREATE TABLE public.fact (
 CREATE TABLE public.source (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     fact_id uuid NOT NULL,
+    index integer,
     original_url text,
     excerpt text,
     file_id uuid,
