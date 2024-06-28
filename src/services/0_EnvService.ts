@@ -99,6 +99,14 @@ export class EnvService {
     return process.env.HASURA_API_URL;
   }
 
+  get hasuraAdminSecret(): string {
+    if (!process.env.HASURA_ADMIN_SECRET) {
+      $log.error("HASURA_ADMIN_SECRET is not set!");
+      process.exit(1);
+    }
+    return process.env.HASURA_ADMIN_SECRET;
+  }
+
   get env(): Environment {
     return (process.env.NODE_ENV || "development") as Environment;
   }

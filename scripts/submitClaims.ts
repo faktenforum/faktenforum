@@ -36,7 +36,7 @@ const generateDummyData = () => {
 
 // Upload dummy data
 const uploadDummyData = async () => {
-  const url = "http://localhost:8083/api/v1/submission"; // Replace with your actual endpoint
+  const url = "http://dev-app.faktenforum.org/api/v1/submission"; // Replace with your actual endpoint
 
   for (let i = 0; i < 10; i++) {
     const dummyData = generateDummyData();
@@ -52,7 +52,7 @@ const uploadDummyData = async () => {
         headers: form.getHeaders()
       });
     } catch (error) {
-      console.error("Error uploading dummy data:", error);
+      console.error("Error uploading dummy data:", error.message);
     }
   }
 };
