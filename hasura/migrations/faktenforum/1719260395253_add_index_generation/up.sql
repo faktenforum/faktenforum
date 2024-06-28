@@ -27,64 +27,115 @@ CREATE OR REPLACE FUNCTION get_next_origin_index(c_id uuid)
 RETURNS integer AS $$
 DECLARE
     next_index integer;
+    lock_key bigint;
 BEGIN
-    -- Update the current index for the claim_id, or initialize it if it doesn't exist
-    UPDATE public.claim_origin_index_tracker
-    SET current_index = current_index + 1
-    WHERE claim_id = c_id
-    RETURNING current_index INTO next_index;
+    -- Compute a hash based on claim ID and a string identifier for the function
+    lock_key := hashtext(c_id::text || 'get_next_origin_index');
 
-    -- If the claim_id doesn't exist, initialize the index at 1
-    IF NOT FOUND THEN
-        next_index := 1;
-        INSERT INTO public.claim_origin_index_tracker (claim_id, current_index) VALUES (c_id, next_index);
-    END IF;
+    -- Acquire an advisory lock
+    PERFORM pg_advisory_lock(lock_key);
+
+    BEGIN
+        -- Update the current index for the claim_id, or initialize it if it doesn't exist
+        UPDATE public.claim_origin_index_tracker
+        SET current_index = current_index + 1
+        WHERE claim_id = c_id
+        RETURNING current_index INTO next_index;
+
+        -- If the claim_id doesn't exist, initialize the index at 1
+        IF NOT FOUND THEN
+            next_index := 1;
+            INSERT INTO public.claim_origin_index_tracker (claim_id, current_index) VALUES (c_id, next_index);
+        END IF;
+    EXCEPTION WHEN OTHERS THEN
+        -- Ensure the lock is released even if an error occurs
+        PERFORM pg_advisory_unlock(lock_key);
+        RAISE;
+    END;
+
+    -- Release the advisory lock
+    PERFORM pg_advisory_unlock(lock_key);
 
     RETURN next_index;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION get_next_fact_index(f_id uuid)
 RETURNS integer AS $$
 DECLARE
     next_index integer;
+    lock_key bigint;
 BEGIN
-    -- Update the current index for the claim_id, or initialize it if it doesn't exist
-    UPDATE public.claim_fact_index_tracker
-    SET current_index = current_index + 1
-    WHERE claim_id = f_id
-    RETURNING current_index INTO next_index;
+    -- Compute a hash based on fact ID and a string identifier for the function
+    lock_key := hashtext(f_id::text || 'get_next_origin_index');
 
-    -- If the claim_id doesn't exist, initialize the index at 1
-    IF NOT FOUND THEN
-        next_index := 1;
-        INSERT INTO public.claim_fact_index_tracker (claim_id, current_index) VALUES (f_id, next_index);
-    END IF;
+    -- Acquire an advisory lock
+    PERFORM pg_advisory_lock(lock_key);
+
+    BEGIN
+        -- Update the current index for the fact_id, or initialize it if it doesn't exist
+        UPDATE public.claim_fact_index_tracker
+        SET current_index = current_index + 1
+        WHERE claim_id = f_id
+        RETURNING current_index INTO next_index;
+
+        -- If the fact_id doesn't exist, initialize the index at 1
+        IF NOT FOUND THEN
+            next_index := 1;
+            INSERT INTO public.claim_fact_index_tracker (claim_id, current_index) VALUES (f_id, next_index);
+        END IF;
+    EXCEPTION WHEN OTHERS THEN
+        -- Ensure the lock is released even if an error occurs
+        PERFORM pg_advisory_unlock(lock_key);
+        RAISE;
+    END;
+
+    -- Release the advisory lock
+    PERFORM pg_advisory_unlock(lock_key);
 
     RETURN next_index;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION get_next_source_index(c_id uuid)
 RETURNS integer AS $$
 DECLARE
     next_index integer;
+    lock_key bigint;
 BEGIN
-    -- Update the current index for the fact_id, or initialize it if it doesn't exist
-    UPDATE public.fact_source_index_tracker
-    SET current_index = current_index + 1
-    WHERE fact_id = c_id
-    RETURNING current_index INTO next_index;
+    -- Compute a hash based on the fact ID and a string identifier for the function
+    lock_key := hashtext(c_id::text || 'get_next_source_index');
 
-    -- If the fact_id doesn't exist, initialize the index at 1
-    IF NOT FOUND THEN
-        next_index := 1;
-        INSERT INTO public.fact_source_index_tracker (fact_id, current_index) VALUES (c_id, next_index);
-    END IF;
+    -- Acquire an advisory lock
+    PERFORM pg_advisory_lock(lock_key);
+
+    BEGIN
+        -- Update the current index for the fact_id, or initialize it if it doesn't exist
+        UPDATE public.fact_source_index_tracker
+        SET current_index = current_index + 1
+        WHERE fact_id = c_id
+        RETURNING current_index INTO next_index;
+
+        -- If the fact_id doesn't exist, initialize the index at 1
+        IF NOT FOUND THEN
+            next_index := 1;
+            INSERT INTO public.fact_source_index_tracker (fact_id, current_index) VALUES (c_id, next_index);
+        END IF;
+    EXCEPTION WHEN OTHERS THEN
+        -- Ensure the lock is released even if an error occurs
+        PERFORM pg_advisory_unlock(lock_key);
+        RAISE;
+    END;
+
+    -- Release the advisory lock
+    PERFORM pg_advisory_unlock(lock_key);
 
     RETURN next_index;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- Step 3: Create the trigger function to set the next index
 CREATE OR REPLACE FUNCTION set_next_origin_index()
