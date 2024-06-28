@@ -4,6 +4,12 @@ CREATE TABLE public.claim_history (
     PRIMARY KEY (history_id),
     CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.claim(id) ON DELETE CASCADE
 );
+CREATE TABLE public.rating_history (
+    LIKE public.rating,
+    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.rating(id) ON DELETE CASCADE
+);
 CREATE TABLE public.user_history (
     LIKE public.user,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -16,11 +22,11 @@ CREATE TABLE public.file_history (
     PRIMARY KEY (history_id),
     CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.file(id) ON DELETE CASCADE
 );
-CREATE TABLE public.fact_resource_history (
-    LIKE public.fact_resource,
+CREATE TABLE public.source_history (
+    LIKE public.source,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
     PRIMARY KEY (history_id),
-    CONSTRAINT fk_fact_resource_history FOREIGN KEY (id) REFERENCES public.fact_resource(id) ON DELETE CASCADE
+    CONSTRAINT fk_source_history FOREIGN KEY (id) REFERENCES public.source(id) ON DELETE CASCADE
 );
 CREATE TABLE public.fact_history (
     LIKE public.fact,
@@ -34,18 +40,13 @@ CREATE TABLE public.comment_history (
     PRIMARY KEY (history_id),
     CONSTRAINT fk_comment_history FOREIGN KEY (id) REFERENCES public.comment(id) ON DELETE CASCADE
 );
-CREATE TABLE public.claim_resource_history (
-    LIKE public.claim_resource,
+CREATE TABLE public.origin_history (
+    LIKE origin,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
     PRIMARY KEY (history_id),
-    CONSTRAINT fk_claim_resource_history FOREIGN KEY (id) REFERENCES public.claim_resource(id) ON DELETE CASCADE
+    CONSTRAINT fk_origin_history FOREIGN KEY (id) REFERENCES origin(id) ON DELETE CASCADE
 );
-CREATE TABLE public.claim_fact_history (
-    LIKE public.claim_fact,
-    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id),
-    CONSTRAINT fk_claim_fact_history FOREIGN KEY (id) REFERENCES public.claim_fact(id) ON DELETE CASCADE
-);
+
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
@@ -61,9 +62,9 @@ UPDATE ON public.file FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'p
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE ON public.fact_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
+UPDATE ON public.source FOR EACH ROW EXECUTE PROCEDURE versioning(
         'sys_period',
-        'public.fact_resource_history',
+        'public.source_history',
         true
     );
 CREATE TRIGGER versioning_trigger BEFORE
@@ -73,15 +74,19 @@ UPDATE ON public.comment FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period',
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE ON public.claim_resource FOR EACH ROW EXECUTE PROCEDURE versioning(
+UPDATE ON public.origin FOR EACH ROW EXECUTE PROCEDURE versioning(
         'sys_period',
-        'public.claim_resource_history',
+        'origin_history',
         true
     );
 CREATE TRIGGER versioning_trigger BEFORE
 INSERT
     OR
-UPDATE ON public.claim_fact FOR EACH ROW EXECUTE PROCEDURE versioning('sys_period', 'public.claim_fact_history', true);
+UPDATE ON public.rating FOR EACH ROW EXECUTE PROCEDURE versioning(
+        'sys_period',
+        'origin_history',
+        true
+    );
 -- Workaround for sql bug in LIKE operator https://www.postgresql.org/message-id/20150707072942.1186.98151@wrigleys.postgresql.org
 -- this script iterates over each history table in the database, identifies array columns, and converts them into single-dimensional arrays by altering their data types. It's a way to fix a specific issue related to array columns in the history tables.
 DO $$

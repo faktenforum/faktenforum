@@ -15,115 +15,253 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  claim_label: { input: any; output: any; }
+  bigint: { input: any; output: any; }
   claim_status: { input: any; output: any; }
-  timestamp: { input: any; output: any; }
   timestamptz: { input: any; output: any; }
   tstzrange: { input: any; output: any; }
   uuid: { input: any; output: any; }
 };
 
+/** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
+export type BigintComparisonExp = {
+  _eq?: InputMaybe<Scalars['bigint']['input']>;
+  _gt?: InputMaybe<Scalars['bigint']['input']>;
+  _gte?: InputMaybe<Scalars['bigint']['input']>;
+  _in?: InputMaybe<Array<Scalars['bigint']['input']>>;
+  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['bigint']['input']>;
+  _lte?: InputMaybe<Scalars['bigint']['input']>;
+  _neq?: InputMaybe<Scalars['bigint']['input']>;
+  _nin?: InputMaybe<Array<Scalars['bigint']['input']>>;
+};
+
+/** columns and relationships of "category" */
+export type Category = {
+  __typename?: 'Category';
+  id: Scalars['uuid']['output'];
+  labelDe?: Maybe<Scalars['String']['output']>;
+  labelEn?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "category" */
+export type CategoryAggregate = {
+  __typename?: 'CategoryAggregate';
+  aggregate?: Maybe<CategoryAggregateFields>;
+  nodes: Array<Category>;
+};
+
+/** aggregate fields of "category" */
+export type CategoryAggregateFields = {
+  __typename?: 'CategoryAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<CategoryMaxFields>;
+  min?: Maybe<CategoryMinFields>;
+};
+
+
+/** aggregate fields of "category" */
+export type CategoryAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<CategorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "category". All fields are combined with a logical 'AND'. */
+export type CategoryBoolExp = {
+  _and?: InputMaybe<Array<CategoryBoolExp>>;
+  _not?: InputMaybe<CategoryBoolExp>;
+  _or?: InputMaybe<Array<CategoryBoolExp>>;
+  id?: InputMaybe<UuidComparisonExp>;
+  labelDe?: InputMaybe<StringComparisonExp>;
+  labelEn?: InputMaybe<StringComparisonExp>;
+  name?: InputMaybe<StringComparisonExp>;
+  title?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "category" */
+export enum CategoryConstraint {
+  /** unique or primary key constraint on columns "id" */
+  CategoryPkey = 'category_pkey'
+}
+
+/** input type for inserting data into table "category" */
+export type CategoryInsertInput = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelDe?: InputMaybe<Scalars['String']['input']>;
+  labelEn?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type CategoryMaxFields = {
+  __typename?: 'CategoryMaxFields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  labelDe?: Maybe<Scalars['String']['output']>;
+  labelEn?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type CategoryMinFields = {
+  __typename?: 'CategoryMinFields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  labelDe?: Maybe<Scalars['String']['output']>;
+  labelEn?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "category" */
+export type CategoryMutationResponse = {
+  __typename?: 'CategoryMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Category>;
+};
+
+/** on_conflict condition type for table "category" */
+export type CategoryOnConflict = {
+  constraint: CategoryConstraint;
+  updateColumns?: Array<CategoryUpdateColumn>;
+  where?: InputMaybe<CategoryBoolExp>;
+};
+
+/** Ordering options when selecting data from "category". */
+export type CategoryOrderBy = {
+  id?: InputMaybe<OrderBy>;
+  labelDe?: InputMaybe<OrderBy>;
+  labelEn?: InputMaybe<OrderBy>;
+  name?: InputMaybe<OrderBy>;
+  title?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: category */
+export type CategoryPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "category" */
+export enum CategorySelectColumn {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LabelDe = 'labelDe',
+  /** column name */
+  LabelEn = 'labelEn',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Title = 'title'
+}
+
+/** input type for updating data in table "category" */
+export type CategorySetInput = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelDe?: InputMaybe<Scalars['String']['input']>;
+  labelEn?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "category" */
+export type CategoryStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: CategoryStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type CategoryStreamCursorValueInput = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelDe?: InputMaybe<Scalars['String']['input']>;
+  labelEn?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "category" */
+export enum CategoryUpdateColumn {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LabelDe = 'labelDe',
+  /** column name */
+  LabelEn = 'labelEn',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Title = 'title'
+}
+
+export type CategoryUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<CategorySetInput>;
+  /** filter the rows which have to be updated */
+  where: CategoryBoolExp;
+};
+
 /** columns and relationships of "claim" */
 export type Claim = {
   __typename?: 'Claim';
-  archiveAt?: Maybe<Scalars['timestamp']['output']>;
-  archiveId?: Maybe<Scalars['uuid']['output']>;
-  /** An aggregate relationship */
-  claimFactsAggregate: ClaimFactAggregate;
-  /** An aggregate relationship */
-  claimResourcesAggregate: ClaimResourceAggregate;
-  /** An aggregate relationship */
-  claimSubmissionTokensAggregate: ClaimSubmissionTokenAggregate;
   /** An array relationship */
-  claim_facts: Array<ClaimFact>;
-  /** An array relationship */
-  claim_resources: Array<ClaimResource>;
-  /** An array relationship */
-  claim_submission_tokens: Array<ClaimSubmissionToken>;
+  claimHistories: Array<ClaimHistory>;
+  /** An aggregate relationship */
+  claimHistoriesAggregate: ClaimHistoryAggregate;
   /** An array relationship */
   comments: Array<Comment>;
   /** An aggregate relationship */
   commentsAggregate: CommentAggregate;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
+  /** An array relationship */
+  facts: Array<Fact>;
+  /** An aggregate relationship */
+  factsAggregate: FactAggregate;
   id: Scalars['uuid']['output'];
-  label?: Maybe<Scalars['claim_label']['output']>;
-  processId?: Maybe<Scalars['Int']['output']>;
+  /** An array relationship */
+  origins: Array<Origin>;
+  /** An aggregate relationship */
+  originsAggregate: OriginAggregate;
+  processId?: Maybe<Scalars['bigint']['output']>;
+  /** An object relationship */
+  rating?: Maybe<Rating>;
+  ratingId?: Maybe<Scalars['uuid']['output']>;
+  shortId?: Maybe<Scalars['String']['output']>;
   status: Scalars['claim_status']['output'];
+  submitterNotes?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  tags?: Maybe<Array<Scalars['String']['output']>>;
-  title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
   user?: Maybe<User>;
   /** An object relationship */
   userByUpdatedBy?: Maybe<User>;
-  /** An array relationship */
-  viralities: Array<Virality>;
-  /** An aggregate relationship */
-  viralitiesAggregate: ViralityAggregate;
 };
 
 
 /** columns and relationships of "claim" */
-export type ClaimClaimFactsAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type ClaimClaimHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<ClaimHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<ClaimHistoryOrderBy>>;
+  where?: InputMaybe<ClaimHistoryBoolExp>;
 };
 
 
 /** columns and relationships of "claim" */
-export type ClaimClaimResourcesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
+export type ClaimClaimHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ClaimHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-/** columns and relationships of "claim" */
-export type ClaimClaimSubmissionTokensAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimSubmissionTokenOrderBy>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-};
-
-
-/** columns and relationships of "claim" */
-export type ClaimClaim_FactsArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
-};
-
-
-/** columns and relationships of "claim" */
-export type ClaimClaim_ResourcesArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-/** columns and relationships of "claim" */
-export type ClaimClaim_Submission_TokensArgs = {
-  distinctOn?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimSubmissionTokenOrderBy>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
+  orderBy?: InputMaybe<Array<ClaimHistoryOrderBy>>;
+  where?: InputMaybe<ClaimHistoryBoolExp>;
 };
 
 
@@ -148,22 +286,42 @@ export type ClaimCommentsAggregateArgs = {
 
 
 /** columns and relationships of "claim" */
-export type ClaimViralitiesArgs = {
-  distinctOn?: InputMaybe<Array<ViralitySelectColumn>>;
+export type ClaimFactsArgs = {
+  distinctOn?: InputMaybe<Array<FactSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ViralityOrderBy>>;
-  where?: InputMaybe<ViralityBoolExp>;
+  orderBy?: InputMaybe<Array<FactOrderBy>>;
+  where?: InputMaybe<FactBoolExp>;
 };
 
 
 /** columns and relationships of "claim" */
-export type ClaimViralitiesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ViralitySelectColumn>>;
+export type ClaimFactsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<FactSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ViralityOrderBy>>;
-  where?: InputMaybe<ViralityBoolExp>;
+  orderBy?: InputMaybe<Array<FactOrderBy>>;
+  where?: InputMaybe<FactBoolExp>;
+};
+
+
+/** columns and relationships of "claim" */
+export type ClaimOriginsArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+/** columns and relationships of "claim" */
+export type ClaimOriginsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
 };
 
 /** aggregated selection of "claim" */
@@ -238,536 +396,237 @@ export type ClaimBoolExp = {
   _and?: InputMaybe<Array<ClaimBoolExp>>;
   _not?: InputMaybe<ClaimBoolExp>;
   _or?: InputMaybe<Array<ClaimBoolExp>>;
-  archiveAt?: InputMaybe<TimestampComparisonExp>;
-  archiveId?: InputMaybe<UuidComparisonExp>;
-  claim_facts?: InputMaybe<ClaimFactBoolExp>;
-  claim_factsAggregate?: InputMaybe<ClaimFactAggregateBoolExp>;
-  claim_resources?: InputMaybe<ClaimResourceBoolExp>;
-  claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateBoolExp>;
-  claim_submission_tokens?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-  claim_submission_tokensAggregate?: InputMaybe<ClaimSubmissionTokenAggregateBoolExp>;
+  claimHistories?: InputMaybe<ClaimHistoryBoolExp>;
+  claimHistoriesAggregate?: InputMaybe<ClaimHistoryAggregateBoolExp>;
   comments?: InputMaybe<CommentBoolExp>;
   commentsAggregate?: InputMaybe<CommentAggregateBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
+  facts?: InputMaybe<FactBoolExp>;
+  factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  label?: InputMaybe<ClaimLabelComparisonExp>;
-  processId?: InputMaybe<IntComparisonExp>;
+  origins?: InputMaybe<OriginBoolExp>;
+  originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
+  processId?: InputMaybe<BigintComparisonExp>;
+  rating?: InputMaybe<RatingBoolExp>;
+  ratingId?: InputMaybe<UuidComparisonExp>;
+  shortId?: InputMaybe<StringComparisonExp>;
   status?: InputMaybe<ClaimStatusComparisonExp>;
+  submitterNotes?: InputMaybe<StringComparisonExp>;
+  synopsis?: InputMaybe<StringComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  tags?: InputMaybe<StringArrayComparisonExp>;
-  title?: InputMaybe<StringComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
   user?: InputMaybe<UserBoolExp>;
   userByUpdatedBy?: InputMaybe<UserBoolExp>;
-  viralities?: InputMaybe<ViralityBoolExp>;
-  viralitiesAggregate?: InputMaybe<ViralityAggregateBoolExp>;
+};
+
+/** columns and relationships of "claim_category" */
+export type ClaimCategory = {
+  __typename?: 'ClaimCategory';
+  categoryId: Scalars['uuid']['output'];
+  claimId: Scalars['uuid']['output'];
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  id: Scalars['uuid']['output'];
+  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregated selection of "claim_category" */
+export type ClaimCategoryAggregate = {
+  __typename?: 'ClaimCategoryAggregate';
+  aggregate?: Maybe<ClaimCategoryAggregateFields>;
+  nodes: Array<ClaimCategory>;
+};
+
+/** aggregate fields of "claim_category" */
+export type ClaimCategoryAggregateFields = {
+  __typename?: 'ClaimCategoryAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<ClaimCategoryMaxFields>;
+  min?: Maybe<ClaimCategoryMinFields>;
+};
+
+
+/** aggregate fields of "claim_category" */
+export type ClaimCategoryAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<ClaimCategorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "claim_category". All fields are combined with a logical 'AND'. */
+export type ClaimCategoryBoolExp = {
+  _and?: InputMaybe<Array<ClaimCategoryBoolExp>>;
+  _not?: InputMaybe<ClaimCategoryBoolExp>;
+  _or?: InputMaybe<Array<ClaimCategoryBoolExp>>;
+  categoryId?: InputMaybe<UuidComparisonExp>;
+  claimId?: InputMaybe<UuidComparisonExp>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+};
+
+/** unique or primary key constraints on table "claim_category" */
+export enum ClaimCategoryConstraint {
+  /** unique or primary key constraint on columns "id" */
+  ClaimCategoryPkey = 'claim_category_pkey'
+}
+
+/** input type for inserting data into table "claim_category" */
+export type ClaimCategoryInsertInput = {
+  categoryId?: InputMaybe<Scalars['uuid']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type ClaimCategoryMaxFields = {
+  __typename?: 'ClaimCategoryMaxFields';
+  categoryId?: Maybe<Scalars['uuid']['output']>;
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregate min on columns */
+export type ClaimCategoryMinFields = {
+  __typename?: 'ClaimCategoryMinFields';
+  categoryId?: Maybe<Scalars['uuid']['output']>;
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** response of any mutation on the table "claim_category" */
+export type ClaimCategoryMutationResponse = {
+  __typename?: 'ClaimCategoryMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<ClaimCategory>;
+};
+
+/** on_conflict condition type for table "claim_category" */
+export type ClaimCategoryOnConflict = {
+  constraint: ClaimCategoryConstraint;
+  updateColumns?: Array<ClaimCategoryUpdateColumn>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
+};
+
+/** Ordering options when selecting data from "claim_category". */
+export type ClaimCategoryOrderBy = {
+  categoryId?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  sysPeriod?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: claim_category */
+export type ClaimCategoryPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "claim_category" */
+export enum ClaimCategorySelectColumn {
+  /** column name */
+  CategoryId = 'categoryId',
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** input type for updating data in table "claim_category" */
+export type ClaimCategorySetInput = {
+  categoryId?: InputMaybe<Scalars['uuid']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "claim_category" */
+export type ClaimCategoryStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: ClaimCategoryStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type ClaimCategoryStreamCursorValueInput = {
+  categoryId?: InputMaybe<Scalars['uuid']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "claim_category" */
+export enum ClaimCategoryUpdateColumn {
+  /** column name */
+  CategoryId = 'categoryId',
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type ClaimCategoryUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<ClaimCategorySetInput>;
+  /** filter the rows which have to be updated */
+  where: ClaimCategoryBoolExp;
 };
 
 /** unique or primary key constraints on table "claim" */
 export enum ClaimConstraint {
   /** unique or primary key constraint on columns "id" */
-  ClaimPkey = 'claim_pkey'
+  ClaimPkey = 'claim_pkey',
+  /** unique or primary key constraint on columns "process_id" */
+  ClaimProcessId = 'claim_process_id',
+  /** unique or primary key constraint on columns "short_id" */
+  ClaimShortIdKey = 'claim_short_id_key'
 }
-
-/** columns and relationships of "claim_fact" */
-export type ClaimFact = {
-  __typename?: 'ClaimFact';
-  /** An object relationship */
-  claim: Claim;
-  claimId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  /** An object relationship */
-  fact: Fact;
-  factId: Scalars['uuid']['output'];
-  id: Scalars['uuid']['output'];
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-  /** An object relationship */
-  user?: Maybe<User>;
-  /** An object relationship */
-  userByUpdatedBy?: Maybe<User>;
-};
-
-/** aggregated selection of "claim_fact" */
-export type ClaimFactAggregate = {
-  __typename?: 'ClaimFactAggregate';
-  aggregate?: Maybe<ClaimFactAggregateFields>;
-  nodes: Array<ClaimFact>;
-};
-
-export type ClaimFactAggregateBoolExp = {
-  count?: InputMaybe<ClaimFactAggregateBoolExpCount>;
-};
-
-/** aggregate fields of "claim_fact" */
-export type ClaimFactAggregateFields = {
-  __typename?: 'ClaimFactAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<ClaimFactMaxFields>;
-  min?: Maybe<ClaimFactMinFields>;
-};
-
-
-/** aggregate fields of "claim_fact" */
-export type ClaimFactAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<ClaimFactSelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "claim_fact" */
-export type ClaimFactAggregateOrderBy = {
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<ClaimFactMaxOrderBy>;
-  min?: InputMaybe<ClaimFactMinOrderBy>;
-};
-
-/** input type for inserting array relation for remote table "claim_fact" */
-export type ClaimFactArrRelInsertInput = {
-  data: Array<ClaimFactInsertInput>;
-  /** upsert condition */
-  onConflict?: InputMaybe<ClaimFactOnConflict>;
-};
-
-/** Boolean expression to filter rows from the table "claim_fact". All fields are combined with a logical 'AND'. */
-export type ClaimFactBoolExp = {
-  _and?: InputMaybe<Array<ClaimFactBoolExp>>;
-  _not?: InputMaybe<ClaimFactBoolExp>;
-  _or?: InputMaybe<Array<ClaimFactBoolExp>>;
-  claim?: InputMaybe<ClaimBoolExp>;
-  claimId?: InputMaybe<UuidComparisonExp>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  createdBy?: InputMaybe<UuidComparisonExp>;
-  fact?: InputMaybe<FactBoolExp>;
-  factId?: InputMaybe<UuidComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  updatedBy?: InputMaybe<UuidComparisonExp>;
-  user?: InputMaybe<UserBoolExp>;
-  userByUpdatedBy?: InputMaybe<UserBoolExp>;
-};
-
-/** unique or primary key constraints on table "claim_fact" */
-export enum ClaimFactConstraint {
-  /** unique or primary key constraint on columns "id" */
-  ClaimFactPkey = 'claim_fact_pkey'
-}
-
-/** columns and relationships of "claim_fact_history" */
-export type ClaimFactHistory = {
-  __typename?: 'ClaimFactHistory';
-  claimId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  factId: Scalars['uuid']['output'];
-  historyId: Scalars['uuid']['output'];
-  id: Scalars['uuid']['output'];
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregated selection of "claim_fact_history" */
-export type ClaimFactHistoryAggregate = {
-  __typename?: 'ClaimFactHistoryAggregate';
-  aggregate?: Maybe<ClaimFactHistoryAggregateFields>;
-  nodes: Array<ClaimFactHistory>;
-};
-
-/** aggregate fields of "claim_fact_history" */
-export type ClaimFactHistoryAggregateFields = {
-  __typename?: 'ClaimFactHistoryAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<ClaimFactHistoryMaxFields>;
-  min?: Maybe<ClaimFactHistoryMinFields>;
-};
-
-
-/** aggregate fields of "claim_fact_history" */
-export type ClaimFactHistoryAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<ClaimFactHistorySelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** Boolean expression to filter rows from the table "claim_fact_history". All fields are combined with a logical 'AND'. */
-export type ClaimFactHistoryBoolExp = {
-  _and?: InputMaybe<Array<ClaimFactHistoryBoolExp>>;
-  _not?: InputMaybe<ClaimFactHistoryBoolExp>;
-  _or?: InputMaybe<Array<ClaimFactHistoryBoolExp>>;
-  claimId?: InputMaybe<UuidComparisonExp>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  createdBy?: InputMaybe<UuidComparisonExp>;
-  factId?: InputMaybe<UuidComparisonExp>;
-  historyId?: InputMaybe<UuidComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  updatedBy?: InputMaybe<UuidComparisonExp>;
-};
-
-/** unique or primary key constraints on table "claim_fact_history" */
-export enum ClaimFactHistoryConstraint {
-  /** unique or primary key constraint on columns "history_id" */
-  ClaimFactHistoryPkey = 'claim_fact_history_pkey'
-}
-
-/** input type for inserting data into table "claim_fact_history" */
-export type ClaimFactHistoryInsertInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate max on columns */
-export type ClaimFactHistoryMaxFields = {
-  __typename?: 'ClaimFactHistoryMaxFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  historyId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregate min on columns */
-export type ClaimFactHistoryMinFields = {
-  __typename?: 'ClaimFactHistoryMinFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  historyId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** response of any mutation on the table "claim_fact_history" */
-export type ClaimFactHistoryMutationResponse = {
-  __typename?: 'ClaimFactHistoryMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<ClaimFactHistory>;
-};
-
-/** on_conflict condition type for table "claim_fact_history" */
-export type ClaimFactHistoryOnConflict = {
-  constraint: ClaimFactHistoryConstraint;
-  updateColumns?: Array<ClaimFactHistoryUpdateColumn>;
-  where?: InputMaybe<ClaimFactHistoryBoolExp>;
-};
-
-/** Ordering options when selecting data from "claim_fact_history". */
-export type ClaimFactHistoryOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  historyId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** primary key columns input for table: claim_fact_history */
-export type ClaimFactHistoryPkColumnsInput = {
-  historyId: Scalars['uuid']['input'];
-};
-
-/** select columns of table "claim_fact_history" */
-export enum ClaimFactHistorySelectColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  HistoryId = 'historyId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-/** input type for updating data in table "claim_fact_history" */
-export type ClaimFactHistorySetInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "claim_fact_history" */
-export type ClaimFactHistoryStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: ClaimFactHistoryStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type ClaimFactHistoryStreamCursorValueInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "claim_fact_history" */
-export enum ClaimFactHistoryUpdateColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  HistoryId = 'historyId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-export type ClaimFactHistoryUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<ClaimFactHistorySetInput>;
-  /** filter the rows which have to be updated */
-  where: ClaimFactHistoryBoolExp;
-};
-
-/** input type for inserting data into table "claim_fact" */
-export type ClaimFactInsertInput = {
-  claim?: InputMaybe<ClaimObjRelInsertInput>;
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  fact?: InputMaybe<FactObjRelInsertInput>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-  user?: InputMaybe<UserObjRelInsertInput>;
-  userByUpdatedBy?: InputMaybe<UserObjRelInsertInput>;
-};
-
-/** aggregate max on columns */
-export type ClaimFactMaxFields = {
-  __typename?: 'ClaimFactMaxFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by max() on columns of table "claim_fact" */
-export type ClaimFactMaxOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** aggregate min on columns */
-export type ClaimFactMinFields = {
-  __typename?: 'ClaimFactMinFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by min() on columns of table "claim_fact" */
-export type ClaimFactMinOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** response of any mutation on the table "claim_fact" */
-export type ClaimFactMutationResponse = {
-  __typename?: 'ClaimFactMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<ClaimFact>;
-};
-
-/** on_conflict condition type for table "claim_fact" */
-export type ClaimFactOnConflict = {
-  constraint: ClaimFactConstraint;
-  updateColumns?: Array<ClaimFactUpdateColumn>;
-  where?: InputMaybe<ClaimFactBoolExp>;
-};
-
-/** Ordering options when selecting data from "claim_fact". */
-export type ClaimFactOrderBy = {
-  claim?: InputMaybe<ClaimOrderBy>;
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  fact?: InputMaybe<FactOrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-  user?: InputMaybe<UserOrderBy>;
-  userByUpdatedBy?: InputMaybe<UserOrderBy>;
-};
-
-/** primary key columns input for table: claim_fact */
-export type ClaimFactPkColumnsInput = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "claim_fact" */
-export enum ClaimFactSelectColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-/** input type for updating data in table "claim_fact" */
-export type ClaimFactSetInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "claim_fact" */
-export type ClaimFactStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: ClaimFactStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type ClaimFactStreamCursorValueInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "claim_fact" */
-export enum ClaimFactUpdateColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-export type ClaimFactUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<ClaimFactSetInput>;
-  /** filter the rows which have to be updated */
-  where: ClaimFactBoolExp;
-};
 
 /** columns and relationships of "claim_history" */
 export type ClaimHistory = {
   __typename?: 'ClaimHistory';
-  archiveAt?: Maybe<Scalars['timestamp']['output']>;
-  archiveId?: Maybe<Scalars['uuid']['output']>;
+  /** An object relationship */
+  claim: Claim;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
-  label?: Maybe<Scalars['claim_label']['output']>;
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
+  ratingId?: Maybe<Scalars['uuid']['output']>;
+  shortId?: Maybe<Scalars['String']['output']>;
   status: Scalars['claim_status']['output'];
+  submitterNotes?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  tags?: Maybe<Array<Scalars['String']['output']>>;
-  title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -777,6 +636,10 @@ export type ClaimHistoryAggregate = {
   __typename?: 'ClaimHistoryAggregate';
   aggregate?: Maybe<ClaimHistoryAggregateFields>;
   nodes: Array<ClaimHistory>;
+};
+
+export type ClaimHistoryAggregateBoolExp = {
+  count?: InputMaybe<ClaimHistoryAggregateBoolExpCount>;
 };
 
 /** aggregate fields of "claim_history" */
@@ -802,10 +665,37 @@ export type ClaimHistoryAggregateFieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "claim_history" */
+export type ClaimHistoryAggregateOrderBy = {
+  avg?: InputMaybe<ClaimHistoryAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<ClaimHistoryMaxOrderBy>;
+  min?: InputMaybe<ClaimHistoryMinOrderBy>;
+  stddev?: InputMaybe<ClaimHistoryStddevOrderBy>;
+  stddevPop?: InputMaybe<ClaimHistoryStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<ClaimHistoryStddevSampOrderBy>;
+  sum?: InputMaybe<ClaimHistorySumOrderBy>;
+  varPop?: InputMaybe<ClaimHistoryVarPopOrderBy>;
+  varSamp?: InputMaybe<ClaimHistoryVarSampOrderBy>;
+  variance?: InputMaybe<ClaimHistoryVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "claim_history" */
+export type ClaimHistoryArrRelInsertInput = {
+  data: Array<ClaimHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<ClaimHistoryOnConflict>;
+};
+
 /** aggregate avg on columns */
 export type ClaimHistoryAvgFields = {
   __typename?: 'ClaimHistoryAvgFields';
   processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "claim_history" */
+export type ClaimHistoryAvgOrderBy = {
+  processId?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "claim_history". All fields are combined with a logical 'AND'. */
@@ -813,19 +703,18 @@ export type ClaimHistoryBoolExp = {
   _and?: InputMaybe<Array<ClaimHistoryBoolExp>>;
   _not?: InputMaybe<ClaimHistoryBoolExp>;
   _or?: InputMaybe<Array<ClaimHistoryBoolExp>>;
-  archiveAt?: InputMaybe<TimestampComparisonExp>;
-  archiveId?: InputMaybe<UuidComparisonExp>;
+  claim?: InputMaybe<ClaimBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  label?: InputMaybe<ClaimLabelComparisonExp>;
-  processId?: InputMaybe<IntComparisonExp>;
+  processId?: InputMaybe<BigintComparisonExp>;
+  ratingId?: InputMaybe<UuidComparisonExp>;
+  shortId?: InputMaybe<StringComparisonExp>;
   status?: InputMaybe<ClaimStatusComparisonExp>;
+  submitterNotes?: InputMaybe<StringComparisonExp>;
+  synopsis?: InputMaybe<StringComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  tags?: InputMaybe<StringArrayComparisonExp>;
-  title?: InputMaybe<StringComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
 };
@@ -838,24 +727,23 @@ export enum ClaimHistoryConstraint {
 
 /** input type for incrementing numeric columns in table "claim_history" */
 export type ClaimHistoryIncInput = {
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
 };
 
 /** input type for inserting data into table "claim_history" */
 export type ClaimHistoryInsertInput = {
-  archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
-  archiveId?: InputMaybe<Scalars['uuid']['input']>;
+  claim?: InputMaybe<ClaimObjRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  label?: InputMaybe<Scalars['claim_label']['input']>;
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
+  ratingId?: InputMaybe<Scalars['uuid']['input']>;
+  shortId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -863,39 +751,67 @@ export type ClaimHistoryInsertInput = {
 /** aggregate max on columns */
 export type ClaimHistoryMaxFields = {
   __typename?: 'ClaimHistoryMaxFields';
-  archiveAt?: Maybe<Scalars['timestamp']['output']>;
-  archiveId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  label?: Maybe<Scalars['claim_label']['output']>;
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
+  ratingId?: Maybe<Scalars['uuid']['output']>;
+  shortId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
-  tags?: Maybe<Array<Scalars['String']['output']>>;
-  title?: Maybe<Scalars['String']['output']>;
+  submitterNotes?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "claim_history" */
+export type ClaimHistoryMaxOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  processId?: InputMaybe<OrderBy>;
+  ratingId?: InputMaybe<OrderBy>;
+  shortId?: InputMaybe<OrderBy>;
+  status?: InputMaybe<OrderBy>;
+  submitterNotes?: InputMaybe<OrderBy>;
+  synopsis?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** aggregate min on columns */
 export type ClaimHistoryMinFields = {
   __typename?: 'ClaimHistoryMinFields';
-  archiveAt?: Maybe<Scalars['timestamp']['output']>;
-  archiveId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  label?: Maybe<Scalars['claim_label']['output']>;
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
+  ratingId?: Maybe<Scalars['uuid']['output']>;
+  shortId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
-  tags?: Maybe<Array<Scalars['String']['output']>>;
-  title?: Maybe<Scalars['String']['output']>;
+  submitterNotes?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "claim_history" */
+export type ClaimHistoryMinOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  processId?: InputMaybe<OrderBy>;
+  ratingId?: InputMaybe<OrderBy>;
+  shortId?: InputMaybe<OrderBy>;
+  status?: InputMaybe<OrderBy>;
+  submitterNotes?: InputMaybe<OrderBy>;
+  synopsis?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "claim_history" */
@@ -916,19 +832,18 @@ export type ClaimHistoryOnConflict = {
 
 /** Ordering options when selecting data from "claim_history". */
 export type ClaimHistoryOrderBy = {
-  archiveAt?: InputMaybe<OrderBy>;
-  archiveId?: InputMaybe<OrderBy>;
+  claim?: InputMaybe<ClaimOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  label?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
+  ratingId?: InputMaybe<OrderBy>;
+  shortId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
+  submitterNotes?: InputMaybe<OrderBy>;
+  synopsis?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
-  tags?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -941,31 +856,27 @@ export type ClaimHistoryPkColumnsInput = {
 /** select columns of table "claim_history" */
 export enum ClaimHistorySelectColumn {
   /** column name */
-  ArchiveAt = 'archiveAt',
-  /** column name */
-  ArchiveId = 'archiveId',
-  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
   /** column name */
   HistoryId = 'historyId',
   /** column name */
   Id = 'id',
   /** column name */
-  Label = 'label',
-  /** column name */
   ProcessId = 'processId',
+  /** column name */
+  RatingId = 'ratingId',
+  /** column name */
+  ShortId = 'shortId',
   /** column name */
   Status = 'status',
   /** column name */
+  SubmitterNotes = 'submitterNotes',
+  /** column name */
+  Synopsis = 'synopsis',
+  /** column name */
   SysPeriod = 'sysPeriod',
-  /** column name */
-  Tags = 'tags',
-  /** column name */
-  Title = 'title',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -974,19 +885,17 @@ export enum ClaimHistorySelectColumn {
 
 /** input type for updating data in table "claim_history" */
 export type ClaimHistorySetInput = {
-  archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
-  archiveId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  label?: InputMaybe<Scalars['claim_label']['input']>;
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
+  ratingId?: InputMaybe<Scalars['uuid']['input']>;
+  shortId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -997,16 +906,31 @@ export type ClaimHistoryStddevFields = {
   processId?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddev() on columns of table "claim_history" */
+export type ClaimHistoryStddevOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
 /** aggregate stddevPop on columns */
 export type ClaimHistoryStddevPopFields = {
   __typename?: 'ClaimHistoryStddevPopFields';
   processId?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddevPop() on columns of table "claim_history" */
+export type ClaimHistoryStddevPopOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
 /** aggregate stddevSamp on columns */
 export type ClaimHistoryStddevSampFields = {
   __typename?: 'ClaimHistoryStddevSampFields';
   processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "claim_history" */
+export type ClaimHistoryStddevSampOrderBy = {
+  processId?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "claim_history" */
@@ -1019,19 +943,17 @@ export type ClaimHistoryStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type ClaimHistoryStreamCursorValueInput = {
-  archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
-  archiveId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  label?: InputMaybe<Scalars['claim_label']['input']>;
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
+  ratingId?: InputMaybe<Scalars['uuid']['input']>;
+  shortId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -1039,37 +961,38 @@ export type ClaimHistoryStreamCursorValueInput = {
 /** aggregate sum on columns */
 export type ClaimHistorySumFields = {
   __typename?: 'ClaimHistorySumFields';
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
+};
+
+/** order by sum() on columns of table "claim_history" */
+export type ClaimHistorySumOrderBy = {
+  processId?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "claim_history" */
 export enum ClaimHistoryUpdateColumn {
   /** column name */
-  ArchiveAt = 'archiveAt',
-  /** column name */
-  ArchiveId = 'archiveId',
-  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
   /** column name */
   HistoryId = 'historyId',
   /** column name */
   Id = 'id',
   /** column name */
-  Label = 'label',
-  /** column name */
   ProcessId = 'processId',
+  /** column name */
+  RatingId = 'ratingId',
+  /** column name */
+  ShortId = 'shortId',
   /** column name */
   Status = 'status',
   /** column name */
+  SubmitterNotes = 'submitterNotes',
+  /** column name */
+  Synopsis = 'synopsis',
+  /** column name */
   SysPeriod = 'sysPeriod',
-  /** column name */
-  Tags = 'tags',
-  /** column name */
-  Title = 'title',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -1091,10 +1014,20 @@ export type ClaimHistoryVarPopFields = {
   processId?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by varPop() on columns of table "claim_history" */
+export type ClaimHistoryVarPopOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
 /** aggregate varSamp on columns */
 export type ClaimHistoryVarSampFields = {
   __typename?: 'ClaimHistoryVarSampFields';
   processId?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "claim_history" */
+export type ClaimHistoryVarSampOrderBy = {
+  processId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate variance on columns */
@@ -1103,80 +1036,66 @@ export type ClaimHistoryVarianceFields = {
   processId?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by variance() on columns of table "claim_history" */
+export type ClaimHistoryVarianceOrderBy = {
+  processId?: InputMaybe<OrderBy>;
+};
+
 /** input type for incrementing numeric columns in table "claim" */
 export type ClaimIncInput = {
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
 };
 
 /** input type for inserting data into table "claim" */
 export type ClaimInsertInput = {
-  archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
-  archiveId?: InputMaybe<Scalars['uuid']['input']>;
-  claim_facts?: InputMaybe<ClaimFactArrRelInsertInput>;
-  claim_resources?: InputMaybe<ClaimResourceArrRelInsertInput>;
-  claim_submission_tokens?: InputMaybe<ClaimSubmissionTokenArrRelInsertInput>;
+  claimHistories?: InputMaybe<ClaimHistoryArrRelInsertInput>;
   comments?: InputMaybe<CommentArrRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
+  facts?: InputMaybe<FactArrRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  label?: InputMaybe<Scalars['claim_label']['input']>;
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  origins?: InputMaybe<OriginArrRelInsertInput>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
+  rating?: InputMaybe<RatingObjRelInsertInput>;
+  ratingId?: InputMaybe<Scalars['uuid']['input']>;
+  shortId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
   user?: InputMaybe<UserObjRelInsertInput>;
   userByUpdatedBy?: InputMaybe<UserObjRelInsertInput>;
-  viralities?: InputMaybe<ViralityArrRelInsertInput>;
-};
-
-/** Boolean expression to compare columns of type "claim_label". All fields are combined with logical 'AND'. */
-export type ClaimLabelComparisonExp = {
-  _eq?: InputMaybe<Scalars['claim_label']['input']>;
-  _gt?: InputMaybe<Scalars['claim_label']['input']>;
-  _gte?: InputMaybe<Scalars['claim_label']['input']>;
-  _in?: InputMaybe<Array<Scalars['claim_label']['input']>>;
-  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Scalars['claim_label']['input']>;
-  _lte?: InputMaybe<Scalars['claim_label']['input']>;
-  _neq?: InputMaybe<Scalars['claim_label']['input']>;
-  _nin?: InputMaybe<Array<Scalars['claim_label']['input']>>;
 };
 
 /** aggregate max on columns */
 export type ClaimMaxFields = {
   __typename?: 'ClaimMaxFields';
-  archiveAt?: Maybe<Scalars['timestamp']['output']>;
-  archiveId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  label?: Maybe<Scalars['claim_label']['output']>;
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
+  ratingId?: Maybe<Scalars['uuid']['output']>;
+  shortId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
-  tags?: Maybe<Array<Scalars['String']['output']>>;
-  title?: Maybe<Scalars['String']['output']>;
+  submitterNotes?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "claim" */
 export type ClaimMaxOrderBy = {
-  archiveAt?: InputMaybe<OrderBy>;
-  archiveId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  label?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
+  ratingId?: InputMaybe<OrderBy>;
+  shortId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
-  tags?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
+  submitterNotes?: InputMaybe<OrderBy>;
+  synopsis?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1184,34 +1103,30 @@ export type ClaimMaxOrderBy = {
 /** aggregate min on columns */
 export type ClaimMinFields = {
   __typename?: 'ClaimMinFields';
-  archiveAt?: Maybe<Scalars['timestamp']['output']>;
-  archiveId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  label?: Maybe<Scalars['claim_label']['output']>;
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
+  ratingId?: Maybe<Scalars['uuid']['output']>;
+  shortId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['claim_status']['output']>;
-  tags?: Maybe<Array<Scalars['String']['output']>>;
-  title?: Maybe<Scalars['String']['output']>;
+  submitterNotes?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "claim" */
 export type ClaimMinOrderBy = {
-  archiveAt?: InputMaybe<OrderBy>;
-  archiveId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  label?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
+  ratingId?: InputMaybe<OrderBy>;
+  shortId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
-  tags?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
+  submitterNotes?: InputMaybe<OrderBy>;
+  synopsis?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1241,27 +1156,25 @@ export type ClaimOnConflict = {
 
 /** Ordering options when selecting data from "claim". */
 export type ClaimOrderBy = {
-  archiveAt?: InputMaybe<OrderBy>;
-  archiveId?: InputMaybe<OrderBy>;
-  claim_factsAggregate?: InputMaybe<ClaimFactAggregateOrderBy>;
-  claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateOrderBy>;
-  claim_submission_tokensAggregate?: InputMaybe<ClaimSubmissionTokenAggregateOrderBy>;
+  claimHistoriesAggregate?: InputMaybe<ClaimHistoryAggregateOrderBy>;
   commentsAggregate?: InputMaybe<CommentAggregateOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
+  factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   id?: InputMaybe<OrderBy>;
-  label?: InputMaybe<OrderBy>;
+  originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   processId?: InputMaybe<OrderBy>;
+  rating?: InputMaybe<RatingOrderBy>;
+  ratingId?: InputMaybe<OrderBy>;
+  shortId?: InputMaybe<OrderBy>;
   status?: InputMaybe<OrderBy>;
+  submitterNotes?: InputMaybe<OrderBy>;
+  synopsis?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
-  tags?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   user?: InputMaybe<UserOrderBy>;
   userByUpdatedBy?: InputMaybe<UserOrderBy>;
-  viralitiesAggregate?: InputMaybe<ViralityAggregateOrderBy>;
 };
 
 /** primary key columns input for table: claim */
@@ -1269,564 +1182,28 @@ export type ClaimPkColumnsInput = {
   id: Scalars['uuid']['input'];
 };
 
-/** columns and relationships of "claim_resource" */
-export type ClaimResource = {
-  __typename?: 'ClaimResource';
-  /** An object relationship */
-  claim: Claim;
-  claimId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  /** An object relationship */
-  file?: Maybe<File>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  id: Scalars['uuid']['output'];
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-  /** An object relationship */
-  user?: Maybe<User>;
-  /** An object relationship */
-  userByUpdatedBy?: Maybe<User>;
-};
-
-/** aggregated selection of "claim_resource" */
-export type ClaimResourceAggregate = {
-  __typename?: 'ClaimResourceAggregate';
-  aggregate?: Maybe<ClaimResourceAggregateFields>;
-  nodes: Array<ClaimResource>;
-};
-
-export type ClaimResourceAggregateBoolExp = {
-  count?: InputMaybe<ClaimResourceAggregateBoolExpCount>;
-};
-
-/** aggregate fields of "claim_resource" */
-export type ClaimResourceAggregateFields = {
-  __typename?: 'ClaimResourceAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<ClaimResourceMaxFields>;
-  min?: Maybe<ClaimResourceMinFields>;
-};
-
-
-/** aggregate fields of "claim_resource" */
-export type ClaimResourceAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "claim_resource" */
-export type ClaimResourceAggregateOrderBy = {
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<ClaimResourceMaxOrderBy>;
-  min?: InputMaybe<ClaimResourceMinOrderBy>;
-};
-
-/** input type for inserting array relation for remote table "claim_resource" */
-export type ClaimResourceArrRelInsertInput = {
-  data: Array<ClaimResourceInsertInput>;
-  /** upsert condition */
-  onConflict?: InputMaybe<ClaimResourceOnConflict>;
-};
-
-/** Boolean expression to filter rows from the table "claim_resource". All fields are combined with a logical 'AND'. */
-export type ClaimResourceBoolExp = {
-  _and?: InputMaybe<Array<ClaimResourceBoolExp>>;
-  _not?: InputMaybe<ClaimResourceBoolExp>;
-  _or?: InputMaybe<Array<ClaimResourceBoolExp>>;
-  claim?: InputMaybe<ClaimBoolExp>;
-  claimId?: InputMaybe<UuidComparisonExp>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
-  file?: InputMaybe<FileBoolExp>;
-  fileId?: InputMaybe<UuidComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  originalUrl?: InputMaybe<StringComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  updatedBy?: InputMaybe<UuidComparisonExp>;
-  user?: InputMaybe<UserBoolExp>;
-  userByUpdatedBy?: InputMaybe<UserBoolExp>;
-};
-
-/** unique or primary key constraints on table "claim_resource" */
-export enum ClaimResourceConstraint {
-  /** unique or primary key constraint on columns "id" */
-  ClaimResourcePkey = 'claim_resource_pkey'
-}
-
-/** columns and relationships of "claim_resource_history" */
-export type ClaimResourceHistory = {
-  __typename?: 'ClaimResourceHistory';
-  claimId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  historyId: Scalars['uuid']['output'];
-  id: Scalars['uuid']['output'];
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregated selection of "claim_resource_history" */
-export type ClaimResourceHistoryAggregate = {
-  __typename?: 'ClaimResourceHistoryAggregate';
-  aggregate?: Maybe<ClaimResourceHistoryAggregateFields>;
-  nodes: Array<ClaimResourceHistory>;
-};
-
-/** aggregate fields of "claim_resource_history" */
-export type ClaimResourceHistoryAggregateFields = {
-  __typename?: 'ClaimResourceHistoryAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<ClaimResourceHistoryMaxFields>;
-  min?: Maybe<ClaimResourceHistoryMinFields>;
-};
-
-
-/** aggregate fields of "claim_resource_history" */
-export type ClaimResourceHistoryAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<ClaimResourceHistorySelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** Boolean expression to filter rows from the table "claim_resource_history". All fields are combined with a logical 'AND'. */
-export type ClaimResourceHistoryBoolExp = {
-  _and?: InputMaybe<Array<ClaimResourceHistoryBoolExp>>;
-  _not?: InputMaybe<ClaimResourceHistoryBoolExp>;
-  _or?: InputMaybe<Array<ClaimResourceHistoryBoolExp>>;
-  claimId?: InputMaybe<UuidComparisonExp>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
-  fileId?: InputMaybe<UuidComparisonExp>;
-  historyId?: InputMaybe<UuidComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  originalUrl?: InputMaybe<StringComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  updatedBy?: InputMaybe<UuidComparisonExp>;
-};
-
-/** unique or primary key constraints on table "claim_resource_history" */
-export enum ClaimResourceHistoryConstraint {
-  /** unique or primary key constraint on columns "history_id" */
-  ClaimResourceHistoryPkey = 'claim_resource_history_pkey'
-}
-
-/** input type for inserting data into table "claim_resource_history" */
-export type ClaimResourceHistoryInsertInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate max on columns */
-export type ClaimResourceHistoryMaxFields = {
-  __typename?: 'ClaimResourceHistoryMaxFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  historyId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregate min on columns */
-export type ClaimResourceHistoryMinFields = {
-  __typename?: 'ClaimResourceHistoryMinFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  historyId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** response of any mutation on the table "claim_resource_history" */
-export type ClaimResourceHistoryMutationResponse = {
-  __typename?: 'ClaimResourceHistoryMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<ClaimResourceHistory>;
-};
-
-/** on_conflict condition type for table "claim_resource_history" */
-export type ClaimResourceHistoryOnConflict = {
-  constraint: ClaimResourceHistoryConstraint;
-  updateColumns?: Array<ClaimResourceHistoryUpdateColumn>;
-  where?: InputMaybe<ClaimResourceHistoryBoolExp>;
-};
-
-/** Ordering options when selecting data from "claim_resource_history". */
-export type ClaimResourceHistoryOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  historyId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** primary key columns input for table: claim_resource_history */
-export type ClaimResourceHistoryPkColumnsInput = {
-  historyId: Scalars['uuid']['input'];
-};
-
-/** select columns of table "claim_resource_history" */
-export enum ClaimResourceHistorySelectColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  HistoryId = 'historyId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-/** input type for updating data in table "claim_resource_history" */
-export type ClaimResourceHistorySetInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "claim_resource_history" */
-export type ClaimResourceHistoryStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: ClaimResourceHistoryStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type ClaimResourceHistoryStreamCursorValueInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "claim_resource_history" */
-export enum ClaimResourceHistoryUpdateColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  HistoryId = 'historyId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-export type ClaimResourceHistoryUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<ClaimResourceHistorySetInput>;
-  /** filter the rows which have to be updated */
-  where: ClaimResourceHistoryBoolExp;
-};
-
-/** input type for inserting data into table "claim_resource" */
-export type ClaimResourceInsertInput = {
-  claim?: InputMaybe<ClaimObjRelInsertInput>;
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  file?: InputMaybe<FileObjRelInsertInput>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-  user?: InputMaybe<UserObjRelInsertInput>;
-  userByUpdatedBy?: InputMaybe<UserObjRelInsertInput>;
-};
-
-/** aggregate max on columns */
-export type ClaimResourceMaxFields = {
-  __typename?: 'ClaimResourceMaxFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by max() on columns of table "claim_resource" */
-export type ClaimResourceMaxOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** aggregate min on columns */
-export type ClaimResourceMinFields = {
-  __typename?: 'ClaimResourceMinFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by min() on columns of table "claim_resource" */
-export type ClaimResourceMinOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** response of any mutation on the table "claim_resource" */
-export type ClaimResourceMutationResponse = {
-  __typename?: 'ClaimResourceMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<ClaimResource>;
-};
-
-/** on_conflict condition type for table "claim_resource" */
-export type ClaimResourceOnConflict = {
-  constraint: ClaimResourceConstraint;
-  updateColumns?: Array<ClaimResourceUpdateColumn>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-/** Ordering options when selecting data from "claim_resource". */
-export type ClaimResourceOrderBy = {
-  claim?: InputMaybe<ClaimOrderBy>;
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  file?: InputMaybe<FileOrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-  user?: InputMaybe<UserOrderBy>;
-  userByUpdatedBy?: InputMaybe<UserOrderBy>;
-};
-
-/** primary key columns input for table: claim_resource */
-export type ClaimResourcePkColumnsInput = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "claim_resource" */
-export enum ClaimResourceSelectColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-/** input type for updating data in table "claim_resource" */
-export type ClaimResourceSetInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "claim_resource" */
-export type ClaimResourceStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: ClaimResourceStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type ClaimResourceStreamCursorValueInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "claim_resource" */
-export enum ClaimResourceUpdateColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-export type ClaimResourceUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<ClaimResourceSetInput>;
-  /** filter the rows which have to be updated */
-  where: ClaimResourceBoolExp;
-};
-
 /** select columns of table "claim" */
 export enum ClaimSelectColumn {
   /** column name */
-  ArchiveAt = 'archiveAt',
-  /** column name */
-  ArchiveId = 'archiveId',
-  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
-  Description = 'description',
-  /** column name */
   Id = 'id',
-  /** column name */
-  Label = 'label',
   /** column name */
   ProcessId = 'processId',
   /** column name */
+  RatingId = 'ratingId',
+  /** column name */
+  ShortId = 'shortId',
+  /** column name */
   Status = 'status',
   /** column name */
+  SubmitterNotes = 'submitterNotes',
+  /** column name */
+  Synopsis = 'synopsis',
+  /** column name */
   SysPeriod = 'sysPeriod',
-  /** column name */
-  Tags = 'tags',
-  /** column name */
-  Title = 'title',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -1835,18 +1212,16 @@ export enum ClaimSelectColumn {
 
 /** input type for updating data in table "claim" */
 export type ClaimSetInput = {
-  archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
-  archiveId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  label?: InputMaybe<Scalars['claim_label']['input']>;
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
+  ratingId?: InputMaybe<Scalars['uuid']['input']>;
+  shortId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -1907,263 +1282,24 @@ export type ClaimStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type ClaimStreamCursorValueInput = {
-  archiveAt?: InputMaybe<Scalars['timestamp']['input']>;
-  archiveId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  label?: InputMaybe<Scalars['claim_label']['input']>;
-  processId?: InputMaybe<Scalars['Int']['input']>;
+  processId?: InputMaybe<Scalars['bigint']['input']>;
+  ratingId?: InputMaybe<Scalars['uuid']['input']>;
+  shortId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['claim_status']['input']>;
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** columns and relationships of "claim_submission_token" */
-export type ClaimSubmissionToken = {
-  __typename?: 'ClaimSubmissionToken';
-  /** An object relationship */
-  claim: Claim;
-  claimId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  expiresAt: Scalars['timestamp']['output'];
-  id: Scalars['uuid']['output'];
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  token: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** aggregated selection of "claim_submission_token" */
-export type ClaimSubmissionTokenAggregate = {
-  __typename?: 'ClaimSubmissionTokenAggregate';
-  aggregate?: Maybe<ClaimSubmissionTokenAggregateFields>;
-  nodes: Array<ClaimSubmissionToken>;
-};
-
-export type ClaimSubmissionTokenAggregateBoolExp = {
-  count?: InputMaybe<ClaimSubmissionTokenAggregateBoolExpCount>;
-};
-
-/** aggregate fields of "claim_submission_token" */
-export type ClaimSubmissionTokenAggregateFields = {
-  __typename?: 'ClaimSubmissionTokenAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<ClaimSubmissionTokenMaxFields>;
-  min?: Maybe<ClaimSubmissionTokenMinFields>;
-};
-
-
-/** aggregate fields of "claim_submission_token" */
-export type ClaimSubmissionTokenAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "claim_submission_token" */
-export type ClaimSubmissionTokenAggregateOrderBy = {
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<ClaimSubmissionTokenMaxOrderBy>;
-  min?: InputMaybe<ClaimSubmissionTokenMinOrderBy>;
-};
-
-/** input type for inserting array relation for remote table "claim_submission_token" */
-export type ClaimSubmissionTokenArrRelInsertInput = {
-  data: Array<ClaimSubmissionTokenInsertInput>;
-  /** upsert condition */
-  onConflict?: InputMaybe<ClaimSubmissionTokenOnConflict>;
-};
-
-/** Boolean expression to filter rows from the table "claim_submission_token". All fields are combined with a logical 'AND'. */
-export type ClaimSubmissionTokenBoolExp = {
-  _and?: InputMaybe<Array<ClaimSubmissionTokenBoolExp>>;
-  _not?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-  _or?: InputMaybe<Array<ClaimSubmissionTokenBoolExp>>;
-  claim?: InputMaybe<ClaimBoolExp>;
-  claimId?: InputMaybe<UuidComparisonExp>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  expiresAt?: InputMaybe<TimestampComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  token?: InputMaybe<StringComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-};
-
-/** unique or primary key constraints on table "claim_submission_token" */
-export enum ClaimSubmissionTokenConstraint {
-  /** unique or primary key constraint on columns "id" */
-  ClaimSubmissionTokenPkey = 'claim_submission_token_pkey',
-  /** unique or primary key constraint on columns "token" */
-  ClaimSubmissionTokenTokenKey = 'claim_submission_token_token_key'
-}
-
-/** input type for inserting data into table "claim_submission_token" */
-export type ClaimSubmissionTokenInsertInput = {
-  claim?: InputMaybe<ClaimObjRelInsertInput>;
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  expiresAt?: InputMaybe<Scalars['timestamp']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  token?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** aggregate max on columns */
-export type ClaimSubmissionTokenMaxFields = {
-  __typename?: 'ClaimSubmissionTokenMaxFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  expiresAt?: Maybe<Scalars['timestamp']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  token?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by max() on columns of table "claim_submission_token" */
-export type ClaimSubmissionTokenMaxOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  expiresAt?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  token?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-};
-
-/** aggregate min on columns */
-export type ClaimSubmissionTokenMinFields = {
-  __typename?: 'ClaimSubmissionTokenMinFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  expiresAt?: Maybe<Scalars['timestamp']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  token?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by min() on columns of table "claim_submission_token" */
-export type ClaimSubmissionTokenMinOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  expiresAt?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  token?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-};
-
-/** response of any mutation on the table "claim_submission_token" */
-export type ClaimSubmissionTokenMutationResponse = {
-  __typename?: 'ClaimSubmissionTokenMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<ClaimSubmissionToken>;
-};
-
-/** on_conflict condition type for table "claim_submission_token" */
-export type ClaimSubmissionTokenOnConflict = {
-  constraint: ClaimSubmissionTokenConstraint;
-  updateColumns?: Array<ClaimSubmissionTokenUpdateColumn>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-};
-
-/** Ordering options when selecting data from "claim_submission_token". */
-export type ClaimSubmissionTokenOrderBy = {
-  claim?: InputMaybe<ClaimOrderBy>;
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  expiresAt?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  token?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-};
-
-/** primary key columns input for table: claim_submission_token */
-export type ClaimSubmissionTokenPkColumnsInput = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "claim_submission_token" */
-export enum ClaimSubmissionTokenSelectColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  ExpiresAt = 'expiresAt',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  Token = 'token',
-  /** column name */
-  UpdatedAt = 'updatedAt'
-}
-
-/** input type for updating data in table "claim_submission_token" */
-export type ClaimSubmissionTokenSetInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  expiresAt?: InputMaybe<Scalars['timestamp']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  token?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** Streaming cursor of the table "claim_submission_token" */
-export type ClaimSubmissionTokenStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: ClaimSubmissionTokenStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type ClaimSubmissionTokenStreamCursorValueInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  expiresAt?: InputMaybe<Scalars['timestamp']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  token?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** update columns of table "claim_submission_token" */
-export enum ClaimSubmissionTokenUpdateColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  ExpiresAt = 'expiresAt',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  Token = 'token',
-  /** column name */
-  UpdatedAt = 'updatedAt'
-}
-
-export type ClaimSubmissionTokenUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<ClaimSubmissionTokenSetInput>;
-  /** filter the rows which have to be updated */
-  where: ClaimSubmissionTokenBoolExp;
 };
 
 /** aggregate sum on columns */
 export type ClaimSumFields = {
   __typename?: 'ClaimSumFields';
-  processId?: Maybe<Scalars['Int']['output']>;
+  processId?: Maybe<Scalars['bigint']['output']>;
 };
 
 /** order by sum() on columns of table "claim" */
@@ -2174,29 +1310,25 @@ export type ClaimSumOrderBy = {
 /** update columns of table "claim" */
 export enum ClaimUpdateColumn {
   /** column name */
-  ArchiveAt = 'archiveAt',
-  /** column name */
-  ArchiveId = 'archiveId',
-  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
-  Description = 'description',
-  /** column name */
   Id = 'id',
-  /** column name */
-  Label = 'label',
   /** column name */
   ProcessId = 'processId',
   /** column name */
+  RatingId = 'ratingId',
+  /** column name */
+  ShortId = 'shortId',
+  /** column name */
   Status = 'status',
   /** column name */
+  SubmitterNotes = 'submitterNotes',
+  /** column name */
+  Synopsis = 'synopsis',
+  /** column name */
   SysPeriod = 'sysPeriod',
-  /** column name */
-  Tags = 'tags',
-  /** column name */
-  Title = 'title',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -2251,6 +1383,10 @@ export type Comment = {
   /** An object relationship */
   claim: Claim;
   claimId: Scalars['uuid']['output'];
+  /** An array relationship */
+  commentHistories: Array<CommentHistory>;
+  /** An aggregate relationship */
+  commentHistoriesAggregate: CommentHistoryAggregate;
   content: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy: Scalars['uuid']['output'];
@@ -2262,6 +1398,26 @@ export type Comment = {
   user: User;
   /** An object relationship */
   userByUpdatedBy?: Maybe<User>;
+};
+
+
+/** columns and relationships of "comment" */
+export type CommentCommentHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<CommentHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentHistoryOrderBy>>;
+  where?: InputMaybe<CommentHistoryBoolExp>;
+};
+
+
+/** columns and relationships of "comment" */
+export type CommentCommentHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CommentHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentHistoryOrderBy>>;
+  where?: InputMaybe<CommentHistoryBoolExp>;
 };
 
 /** aggregated selection of "comment" */
@@ -2311,6 +1467,8 @@ export type CommentBoolExp = {
   _or?: InputMaybe<Array<CommentBoolExp>>;
   claim?: InputMaybe<ClaimBoolExp>;
   claimId?: InputMaybe<UuidComparisonExp>;
+  commentHistories?: InputMaybe<CommentHistoryBoolExp>;
+  commentHistoriesAggregate?: InputMaybe<CommentHistoryAggregateBoolExp>;
   content?: InputMaybe<StringComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
@@ -2332,6 +1490,8 @@ export enum CommentConstraint {
 export type CommentHistory = {
   __typename?: 'CommentHistory';
   claimId: Scalars['uuid']['output'];
+  /** An object relationship */
+  comment: Comment;
   content: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy: Scalars['uuid']['output'];
@@ -2349,6 +1509,10 @@ export type CommentHistoryAggregate = {
   nodes: Array<CommentHistory>;
 };
 
+export type CommentHistoryAggregateBoolExp = {
+  count?: InputMaybe<CommentHistoryAggregateBoolExpCount>;
+};
+
 /** aggregate fields of "comment_history" */
 export type CommentHistoryAggregateFields = {
   __typename?: 'CommentHistoryAggregateFields';
@@ -2364,12 +1528,27 @@ export type CommentHistoryAggregateFieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "comment_history" */
+export type CommentHistoryAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<CommentHistoryMaxOrderBy>;
+  min?: InputMaybe<CommentHistoryMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "comment_history" */
+export type CommentHistoryArrRelInsertInput = {
+  data: Array<CommentHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<CommentHistoryOnConflict>;
+};
+
 /** Boolean expression to filter rows from the table "comment_history". All fields are combined with a logical 'AND'. */
 export type CommentHistoryBoolExp = {
   _and?: InputMaybe<Array<CommentHistoryBoolExp>>;
   _not?: InputMaybe<CommentHistoryBoolExp>;
   _or?: InputMaybe<Array<CommentHistoryBoolExp>>;
   claimId?: InputMaybe<UuidComparisonExp>;
+  comment?: InputMaybe<CommentBoolExp>;
   content?: InputMaybe<StringComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
@@ -2389,6 +1568,7 @@ export enum CommentHistoryConstraint {
 /** input type for inserting data into table "comment_history" */
 export type CommentHistoryInsertInput = {
   claimId?: InputMaybe<Scalars['uuid']['input']>;
+  comment?: InputMaybe<CommentObjRelInsertInput>;
   content?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -2412,6 +1592,18 @@ export type CommentHistoryMaxFields = {
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
+/** order by max() on columns of table "comment_history" */
+export type CommentHistoryMaxOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  content?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
 /** aggregate min on columns */
 export type CommentHistoryMinFields = {
   __typename?: 'CommentHistoryMinFields';
@@ -2423,6 +1615,18 @@ export type CommentHistoryMinFields = {
   id?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "comment_history" */
+export type CommentHistoryMinOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  content?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "comment_history" */
@@ -2444,6 +1648,7 @@ export type CommentHistoryOnConflict = {
 /** Ordering options when selecting data from "comment_history". */
 export type CommentHistoryOrderBy = {
   claimId?: InputMaybe<OrderBy>;
+  comment?: InputMaybe<CommentOrderBy>;
   content?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
@@ -2548,6 +1753,7 @@ export type CommentHistoryUpdates = {
 export type CommentInsertInput = {
   claim?: InputMaybe<ClaimObjRelInsertInput>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
+  commentHistories?: InputMaybe<CommentHistoryArrRelInsertInput>;
   content?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -2614,6 +1820,13 @@ export type CommentMutationResponse = {
   returning: Array<Comment>;
 };
 
+/** input type for inserting object relation for remote table "comment" */
+export type CommentObjRelInsertInput = {
+  data: CommentInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<CommentOnConflict>;
+};
+
 /** on_conflict condition type for table "comment" */
 export type CommentOnConflict = {
   constraint: CommentConstraint;
@@ -2625,6 +1838,7 @@ export type CommentOnConflict = {
 export type CommentOrderBy = {
   claim?: InputMaybe<ClaimOrderBy>;
   claimId?: InputMaybe<OrderBy>;
+  commentHistoriesAggregate?: InputMaybe<CommentHistoryAggregateOrderBy>;
   content?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
@@ -2731,20 +1945,23 @@ export enum CursorOrdering {
 /** columns and relationships of "fact" */
 export type Fact = {
   __typename?: 'Fact';
-  /** An aggregate relationship */
-  claimFactsAggregate: ClaimFactAggregate;
-  /** An array relationship */
-  claim_facts: Array<ClaimFact>;
+  /** An object relationship */
+  claim: Claim;
+  claimId: Scalars['uuid']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  /** An aggregate relationship */
-  factResourcesAggregate: FactResourceAggregate;
   /** An array relationship */
-  fact_resources: Array<FactResource>;
+  factHistories: Array<FactHistory>;
+  /** An aggregate relationship */
+  factHistoriesAggregate: FactHistoryAggregate;
   id: Scalars['uuid']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  /** An array relationship */
+  sources: Array<Source>;
+  /** An aggregate relationship */
+  sourcesAggregate: SourceAggregate;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
@@ -2755,42 +1972,42 @@ export type Fact = {
 
 
 /** columns and relationships of "fact" */
-export type FactClaimFactsAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type FactFactHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<FactHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<FactHistoryOrderBy>>;
+  where?: InputMaybe<FactHistoryBoolExp>;
 };
 
 
 /** columns and relationships of "fact" */
-export type FactClaim_FactsArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type FactFactHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<FactHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<FactHistoryOrderBy>>;
+  where?: InputMaybe<FactHistoryBoolExp>;
 };
 
 
 /** columns and relationships of "fact" */
-export type FactFactResourcesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
+export type FactSourcesArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
 };
 
 
 /** columns and relationships of "fact" */
-export type FactFact_ResourcesArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
+export type FactSourcesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
 };
 
 /** aggregated selection of "fact" */
@@ -2807,9 +2024,17 @@ export type FactAggregateBoolExp = {
 /** aggregate fields of "fact" */
 export type FactAggregateFields = {
   __typename?: 'FactAggregateFields';
+  avg?: Maybe<FactAvgFields>;
   count: Scalars['Int']['output'];
   max?: Maybe<FactMaxFields>;
   min?: Maybe<FactMinFields>;
+  stddev?: Maybe<FactStddevFields>;
+  stddevPop?: Maybe<FactStddevPopFields>;
+  stddevSamp?: Maybe<FactStddevSampFields>;
+  sum?: Maybe<FactSumFields>;
+  varPop?: Maybe<FactVarPopFields>;
+  varSamp?: Maybe<FactVarSampFields>;
+  variance?: Maybe<FactVarianceFields>;
 };
 
 
@@ -2821,9 +2046,17 @@ export type FactAggregateFieldsCountArgs = {
 
 /** order by aggregate values of table "fact" */
 export type FactAggregateOrderBy = {
+  avg?: InputMaybe<FactAvgOrderBy>;
   count?: InputMaybe<OrderBy>;
   max?: InputMaybe<FactMaxOrderBy>;
   min?: InputMaybe<FactMinOrderBy>;
+  stddev?: InputMaybe<FactStddevOrderBy>;
+  stddevPop?: InputMaybe<FactStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<FactStddevSampOrderBy>;
+  sum?: InputMaybe<FactSumOrderBy>;
+  varPop?: InputMaybe<FactVarPopOrderBy>;
+  varSamp?: InputMaybe<FactVarSampOrderBy>;
+  variance?: InputMaybe<FactVarianceOrderBy>;
 };
 
 /** input type for inserting array relation for remote table "fact" */
@@ -2833,21 +2066,34 @@ export type FactArrRelInsertInput = {
   onConflict?: InputMaybe<FactOnConflict>;
 };
 
+/** aggregate avg on columns */
+export type FactAvgFields = {
+  __typename?: 'FactAvgFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "fact" */
+export type FactAvgOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
 /** Boolean expression to filter rows from the table "fact". All fields are combined with a logical 'AND'. */
 export type FactBoolExp = {
   _and?: InputMaybe<Array<FactBoolExp>>;
   _not?: InputMaybe<FactBoolExp>;
   _or?: InputMaybe<Array<FactBoolExp>>;
-  claim_facts?: InputMaybe<ClaimFactBoolExp>;
-  claim_factsAggregate?: InputMaybe<ClaimFactAggregateBoolExp>;
+  claim?: InputMaybe<ClaimBoolExp>;
+  claimId?: InputMaybe<UuidComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
-  fact_resources?: InputMaybe<FactResourceBoolExp>;
-  fact_resourcesAggregate?: InputMaybe<FactResourceAggregateBoolExp>;
+  factHistories?: InputMaybe<FactHistoryBoolExp>;
+  factHistoriesAggregate?: InputMaybe<FactHistoryAggregateBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
+  index?: InputMaybe<IntComparisonExp>;
+  sources?: InputMaybe<SourceBoolExp>;
+  sourcesAggregate?: InputMaybe<SourceAggregateBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  title?: InputMaybe<StringComparisonExp>;
+  text?: InputMaybe<StringComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
   user?: InputMaybe<UserBoolExp>;
@@ -2863,13 +2109,16 @@ export enum FactConstraint {
 /** columns and relationships of "fact_history" */
 export type FactHistory = {
   __typename?: 'FactHistory';
+  claimId: Scalars['uuid']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  fact: Fact;
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -2881,12 +2130,24 @@ export type FactHistoryAggregate = {
   nodes: Array<FactHistory>;
 };
 
+export type FactHistoryAggregateBoolExp = {
+  count?: InputMaybe<FactHistoryAggregateBoolExpCount>;
+};
+
 /** aggregate fields of "fact_history" */
 export type FactHistoryAggregateFields = {
   __typename?: 'FactHistoryAggregateFields';
+  avg?: Maybe<FactHistoryAvgFields>;
   count: Scalars['Int']['output'];
   max?: Maybe<FactHistoryMaxFields>;
   min?: Maybe<FactHistoryMinFields>;
+  stddev?: Maybe<FactHistoryStddevFields>;
+  stddevPop?: Maybe<FactHistoryStddevPopFields>;
+  stddevSamp?: Maybe<FactHistoryStddevSampFields>;
+  sum?: Maybe<FactHistorySumFields>;
+  varPop?: Maybe<FactHistoryVarPopFields>;
+  varSamp?: Maybe<FactHistoryVarSampFields>;
+  variance?: Maybe<FactHistoryVarianceFields>;
 };
 
 
@@ -2896,18 +2157,53 @@ export type FactHistoryAggregateFieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "fact_history" */
+export type FactHistoryAggregateOrderBy = {
+  avg?: InputMaybe<FactHistoryAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<FactHistoryMaxOrderBy>;
+  min?: InputMaybe<FactHistoryMinOrderBy>;
+  stddev?: InputMaybe<FactHistoryStddevOrderBy>;
+  stddevPop?: InputMaybe<FactHistoryStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<FactHistoryStddevSampOrderBy>;
+  sum?: InputMaybe<FactHistorySumOrderBy>;
+  varPop?: InputMaybe<FactHistoryVarPopOrderBy>;
+  varSamp?: InputMaybe<FactHistoryVarSampOrderBy>;
+  variance?: InputMaybe<FactHistoryVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "fact_history" */
+export type FactHistoryArrRelInsertInput = {
+  data: Array<FactHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<FactHistoryOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type FactHistoryAvgFields = {
+  __typename?: 'FactHistoryAvgFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "fact_history" */
+export type FactHistoryAvgOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
 /** Boolean expression to filter rows from the table "fact_history". All fields are combined with a logical 'AND'. */
 export type FactHistoryBoolExp = {
   _and?: InputMaybe<Array<FactHistoryBoolExp>>;
   _not?: InputMaybe<FactHistoryBoolExp>;
   _or?: InputMaybe<Array<FactHistoryBoolExp>>;
+  claimId?: InputMaybe<UuidComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
+  fact?: InputMaybe<FactBoolExp>;
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
+  index?: InputMaybe<IntComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  title?: InputMaybe<StringComparisonExp>;
+  text?: InputMaybe<StringComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
 };
@@ -2918,15 +2214,22 @@ export enum FactHistoryConstraint {
   FactHistoryPkey = 'fact_history_pkey'
 }
 
+/** input type for incrementing numeric columns in table "fact_history" */
+export type FactHistoryIncInput = {
+  index?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** input type for inserting data into table "fact_history" */
 export type FactHistoryInsertInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
+  fact?: InputMaybe<FactObjRelInsertInput>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -2934,27 +2237,55 @@ export type FactHistoryInsertInput = {
 /** aggregate max on columns */
 export type FactHistoryMaxFields = {
   __typename?: 'FactHistoryMaxFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "fact_history" */
+export type FactHistoryMaxOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  text?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** aggregate min on columns */
 export type FactHistoryMinFields = {
   __typename?: 'FactHistoryMinFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "fact_history" */
+export type FactHistoryMinOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  text?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "fact_history" */
@@ -2975,13 +2306,15 @@ export type FactHistoryOnConflict = {
 
 /** Ordering options when selecting data from "fact_history". */
 export type FactHistoryOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
+  fact?: InputMaybe<FactOrderBy>;
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
+  text?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -2994,19 +2327,21 @@ export type FactHistoryPkColumnsInput = {
 /** select columns of table "fact_history" */
 export enum FactHistorySelectColumn {
   /** column name */
+  ClaimId = 'claimId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
   /** column name */
   HistoryId = 'historyId',
   /** column name */
   Id = 'id',
   /** column name */
+  Index = 'index',
+  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
-  Title = 'title',
+  Text = 'text',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -3015,15 +2350,49 @@ export enum FactHistorySelectColumn {
 
 /** input type for updating data in table "fact_history" */
 export type FactHistorySetInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type FactHistoryStddevFields = {
+  __typename?: 'FactHistoryStddevFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "fact_history" */
+export type FactHistoryStddevOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type FactHistoryStddevPopFields = {
+  __typename?: 'FactHistoryStddevPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "fact_history" */
+export type FactHistoryStddevPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type FactHistoryStddevSampFields = {
+  __typename?: 'FactHistoryStddevSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "fact_history" */
+export type FactHistoryStddevSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "fact_history" */
@@ -3036,33 +2405,47 @@ export type FactHistoryStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type FactHistoryStreamCursorValueInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate sum on columns */
+export type FactHistorySumFields = {
+  __typename?: 'FactHistorySumFields';
+  index?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "fact_history" */
+export type FactHistorySumOrderBy = {
+  index?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "fact_history" */
 export enum FactHistoryUpdateColumn {
   /** column name */
+  ClaimId = 'claimId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
   /** column name */
   HistoryId = 'historyId',
   /** column name */
   Id = 'id',
   /** column name */
+  Index = 'index',
+  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
-  Title = 'title',
+  Text = 'text',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -3070,22 +2453,64 @@ export enum FactHistoryUpdateColumn {
 }
 
 export type FactHistoryUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<FactHistoryIncInput>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<FactHistorySetInput>;
   /** filter the rows which have to be updated */
   where: FactHistoryBoolExp;
 };
 
+/** aggregate varPop on columns */
+export type FactHistoryVarPopFields = {
+  __typename?: 'FactHistoryVarPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "fact_history" */
+export type FactHistoryVarPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type FactHistoryVarSampFields = {
+  __typename?: 'FactHistoryVarSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "fact_history" */
+export type FactHistoryVarSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type FactHistoryVarianceFields = {
+  __typename?: 'FactHistoryVarianceFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "fact_history" */
+export type FactHistoryVarianceOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** input type for incrementing numeric columns in table "fact" */
+export type FactIncInput = {
+  index?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** input type for inserting data into table "fact" */
 export type FactInsertInput = {
-  claim_facts?: InputMaybe<ClaimFactArrRelInsertInput>;
+  claim?: InputMaybe<ClaimObjRelInsertInput>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fact_resources?: InputMaybe<FactResourceArrRelInsertInput>;
+  factHistories?: InputMaybe<FactHistoryArrRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  sources?: InputMaybe<SourceArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
   user?: InputMaybe<UserObjRelInsertInput>;
@@ -3095,22 +2520,24 @@ export type FactInsertInput = {
 /** aggregate max on columns */
 export type FactMaxFields = {
   __typename?: 'FactMaxFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "fact" */
 export type FactMaxOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  text?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -3118,22 +2545,24 @@ export type FactMaxOrderBy = {
 /** aggregate min on columns */
 export type FactMinFields = {
   __typename?: 'FactMinFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "fact" */
 export type FactMinOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  text?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -3163,14 +2592,16 @@ export type FactOnConflict = {
 
 /** Ordering options when selecting data from "fact". */
 export type FactOrderBy = {
-  claim_factsAggregate?: InputMaybe<ClaimFactAggregateOrderBy>;
+  claim?: InputMaybe<ClaimOrderBy>;
+  claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  fact_resourcesAggregate?: InputMaybe<FactResourceAggregateOrderBy>;
+  factHistoriesAggregate?: InputMaybe<FactHistoryAggregateOrderBy>;
   id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  sourcesAggregate?: InputMaybe<SourceAggregateOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
-  title?: InputMaybe<OrderBy>;
+  text?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   user?: InputMaybe<UserOrderBy>;
@@ -3182,552 +2613,22 @@ export type FactPkColumnsInput = {
   id: Scalars['uuid']['input'];
 };
 
-/** columns and relationships of "fact_resource" */
-export type FactResource = {
-  __typename?: 'FactResource';
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  /** An object relationship */
-  fact: Fact;
-  factId: Scalars['uuid']['output'];
-  /** An object relationship */
-  file?: Maybe<File>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  id: Scalars['uuid']['output'];
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-  /** An object relationship */
-  user?: Maybe<User>;
-  /** An object relationship */
-  userByUpdatedBy?: Maybe<User>;
-};
-
-/** aggregated selection of "fact_resource" */
-export type FactResourceAggregate = {
-  __typename?: 'FactResourceAggregate';
-  aggregate?: Maybe<FactResourceAggregateFields>;
-  nodes: Array<FactResource>;
-};
-
-export type FactResourceAggregateBoolExp = {
-  count?: InputMaybe<FactResourceAggregateBoolExpCount>;
-};
-
-/** aggregate fields of "fact_resource" */
-export type FactResourceAggregateFields = {
-  __typename?: 'FactResourceAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<FactResourceMaxFields>;
-  min?: Maybe<FactResourceMinFields>;
-};
-
-
-/** aggregate fields of "fact_resource" */
-export type FactResourceAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<FactResourceSelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "fact_resource" */
-export type FactResourceAggregateOrderBy = {
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<FactResourceMaxOrderBy>;
-  min?: InputMaybe<FactResourceMinOrderBy>;
-};
-
-/** input type for inserting array relation for remote table "fact_resource" */
-export type FactResourceArrRelInsertInput = {
-  data: Array<FactResourceInsertInput>;
-  /** upsert condition */
-  onConflict?: InputMaybe<FactResourceOnConflict>;
-};
-
-/** Boolean expression to filter rows from the table "fact_resource". All fields are combined with a logical 'AND'. */
-export type FactResourceBoolExp = {
-  _and?: InputMaybe<Array<FactResourceBoolExp>>;
-  _not?: InputMaybe<FactResourceBoolExp>;
-  _or?: InputMaybe<Array<FactResourceBoolExp>>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
-  fact?: InputMaybe<FactBoolExp>;
-  factId?: InputMaybe<UuidComparisonExp>;
-  file?: InputMaybe<FileBoolExp>;
-  fileId?: InputMaybe<UuidComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  originalUrl?: InputMaybe<StringComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  updatedBy?: InputMaybe<UuidComparisonExp>;
-  user?: InputMaybe<UserBoolExp>;
-  userByUpdatedBy?: InputMaybe<UserBoolExp>;
-};
-
-/** unique or primary key constraints on table "fact_resource" */
-export enum FactResourceConstraint {
-  /** unique or primary key constraint on columns "id" */
-  FactResourcePkey = 'fact_resource_pkey'
-}
-
-/** columns and relationships of "fact_resource_history" */
-export type FactResourceHistory = {
-  __typename?: 'FactResourceHistory';
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  factId: Scalars['uuid']['output'];
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  historyId: Scalars['uuid']['output'];
-  id: Scalars['uuid']['output'];
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregated selection of "fact_resource_history" */
-export type FactResourceHistoryAggregate = {
-  __typename?: 'FactResourceHistoryAggregate';
-  aggregate?: Maybe<FactResourceHistoryAggregateFields>;
-  nodes: Array<FactResourceHistory>;
-};
-
-/** aggregate fields of "fact_resource_history" */
-export type FactResourceHistoryAggregateFields = {
-  __typename?: 'FactResourceHistoryAggregateFields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<FactResourceHistoryMaxFields>;
-  min?: Maybe<FactResourceHistoryMinFields>;
-};
-
-
-/** aggregate fields of "fact_resource_history" */
-export type FactResourceHistoryAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<FactResourceHistorySelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** Boolean expression to filter rows from the table "fact_resource_history". All fields are combined with a logical 'AND'. */
-export type FactResourceHistoryBoolExp = {
-  _and?: InputMaybe<Array<FactResourceHistoryBoolExp>>;
-  _not?: InputMaybe<FactResourceHistoryBoolExp>;
-  _or?: InputMaybe<Array<FactResourceHistoryBoolExp>>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  createdBy?: InputMaybe<UuidComparisonExp>;
-  description?: InputMaybe<StringComparisonExp>;
-  factId?: InputMaybe<UuidComparisonExp>;
-  fileId?: InputMaybe<UuidComparisonExp>;
-  historyId?: InputMaybe<UuidComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  originalUrl?: InputMaybe<StringComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  updatedBy?: InputMaybe<UuidComparisonExp>;
-};
-
-/** unique or primary key constraints on table "fact_resource_history" */
-export enum FactResourceHistoryConstraint {
-  /** unique or primary key constraint on columns "history_id" */
-  FactResourceHistoryPkey = 'fact_resource_history_pkey'
-}
-
-/** input type for inserting data into table "fact_resource_history" */
-export type FactResourceHistoryInsertInput = {
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate max on columns */
-export type FactResourceHistoryMaxFields = {
-  __typename?: 'FactResourceHistoryMaxFields';
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  historyId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregate min on columns */
-export type FactResourceHistoryMinFields = {
-  __typename?: 'FactResourceHistoryMinFields';
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  historyId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** response of any mutation on the table "fact_resource_history" */
-export type FactResourceHistoryMutationResponse = {
-  __typename?: 'FactResourceHistoryMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<FactResourceHistory>;
-};
-
-/** on_conflict condition type for table "fact_resource_history" */
-export type FactResourceHistoryOnConflict = {
-  constraint: FactResourceHistoryConstraint;
-  updateColumns?: Array<FactResourceHistoryUpdateColumn>;
-  where?: InputMaybe<FactResourceHistoryBoolExp>;
-};
-
-/** Ordering options when selecting data from "fact_resource_history". */
-export type FactResourceHistoryOrderBy = {
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  historyId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** primary key columns input for table: fact_resource_history */
-export type FactResourceHistoryPkColumnsInput = {
-  historyId: Scalars['uuid']['input'];
-};
-
-/** select columns of table "fact_resource_history" */
-export enum FactResourceHistorySelectColumn {
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  HistoryId = 'historyId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-/** input type for updating data in table "fact_resource_history" */
-export type FactResourceHistorySetInput = {
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "fact_resource_history" */
-export type FactResourceHistoryStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: FactResourceHistoryStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type FactResourceHistoryStreamCursorValueInput = {
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  historyId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "fact_resource_history" */
-export enum FactResourceHistoryUpdateColumn {
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  HistoryId = 'historyId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-export type FactResourceHistoryUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<FactResourceHistorySetInput>;
-  /** filter the rows which have to be updated */
-  where: FactResourceHistoryBoolExp;
-};
-
-/** input type for inserting data into table "fact_resource" */
-export type FactResourceInsertInput = {
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  fact?: InputMaybe<FactObjRelInsertInput>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  file?: InputMaybe<FileObjRelInsertInput>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-  user?: InputMaybe<UserObjRelInsertInput>;
-  userByUpdatedBy?: InputMaybe<UserObjRelInsertInput>;
-};
-
-/** aggregate max on columns */
-export type FactResourceMaxFields = {
-  __typename?: 'FactResourceMaxFields';
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by max() on columns of table "fact_resource" */
-export type FactResourceMaxOrderBy = {
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** aggregate min on columns */
-export type FactResourceMinFields = {
-  __typename?: 'FactResourceMinFields';
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  createdBy?: Maybe<Scalars['uuid']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  factId?: Maybe<Scalars['uuid']['output']>;
-  fileId?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by min() on columns of table "fact_resource" */
-export type FactResourceMinOrderBy = {
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
-/** response of any mutation on the table "fact_resource" */
-export type FactResourceMutationResponse = {
-  __typename?: 'FactResourceMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<FactResource>;
-};
-
-/** on_conflict condition type for table "fact_resource" */
-export type FactResourceOnConflict = {
-  constraint: FactResourceConstraint;
-  updateColumns?: Array<FactResourceUpdateColumn>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-/** Ordering options when selecting data from "fact_resource". */
-export type FactResourceOrderBy = {
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  description?: InputMaybe<OrderBy>;
-  fact?: InputMaybe<FactOrderBy>;
-  factId?: InputMaybe<OrderBy>;
-  file?: InputMaybe<FileOrderBy>;
-  fileId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-  user?: InputMaybe<UserOrderBy>;
-  userByUpdatedBy?: InputMaybe<UserOrderBy>;
-};
-
-/** primary key columns input for table: fact_resource */
-export type FactResourcePkColumnsInput = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "fact_resource" */
-export enum FactResourceSelectColumn {
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-/** input type for updating data in table "fact_resource" */
-export type FactResourceSetInput = {
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "fact_resource" */
-export type FactResourceStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: FactResourceStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type FactResourceStreamCursorValueInput = {
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  factId?: InputMaybe<Scalars['uuid']['input']>;
-  fileId?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "fact_resource" */
-export enum FactResourceUpdateColumn {
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  CreatedBy = 'createdBy',
-  /** column name */
-  Description = 'description',
-  /** column name */
-  FactId = 'factId',
-  /** column name */
-  FileId = 'fileId',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  UpdatedBy = 'updatedBy'
-}
-
-export type FactResourceUpdates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<FactResourceSetInput>;
-  /** filter the rows which have to be updated */
-  where: FactResourceBoolExp;
-};
-
 /** select columns of table "fact" */
 export enum FactSelectColumn {
   /** column name */
+  ClaimId = 'claimId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
-  Description = 'description',
-  /** column name */
   Id = 'id',
+  /** column name */
+  Index = 'index',
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
-  Title = 'title',
+  Text = 'text',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -3736,14 +2637,48 @@ export enum FactSelectColumn {
 
 /** input type for updating data in table "fact" */
 export type FactSetInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type FactStddevFields = {
+  __typename?: 'FactStddevFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "fact" */
+export type FactStddevOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type FactStddevPopFields = {
+  __typename?: 'FactStddevPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "fact" */
+export type FactStddevPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type FactStddevSampFields = {
+  __typename?: 'FactStddevSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "fact" */
+export type FactStddevSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "fact" */
@@ -3756,30 +2691,44 @@ export type FactStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type FactStreamCursorValueInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate sum on columns */
+export type FactSumFields = {
+  __typename?: 'FactSumFields';
+  index?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "fact" */
+export type FactSumOrderBy = {
+  index?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "fact" */
 export enum FactUpdateColumn {
   /** column name */
+  ClaimId = 'claimId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
   /** column name */
-  Description = 'description',
-  /** column name */
   Id = 'id',
+  /** column name */
+  Index = 'index',
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
-  Title = 'title',
+  Text = 'text',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -3787,30 +2736,69 @@ export enum FactUpdateColumn {
 }
 
 export type FactUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<FactIncInput>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<FactSetInput>;
   /** filter the rows which have to be updated */
   where: FactBoolExp;
 };
 
+/** aggregate varPop on columns */
+export type FactVarPopFields = {
+  __typename?: 'FactVarPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "fact" */
+export type FactVarPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type FactVarSampFields = {
+  __typename?: 'FactVarSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "fact" */
+export type FactVarSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type FactVarianceFields = {
+  __typename?: 'FactVarianceFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "fact" */
+export type FactVarianceOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
 /** columns and relationships of "file" */
 export type File = {
   __typename?: 'File';
-  /** An aggregate relationship */
-  claimResourcesAggregate: ClaimResourceAggregate;
-  /** An array relationship */
-  claim_resources: Array<ClaimResource>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   eTag: Scalars['String']['output'];
-  /** An aggregate relationship */
-  factResourcesAggregate: FactResourceAggregate;
   /** An array relationship */
-  fact_resources: Array<FactResource>;
+  fileHistories: Array<FileHistory>;
+  /** An aggregate relationship */
+  fileHistoriesAggregate: FileHistoryAggregate;
   id: Scalars['uuid']['output'];
   mimeType: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  /** An array relationship */
+  origins: Array<Origin>;
+  /** An aggregate relationship */
+  originsAggregate: OriginAggregate;
   size: Scalars['Int']['output'];
+  /** An array relationship */
+  sources: Array<Source>;
+  /** An aggregate relationship */
+  sourcesAggregate: SourceAggregate;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   transcription?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
@@ -3823,42 +2811,62 @@ export type File = {
 
 
 /** columns and relationships of "file" */
-export type FileClaimResourcesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
+export type FileFileHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<FileHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
+  orderBy?: InputMaybe<Array<FileHistoryOrderBy>>;
+  where?: InputMaybe<FileHistoryBoolExp>;
 };
 
 
 /** columns and relationships of "file" */
-export type FileClaim_ResourcesArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
+export type FileFileHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<FileHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
+  orderBy?: InputMaybe<Array<FileHistoryOrderBy>>;
+  where?: InputMaybe<FileHistoryBoolExp>;
 };
 
 
 /** columns and relationships of "file" */
-export type FileFactResourcesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
+export type FileOriginsArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
 };
 
 
 /** columns and relationships of "file" */
-export type FileFact_ResourcesArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
+export type FileOriginsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+/** columns and relationships of "file" */
+export type FileSourcesArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+/** columns and relationships of "file" */
+export type FileSourcesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
 };
 
 /** aggregated selection of "file" */
@@ -3933,17 +2941,19 @@ export type FileBoolExp = {
   _and?: InputMaybe<Array<FileBoolExp>>;
   _not?: InputMaybe<FileBoolExp>;
   _or?: InputMaybe<Array<FileBoolExp>>;
-  claim_resources?: InputMaybe<ClaimResourceBoolExp>;
-  claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   eTag?: InputMaybe<StringComparisonExp>;
-  fact_resources?: InputMaybe<FactResourceBoolExp>;
-  fact_resourcesAggregate?: InputMaybe<FactResourceAggregateBoolExp>;
+  fileHistories?: InputMaybe<FileHistoryBoolExp>;
+  fileHistoriesAggregate?: InputMaybe<FileHistoryAggregateBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
   mimeType?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
+  origins?: InputMaybe<OriginBoolExp>;
+  originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
   size?: InputMaybe<IntComparisonExp>;
+  sources?: InputMaybe<SourceBoolExp>;
+  sourcesAggregate?: InputMaybe<SourceAggregateBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   transcription?: InputMaybe<StringComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
@@ -3964,6 +2974,8 @@ export type FileHistory = {
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   eTag: Scalars['String']['output'];
+  /** An object relationship */
+  file: File;
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
   mimeType: Scalars['String']['output'];
@@ -3980,6 +2992,10 @@ export type FileHistoryAggregate = {
   __typename?: 'FileHistoryAggregate';
   aggregate?: Maybe<FileHistoryAggregateFields>;
   nodes: Array<FileHistory>;
+};
+
+export type FileHistoryAggregateBoolExp = {
+  count?: InputMaybe<FileHistoryAggregateBoolExpCount>;
 };
 
 /** aggregate fields of "file_history" */
@@ -4005,10 +3021,37 @@ export type FileHistoryAggregateFieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "file_history" */
+export type FileHistoryAggregateOrderBy = {
+  avg?: InputMaybe<FileHistoryAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<FileHistoryMaxOrderBy>;
+  min?: InputMaybe<FileHistoryMinOrderBy>;
+  stddev?: InputMaybe<FileHistoryStddevOrderBy>;
+  stddevPop?: InputMaybe<FileHistoryStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<FileHistoryStddevSampOrderBy>;
+  sum?: InputMaybe<FileHistorySumOrderBy>;
+  varPop?: InputMaybe<FileHistoryVarPopOrderBy>;
+  varSamp?: InputMaybe<FileHistoryVarSampOrderBy>;
+  variance?: InputMaybe<FileHistoryVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "file_history" */
+export type FileHistoryArrRelInsertInput = {
+  data: Array<FileHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<FileHistoryOnConflict>;
+};
+
 /** aggregate avg on columns */
 export type FileHistoryAvgFields = {
   __typename?: 'FileHistoryAvgFields';
   size?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "file_history" */
+export type FileHistoryAvgOrderBy = {
+  size?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "file_history". All fields are combined with a logical 'AND'. */
@@ -4019,6 +3062,7 @@ export type FileHistoryBoolExp = {
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   eTag?: InputMaybe<StringComparisonExp>;
+  file?: InputMaybe<FileBoolExp>;
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   mimeType?: InputMaybe<StringComparisonExp>;
@@ -4046,6 +3090,7 @@ export type FileHistoryInsertInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   eTag?: InputMaybe<Scalars['String']['input']>;
+  file?: InputMaybe<FileObjRelInsertInput>;
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
@@ -4073,6 +3118,21 @@ export type FileHistoryMaxFields = {
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
+/** order by max() on columns of table "file_history" */
+export type FileHistoryMaxOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  eTag?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  mimeType?: InputMaybe<OrderBy>;
+  name?: InputMaybe<OrderBy>;
+  size?: InputMaybe<OrderBy>;
+  transcription?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
 /** aggregate min on columns */
 export type FileHistoryMinFields = {
   __typename?: 'FileHistoryMinFields';
@@ -4087,6 +3147,21 @@ export type FileHistoryMinFields = {
   transcription?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "file_history" */
+export type FileHistoryMinOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  eTag?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  mimeType?: InputMaybe<OrderBy>;
+  name?: InputMaybe<OrderBy>;
+  size?: InputMaybe<OrderBy>;
+  transcription?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "file_history" */
@@ -4110,6 +3185,7 @@ export type FileHistoryOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   eTag?: InputMaybe<OrderBy>;
+  file?: InputMaybe<FileOrderBy>;
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   mimeType?: InputMaybe<OrderBy>;
@@ -4176,16 +3252,31 @@ export type FileHistoryStddevFields = {
   size?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddev() on columns of table "file_history" */
+export type FileHistoryStddevOrderBy = {
+  size?: InputMaybe<OrderBy>;
+};
+
 /** aggregate stddevPop on columns */
 export type FileHistoryStddevPopFields = {
   __typename?: 'FileHistoryStddevPopFields';
   size?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddevPop() on columns of table "file_history" */
+export type FileHistoryStddevPopOrderBy = {
+  size?: InputMaybe<OrderBy>;
+};
+
 /** aggregate stddevSamp on columns */
 export type FileHistoryStddevSampFields = {
   __typename?: 'FileHistoryStddevSampFields';
   size?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "file_history" */
+export type FileHistoryStddevSampOrderBy = {
+  size?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "file_history" */
@@ -4216,6 +3307,11 @@ export type FileHistoryStreamCursorValueInput = {
 export type FileHistorySumFields = {
   __typename?: 'FileHistorySumFields';
   size?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "file_history" */
+export type FileHistorySumOrderBy = {
+  size?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "file_history" */
@@ -4261,16 +3357,31 @@ export type FileHistoryVarPopFields = {
   size?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by varPop() on columns of table "file_history" */
+export type FileHistoryVarPopOrderBy = {
+  size?: InputMaybe<OrderBy>;
+};
+
 /** aggregate varSamp on columns */
 export type FileHistoryVarSampFields = {
   __typename?: 'FileHistoryVarSampFields';
   size?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by varSamp() on columns of table "file_history" */
+export type FileHistoryVarSampOrderBy = {
+  size?: InputMaybe<OrderBy>;
+};
+
 /** aggregate variance on columns */
 export type FileHistoryVarianceFields = {
   __typename?: 'FileHistoryVarianceFields';
   size?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "file_history" */
+export type FileHistoryVarianceOrderBy = {
+  size?: InputMaybe<OrderBy>;
 };
 
 /** input type for incrementing numeric columns in table "file" */
@@ -4280,15 +3391,16 @@ export type FileIncInput = {
 
 /** input type for inserting data into table "file" */
 export type FileInsertInput = {
-  claim_resources?: InputMaybe<ClaimResourceArrRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   eTag?: InputMaybe<Scalars['String']['input']>;
-  fact_resources?: InputMaybe<FactResourceArrRelInsertInput>;
+  fileHistories?: InputMaybe<FileHistoryArrRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  origins?: InputMaybe<OriginArrRelInsertInput>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sources?: InputMaybe<SourceArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   transcription?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -4380,15 +3492,16 @@ export type FileOnConflict = {
 
 /** Ordering options when selecting data from "file". */
 export type FileOrderBy = {
-  claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   eTag?: InputMaybe<OrderBy>;
-  fact_resourcesAggregate?: InputMaybe<FactResourceAggregateOrderBy>;
+  fileHistoriesAggregate?: InputMaybe<FileHistoryAggregateOrderBy>;
   id?: InputMaybe<OrderBy>;
   mimeType?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
+  originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   size?: InputMaybe<OrderBy>;
+  sourcesAggregate?: InputMaybe<SourceAggregateOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   transcription?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
@@ -4607,21 +3720,2200 @@ export enum OrderBy {
   DescNullsLast = 'DESC_NULLS_LAST'
 }
 
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type StringArrayComparisonExp = {
-  /** is the array contained in the given array value */
-  _containedIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** does the array contain the given value */
-  _contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  _eq?: InputMaybe<Array<Scalars['String']['input']>>;
-  _gt?: InputMaybe<Array<Scalars['String']['input']>>;
-  _gte?: InputMaybe<Array<Scalars['String']['input']>>;
-  _in?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
-  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Array<Scalars['String']['input']>>;
-  _lte?: InputMaybe<Array<Scalars['String']['input']>>;
-  _neq?: InputMaybe<Array<Scalars['String']['input']>>;
-  _nin?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
+/** columns and relationships of "origin" */
+export type Origin = {
+  __typename?: 'Origin';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  claim: Claim;
+  claimId: Scalars['uuid']['output'];
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  file?: Maybe<File>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  id: Scalars['uuid']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  /** An array relationship */
+  originHistories: Array<OriginHistory>;
+  /** An aggregate relationship */
+  originHistoriesAggregate: OriginHistoryAggregate;
+  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  user?: Maybe<User>;
+  /** An object relationship */
+  userByUpdatedBy?: Maybe<User>;
+};
+
+
+/** columns and relationships of "origin" */
+export type OriginOriginHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginHistoryOrderBy>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+
+/** columns and relationships of "origin" */
+export type OriginOriginHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginHistoryOrderBy>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+/** aggregated selection of "origin" */
+export type OriginAggregate = {
+  __typename?: 'OriginAggregate';
+  aggregate?: Maybe<OriginAggregateFields>;
+  nodes: Array<Origin>;
+};
+
+export type OriginAggregateBoolExp = {
+  count?: InputMaybe<OriginAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "origin" */
+export type OriginAggregateFields = {
+  __typename?: 'OriginAggregateFields';
+  avg?: Maybe<OriginAvgFields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<OriginMaxFields>;
+  min?: Maybe<OriginMinFields>;
+  stddev?: Maybe<OriginStddevFields>;
+  stddevPop?: Maybe<OriginStddevPopFields>;
+  stddevSamp?: Maybe<OriginStddevSampFields>;
+  sum?: Maybe<OriginSumFields>;
+  varPop?: Maybe<OriginVarPopFields>;
+  varSamp?: Maybe<OriginVarSampFields>;
+  variance?: Maybe<OriginVarianceFields>;
+};
+
+
+/** aggregate fields of "origin" */
+export type OriginAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<OriginSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "origin" */
+export type OriginAggregateOrderBy = {
+  avg?: InputMaybe<OriginAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<OriginMaxOrderBy>;
+  min?: InputMaybe<OriginMinOrderBy>;
+  stddev?: InputMaybe<OriginStddevOrderBy>;
+  stddevPop?: InputMaybe<OriginStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<OriginStddevSampOrderBy>;
+  sum?: InputMaybe<OriginSumOrderBy>;
+  varPop?: InputMaybe<OriginVarPopOrderBy>;
+  varSamp?: InputMaybe<OriginVarSampOrderBy>;
+  variance?: InputMaybe<OriginVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "origin" */
+export type OriginArrRelInsertInput = {
+  data: Array<OriginInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<OriginOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type OriginAvgFields = {
+  __typename?: 'OriginAvgFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "origin" */
+export type OriginAvgOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "origin". All fields are combined with a logical 'AND'. */
+export type OriginBoolExp = {
+  _and?: InputMaybe<Array<OriginBoolExp>>;
+  _not?: InputMaybe<OriginBoolExp>;
+  _or?: InputMaybe<Array<OriginBoolExp>>;
+  archiveUrl?: InputMaybe<StringComparisonExp>;
+  claim?: InputMaybe<ClaimBoolExp>;
+  claimId?: InputMaybe<UuidComparisonExp>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  createdBy?: InputMaybe<UuidComparisonExp>;
+  excerpt?: InputMaybe<StringComparisonExp>;
+  file?: InputMaybe<FileBoolExp>;
+  fileId?: InputMaybe<UuidComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  index?: InputMaybe<IntComparisonExp>;
+  originHistories?: InputMaybe<OriginHistoryBoolExp>;
+  originHistoriesAggregate?: InputMaybe<OriginHistoryAggregateBoolExp>;
+  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  updatedBy?: InputMaybe<UuidComparisonExp>;
+  url?: InputMaybe<StringComparisonExp>;
+  user?: InputMaybe<UserBoolExp>;
+  userByUpdatedBy?: InputMaybe<UserBoolExp>;
+};
+
+/** unique or primary key constraints on table "origin" */
+export enum OriginConstraint {
+  /** unique or primary key constraint on columns "id" */
+  OriginPkey = 'origin_pkey'
+}
+
+/** columns and relationships of "origin_history" */
+export type OriginHistory = {
+  __typename?: 'OriginHistory';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
+  claimId: Scalars['uuid']['output'];
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  historyId: Scalars['uuid']['output'];
+  id: Scalars['uuid']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  /** An object relationship */
+  origin: Origin;
+  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "origin_history" */
+export type OriginHistoryAggregate = {
+  __typename?: 'OriginHistoryAggregate';
+  aggregate?: Maybe<OriginHistoryAggregateFields>;
+  nodes: Array<OriginHistory>;
+};
+
+export type OriginHistoryAggregateBoolExp = {
+  count?: InputMaybe<OriginHistoryAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "origin_history" */
+export type OriginHistoryAggregateFields = {
+  __typename?: 'OriginHistoryAggregateFields';
+  avg?: Maybe<OriginHistoryAvgFields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<OriginHistoryMaxFields>;
+  min?: Maybe<OriginHistoryMinFields>;
+  stddev?: Maybe<OriginHistoryStddevFields>;
+  stddevPop?: Maybe<OriginHistoryStddevPopFields>;
+  stddevSamp?: Maybe<OriginHistoryStddevSampFields>;
+  sum?: Maybe<OriginHistorySumFields>;
+  varPop?: Maybe<OriginHistoryVarPopFields>;
+  varSamp?: Maybe<OriginHistoryVarSampFields>;
+  variance?: Maybe<OriginHistoryVarianceFields>;
+};
+
+
+/** aggregate fields of "origin_history" */
+export type OriginHistoryAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "origin_history" */
+export type OriginHistoryAggregateOrderBy = {
+  avg?: InputMaybe<OriginHistoryAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<OriginHistoryMaxOrderBy>;
+  min?: InputMaybe<OriginHistoryMinOrderBy>;
+  stddev?: InputMaybe<OriginHistoryStddevOrderBy>;
+  stddevPop?: InputMaybe<OriginHistoryStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<OriginHistoryStddevSampOrderBy>;
+  sum?: InputMaybe<OriginHistorySumOrderBy>;
+  varPop?: InputMaybe<OriginHistoryVarPopOrderBy>;
+  varSamp?: InputMaybe<OriginHistoryVarSampOrderBy>;
+  variance?: InputMaybe<OriginHistoryVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "origin_history" */
+export type OriginHistoryArrRelInsertInput = {
+  data: Array<OriginHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<OriginHistoryOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type OriginHistoryAvgFields = {
+  __typename?: 'OriginHistoryAvgFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "origin_history" */
+export type OriginHistoryAvgOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "origin_history". All fields are combined with a logical 'AND'. */
+export type OriginHistoryBoolExp = {
+  _and?: InputMaybe<Array<OriginHistoryBoolExp>>;
+  _not?: InputMaybe<OriginHistoryBoolExp>;
+  _or?: InputMaybe<Array<OriginHistoryBoolExp>>;
+  archiveUrl?: InputMaybe<StringComparisonExp>;
+  claimId?: InputMaybe<UuidComparisonExp>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  createdBy?: InputMaybe<UuidComparisonExp>;
+  excerpt?: InputMaybe<StringComparisonExp>;
+  fileId?: InputMaybe<UuidComparisonExp>;
+  historyId?: InputMaybe<UuidComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  index?: InputMaybe<IntComparisonExp>;
+  origin?: InputMaybe<OriginBoolExp>;
+  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  updatedBy?: InputMaybe<UuidComparisonExp>;
+  url?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "origin_history" */
+export enum OriginHistoryConstraint {
+  /** unique or primary key constraint on columns "history_id" */
+  OriginHistoryPkey = 'origin_history_pkey'
+}
+
+/** input type for incrementing numeric columns in table "origin_history" */
+export type OriginHistoryIncInput = {
+  index?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "origin_history" */
+export type OriginHistoryInsertInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  origin?: InputMaybe<OriginObjRelInsertInput>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type OriginHistoryMaxFields = {
+  __typename?: 'OriginHistoryMaxFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  historyId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by max() on columns of table "origin_history" */
+export type OriginHistoryMaxOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type OriginHistoryMinFields = {
+  __typename?: 'OriginHistoryMinFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  historyId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by min() on columns of table "origin_history" */
+export type OriginHistoryMinOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "origin_history" */
+export type OriginHistoryMutationResponse = {
+  __typename?: 'OriginHistoryMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<OriginHistory>;
+};
+
+/** on_conflict condition type for table "origin_history" */
+export type OriginHistoryOnConflict = {
+  constraint: OriginHistoryConstraint;
+  updateColumns?: Array<OriginHistoryUpdateColumn>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+/** Ordering options when selecting data from "origin_history". */
+export type OriginHistoryOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  origin?: InputMaybe<OriginOrderBy>;
+  sysPeriod?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: origin_history */
+export type OriginHistoryPkColumnsInput = {
+  historyId: Scalars['uuid']['input'];
+};
+
+/** select columns of table "origin_history" */
+export enum OriginHistorySelectColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  HistoryId = 'historyId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
+}
+
+/** input type for updating data in table "origin_history" */
+export type OriginHistorySetInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type OriginHistoryStddevFields = {
+  __typename?: 'OriginHistoryStddevFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "origin_history" */
+export type OriginHistoryStddevOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type OriginHistoryStddevPopFields = {
+  __typename?: 'OriginHistoryStddevPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "origin_history" */
+export type OriginHistoryStddevPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type OriginHistoryStddevSampFields = {
+  __typename?: 'OriginHistoryStddevSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "origin_history" */
+export type OriginHistoryStddevSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "origin_history" */
+export type OriginHistoryStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: OriginHistoryStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type OriginHistoryStreamCursorValueInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type OriginHistorySumFields = {
+  __typename?: 'OriginHistorySumFields';
+  index?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "origin_history" */
+export type OriginHistorySumOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** update columns of table "origin_history" */
+export enum OriginHistoryUpdateColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  HistoryId = 'historyId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
+}
+
+export type OriginHistoryUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<OriginHistoryIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<OriginHistorySetInput>;
+  /** filter the rows which have to be updated */
+  where: OriginHistoryBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type OriginHistoryVarPopFields = {
+  __typename?: 'OriginHistoryVarPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "origin_history" */
+export type OriginHistoryVarPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type OriginHistoryVarSampFields = {
+  __typename?: 'OriginHistoryVarSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "origin_history" */
+export type OriginHistoryVarSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type OriginHistoryVarianceFields = {
+  __typename?: 'OriginHistoryVarianceFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "origin_history" */
+export type OriginHistoryVarianceOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** input type for incrementing numeric columns in table "origin" */
+export type OriginIncInput = {
+  index?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "origin" */
+export type OriginInsertInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  claim?: InputMaybe<ClaimObjRelInsertInput>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  file?: InputMaybe<FileObjRelInsertInput>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originHistories?: InputMaybe<OriginHistoryArrRelInsertInput>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+  user?: InputMaybe<UserObjRelInsertInput>;
+  userByUpdatedBy?: InputMaybe<UserObjRelInsertInput>;
+};
+
+/** aggregate max on columns */
+export type OriginMaxFields = {
+  __typename?: 'OriginMaxFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by max() on columns of table "origin" */
+export type OriginMaxOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type OriginMinFields = {
+  __typename?: 'OriginMinFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by min() on columns of table "origin" */
+export type OriginMinOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "origin" */
+export type OriginMutationResponse = {
+  __typename?: 'OriginMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Origin>;
+};
+
+/** input type for inserting object relation for remote table "origin" */
+export type OriginObjRelInsertInput = {
+  data: OriginInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<OriginOnConflict>;
+};
+
+/** on_conflict condition type for table "origin" */
+export type OriginOnConflict = {
+  constraint: OriginConstraint;
+  updateColumns?: Array<OriginUpdateColumn>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+/** Ordering options when selecting data from "origin". */
+export type OriginOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
+  claim?: InputMaybe<ClaimOrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  file?: InputMaybe<FileOrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originHistoriesAggregate?: InputMaybe<OriginHistoryAggregateOrderBy>;
+  sysPeriod?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UserOrderBy>;
+  userByUpdatedBy?: InputMaybe<UserOrderBy>;
+};
+
+/** primary key columns input for table: origin */
+export type OriginPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "origin" */
+export enum OriginSelectColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
+}
+
+/** input type for updating data in table "origin" */
+export type OriginSetInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type OriginStddevFields = {
+  __typename?: 'OriginStddevFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "origin" */
+export type OriginStddevOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type OriginStddevPopFields = {
+  __typename?: 'OriginStddevPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "origin" */
+export type OriginStddevPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type OriginStddevSampFields = {
+  __typename?: 'OriginStddevSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "origin" */
+export type OriginStddevSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "origin" */
+export type OriginStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: OriginStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type OriginStreamCursorValueInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type OriginSumFields = {
+  __typename?: 'OriginSumFields';
+  index?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "origin" */
+export type OriginSumOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** update columns of table "origin" */
+export enum OriginUpdateColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
+}
+
+export type OriginUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<OriginIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<OriginSetInput>;
+  /** filter the rows which have to be updated */
+  where: OriginBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type OriginVarPopFields = {
+  __typename?: 'OriginVarPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "origin" */
+export type OriginVarPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type OriginVarSampFields = {
+  __typename?: 'OriginVarSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "origin" */
+export type OriginVarSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type OriginVarianceFields = {
+  __typename?: 'OriginVarianceFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "origin" */
+export type OriginVarianceOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** columns and relationships of "rating" */
+export type Rating = {
+  __typename?: 'Rating';
+  /** An array relationship */
+  claims: Array<Claim>;
+  /** An aggregate relationship */
+  claimsAggregate: ClaimAggregate;
+  id: Scalars['uuid']['output'];
+  labelId?: Maybe<Scalars['uuid']['output']>;
+  /** An array relationship */
+  ratingHistories: Array<RatingHistory>;
+  /** An aggregate relationship */
+  ratingHistoriesAggregate: RatingHistoryAggregate;
+  summary?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+
+/** columns and relationships of "rating" */
+export type RatingClaimsArgs = {
+  distinctOn?: InputMaybe<Array<ClaimSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ClaimOrderBy>>;
+  where?: InputMaybe<ClaimBoolExp>;
+};
+
+
+/** columns and relationships of "rating" */
+export type RatingClaimsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ClaimSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ClaimOrderBy>>;
+  where?: InputMaybe<ClaimBoolExp>;
+};
+
+
+/** columns and relationships of "rating" */
+export type RatingRatingHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingHistoryOrderBy>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+
+/** columns and relationships of "rating" */
+export type RatingRatingHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingHistoryOrderBy>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+/** aggregated selection of "rating" */
+export type RatingAggregate = {
+  __typename?: 'RatingAggregate';
+  aggregate?: Maybe<RatingAggregateFields>;
+  nodes: Array<Rating>;
+};
+
+/** aggregate fields of "rating" */
+export type RatingAggregateFields = {
+  __typename?: 'RatingAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<RatingMaxFields>;
+  min?: Maybe<RatingMinFields>;
+};
+
+
+/** aggregate fields of "rating" */
+export type RatingAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<RatingSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "rating". All fields are combined with a logical 'AND'. */
+export type RatingBoolExp = {
+  _and?: InputMaybe<Array<RatingBoolExp>>;
+  _not?: InputMaybe<RatingBoolExp>;
+  _or?: InputMaybe<Array<RatingBoolExp>>;
+  claims?: InputMaybe<ClaimBoolExp>;
+  claimsAggregate?: InputMaybe<ClaimAggregateBoolExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  labelId?: InputMaybe<UuidComparisonExp>;
+  ratingHistories?: InputMaybe<RatingHistoryBoolExp>;
+  ratingHistoriesAggregate?: InputMaybe<RatingHistoryAggregateBoolExp>;
+  summary?: InputMaybe<StringComparisonExp>;
+  title?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "rating" */
+export enum RatingConstraint {
+  /** unique or primary key constraint on columns "id" */
+  RatingPkey = 'rating_pkey'
+}
+
+/** columns and relationships of "rating_history" */
+export type RatingHistory = {
+  __typename?: 'RatingHistory';
+  historyId: Scalars['uuid']['output'];
+  id: Scalars['uuid']['output'];
+  labelId?: Maybe<Scalars['uuid']['output']>;
+  /** An object relationship */
+  rating: Rating;
+  summary?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "rating_history" */
+export type RatingHistoryAggregate = {
+  __typename?: 'RatingHistoryAggregate';
+  aggregate?: Maybe<RatingHistoryAggregateFields>;
+  nodes: Array<RatingHistory>;
+};
+
+export type RatingHistoryAggregateBoolExp = {
+  count?: InputMaybe<RatingHistoryAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "rating_history" */
+export type RatingHistoryAggregateFields = {
+  __typename?: 'RatingHistoryAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<RatingHistoryMaxFields>;
+  min?: Maybe<RatingHistoryMinFields>;
+};
+
+
+/** aggregate fields of "rating_history" */
+export type RatingHistoryAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "rating_history" */
+export type RatingHistoryAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<RatingHistoryMaxOrderBy>;
+  min?: InputMaybe<RatingHistoryMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "rating_history" */
+export type RatingHistoryArrRelInsertInput = {
+  data: Array<RatingHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<RatingHistoryOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "rating_history". All fields are combined with a logical 'AND'. */
+export type RatingHistoryBoolExp = {
+  _and?: InputMaybe<Array<RatingHistoryBoolExp>>;
+  _not?: InputMaybe<RatingHistoryBoolExp>;
+  _or?: InputMaybe<Array<RatingHistoryBoolExp>>;
+  historyId?: InputMaybe<UuidComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  labelId?: InputMaybe<UuidComparisonExp>;
+  rating?: InputMaybe<RatingBoolExp>;
+  summary?: InputMaybe<StringComparisonExp>;
+  title?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "rating_history" */
+export enum RatingHistoryConstraint {
+  /** unique or primary key constraint on columns "history_id" */
+  RatingHistoryPkey = 'rating_history_pkey'
+}
+
+/** input type for inserting data into table "rating_history" */
+export type RatingHistoryInsertInput = {
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelId?: InputMaybe<Scalars['uuid']['input']>;
+  rating?: InputMaybe<RatingObjRelInsertInput>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type RatingHistoryMaxFields = {
+  __typename?: 'RatingHistoryMaxFields';
+  historyId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  labelId?: Maybe<Scalars['uuid']['output']>;
+  summary?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by max() on columns of table "rating_history" */
+export type RatingHistoryMaxOrderBy = {
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  labelId?: InputMaybe<OrderBy>;
+  summary?: InputMaybe<OrderBy>;
+  title?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type RatingHistoryMinFields = {
+  __typename?: 'RatingHistoryMinFields';
+  historyId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  labelId?: Maybe<Scalars['uuid']['output']>;
+  summary?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by min() on columns of table "rating_history" */
+export type RatingHistoryMinOrderBy = {
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  labelId?: InputMaybe<OrderBy>;
+  summary?: InputMaybe<OrderBy>;
+  title?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "rating_history" */
+export type RatingHistoryMutationResponse = {
+  __typename?: 'RatingHistoryMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<RatingHistory>;
+};
+
+/** on_conflict condition type for table "rating_history" */
+export type RatingHistoryOnConflict = {
+  constraint: RatingHistoryConstraint;
+  updateColumns?: Array<RatingHistoryUpdateColumn>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+/** Ordering options when selecting data from "rating_history". */
+export type RatingHistoryOrderBy = {
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  labelId?: InputMaybe<OrderBy>;
+  rating?: InputMaybe<RatingOrderBy>;
+  summary?: InputMaybe<OrderBy>;
+  title?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: rating_history */
+export type RatingHistoryPkColumnsInput = {
+  historyId: Scalars['uuid']['input'];
+};
+
+/** select columns of table "rating_history" */
+export enum RatingHistorySelectColumn {
+  /** column name */
+  HistoryId = 'historyId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LabelId = 'labelId',
+  /** column name */
+  Summary = 'summary',
+  /** column name */
+  Title = 'title'
+}
+
+/** input type for updating data in table "rating_history" */
+export type RatingHistorySetInput = {
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelId?: InputMaybe<Scalars['uuid']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "rating_history" */
+export type RatingHistoryStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: RatingHistoryStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type RatingHistoryStreamCursorValueInput = {
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelId?: InputMaybe<Scalars['uuid']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "rating_history" */
+export enum RatingHistoryUpdateColumn {
+  /** column name */
+  HistoryId = 'historyId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LabelId = 'labelId',
+  /** column name */
+  Summary = 'summary',
+  /** column name */
+  Title = 'title'
+}
+
+export type RatingHistoryUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<RatingHistorySetInput>;
+  /** filter the rows which have to be updated */
+  where: RatingHistoryBoolExp;
+};
+
+/** input type for inserting data into table "rating" */
+export type RatingInsertInput = {
+  claims?: InputMaybe<ClaimArrRelInsertInput>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingHistories?: InputMaybe<RatingHistoryArrRelInsertInput>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type RatingMaxFields = {
+  __typename?: 'RatingMaxFields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  labelId?: Maybe<Scalars['uuid']['output']>;
+  summary?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type RatingMinFields = {
+  __typename?: 'RatingMinFields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  labelId?: Maybe<Scalars['uuid']['output']>;
+  summary?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "rating" */
+export type RatingMutationResponse = {
+  __typename?: 'RatingMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Rating>;
+};
+
+/** input type for inserting object relation for remote table "rating" */
+export type RatingObjRelInsertInput = {
+  data: RatingInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<RatingOnConflict>;
+};
+
+/** on_conflict condition type for table "rating" */
+export type RatingOnConflict = {
+  constraint: RatingConstraint;
+  updateColumns?: Array<RatingUpdateColumn>;
+  where?: InputMaybe<RatingBoolExp>;
+};
+
+/** Ordering options when selecting data from "rating". */
+export type RatingOrderBy = {
+  claimsAggregate?: InputMaybe<ClaimAggregateOrderBy>;
+  id?: InputMaybe<OrderBy>;
+  labelId?: InputMaybe<OrderBy>;
+  ratingHistoriesAggregate?: InputMaybe<RatingHistoryAggregateOrderBy>;
+  summary?: InputMaybe<OrderBy>;
+  title?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: rating */
+export type RatingPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "rating" */
+export enum RatingSelectColumn {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LabelId = 'labelId',
+  /** column name */
+  Summary = 'summary',
+  /** column name */
+  Title = 'title'
+}
+
+/** input type for updating data in table "rating" */
+export type RatingSetInput = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelId?: InputMaybe<Scalars['uuid']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "rating" */
+export type RatingStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: RatingStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type RatingStreamCursorValueInput = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  labelId?: InputMaybe<Scalars['uuid']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "rating" */
+export enum RatingUpdateColumn {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LabelId = 'labelId',
+  /** column name */
+  Summary = 'summary',
+  /** column name */
+  Title = 'title'
+}
+
+export type RatingUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<RatingSetInput>;
+  /** filter the rows which have to be updated */
+  where: RatingBoolExp;
+};
+
+/** columns and relationships of "source" */
+export type Source = {
+  __typename?: 'Source';
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  fact: Fact;
+  factId: Scalars['uuid']['output'];
+  /** An object relationship */
+  file?: Maybe<File>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  id: Scalars['uuid']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
+  /** An array relationship */
+  sourceHistories: Array<SourceHistory>;
+  /** An aggregate relationship */
+  sourceHistoriesAggregate: SourceHistoryAggregate;
+  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+  /** An object relationship */
+  user?: Maybe<User>;
+  /** An object relationship */
+  userByUpdatedBy?: Maybe<User>;
+};
+
+
+/** columns and relationships of "source" */
+export type SourceSourceHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceHistoryOrderBy>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+
+/** columns and relationships of "source" */
+export type SourceSourceHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceHistoryOrderBy>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+/** aggregated selection of "source" */
+export type SourceAggregate = {
+  __typename?: 'SourceAggregate';
+  aggregate?: Maybe<SourceAggregateFields>;
+  nodes: Array<Source>;
+};
+
+export type SourceAggregateBoolExp = {
+  count?: InputMaybe<SourceAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "source" */
+export type SourceAggregateFields = {
+  __typename?: 'SourceAggregateFields';
+  avg?: Maybe<SourceAvgFields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<SourceMaxFields>;
+  min?: Maybe<SourceMinFields>;
+  stddev?: Maybe<SourceStddevFields>;
+  stddevPop?: Maybe<SourceStddevPopFields>;
+  stddevSamp?: Maybe<SourceStddevSampFields>;
+  sum?: Maybe<SourceSumFields>;
+  varPop?: Maybe<SourceVarPopFields>;
+  varSamp?: Maybe<SourceVarSampFields>;
+  variance?: Maybe<SourceVarianceFields>;
+};
+
+
+/** aggregate fields of "source" */
+export type SourceAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<SourceSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "source" */
+export type SourceAggregateOrderBy = {
+  avg?: InputMaybe<SourceAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<SourceMaxOrderBy>;
+  min?: InputMaybe<SourceMinOrderBy>;
+  stddev?: InputMaybe<SourceStddevOrderBy>;
+  stddevPop?: InputMaybe<SourceStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<SourceStddevSampOrderBy>;
+  sum?: InputMaybe<SourceSumOrderBy>;
+  varPop?: InputMaybe<SourceVarPopOrderBy>;
+  varSamp?: InputMaybe<SourceVarSampOrderBy>;
+  variance?: InputMaybe<SourceVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "source" */
+export type SourceArrRelInsertInput = {
+  data: Array<SourceInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<SourceOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type SourceAvgFields = {
+  __typename?: 'SourceAvgFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "source" */
+export type SourceAvgOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "source". All fields are combined with a logical 'AND'. */
+export type SourceBoolExp = {
+  _and?: InputMaybe<Array<SourceBoolExp>>;
+  _not?: InputMaybe<SourceBoolExp>;
+  _or?: InputMaybe<Array<SourceBoolExp>>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  createdBy?: InputMaybe<UuidComparisonExp>;
+  excerpt?: InputMaybe<StringComparisonExp>;
+  fact?: InputMaybe<FactBoolExp>;
+  factId?: InputMaybe<UuidComparisonExp>;
+  file?: InputMaybe<FileBoolExp>;
+  fileId?: InputMaybe<UuidComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  index?: InputMaybe<IntComparisonExp>;
+  originalUrl?: InputMaybe<StringComparisonExp>;
+  sourceHistories?: InputMaybe<SourceHistoryBoolExp>;
+  sourceHistoriesAggregate?: InputMaybe<SourceHistoryAggregateBoolExp>;
+  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  updatedBy?: InputMaybe<UuidComparisonExp>;
+  user?: InputMaybe<UserBoolExp>;
+  userByUpdatedBy?: InputMaybe<UserBoolExp>;
+};
+
+/** unique or primary key constraints on table "source" */
+export enum SourceConstraint {
+  /** unique or primary key constraint on columns "id" */
+  SourcePkey = 'source_pkey'
+}
+
+/** columns and relationships of "source_history" */
+export type SourceHistory = {
+  __typename?: 'SourceHistory';
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  factId: Scalars['uuid']['output'];
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  historyId: Scalars['uuid']['output'];
+  id: Scalars['uuid']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  source: Source;
+  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** aggregated selection of "source_history" */
+export type SourceHistoryAggregate = {
+  __typename?: 'SourceHistoryAggregate';
+  aggregate?: Maybe<SourceHistoryAggregateFields>;
+  nodes: Array<SourceHistory>;
+};
+
+export type SourceHistoryAggregateBoolExp = {
+  count?: InputMaybe<SourceHistoryAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "source_history" */
+export type SourceHistoryAggregateFields = {
+  __typename?: 'SourceHistoryAggregateFields';
+  avg?: Maybe<SourceHistoryAvgFields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<SourceHistoryMaxFields>;
+  min?: Maybe<SourceHistoryMinFields>;
+  stddev?: Maybe<SourceHistoryStddevFields>;
+  stddevPop?: Maybe<SourceHistoryStddevPopFields>;
+  stddevSamp?: Maybe<SourceHistoryStddevSampFields>;
+  sum?: Maybe<SourceHistorySumFields>;
+  varPop?: Maybe<SourceHistoryVarPopFields>;
+  varSamp?: Maybe<SourceHistoryVarSampFields>;
+  variance?: Maybe<SourceHistoryVarianceFields>;
+};
+
+
+/** aggregate fields of "source_history" */
+export type SourceHistoryAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "source_history" */
+export type SourceHistoryAggregateOrderBy = {
+  avg?: InputMaybe<SourceHistoryAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<SourceHistoryMaxOrderBy>;
+  min?: InputMaybe<SourceHistoryMinOrderBy>;
+  stddev?: InputMaybe<SourceHistoryStddevOrderBy>;
+  stddevPop?: InputMaybe<SourceHistoryStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<SourceHistoryStddevSampOrderBy>;
+  sum?: InputMaybe<SourceHistorySumOrderBy>;
+  varPop?: InputMaybe<SourceHistoryVarPopOrderBy>;
+  varSamp?: InputMaybe<SourceHistoryVarSampOrderBy>;
+  variance?: InputMaybe<SourceHistoryVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "source_history" */
+export type SourceHistoryArrRelInsertInput = {
+  data: Array<SourceHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<SourceHistoryOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type SourceHistoryAvgFields = {
+  __typename?: 'SourceHistoryAvgFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "source_history" */
+export type SourceHistoryAvgOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "source_history". All fields are combined with a logical 'AND'. */
+export type SourceHistoryBoolExp = {
+  _and?: InputMaybe<Array<SourceHistoryBoolExp>>;
+  _not?: InputMaybe<SourceHistoryBoolExp>;
+  _or?: InputMaybe<Array<SourceHistoryBoolExp>>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  createdBy?: InputMaybe<UuidComparisonExp>;
+  excerpt?: InputMaybe<StringComparisonExp>;
+  factId?: InputMaybe<UuidComparisonExp>;
+  fileId?: InputMaybe<UuidComparisonExp>;
+  historyId?: InputMaybe<UuidComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  index?: InputMaybe<IntComparisonExp>;
+  originalUrl?: InputMaybe<StringComparisonExp>;
+  source?: InputMaybe<SourceBoolExp>;
+  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  updatedBy?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "source_history" */
+export enum SourceHistoryConstraint {
+  /** unique or primary key constraint on columns "history_id" */
+  SourceHistoryPkey = 'source_history_pkey'
+}
+
+/** input type for incrementing numeric columns in table "source_history" */
+export type SourceHistoryIncInput = {
+  index?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "source_history" */
+export type SourceHistoryInsertInput = {
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  factId?: InputMaybe<Scalars['uuid']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originalUrl?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<SourceObjRelInsertInput>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type SourceHistoryMaxFields = {
+  __typename?: 'SourceHistoryMaxFields';
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  factId?: Maybe<Scalars['uuid']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  historyId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "source_history" */
+export type SourceHistoryMaxOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  factId?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originalUrl?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type SourceHistoryMinFields = {
+  __typename?: 'SourceHistoryMinFields';
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  factId?: Maybe<Scalars['uuid']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  historyId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "source_history" */
+export type SourceHistoryMinOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  factId?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originalUrl?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "source_history" */
+export type SourceHistoryMutationResponse = {
+  __typename?: 'SourceHistoryMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<SourceHistory>;
+};
+
+/** on_conflict condition type for table "source_history" */
+export type SourceHistoryOnConflict = {
+  constraint: SourceHistoryConstraint;
+  updateColumns?: Array<SourceHistoryUpdateColumn>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+/** Ordering options when selecting data from "source_history". */
+export type SourceHistoryOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  factId?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originalUrl?: InputMaybe<OrderBy>;
+  source?: InputMaybe<SourceOrderBy>;
+  sysPeriod?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: source_history */
+export type SourceHistoryPkColumnsInput = {
+  historyId: Scalars['uuid']['input'];
+};
+
+/** select columns of table "source_history" */
+export enum SourceHistorySelectColumn {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FactId = 'factId',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  HistoryId = 'historyId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  OriginalUrl = 'originalUrl',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy'
+}
+
+/** input type for updating data in table "source_history" */
+export type SourceHistorySetInput = {
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  factId?: InputMaybe<Scalars['uuid']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originalUrl?: InputMaybe<Scalars['String']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type SourceHistoryStddevFields = {
+  __typename?: 'SourceHistoryStddevFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "source_history" */
+export type SourceHistoryStddevOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type SourceHistoryStddevPopFields = {
+  __typename?: 'SourceHistoryStddevPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "source_history" */
+export type SourceHistoryStddevPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type SourceHistoryStddevSampFields = {
+  __typename?: 'SourceHistoryStddevSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "source_history" */
+export type SourceHistoryStddevSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "source_history" */
+export type SourceHistoryStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: SourceHistoryStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type SourceHistoryStreamCursorValueInput = {
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  factId?: InputMaybe<Scalars['uuid']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  historyId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originalUrl?: InputMaybe<Scalars['String']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate sum on columns */
+export type SourceHistorySumFields = {
+  __typename?: 'SourceHistorySumFields';
+  index?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "source_history" */
+export type SourceHistorySumOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** update columns of table "source_history" */
+export enum SourceHistoryUpdateColumn {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FactId = 'factId',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  HistoryId = 'historyId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  OriginalUrl = 'originalUrl',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy'
+}
+
+export type SourceHistoryUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<SourceHistoryIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<SourceHistorySetInput>;
+  /** filter the rows which have to be updated */
+  where: SourceHistoryBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type SourceHistoryVarPopFields = {
+  __typename?: 'SourceHistoryVarPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "source_history" */
+export type SourceHistoryVarPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type SourceHistoryVarSampFields = {
+  __typename?: 'SourceHistoryVarSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "source_history" */
+export type SourceHistoryVarSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type SourceHistoryVarianceFields = {
+  __typename?: 'SourceHistoryVarianceFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "source_history" */
+export type SourceHistoryVarianceOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** input type for incrementing numeric columns in table "source" */
+export type SourceIncInput = {
+  index?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "source" */
+export type SourceInsertInput = {
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  fact?: InputMaybe<FactObjRelInsertInput>;
+  factId?: InputMaybe<Scalars['uuid']['input']>;
+  file?: InputMaybe<FileObjRelInsertInput>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originalUrl?: InputMaybe<Scalars['String']['input']>;
+  sourceHistories?: InputMaybe<SourceHistoryArrRelInsertInput>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  user?: InputMaybe<UserObjRelInsertInput>;
+  userByUpdatedBy?: InputMaybe<UserObjRelInsertInput>;
+};
+
+/** aggregate max on columns */
+export type SourceMaxFields = {
+  __typename?: 'SourceMaxFields';
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  factId?: Maybe<Scalars['uuid']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "source" */
+export type SourceMaxOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  factId?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originalUrl?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type SourceMinFields = {
+  __typename?: 'SourceMinFields';
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdBy?: Maybe<Scalars['uuid']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  factId?: Maybe<Scalars['uuid']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedBy?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "source" */
+export type SourceMinOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  factId?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originalUrl?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "source" */
+export type SourceMutationResponse = {
+  __typename?: 'SourceMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Source>;
+};
+
+/** input type for inserting object relation for remote table "source" */
+export type SourceObjRelInsertInput = {
+  data: SourceInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<SourceOnConflict>;
+};
+
+/** on_conflict condition type for table "source" */
+export type SourceOnConflict = {
+  constraint: SourceConstraint;
+  updateColumns?: Array<SourceUpdateColumn>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+/** Ordering options when selecting data from "source". */
+export type SourceOrderBy = {
+  createdAt?: InputMaybe<OrderBy>;
+  createdBy?: InputMaybe<OrderBy>;
+  excerpt?: InputMaybe<OrderBy>;
+  fact?: InputMaybe<FactOrderBy>;
+  factId?: InputMaybe<OrderBy>;
+  file?: InputMaybe<FileOrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  index?: InputMaybe<OrderBy>;
+  originalUrl?: InputMaybe<OrderBy>;
+  sourceHistoriesAggregate?: InputMaybe<SourceHistoryAggregateOrderBy>;
+  sysPeriod?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  updatedBy?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UserOrderBy>;
+  userByUpdatedBy?: InputMaybe<UserOrderBy>;
+};
+
+/** primary key columns input for table: source */
+export type SourcePkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "source" */
+export enum SourceSelectColumn {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FactId = 'factId',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  OriginalUrl = 'originalUrl',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy'
+}
+
+/** input type for updating data in table "source" */
+export type SourceSetInput = {
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  factId?: InputMaybe<Scalars['uuid']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originalUrl?: InputMaybe<Scalars['String']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type SourceStddevFields = {
+  __typename?: 'SourceStddevFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "source" */
+export type SourceStddevOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type SourceStddevPopFields = {
+  __typename?: 'SourceStddevPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevPop() on columns of table "source" */
+export type SourceStddevPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type SourceStddevSampFields = {
+  __typename?: 'SourceStddevSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "source" */
+export type SourceStddevSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "source" */
+export type SourceStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: SourceStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type SourceStreamCursorValueInput = {
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  factId?: InputMaybe<Scalars['uuid']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  originalUrl?: InputMaybe<Scalars['String']['input']>;
+  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate sum on columns */
+export type SourceSumFields = {
+  __typename?: 'SourceSumFields';
+  index?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "source" */
+export type SourceSumOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** update columns of table "source" */
+export enum SourceUpdateColumn {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  CreatedBy = 'createdBy',
+  /** column name */
+  Excerpt = 'excerpt',
+  /** column name */
+  FactId = 'factId',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  OriginalUrl = 'originalUrl',
+  /** column name */
+  SysPeriod = 'sysPeriod',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UpdatedBy = 'updatedBy'
+}
+
+export type SourceUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<SourceIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<SourceSetInput>;
+  /** filter the rows which have to be updated */
+  where: SourceBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type SourceVarPopFields = {
+  __typename?: 'SourceVarPopFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varPop() on columns of table "source" */
+export type SourceVarPopOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type SourceVarSampFields = {
+  __typename?: 'SourceVarSampFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by varSamp() on columns of table "source" */
+export type SourceVarSampOrderBy = {
+  index?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type SourceVarianceFields = {
+  __typename?: 'SourceVarianceFields';
+  index?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "source" */
+export type SourceVarianceOrderBy = {
+  index?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -4657,19 +5949,6 @@ export type StringComparisonExp = {
   _similar?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
-export type TimestampComparisonExp = {
-  _eq?: InputMaybe<Scalars['timestamp']['input']>;
-  _gt?: InputMaybe<Scalars['timestamp']['input']>;
-  _gte?: InputMaybe<Scalars['timestamp']['input']>;
-  _in?: InputMaybe<Array<Scalars['timestamp']['input']>>;
-  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Scalars['timestamp']['input']>;
-  _lte?: InputMaybe<Scalars['timestamp']['input']>;
-  _neq?: InputMaybe<Scalars['timestamp']['input']>;
-  _nin?: InputMaybe<Array<Scalars['timestamp']['input']>>;
-};
-
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type TimestamptzComparisonExp = {
   _eq?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -4700,22 +5979,10 @@ export type TstzrangeComparisonExp = {
 export type User = {
   __typename?: 'User';
   bio?: Maybe<Scalars['String']['output']>;
-  /** An aggregate relationship */
-  claimFactsAggregate: ClaimFactAggregate;
   /** An array relationship */
-  claimFactsByUpdatedBy: Array<ClaimFact>;
+  claimResourcesByUpdatedBy: Array<Origin>;
   /** An aggregate relationship */
-  claimFactsByUpdatedByAggregate: ClaimFactAggregate;
-  /** An aggregate relationship */
-  claimResourcesAggregate: ClaimResourceAggregate;
-  /** An array relationship */
-  claimResourcesByUpdatedBy: Array<ClaimResource>;
-  /** An aggregate relationship */
-  claimResourcesByUpdatedByAggregate: ClaimResourceAggregate;
-  /** An array relationship */
-  claim_facts: Array<ClaimFact>;
-  /** An array relationship */
-  claim_resources: Array<ClaimResource>;
+  claimResourcesByUpdatedByAggregate: OriginAggregate;
   /** An array relationship */
   claims: Array<Claim>;
   /** An aggregate relationship */
@@ -4734,14 +6001,10 @@ export type User = {
   commentsByUpdatedByAggregate: CommentAggregate;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   email: Scalars['String']['output'];
-  /** An aggregate relationship */
-  factResourcesAggregate: FactResourceAggregate;
   /** An array relationship */
-  factResourcesByUpdatedBy: Array<FactResource>;
+  factResourcesByUpdatedBy: Array<Source>;
   /** An aggregate relationship */
-  factResourcesByUpdatedByAggregate: FactResourceAggregate;
-  /** An array relationship */
-  fact_resources: Array<FactResource>;
+  factResourcesByUpdatedByAggregate: SourceAggregate;
   /** An array relationship */
   facts: Array<Fact>;
   /** An aggregate relationship */
@@ -4762,91 +6025,43 @@ export type User = {
   id: Scalars['uuid']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   mobileNumber?: Maybe<Scalars['String']['output']>;
+  /** An array relationship */
+  origins: Array<Origin>;
+  /** An aggregate relationship */
+  originsAggregate: OriginAggregate;
   profileImage?: Maybe<Scalars['String']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
+  /** An array relationship */
+  sources: Array<Source>;
+  /** An aggregate relationship */
+  sourcesAggregate: SourceAggregate;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  /** An array relationship */
+  userHistories: Array<UserHistory>;
+  /** An aggregate relationship */
+  userHistoriesAggregate: UserHistoryAggregate;
   username: Scalars['String']['output'];
 };
 
 
 /** columns and relationships of "user" */
-export type UserClaimFactsAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
-export type UserClaimFactsByUpdatedByArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
-export type UserClaimFactsByUpdatedByAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
-export type UserClaimResourcesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
 export type UserClaimResourcesByUpdatedByArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
 };
 
 
 /** columns and relationships of "user" */
 export type UserClaimResourcesByUpdatedByAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
-export type UserClaim_FactsArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
-export type UserClaim_ResourcesArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
 };
 
 
@@ -4931,42 +6146,22 @@ export type UserCommentsByUpdatedByAggregateArgs = {
 
 
 /** columns and relationships of "user" */
-export type UserFactResourcesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
 export type UserFactResourcesByUpdatedByArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
 };
 
 
 /** columns and relationships of "user" */
 export type UserFactResourcesByUpdatedByAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
-/** columns and relationships of "user" */
-export type UserFact_ResourcesArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
 };
 
 
@@ -5049,6 +6244,66 @@ export type UserFilesByUpdatedByAggregateArgs = {
   where?: InputMaybe<FileBoolExp>;
 };
 
+
+/** columns and relationships of "user" */
+export type UserOriginsArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+/** columns and relationships of "user" */
+export type UserOriginsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+/** columns and relationships of "user" */
+export type UserSourcesArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+/** columns and relationships of "user" */
+export type UserSourcesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+/** columns and relationships of "user" */
+export type UserUserHistoriesArgs = {
+  distinctOn?: InputMaybe<Array<UserHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserHistoryOrderBy>>;
+  where?: InputMaybe<UserHistoryBoolExp>;
+};
+
+
+/** columns and relationships of "user" */
+export type UserUserHistoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserHistoryOrderBy>>;
+  where?: InputMaybe<UserHistoryBoolExp>;
+};
+
 /** aggregated selection of "user" */
 export type UserAggregate = {
   __typename?: 'UserAggregate';
@@ -5077,14 +6332,8 @@ export type UserBoolExp = {
   _not?: InputMaybe<UserBoolExp>;
   _or?: InputMaybe<Array<UserBoolExp>>;
   bio?: InputMaybe<StringComparisonExp>;
-  claimFactsByUpdatedBy?: InputMaybe<ClaimFactBoolExp>;
-  claimFactsByUpdatedByAggregate?: InputMaybe<ClaimFactAggregateBoolExp>;
-  claimResourcesByUpdatedBy?: InputMaybe<ClaimResourceBoolExp>;
-  claimResourcesByUpdatedByAggregate?: InputMaybe<ClaimResourceAggregateBoolExp>;
-  claim_facts?: InputMaybe<ClaimFactBoolExp>;
-  claim_factsAggregate?: InputMaybe<ClaimFactAggregateBoolExp>;
-  claim_resources?: InputMaybe<ClaimResourceBoolExp>;
-  claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateBoolExp>;
+  claimResourcesByUpdatedBy?: InputMaybe<OriginBoolExp>;
+  claimResourcesByUpdatedByAggregate?: InputMaybe<OriginAggregateBoolExp>;
   claims?: InputMaybe<ClaimBoolExp>;
   claimsAggregate?: InputMaybe<ClaimAggregateBoolExp>;
   claimsByUpdatedBy?: InputMaybe<ClaimBoolExp>;
@@ -5095,10 +6344,8 @@ export type UserBoolExp = {
   commentsByUpdatedByAggregate?: InputMaybe<CommentAggregateBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   email?: InputMaybe<StringComparisonExp>;
-  factResourcesByUpdatedBy?: InputMaybe<FactResourceBoolExp>;
-  factResourcesByUpdatedByAggregate?: InputMaybe<FactResourceAggregateBoolExp>;
-  fact_resources?: InputMaybe<FactResourceBoolExp>;
-  fact_resourcesAggregate?: InputMaybe<FactResourceAggregateBoolExp>;
+  factResourcesByUpdatedBy?: InputMaybe<SourceBoolExp>;
+  factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateBoolExp>;
   facts?: InputMaybe<FactBoolExp>;
   factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   factsByUpdatedBy?: InputMaybe<FactBoolExp>;
@@ -5111,10 +6358,16 @@ export type UserBoolExp = {
   id?: InputMaybe<UuidComparisonExp>;
   lastName?: InputMaybe<StringComparisonExp>;
   mobileNumber?: InputMaybe<StringComparisonExp>;
+  origins?: InputMaybe<OriginBoolExp>;
+  originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
   profileImage?: InputMaybe<StringComparisonExp>;
   pronouns?: InputMaybe<StringComparisonExp>;
+  sources?: InputMaybe<SourceBoolExp>;
+  sourcesAggregate?: InputMaybe<SourceAggregateBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  userHistories?: InputMaybe<UserHistoryBoolExp>;
+  userHistoriesAggregate?: InputMaybe<UserHistoryAggregateBoolExp>;
   username?: InputMaybe<StringComparisonExp>;
 };
 
@@ -5143,6 +6396,8 @@ export type UserHistory = {
   pronouns?: Maybe<Scalars['String']['output']>;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  /** An object relationship */
+  user: User;
   username: Scalars['String']['output'];
 };
 
@@ -5151,6 +6406,10 @@ export type UserHistoryAggregate = {
   __typename?: 'UserHistoryAggregate';
   aggregate?: Maybe<UserHistoryAggregateFields>;
   nodes: Array<UserHistory>;
+};
+
+export type UserHistoryAggregateBoolExp = {
+  count?: InputMaybe<UserHistoryAggregateBoolExpCount>;
 };
 
 /** aggregate fields of "user_history" */
@@ -5166,6 +6425,20 @@ export type UserHistoryAggregateFields = {
 export type UserHistoryAggregateFieldsCountArgs = {
   columns?: InputMaybe<Array<UserHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "user_history" */
+export type UserHistoryAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<UserHistoryMaxOrderBy>;
+  min?: InputMaybe<UserHistoryMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "user_history" */
+export type UserHistoryArrRelInsertInput = {
+  data: Array<UserHistoryInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<UserHistoryOnConflict>;
 };
 
 /** Boolean expression to filter rows from the table "user_history". All fields are combined with a logical 'AND'. */
@@ -5185,6 +6458,7 @@ export type UserHistoryBoolExp = {
   pronouns?: InputMaybe<StringComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  user?: InputMaybe<UserBoolExp>;
   username?: InputMaybe<StringComparisonExp>;
 };
 
@@ -5208,6 +6482,7 @@ export type UserHistoryInsertInput = {
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  user?: InputMaybe<UserObjRelInsertInput>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -5228,6 +6503,22 @@ export type UserHistoryMaxFields = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
+/** order by max() on columns of table "user_history" */
+export type UserHistoryMaxOrderBy = {
+  bio?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  email?: InputMaybe<OrderBy>;
+  firstName?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  lastName?: InputMaybe<OrderBy>;
+  mobileNumber?: InputMaybe<OrderBy>;
+  profileImage?: InputMaybe<OrderBy>;
+  pronouns?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  username?: InputMaybe<OrderBy>;
+};
+
 /** aggregate min on columns */
 export type UserHistoryMinFields = {
   __typename?: 'UserHistoryMinFields';
@@ -5243,6 +6534,22 @@ export type UserHistoryMinFields = {
   pronouns?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   username?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by min() on columns of table "user_history" */
+export type UserHistoryMinOrderBy = {
+  bio?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  email?: InputMaybe<OrderBy>;
+  firstName?: InputMaybe<OrderBy>;
+  historyId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  lastName?: InputMaybe<OrderBy>;
+  mobileNumber?: InputMaybe<OrderBy>;
+  profileImage?: InputMaybe<OrderBy>;
+  pronouns?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  username?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "user_history" */
@@ -5275,6 +6582,7 @@ export type UserHistoryOrderBy = {
   pronouns?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UserOrderBy>;
   username?: InputMaybe<OrderBy>;
 };
 
@@ -5395,18 +6703,14 @@ export type UserHistoryUpdates = {
 /** input type for inserting data into table "user" */
 export type UserInsertInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
-  claimFactsByUpdatedBy?: InputMaybe<ClaimFactArrRelInsertInput>;
-  claimResourcesByUpdatedBy?: InputMaybe<ClaimResourceArrRelInsertInput>;
-  claim_facts?: InputMaybe<ClaimFactArrRelInsertInput>;
-  claim_resources?: InputMaybe<ClaimResourceArrRelInsertInput>;
+  claimResourcesByUpdatedBy?: InputMaybe<OriginArrRelInsertInput>;
   claims?: InputMaybe<ClaimArrRelInsertInput>;
   claimsByUpdatedBy?: InputMaybe<ClaimArrRelInsertInput>;
   comments?: InputMaybe<CommentArrRelInsertInput>;
   commentsByUpdatedBy?: InputMaybe<CommentArrRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
-  factResourcesByUpdatedBy?: InputMaybe<FactResourceArrRelInsertInput>;
-  fact_resources?: InputMaybe<FactResourceArrRelInsertInput>;
+  factResourcesByUpdatedBy?: InputMaybe<SourceArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
   factsByUpdatedBy?: InputMaybe<FactArrRelInsertInput>;
   files?: InputMaybe<FileArrRelInsertInput>;
@@ -5415,10 +6719,13 @@ export type UserInsertInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  origins?: InputMaybe<OriginArrRelInsertInput>;
   profileImage?: InputMaybe<Scalars['String']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  sources?: InputMaybe<SourceArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  userHistories?: InputMaybe<UserHistoryArrRelInsertInput>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -5480,18 +6787,14 @@ export type UserOnConflict = {
 /** Ordering options when selecting data from "user". */
 export type UserOrderBy = {
   bio?: InputMaybe<OrderBy>;
-  claimFactsByUpdatedByAggregate?: InputMaybe<ClaimFactAggregateOrderBy>;
-  claimResourcesByUpdatedByAggregate?: InputMaybe<ClaimResourceAggregateOrderBy>;
-  claim_factsAggregate?: InputMaybe<ClaimFactAggregateOrderBy>;
-  claim_resourcesAggregate?: InputMaybe<ClaimResourceAggregateOrderBy>;
+  claimResourcesByUpdatedByAggregate?: InputMaybe<OriginAggregateOrderBy>;
   claimsAggregate?: InputMaybe<ClaimAggregateOrderBy>;
   claimsByUpdatedByAggregate?: InputMaybe<ClaimAggregateOrderBy>;
   commentsAggregate?: InputMaybe<CommentAggregateOrderBy>;
   commentsByUpdatedByAggregate?: InputMaybe<CommentAggregateOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   email?: InputMaybe<OrderBy>;
-  factResourcesByUpdatedByAggregate?: InputMaybe<FactResourceAggregateOrderBy>;
-  fact_resourcesAggregate?: InputMaybe<FactResourceAggregateOrderBy>;
+  factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateOrderBy>;
   filesAggregate?: InputMaybe<FileAggregateOrderBy>;
@@ -5500,10 +6803,13 @@ export type UserOrderBy = {
   id?: InputMaybe<OrderBy>;
   lastName?: InputMaybe<OrderBy>;
   mobileNumber?: InputMaybe<OrderBy>;
+  originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   profileImage?: InputMaybe<OrderBy>;
   pronouns?: InputMaybe<OrderBy>;
+  sourcesAggregate?: InputMaybe<SourceAggregateOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
+  userHistoriesAggregate?: InputMaybe<UserHistoryAggregateOrderBy>;
   username?: InputMaybe<OrderBy>;
 };
 
@@ -5628,524 +6934,6 @@ export type UuidComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
-/** columns and relationships of "virality" */
-export type Virality = {
-  __typename?: 'Virality';
-  /** An object relationship */
-  claim: Claim;
-  claimId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  facebookLikes?: Maybe<Scalars['Int']['output']>;
-  facebookShares?: Maybe<Scalars['Int']['output']>;
-  id: Scalars['uuid']['output'];
-  instagramLikes?: Maybe<Scalars['Int']['output']>;
-  instagramShares?: Maybe<Scalars['Int']['output']>;
-  sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Int']['output']>;
-  youtubeLikes?: Maybe<Scalars['Int']['output']>;
-  youtubeViews?: Maybe<Scalars['Int']['output']>;
-};
-
-/** aggregated selection of "virality" */
-export type ViralityAggregate = {
-  __typename?: 'ViralityAggregate';
-  aggregate?: Maybe<ViralityAggregateFields>;
-  nodes: Array<Virality>;
-};
-
-export type ViralityAggregateBoolExp = {
-  count?: InputMaybe<ViralityAggregateBoolExpCount>;
-};
-
-/** aggregate fields of "virality" */
-export type ViralityAggregateFields = {
-  __typename?: 'ViralityAggregateFields';
-  avg?: Maybe<ViralityAvgFields>;
-  count: Scalars['Int']['output'];
-  max?: Maybe<ViralityMaxFields>;
-  min?: Maybe<ViralityMinFields>;
-  stddev?: Maybe<ViralityStddevFields>;
-  stddevPop?: Maybe<ViralityStddevPopFields>;
-  stddevSamp?: Maybe<ViralityStddevSampFields>;
-  sum?: Maybe<ViralitySumFields>;
-  varPop?: Maybe<ViralityVarPopFields>;
-  varSamp?: Maybe<ViralityVarSampFields>;
-  variance?: Maybe<ViralityVarianceFields>;
-};
-
-
-/** aggregate fields of "virality" */
-export type ViralityAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<ViralitySelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "virality" */
-export type ViralityAggregateOrderBy = {
-  avg?: InputMaybe<ViralityAvgOrderBy>;
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<ViralityMaxOrderBy>;
-  min?: InputMaybe<ViralityMinOrderBy>;
-  stddev?: InputMaybe<ViralityStddevOrderBy>;
-  stddevPop?: InputMaybe<ViralityStddevPopOrderBy>;
-  stddevSamp?: InputMaybe<ViralityStddevSampOrderBy>;
-  sum?: InputMaybe<ViralitySumOrderBy>;
-  varPop?: InputMaybe<ViralityVarPopOrderBy>;
-  varSamp?: InputMaybe<ViralityVarSampOrderBy>;
-  variance?: InputMaybe<ViralityVarianceOrderBy>;
-};
-
-/** input type for inserting array relation for remote table "virality" */
-export type ViralityArrRelInsertInput = {
-  data: Array<ViralityInsertInput>;
-  /** upsert condition */
-  onConflict?: InputMaybe<ViralityOnConflict>;
-};
-
-/** aggregate avg on columns */
-export type ViralityAvgFields = {
-  __typename?: 'ViralityAvgFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by avg() on columns of table "virality" */
-export type ViralityAvgOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** Boolean expression to filter rows from the table "virality". All fields are combined with a logical 'AND'. */
-export type ViralityBoolExp = {
-  _and?: InputMaybe<Array<ViralityBoolExp>>;
-  _not?: InputMaybe<ViralityBoolExp>;
-  _or?: InputMaybe<Array<ViralityBoolExp>>;
-  claim?: InputMaybe<ClaimBoolExp>;
-  claimId?: InputMaybe<UuidComparisonExp>;
-  createdAt?: InputMaybe<TimestamptzComparisonExp>;
-  facebookLikes?: InputMaybe<IntComparisonExp>;
-  facebookShares?: InputMaybe<IntComparisonExp>;
-  id?: InputMaybe<UuidComparisonExp>;
-  instagramLikes?: InputMaybe<IntComparisonExp>;
-  instagramShares?: InputMaybe<IntComparisonExp>;
-  sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
-  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
-  youtubeDislikes?: InputMaybe<IntComparisonExp>;
-  youtubeLikes?: InputMaybe<IntComparisonExp>;
-  youtubeViews?: InputMaybe<IntComparisonExp>;
-};
-
-/** unique or primary key constraints on table "virality" */
-export enum ViralityConstraint {
-  /** unique or primary key constraint on columns "id" */
-  ViralityPkey = 'virality_pkey'
-}
-
-/** input type for incrementing numeric columns in table "virality" */
-export type ViralityIncInput = {
-  facebookLikes?: InputMaybe<Scalars['Int']['input']>;
-  facebookShares?: InputMaybe<Scalars['Int']['input']>;
-  instagramLikes?: InputMaybe<Scalars['Int']['input']>;
-  instagramShares?: InputMaybe<Scalars['Int']['input']>;
-  youtubeDislikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeLikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeViews?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** input type for inserting data into table "virality" */
-export type ViralityInsertInput = {
-  claim?: InputMaybe<ClaimObjRelInsertInput>;
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  facebookLikes?: InputMaybe<Scalars['Int']['input']>;
-  facebookShares?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  instagramLikes?: InputMaybe<Scalars['Int']['input']>;
-  instagramShares?: InputMaybe<Scalars['Int']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  youtubeDislikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeLikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeViews?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** aggregate max on columns */
-export type ViralityMaxFields = {
-  __typename?: 'ViralityMaxFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  facebookLikes?: Maybe<Scalars['Int']['output']>;
-  facebookShares?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  instagramLikes?: Maybe<Scalars['Int']['output']>;
-  instagramShares?: Maybe<Scalars['Int']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Int']['output']>;
-  youtubeLikes?: Maybe<Scalars['Int']['output']>;
-  youtubeViews?: Maybe<Scalars['Int']['output']>;
-};
-
-/** order by max() on columns of table "virality" */
-export type ViralityMaxOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** aggregate min on columns */
-export type ViralityMinFields = {
-  __typename?: 'ViralityMinFields';
-  claimId?: Maybe<Scalars['uuid']['output']>;
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
-  facebookLikes?: Maybe<Scalars['Int']['output']>;
-  facebookShares?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  instagramLikes?: Maybe<Scalars['Int']['output']>;
-  instagramShares?: Maybe<Scalars['Int']['output']>;
-  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Int']['output']>;
-  youtubeLikes?: Maybe<Scalars['Int']['output']>;
-  youtubeViews?: Maybe<Scalars['Int']['output']>;
-};
-
-/** order by min() on columns of table "virality" */
-export type ViralityMinOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** response of any mutation on the table "virality" */
-export type ViralityMutationResponse = {
-  __typename?: 'ViralityMutationResponse';
-  /** number of rows affected by the mutation */
-  affectedRows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Virality>;
-};
-
-/** on_conflict condition type for table "virality" */
-export type ViralityOnConflict = {
-  constraint: ViralityConstraint;
-  updateColumns?: Array<ViralityUpdateColumn>;
-  where?: InputMaybe<ViralityBoolExp>;
-};
-
-/** Ordering options when selecting data from "virality". */
-export type ViralityOrderBy = {
-  claim?: InputMaybe<ClaimOrderBy>;
-  claimId?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  sysPeriod?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** primary key columns input for table: virality */
-export type ViralityPkColumnsInput = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "virality" */
-export enum ViralitySelectColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  FacebookLikes = 'facebookLikes',
-  /** column name */
-  FacebookShares = 'facebookShares',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  InstagramLikes = 'instagramLikes',
-  /** column name */
-  InstagramShares = 'instagramShares',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  YoutubeDislikes = 'youtubeDislikes',
-  /** column name */
-  YoutubeLikes = 'youtubeLikes',
-  /** column name */
-  YoutubeViews = 'youtubeViews'
-}
-
-/** input type for updating data in table "virality" */
-export type ViralitySetInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  facebookLikes?: InputMaybe<Scalars['Int']['input']>;
-  facebookShares?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  instagramLikes?: InputMaybe<Scalars['Int']['input']>;
-  instagramShares?: InputMaybe<Scalars['Int']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  youtubeDislikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeLikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeViews?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type ViralityStddevFields = {
-  __typename?: 'ViralityStddevFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev() on columns of table "virality" */
-export type ViralityStddevOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** aggregate stddevPop on columns */
-export type ViralityStddevPopFields = {
-  __typename?: 'ViralityStddevPopFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddevPop() on columns of table "virality" */
-export type ViralityStddevPopOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** aggregate stddevSamp on columns */
-export type ViralityStddevSampFields = {
-  __typename?: 'ViralityStddevSampFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddevSamp() on columns of table "virality" */
-export type ViralityStddevSampOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** Streaming cursor of the table "virality" */
-export type ViralityStreamCursorInput = {
-  /** Stream column input with initial value */
-  initialValue: ViralityStreamCursorValueInput;
-  /** cursor ordering */
-  ordering?: InputMaybe<CursorOrdering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type ViralityStreamCursorValueInput = {
-  claimId?: InputMaybe<Scalars['uuid']['input']>;
-  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  facebookLikes?: InputMaybe<Scalars['Int']['input']>;
-  facebookShares?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  instagramLikes?: InputMaybe<Scalars['Int']['input']>;
-  instagramShares?: InputMaybe<Scalars['Int']['input']>;
-  sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  youtubeDislikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeLikes?: InputMaybe<Scalars['Int']['input']>;
-  youtubeViews?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** aggregate sum on columns */
-export type ViralitySumFields = {
-  __typename?: 'ViralitySumFields';
-  facebookLikes?: Maybe<Scalars['Int']['output']>;
-  facebookShares?: Maybe<Scalars['Int']['output']>;
-  instagramLikes?: Maybe<Scalars['Int']['output']>;
-  instagramShares?: Maybe<Scalars['Int']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Int']['output']>;
-  youtubeLikes?: Maybe<Scalars['Int']['output']>;
-  youtubeViews?: Maybe<Scalars['Int']['output']>;
-};
-
-/** order by sum() on columns of table "virality" */
-export type ViralitySumOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** update columns of table "virality" */
-export enum ViralityUpdateColumn {
-  /** column name */
-  ClaimId = 'claimId',
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  FacebookLikes = 'facebookLikes',
-  /** column name */
-  FacebookShares = 'facebookShares',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  InstagramLikes = 'instagramLikes',
-  /** column name */
-  InstagramShares = 'instagramShares',
-  /** column name */
-  SysPeriod = 'sysPeriod',
-  /** column name */
-  UpdatedAt = 'updatedAt',
-  /** column name */
-  YoutubeDislikes = 'youtubeDislikes',
-  /** column name */
-  YoutubeLikes = 'youtubeLikes',
-  /** column name */
-  YoutubeViews = 'youtubeViews'
-}
-
-export type ViralityUpdates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<ViralityIncInput>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<ViralitySetInput>;
-  /** filter the rows which have to be updated */
-  where: ViralityBoolExp;
-};
-
-/** aggregate varPop on columns */
-export type ViralityVarPopFields = {
-  __typename?: 'ViralityVarPopFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by varPop() on columns of table "virality" */
-export type ViralityVarPopOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** aggregate varSamp on columns */
-export type ViralityVarSampFields = {
-  __typename?: 'ViralityVarSampFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by varSamp() on columns of table "virality" */
-export type ViralityVarSampOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
-/** aggregate variance on columns */
-export type ViralityVarianceFields = {
-  __typename?: 'ViralityVarianceFields';
-  facebookLikes?: Maybe<Scalars['Float']['output']>;
-  facebookShares?: Maybe<Scalars['Float']['output']>;
-  instagramLikes?: Maybe<Scalars['Float']['output']>;
-  instagramShares?: Maybe<Scalars['Float']['output']>;
-  youtubeDislikes?: Maybe<Scalars['Float']['output']>;
-  youtubeLikes?: Maybe<Scalars['Float']['output']>;
-  youtubeViews?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by variance() on columns of table "virality" */
-export type ViralityVarianceOrderBy = {
-  facebookLikes?: InputMaybe<OrderBy>;
-  facebookShares?: InputMaybe<OrderBy>;
-  instagramLikes?: InputMaybe<OrderBy>;
-  instagramShares?: InputMaybe<OrderBy>;
-  youtubeDislikes?: InputMaybe<OrderBy>;
-  youtubeLikes?: InputMaybe<OrderBy>;
-  youtubeViews?: InputMaybe<OrderBy>;
-};
-
 export type ClaimAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<ClaimSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6153,24 +6941,10 @@ export type ClaimAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type ClaimFactAggregateBoolExpCount = {
-  arguments?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type ClaimHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<ClaimHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<ClaimFactBoolExp>;
-  predicate: IntComparisonExp;
-};
-
-export type ClaimResourceAggregateBoolExpCount = {
-  arguments?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<ClaimResourceBoolExp>;
-  predicate: IntComparisonExp;
-};
-
-export type ClaimSubmissionTokenAggregateBoolExpCount = {
-  arguments?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<ClaimSubmissionTokenBoolExp>;
+  filter?: InputMaybe<ClaimHistoryBoolExp>;
   predicate: IntComparisonExp;
 };
 
@@ -6181,6 +6955,13 @@ export type CommentAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type CommentHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<CommentHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<CommentHistoryBoolExp>;
+  predicate: IntComparisonExp;
+};
+
 export type FactAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<FactSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6188,10 +6969,10 @@ export type FactAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type FactResourceAggregateBoolExpCount = {
-  arguments?: InputMaybe<Array<FactResourceSelectColumn>>;
+export type FactHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<FactHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<FactResourceBoolExp>;
+  filter?: InputMaybe<FactHistoryBoolExp>;
   predicate: IntComparisonExp;
 };
 
@@ -6202,37 +6983,32 @@ export type FileAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type FileHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<FileHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<FileHistoryBoolExp>;
+  predicate: IntComparisonExp;
+};
+
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
+  /** delete data from the table: "category" */
+  deleteCategory?: Maybe<CategoryMutationResponse>;
+  /** delete single row from the table: "category" */
+  deleteCategoryByPk?: Maybe<Category>;
   /** delete data from the table: "claim" */
   deleteClaim?: Maybe<ClaimMutationResponse>;
   /** delete single row from the table: "claim" */
   deleteClaimByPk?: Maybe<Claim>;
-  /** delete data from the table: "claim_fact" */
-  deleteClaimFact?: Maybe<ClaimFactMutationResponse>;
-  /** delete single row from the table: "claim_fact" */
-  deleteClaimFactByPk?: Maybe<ClaimFact>;
-  /** delete data from the table: "claim_fact_history" */
-  deleteClaimFactHistory?: Maybe<ClaimFactHistoryMutationResponse>;
-  /** delete single row from the table: "claim_fact_history" */
-  deleteClaimFactHistoryByPk?: Maybe<ClaimFactHistory>;
+  /** delete data from the table: "claim_category" */
+  deleteClaimCategory?: Maybe<ClaimCategoryMutationResponse>;
+  /** delete single row from the table: "claim_category" */
+  deleteClaimCategoryByPk?: Maybe<ClaimCategory>;
   /** delete data from the table: "claim_history" */
   deleteClaimHistory?: Maybe<ClaimHistoryMutationResponse>;
   /** delete single row from the table: "claim_history" */
   deleteClaimHistoryByPk?: Maybe<ClaimHistory>;
-  /** delete data from the table: "claim_resource" */
-  deleteClaimResource?: Maybe<ClaimResourceMutationResponse>;
-  /** delete single row from the table: "claim_resource" */
-  deleteClaimResourceByPk?: Maybe<ClaimResource>;
-  /** delete data from the table: "claim_resource_history" */
-  deleteClaimResourceHistory?: Maybe<ClaimResourceHistoryMutationResponse>;
-  /** delete single row from the table: "claim_resource_history" */
-  deleteClaimResourceHistoryByPk?: Maybe<ClaimResourceHistory>;
-  /** delete data from the table: "claim_submission_token" */
-  deleteClaimSubmissionToken?: Maybe<ClaimSubmissionTokenMutationResponse>;
-  /** delete single row from the table: "claim_submission_token" */
-  deleteClaimSubmissionTokenByPk?: Maybe<ClaimSubmissionToken>;
   /** delete data from the table: "comment" */
   deleteComment?: Maybe<CommentMutationResponse>;
   /** delete single row from the table: "comment" */
@@ -6249,14 +7025,6 @@ export type Mutation_Root = {
   deleteFactHistory?: Maybe<FactHistoryMutationResponse>;
   /** delete single row from the table: "fact_history" */
   deleteFactHistoryByPk?: Maybe<FactHistory>;
-  /** delete data from the table: "fact_resource" */
-  deleteFactResource?: Maybe<FactResourceMutationResponse>;
-  /** delete single row from the table: "fact_resource" */
-  deleteFactResourceByPk?: Maybe<FactResource>;
-  /** delete data from the table: "fact_resource_history" */
-  deleteFactResourceHistory?: Maybe<FactResourceHistoryMutationResponse>;
-  /** delete single row from the table: "fact_resource_history" */
-  deleteFactResourceHistoryByPk?: Maybe<FactResourceHistory>;
   /** delete data from the table: "file" */
   deleteFile?: Maybe<FileMutationResponse>;
   /** delete single row from the table: "file" */
@@ -6265,6 +7033,30 @@ export type Mutation_Root = {
   deleteFileHistory?: Maybe<FileHistoryMutationResponse>;
   /** delete single row from the table: "file_history" */
   deleteFileHistoryByPk?: Maybe<FileHistory>;
+  /** delete data from the table: "origin" */
+  deleteOrigin?: Maybe<OriginMutationResponse>;
+  /** delete single row from the table: "origin" */
+  deleteOriginByPk?: Maybe<Origin>;
+  /** delete data from the table: "origin_history" */
+  deleteOriginHistory?: Maybe<OriginHistoryMutationResponse>;
+  /** delete single row from the table: "origin_history" */
+  deleteOriginHistoryByPk?: Maybe<OriginHistory>;
+  /** delete data from the table: "rating" */
+  deleteRating?: Maybe<RatingMutationResponse>;
+  /** delete single row from the table: "rating" */
+  deleteRatingByPk?: Maybe<Rating>;
+  /** delete data from the table: "rating_history" */
+  deleteRatingHistory?: Maybe<RatingHistoryMutationResponse>;
+  /** delete single row from the table: "rating_history" */
+  deleteRatingHistoryByPk?: Maybe<RatingHistory>;
+  /** delete data from the table: "source" */
+  deleteSource?: Maybe<SourceMutationResponse>;
+  /** delete single row from the table: "source" */
+  deleteSourceByPk?: Maybe<Source>;
+  /** delete data from the table: "source_history" */
+  deleteSourceHistory?: Maybe<SourceHistoryMutationResponse>;
+  /** delete single row from the table: "source_history" */
+  deleteSourceHistoryByPk?: Maybe<SourceHistory>;
   /** delete data from the table: "user" */
   deleteUser?: Maybe<UserMutationResponse>;
   /** delete single row from the table: "user" */
@@ -6273,38 +7065,22 @@ export type Mutation_Root = {
   deleteUserHistory?: Maybe<UserHistoryMutationResponse>;
   /** delete single row from the table: "user_history" */
   deleteUserHistoryByPk?: Maybe<UserHistory>;
-  /** delete data from the table: "virality" */
-  deleteVirality?: Maybe<ViralityMutationResponse>;
-  /** delete single row from the table: "virality" */
-  deleteViralityByPk?: Maybe<Virality>;
+  /** insert data into the table: "category" */
+  insertCategory?: Maybe<CategoryMutationResponse>;
+  /** insert a single row into the table: "category" */
+  insertCategoryOne?: Maybe<Category>;
   /** insert data into the table: "claim" */
   insertClaim?: Maybe<ClaimMutationResponse>;
-  /** insert data into the table: "claim_fact" */
-  insertClaimFact?: Maybe<ClaimFactMutationResponse>;
-  /** insert data into the table: "claim_fact_history" */
-  insertClaimFactHistory?: Maybe<ClaimFactHistoryMutationResponse>;
-  /** insert a single row into the table: "claim_fact_history" */
-  insertClaimFactHistoryOne?: Maybe<ClaimFactHistory>;
-  /** insert a single row into the table: "claim_fact" */
-  insertClaimFactOne?: Maybe<ClaimFact>;
+  /** insert data into the table: "claim_category" */
+  insertClaimCategory?: Maybe<ClaimCategoryMutationResponse>;
+  /** insert a single row into the table: "claim_category" */
+  insertClaimCategoryOne?: Maybe<ClaimCategory>;
   /** insert data into the table: "claim_history" */
   insertClaimHistory?: Maybe<ClaimHistoryMutationResponse>;
   /** insert a single row into the table: "claim_history" */
   insertClaimHistoryOne?: Maybe<ClaimHistory>;
   /** insert a single row into the table: "claim" */
   insertClaimOne?: Maybe<Claim>;
-  /** insert data into the table: "claim_resource" */
-  insertClaimResource?: Maybe<ClaimResourceMutationResponse>;
-  /** insert data into the table: "claim_resource_history" */
-  insertClaimResourceHistory?: Maybe<ClaimResourceHistoryMutationResponse>;
-  /** insert a single row into the table: "claim_resource_history" */
-  insertClaimResourceHistoryOne?: Maybe<ClaimResourceHistory>;
-  /** insert a single row into the table: "claim_resource" */
-  insertClaimResourceOne?: Maybe<ClaimResource>;
-  /** insert data into the table: "claim_submission_token" */
-  insertClaimSubmissionToken?: Maybe<ClaimSubmissionTokenMutationResponse>;
-  /** insert a single row into the table: "claim_submission_token" */
-  insertClaimSubmissionTokenOne?: Maybe<ClaimSubmissionToken>;
   /** insert data into the table: "comment" */
   insertComment?: Maybe<CommentMutationResponse>;
   /** insert data into the table: "comment_history" */
@@ -6321,14 +7097,6 @@ export type Mutation_Root = {
   insertFactHistoryOne?: Maybe<FactHistory>;
   /** insert a single row into the table: "fact" */
   insertFactOne?: Maybe<Fact>;
-  /** insert data into the table: "fact_resource" */
-  insertFactResource?: Maybe<FactResourceMutationResponse>;
-  /** insert data into the table: "fact_resource_history" */
-  insertFactResourceHistory?: Maybe<FactResourceHistoryMutationResponse>;
-  /** insert a single row into the table: "fact_resource_history" */
-  insertFactResourceHistoryOne?: Maybe<FactResourceHistory>;
-  /** insert a single row into the table: "fact_resource" */
-  insertFactResourceOne?: Maybe<FactResource>;
   /** insert data into the table: "file" */
   insertFile?: Maybe<FileMutationResponse>;
   /** insert data into the table: "file_history" */
@@ -6337,6 +7105,30 @@ export type Mutation_Root = {
   insertFileHistoryOne?: Maybe<FileHistory>;
   /** insert a single row into the table: "file" */
   insertFileOne?: Maybe<File>;
+  /** insert data into the table: "origin" */
+  insertOrigin?: Maybe<OriginMutationResponse>;
+  /** insert data into the table: "origin_history" */
+  insertOriginHistory?: Maybe<OriginHistoryMutationResponse>;
+  /** insert a single row into the table: "origin_history" */
+  insertOriginHistoryOne?: Maybe<OriginHistory>;
+  /** insert a single row into the table: "origin" */
+  insertOriginOne?: Maybe<Origin>;
+  /** insert data into the table: "rating" */
+  insertRating?: Maybe<RatingMutationResponse>;
+  /** insert data into the table: "rating_history" */
+  insertRatingHistory?: Maybe<RatingHistoryMutationResponse>;
+  /** insert a single row into the table: "rating_history" */
+  insertRatingHistoryOne?: Maybe<RatingHistory>;
+  /** insert a single row into the table: "rating" */
+  insertRatingOne?: Maybe<Rating>;
+  /** insert data into the table: "source" */
+  insertSource?: Maybe<SourceMutationResponse>;
+  /** insert data into the table: "source_history" */
+  insertSourceHistory?: Maybe<SourceHistoryMutationResponse>;
+  /** insert a single row into the table: "source_history" */
+  insertSourceHistoryOne?: Maybe<SourceHistory>;
+  /** insert a single row into the table: "source" */
+  insertSourceOne?: Maybe<Source>;
   /** insert data into the table: "user" */
   insertUser?: Maybe<UserMutationResponse>;
   /** insert data into the table: "user_history" */
@@ -6345,26 +7137,22 @@ export type Mutation_Root = {
   insertUserHistoryOne?: Maybe<UserHistory>;
   /** insert a single row into the table: "user" */
   insertUserOne?: Maybe<User>;
-  /** insert data into the table: "virality" */
-  insertVirality?: Maybe<ViralityMutationResponse>;
-  /** insert a single row into the table: "virality" */
-  insertViralityOne?: Maybe<Virality>;
+  /** update data of the table: "category" */
+  updateCategory?: Maybe<CategoryMutationResponse>;
+  /** update single row of the table: "category" */
+  updateCategoryByPk?: Maybe<Category>;
+  /** update multiples rows of table: "category" */
+  updateCategoryMany?: Maybe<Array<Maybe<CategoryMutationResponse>>>;
   /** update data of the table: "claim" */
   updateClaim?: Maybe<ClaimMutationResponse>;
   /** update single row of the table: "claim" */
   updateClaimByPk?: Maybe<Claim>;
-  /** update data of the table: "claim_fact" */
-  updateClaimFact?: Maybe<ClaimFactMutationResponse>;
-  /** update single row of the table: "claim_fact" */
-  updateClaimFactByPk?: Maybe<ClaimFact>;
-  /** update data of the table: "claim_fact_history" */
-  updateClaimFactHistory?: Maybe<ClaimFactHistoryMutationResponse>;
-  /** update single row of the table: "claim_fact_history" */
-  updateClaimFactHistoryByPk?: Maybe<ClaimFactHistory>;
-  /** update multiples rows of table: "claim_fact_history" */
-  updateClaimFactHistoryMany?: Maybe<Array<Maybe<ClaimFactHistoryMutationResponse>>>;
-  /** update multiples rows of table: "claim_fact" */
-  updateClaimFactMany?: Maybe<Array<Maybe<ClaimFactMutationResponse>>>;
+  /** update data of the table: "claim_category" */
+  updateClaimCategory?: Maybe<ClaimCategoryMutationResponse>;
+  /** update single row of the table: "claim_category" */
+  updateClaimCategoryByPk?: Maybe<ClaimCategory>;
+  /** update multiples rows of table: "claim_category" */
+  updateClaimCategoryMany?: Maybe<Array<Maybe<ClaimCategoryMutationResponse>>>;
   /** update data of the table: "claim_history" */
   updateClaimHistory?: Maybe<ClaimHistoryMutationResponse>;
   /** update single row of the table: "claim_history" */
@@ -6373,24 +7161,6 @@ export type Mutation_Root = {
   updateClaimHistoryMany?: Maybe<Array<Maybe<ClaimHistoryMutationResponse>>>;
   /** update multiples rows of table: "claim" */
   updateClaimMany?: Maybe<Array<Maybe<ClaimMutationResponse>>>;
-  /** update data of the table: "claim_resource" */
-  updateClaimResource?: Maybe<ClaimResourceMutationResponse>;
-  /** update single row of the table: "claim_resource" */
-  updateClaimResourceByPk?: Maybe<ClaimResource>;
-  /** update data of the table: "claim_resource_history" */
-  updateClaimResourceHistory?: Maybe<ClaimResourceHistoryMutationResponse>;
-  /** update single row of the table: "claim_resource_history" */
-  updateClaimResourceHistoryByPk?: Maybe<ClaimResourceHistory>;
-  /** update multiples rows of table: "claim_resource_history" */
-  updateClaimResourceHistoryMany?: Maybe<Array<Maybe<ClaimResourceHistoryMutationResponse>>>;
-  /** update multiples rows of table: "claim_resource" */
-  updateClaimResourceMany?: Maybe<Array<Maybe<ClaimResourceMutationResponse>>>;
-  /** update data of the table: "claim_submission_token" */
-  updateClaimSubmissionToken?: Maybe<ClaimSubmissionTokenMutationResponse>;
-  /** update single row of the table: "claim_submission_token" */
-  updateClaimSubmissionTokenByPk?: Maybe<ClaimSubmissionToken>;
-  /** update multiples rows of table: "claim_submission_token" */
-  updateClaimSubmissionTokenMany?: Maybe<Array<Maybe<ClaimSubmissionTokenMutationResponse>>>;
   /** update data of the table: "comment" */
   updateComment?: Maybe<CommentMutationResponse>;
   /** update single row of the table: "comment" */
@@ -6415,18 +7185,6 @@ export type Mutation_Root = {
   updateFactHistoryMany?: Maybe<Array<Maybe<FactHistoryMutationResponse>>>;
   /** update multiples rows of table: "fact" */
   updateFactMany?: Maybe<Array<Maybe<FactMutationResponse>>>;
-  /** update data of the table: "fact_resource" */
-  updateFactResource?: Maybe<FactResourceMutationResponse>;
-  /** update single row of the table: "fact_resource" */
-  updateFactResourceByPk?: Maybe<FactResource>;
-  /** update data of the table: "fact_resource_history" */
-  updateFactResourceHistory?: Maybe<FactResourceHistoryMutationResponse>;
-  /** update single row of the table: "fact_resource_history" */
-  updateFactResourceHistoryByPk?: Maybe<FactResourceHistory>;
-  /** update multiples rows of table: "fact_resource_history" */
-  updateFactResourceHistoryMany?: Maybe<Array<Maybe<FactResourceHistoryMutationResponse>>>;
-  /** update multiples rows of table: "fact_resource" */
-  updateFactResourceMany?: Maybe<Array<Maybe<FactResourceMutationResponse>>>;
   /** update data of the table: "file" */
   updateFile?: Maybe<FileMutationResponse>;
   /** update single row of the table: "file" */
@@ -6439,6 +7197,42 @@ export type Mutation_Root = {
   updateFileHistoryMany?: Maybe<Array<Maybe<FileHistoryMutationResponse>>>;
   /** update multiples rows of table: "file" */
   updateFileMany?: Maybe<Array<Maybe<FileMutationResponse>>>;
+  /** update data of the table: "origin" */
+  updateOrigin?: Maybe<OriginMutationResponse>;
+  /** update single row of the table: "origin" */
+  updateOriginByPk?: Maybe<Origin>;
+  /** update data of the table: "origin_history" */
+  updateOriginHistory?: Maybe<OriginHistoryMutationResponse>;
+  /** update single row of the table: "origin_history" */
+  updateOriginHistoryByPk?: Maybe<OriginHistory>;
+  /** update multiples rows of table: "origin_history" */
+  updateOriginHistoryMany?: Maybe<Array<Maybe<OriginHistoryMutationResponse>>>;
+  /** update multiples rows of table: "origin" */
+  updateOriginMany?: Maybe<Array<Maybe<OriginMutationResponse>>>;
+  /** update data of the table: "rating" */
+  updateRating?: Maybe<RatingMutationResponse>;
+  /** update single row of the table: "rating" */
+  updateRatingByPk?: Maybe<Rating>;
+  /** update data of the table: "rating_history" */
+  updateRatingHistory?: Maybe<RatingHistoryMutationResponse>;
+  /** update single row of the table: "rating_history" */
+  updateRatingHistoryByPk?: Maybe<RatingHistory>;
+  /** update multiples rows of table: "rating_history" */
+  updateRatingHistoryMany?: Maybe<Array<Maybe<RatingHistoryMutationResponse>>>;
+  /** update multiples rows of table: "rating" */
+  updateRatingMany?: Maybe<Array<Maybe<RatingMutationResponse>>>;
+  /** update data of the table: "source" */
+  updateSource?: Maybe<SourceMutationResponse>;
+  /** update single row of the table: "source" */
+  updateSourceByPk?: Maybe<Source>;
+  /** update data of the table: "source_history" */
+  updateSourceHistory?: Maybe<SourceHistoryMutationResponse>;
+  /** update single row of the table: "source_history" */
+  updateSourceHistoryByPk?: Maybe<SourceHistory>;
+  /** update multiples rows of table: "source_history" */
+  updateSourceHistoryMany?: Maybe<Array<Maybe<SourceHistoryMutationResponse>>>;
+  /** update multiples rows of table: "source" */
+  updateSourceMany?: Maybe<Array<Maybe<SourceMutationResponse>>>;
   /** update data of the table: "user" */
   updateUser?: Maybe<UserMutationResponse>;
   /** update single row of the table: "user" */
@@ -6451,12 +7245,18 @@ export type Mutation_Root = {
   updateUserHistoryMany?: Maybe<Array<Maybe<UserHistoryMutationResponse>>>;
   /** update multiples rows of table: "user" */
   updateUserMany?: Maybe<Array<Maybe<UserMutationResponse>>>;
-  /** update data of the table: "virality" */
-  updateVirality?: Maybe<ViralityMutationResponse>;
-  /** update single row of the table: "virality" */
-  updateViralityByPk?: Maybe<Virality>;
-  /** update multiples rows of table: "virality" */
-  updateViralityMany?: Maybe<Array<Maybe<ViralityMutationResponse>>>;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteCategoryArgs = {
+  where: CategoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteCategoryByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -6473,26 +7273,14 @@ export type Mutation_RootDeleteClaimByPkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDeleteClaimFactArgs = {
-  where: ClaimFactBoolExp;
+export type Mutation_RootDeleteClaimCategoryArgs = {
+  where: ClaimCategoryBoolExp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDeleteClaimFactByPkArgs = {
+export type Mutation_RootDeleteClaimCategoryByPkArgs = {
   id: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimFactHistoryArgs = {
-  where: ClaimFactHistoryBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimFactHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
 };
 
 
@@ -6505,42 +7293,6 @@ export type Mutation_RootDeleteClaimHistoryArgs = {
 /** mutation root */
 export type Mutation_RootDeleteClaimHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimResourceArgs = {
-  where: ClaimResourceBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimResourceByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimResourceHistoryArgs = {
-  where: ClaimResourceHistoryBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimResourceHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimSubmissionTokenArgs = {
-  where: ClaimSubmissionTokenBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteClaimSubmissionTokenByPkArgs = {
-  id: Scalars['uuid']['input'];
 };
 
 
@@ -6593,30 +7345,6 @@ export type Mutation_RootDeleteFactHistoryByPkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDeleteFactResourceArgs = {
-  where: FactResourceBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteFactResourceByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteFactResourceHistoryArgs = {
-  where: FactResourceHistoryBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDeleteFactResourceHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
 export type Mutation_RootDeleteFileArgs = {
   where: FileBoolExp;
 };
@@ -6636,6 +7364,78 @@ export type Mutation_RootDeleteFileHistoryArgs = {
 
 /** mutation root */
 export type Mutation_RootDeleteFileHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteOriginArgs = {
+  where: OriginBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteOriginByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteOriginHistoryArgs = {
+  where: OriginHistoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteOriginHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteRatingArgs = {
+  where: RatingBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteRatingByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteRatingHistoryArgs = {
+  where: RatingHistoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteRatingHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteSourceArgs = {
+  where: SourceBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteSourceByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteSourceHistoryArgs = {
+  where: SourceHistoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteSourceHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
 };
 
@@ -6665,14 +7465,16 @@ export type Mutation_RootDeleteUserHistoryByPkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDeleteViralityArgs = {
-  where: ViralityBoolExp;
+export type Mutation_RootInsertCategoryArgs = {
+  objects: Array<CategoryInsertInput>;
+  onConflict?: InputMaybe<CategoryOnConflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootDeleteViralityByPkArgs = {
-  id: Scalars['uuid']['input'];
+export type Mutation_RootInsertCategoryOneArgs = {
+  object: CategoryInsertInput;
+  onConflict?: InputMaybe<CategoryOnConflict>;
 };
 
 
@@ -6684,30 +7486,16 @@ export type Mutation_RootInsertClaimArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsertClaimFactArgs = {
-  objects: Array<ClaimFactInsertInput>;
-  onConflict?: InputMaybe<ClaimFactOnConflict>;
+export type Mutation_RootInsertClaimCategoryArgs = {
+  objects: Array<ClaimCategoryInsertInput>;
+  onConflict?: InputMaybe<ClaimCategoryOnConflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsertClaimFactHistoryArgs = {
-  objects: Array<ClaimFactHistoryInsertInput>;
-  onConflict?: InputMaybe<ClaimFactHistoryOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimFactHistoryOneArgs = {
-  object: ClaimFactHistoryInsertInput;
-  onConflict?: InputMaybe<ClaimFactHistoryOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimFactOneArgs = {
-  object: ClaimFactInsertInput;
-  onConflict?: InputMaybe<ClaimFactOnConflict>;
+export type Mutation_RootInsertClaimCategoryOneArgs = {
+  object: ClaimCategoryInsertInput;
+  onConflict?: InputMaybe<ClaimCategoryOnConflict>;
 };
 
 
@@ -6729,48 +7517,6 @@ export type Mutation_RootInsertClaimHistoryOneArgs = {
 export type Mutation_RootInsertClaimOneArgs = {
   object: ClaimInsertInput;
   onConflict?: InputMaybe<ClaimOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimResourceArgs = {
-  objects: Array<ClaimResourceInsertInput>;
-  onConflict?: InputMaybe<ClaimResourceOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimResourceHistoryArgs = {
-  objects: Array<ClaimResourceHistoryInsertInput>;
-  onConflict?: InputMaybe<ClaimResourceHistoryOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimResourceHistoryOneArgs = {
-  object: ClaimResourceHistoryInsertInput;
-  onConflict?: InputMaybe<ClaimResourceHistoryOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimResourceOneArgs = {
-  object: ClaimResourceInsertInput;
-  onConflict?: InputMaybe<ClaimResourceOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimSubmissionTokenArgs = {
-  objects: Array<ClaimSubmissionTokenInsertInput>;
-  onConflict?: InputMaybe<ClaimSubmissionTokenOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertClaimSubmissionTokenOneArgs = {
-  object: ClaimSubmissionTokenInsertInput;
-  onConflict?: InputMaybe<ClaimSubmissionTokenOnConflict>;
 };
 
 
@@ -6831,34 +7577,6 @@ export type Mutation_RootInsertFactOneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsertFactResourceArgs = {
-  objects: Array<FactResourceInsertInput>;
-  onConflict?: InputMaybe<FactResourceOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertFactResourceHistoryArgs = {
-  objects: Array<FactResourceHistoryInsertInput>;
-  onConflict?: InputMaybe<FactResourceHistoryOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertFactResourceHistoryOneArgs = {
-  object: FactResourceHistoryInsertInput;
-  onConflict?: InputMaybe<FactResourceHistoryOnConflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsertFactResourceOneArgs = {
-  object: FactResourceInsertInput;
-  onConflict?: InputMaybe<FactResourceOnConflict>;
-};
-
-
-/** mutation root */
 export type Mutation_RootInsertFileArgs = {
   objects: Array<FileInsertInput>;
   onConflict?: InputMaybe<FileOnConflict>;
@@ -6883,6 +7601,90 @@ export type Mutation_RootInsertFileHistoryOneArgs = {
 export type Mutation_RootInsertFileOneArgs = {
   object: FileInsertInput;
   onConflict?: InputMaybe<FileOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertOriginArgs = {
+  objects: Array<OriginInsertInput>;
+  onConflict?: InputMaybe<OriginOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertOriginHistoryArgs = {
+  objects: Array<OriginHistoryInsertInput>;
+  onConflict?: InputMaybe<OriginHistoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertOriginHistoryOneArgs = {
+  object: OriginHistoryInsertInput;
+  onConflict?: InputMaybe<OriginHistoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertOriginOneArgs = {
+  object: OriginInsertInput;
+  onConflict?: InputMaybe<OriginOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertRatingArgs = {
+  objects: Array<RatingInsertInput>;
+  onConflict?: InputMaybe<RatingOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertRatingHistoryArgs = {
+  objects: Array<RatingHistoryInsertInput>;
+  onConflict?: InputMaybe<RatingHistoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertRatingHistoryOneArgs = {
+  object: RatingHistoryInsertInput;
+  onConflict?: InputMaybe<RatingHistoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertRatingOneArgs = {
+  object: RatingInsertInput;
+  onConflict?: InputMaybe<RatingOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertSourceArgs = {
+  objects: Array<SourceInsertInput>;
+  onConflict?: InputMaybe<SourceOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertSourceHistoryArgs = {
+  objects: Array<SourceHistoryInsertInput>;
+  onConflict?: InputMaybe<SourceHistoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertSourceHistoryOneArgs = {
+  object: SourceHistoryInsertInput;
+  onConflict?: InputMaybe<SourceHistoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertSourceOneArgs = {
+  object: SourceInsertInput;
+  onConflict?: InputMaybe<SourceOnConflict>;
 };
 
 
@@ -6915,16 +7717,22 @@ export type Mutation_RootInsertUserOneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsertViralityArgs = {
-  objects: Array<ViralityInsertInput>;
-  onConflict?: InputMaybe<ViralityOnConflict>;
+export type Mutation_RootUpdateCategoryArgs = {
+  _set?: InputMaybe<CategorySetInput>;
+  where: CategoryBoolExp;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsertViralityOneArgs = {
-  object: ViralityInsertInput;
-  onConflict?: InputMaybe<ViralityOnConflict>;
+export type Mutation_RootUpdateCategoryByPkArgs = {
+  _set?: InputMaybe<CategorySetInput>;
+  pkColumns: CategoryPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCategoryManyArgs = {
+  updates: Array<CategoryUpdates>;
 };
 
 
@@ -6945,42 +7753,22 @@ export type Mutation_RootUpdateClaimByPkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdateClaimFactArgs = {
-  _set?: InputMaybe<ClaimFactSetInput>;
-  where: ClaimFactBoolExp;
+export type Mutation_RootUpdateClaimCategoryArgs = {
+  _set?: InputMaybe<ClaimCategorySetInput>;
+  where: ClaimCategoryBoolExp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdateClaimFactByPkArgs = {
-  _set?: InputMaybe<ClaimFactSetInput>;
-  pkColumns: ClaimFactPkColumnsInput;
+export type Mutation_RootUpdateClaimCategoryByPkArgs = {
+  _set?: InputMaybe<ClaimCategorySetInput>;
+  pkColumns: ClaimCategoryPkColumnsInput;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdateClaimFactHistoryArgs = {
-  _set?: InputMaybe<ClaimFactHistorySetInput>;
-  where: ClaimFactHistoryBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimFactHistoryByPkArgs = {
-  _set?: InputMaybe<ClaimFactHistorySetInput>;
-  pkColumns: ClaimFactHistoryPkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimFactHistoryManyArgs = {
-  updates: Array<ClaimFactHistoryUpdates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimFactManyArgs = {
-  updates: Array<ClaimFactUpdates>;
+export type Mutation_RootUpdateClaimCategoryManyArgs = {
+  updates: Array<ClaimCategoryUpdates>;
 };
 
 
@@ -7009,66 +7797,6 @@ export type Mutation_RootUpdateClaimHistoryManyArgs = {
 /** mutation root */
 export type Mutation_RootUpdateClaimManyArgs = {
   updates: Array<ClaimUpdates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimResourceArgs = {
-  _set?: InputMaybe<ClaimResourceSetInput>;
-  where: ClaimResourceBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimResourceByPkArgs = {
-  _set?: InputMaybe<ClaimResourceSetInput>;
-  pkColumns: ClaimResourcePkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimResourceHistoryArgs = {
-  _set?: InputMaybe<ClaimResourceHistorySetInput>;
-  where: ClaimResourceHistoryBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimResourceHistoryByPkArgs = {
-  _set?: InputMaybe<ClaimResourceHistorySetInput>;
-  pkColumns: ClaimResourceHistoryPkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimResourceHistoryManyArgs = {
-  updates: Array<ClaimResourceHistoryUpdates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimResourceManyArgs = {
-  updates: Array<ClaimResourceUpdates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimSubmissionTokenArgs = {
-  _set?: InputMaybe<ClaimSubmissionTokenSetInput>;
-  where: ClaimSubmissionTokenBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimSubmissionTokenByPkArgs = {
-  _set?: InputMaybe<ClaimSubmissionTokenSetInput>;
-  pkColumns: ClaimSubmissionTokenPkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateClaimSubmissionTokenManyArgs = {
-  updates: Array<ClaimSubmissionTokenUpdates>;
 };
 
 
@@ -7114,6 +7842,7 @@ export type Mutation_RootUpdateCommentManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateFactArgs = {
+  _inc?: InputMaybe<FactIncInput>;
   _set?: InputMaybe<FactSetInput>;
   where: FactBoolExp;
 };
@@ -7121,6 +7850,7 @@ export type Mutation_RootUpdateFactArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateFactByPkArgs = {
+  _inc?: InputMaybe<FactIncInput>;
   _set?: InputMaybe<FactSetInput>;
   pkColumns: FactPkColumnsInput;
 };
@@ -7128,6 +7858,7 @@ export type Mutation_RootUpdateFactByPkArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateFactHistoryArgs = {
+  _inc?: InputMaybe<FactHistoryIncInput>;
   _set?: InputMaybe<FactHistorySetInput>;
   where: FactHistoryBoolExp;
 };
@@ -7135,6 +7866,7 @@ export type Mutation_RootUpdateFactHistoryArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdateFactHistoryByPkArgs = {
+  _inc?: InputMaybe<FactHistoryIncInput>;
   _set?: InputMaybe<FactHistorySetInput>;
   pkColumns: FactHistoryPkColumnsInput;
 };
@@ -7149,46 +7881,6 @@ export type Mutation_RootUpdateFactHistoryManyArgs = {
 /** mutation root */
 export type Mutation_RootUpdateFactManyArgs = {
   updates: Array<FactUpdates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateFactResourceArgs = {
-  _set?: InputMaybe<FactResourceSetInput>;
-  where: FactResourceBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateFactResourceByPkArgs = {
-  _set?: InputMaybe<FactResourceSetInput>;
-  pkColumns: FactResourcePkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateFactResourceHistoryArgs = {
-  _set?: InputMaybe<FactResourceHistorySetInput>;
-  where: FactResourceHistoryBoolExp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateFactResourceHistoryByPkArgs = {
-  _set?: InputMaybe<FactResourceHistorySetInput>;
-  pkColumns: FactResourceHistoryPkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateFactResourceHistoryManyArgs = {
-  updates: Array<FactResourceHistoryUpdates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateFactResourceManyArgs = {
-  updates: Array<FactResourceUpdates>;
 };
 
 
@@ -7237,6 +7929,134 @@ export type Mutation_RootUpdateFileManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdateOriginArgs = {
+  _inc?: InputMaybe<OriginIncInput>;
+  _set?: InputMaybe<OriginSetInput>;
+  where: OriginBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateOriginByPkArgs = {
+  _inc?: InputMaybe<OriginIncInput>;
+  _set?: InputMaybe<OriginSetInput>;
+  pkColumns: OriginPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateOriginHistoryArgs = {
+  _inc?: InputMaybe<OriginHistoryIncInput>;
+  _set?: InputMaybe<OriginHistorySetInput>;
+  where: OriginHistoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateOriginHistoryByPkArgs = {
+  _inc?: InputMaybe<OriginHistoryIncInput>;
+  _set?: InputMaybe<OriginHistorySetInput>;
+  pkColumns: OriginHistoryPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateOriginHistoryManyArgs = {
+  updates: Array<OriginHistoryUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateOriginManyArgs = {
+  updates: Array<OriginUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateRatingArgs = {
+  _set?: InputMaybe<RatingSetInput>;
+  where: RatingBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateRatingByPkArgs = {
+  _set?: InputMaybe<RatingSetInput>;
+  pkColumns: RatingPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateRatingHistoryArgs = {
+  _set?: InputMaybe<RatingHistorySetInput>;
+  where: RatingHistoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateRatingHistoryByPkArgs = {
+  _set?: InputMaybe<RatingHistorySetInput>;
+  pkColumns: RatingHistoryPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateRatingHistoryManyArgs = {
+  updates: Array<RatingHistoryUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateRatingManyArgs = {
+  updates: Array<RatingUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateSourceArgs = {
+  _inc?: InputMaybe<SourceIncInput>;
+  _set?: InputMaybe<SourceSetInput>;
+  where: SourceBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateSourceByPkArgs = {
+  _inc?: InputMaybe<SourceIncInput>;
+  _set?: InputMaybe<SourceSetInput>;
+  pkColumns: SourcePkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateSourceHistoryArgs = {
+  _inc?: InputMaybe<SourceHistoryIncInput>;
+  _set?: InputMaybe<SourceHistorySetInput>;
+  where: SourceHistoryBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateSourceHistoryByPkArgs = {
+  _inc?: InputMaybe<SourceHistoryIncInput>;
+  _set?: InputMaybe<SourceHistorySetInput>;
+  pkColumns: SourceHistoryPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateSourceHistoryManyArgs = {
+  updates: Array<SourceHistoryUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateSourceManyArgs = {
+  updates: Array<SourceUpdates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdateUserArgs = {
   _set?: InputMaybe<UserSetInput>;
   where: UserBoolExp;
@@ -7275,72 +8095,46 @@ export type Mutation_RootUpdateUserManyArgs = {
   updates: Array<UserUpdates>;
 };
 
-
-/** mutation root */
-export type Mutation_RootUpdateViralityArgs = {
-  _inc?: InputMaybe<ViralityIncInput>;
-  _set?: InputMaybe<ViralitySetInput>;
-  where: ViralityBoolExp;
+export type OriginAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<OriginSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<OriginBoolExp>;
+  predicate: IntComparisonExp;
 };
 
-
-/** mutation root */
-export type Mutation_RootUpdateViralityByPkArgs = {
-  _inc?: InputMaybe<ViralityIncInput>;
-  _set?: InputMaybe<ViralitySetInput>;
-  pkColumns: ViralityPkColumnsInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdateViralityManyArgs = {
-  updates: Array<ViralityUpdates>;
+export type OriginHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<OriginHistoryBoolExp>;
+  predicate: IntComparisonExp;
 };
 
 export type Query_Root = {
   __typename?: 'query_root';
+  /** fetch data from the table: "category" */
+  category: Array<Category>;
+  /** fetch aggregated fields from the table: "category" */
+  categoryAggregate: CategoryAggregate;
+  /** fetch data from the table: "category" using primary key columns */
+  categoryByPk?: Maybe<Category>;
   /** fetch data from the table: "claim" */
   claim: Array<Claim>;
   /** fetch aggregated fields from the table: "claim" */
   claimAggregate: ClaimAggregate;
   /** fetch data from the table: "claim" using primary key columns */
   claimByPk?: Maybe<Claim>;
-  /** fetch data from the table: "claim_fact" */
-  claimFact: Array<ClaimFact>;
-  /** fetch aggregated fields from the table: "claim_fact" */
-  claimFactAggregate: ClaimFactAggregate;
-  /** fetch data from the table: "claim_fact" using primary key columns */
-  claimFactByPk?: Maybe<ClaimFact>;
-  /** fetch data from the table: "claim_fact_history" */
-  claimFactHistory: Array<ClaimFactHistory>;
-  /** fetch aggregated fields from the table: "claim_fact_history" */
-  claimFactHistoryAggregate: ClaimFactHistoryAggregate;
-  /** fetch data from the table: "claim_fact_history" using primary key columns */
-  claimFactHistoryByPk?: Maybe<ClaimFactHistory>;
+  /** fetch data from the table: "claim_category" */
+  claimCategory: Array<ClaimCategory>;
+  /** fetch aggregated fields from the table: "claim_category" */
+  claimCategoryAggregate: ClaimCategoryAggregate;
+  /** fetch data from the table: "claim_category" using primary key columns */
+  claimCategoryByPk?: Maybe<ClaimCategory>;
   /** fetch data from the table: "claim_history" */
   claimHistory: Array<ClaimHistory>;
   /** fetch aggregated fields from the table: "claim_history" */
   claimHistoryAggregate: ClaimHistoryAggregate;
   /** fetch data from the table: "claim_history" using primary key columns */
   claimHistoryByPk?: Maybe<ClaimHistory>;
-  /** fetch data from the table: "claim_resource" */
-  claimResource: Array<ClaimResource>;
-  /** fetch aggregated fields from the table: "claim_resource" */
-  claimResourceAggregate: ClaimResourceAggregate;
-  /** fetch data from the table: "claim_resource" using primary key columns */
-  claimResourceByPk?: Maybe<ClaimResource>;
-  /** fetch data from the table: "claim_resource_history" */
-  claimResourceHistory: Array<ClaimResourceHistory>;
-  /** fetch aggregated fields from the table: "claim_resource_history" */
-  claimResourceHistoryAggregate: ClaimResourceHistoryAggregate;
-  /** fetch data from the table: "claim_resource_history" using primary key columns */
-  claimResourceHistoryByPk?: Maybe<ClaimResourceHistory>;
-  /** fetch data from the table: "claim_submission_token" */
-  claimSubmissionToken: Array<ClaimSubmissionToken>;
-  /** fetch aggregated fields from the table: "claim_submission_token" */
-  claimSubmissionTokenAggregate: ClaimSubmissionTokenAggregate;
-  /** fetch data from the table: "claim_submission_token" using primary key columns */
-  claimSubmissionTokenByPk?: Maybe<ClaimSubmissionToken>;
   /** fetch data from the table: "comment" */
   comment: Array<Comment>;
   /** fetch aggregated fields from the table: "comment" */
@@ -7365,18 +8159,6 @@ export type Query_Root = {
   factHistoryAggregate: FactHistoryAggregate;
   /** fetch data from the table: "fact_history" using primary key columns */
   factHistoryByPk?: Maybe<FactHistory>;
-  /** fetch data from the table: "fact_resource" */
-  factResource: Array<FactResource>;
-  /** fetch aggregated fields from the table: "fact_resource" */
-  factResourceAggregate: FactResourceAggregate;
-  /** fetch data from the table: "fact_resource" using primary key columns */
-  factResourceByPk?: Maybe<FactResource>;
-  /** fetch data from the table: "fact_resource_history" */
-  factResourceHistory: Array<FactResourceHistory>;
-  /** fetch aggregated fields from the table: "fact_resource_history" */
-  factResourceHistoryAggregate: FactResourceHistoryAggregate;
-  /** fetch data from the table: "fact_resource_history" using primary key columns */
-  factResourceHistoryByPk?: Maybe<FactResourceHistory>;
   /** fetch data from the table: "file" */
   file: Array<File>;
   /** fetch aggregated fields from the table: "file" */
@@ -7389,6 +8171,42 @@ export type Query_Root = {
   fileHistoryAggregate: FileHistoryAggregate;
   /** fetch data from the table: "file_history" using primary key columns */
   fileHistoryByPk?: Maybe<FileHistory>;
+  /** fetch data from the table: "origin" */
+  origin: Array<Origin>;
+  /** fetch aggregated fields from the table: "origin" */
+  originAggregate: OriginAggregate;
+  /** fetch data from the table: "origin" using primary key columns */
+  originByPk?: Maybe<Origin>;
+  /** fetch data from the table: "origin_history" */
+  originHistory: Array<OriginHistory>;
+  /** fetch aggregated fields from the table: "origin_history" */
+  originHistoryAggregate: OriginHistoryAggregate;
+  /** fetch data from the table: "origin_history" using primary key columns */
+  originHistoryByPk?: Maybe<OriginHistory>;
+  /** fetch data from the table: "rating" */
+  rating: Array<Rating>;
+  /** fetch aggregated fields from the table: "rating" */
+  ratingAggregate: RatingAggregate;
+  /** fetch data from the table: "rating" using primary key columns */
+  ratingByPk?: Maybe<Rating>;
+  /** fetch data from the table: "rating_history" */
+  ratingHistory: Array<RatingHistory>;
+  /** fetch aggregated fields from the table: "rating_history" */
+  ratingHistoryAggregate: RatingHistoryAggregate;
+  /** fetch data from the table: "rating_history" using primary key columns */
+  ratingHistoryByPk?: Maybe<RatingHistory>;
+  /** fetch data from the table: "source" */
+  source: Array<Source>;
+  /** fetch aggregated fields from the table: "source" */
+  sourceAggregate: SourceAggregate;
+  /** fetch data from the table: "source" using primary key columns */
+  sourceByPk?: Maybe<Source>;
+  /** fetch data from the table: "source_history" */
+  sourceHistory: Array<SourceHistory>;
+  /** fetch aggregated fields from the table: "source_history" */
+  sourceHistoryAggregate: SourceHistoryAggregate;
+  /** fetch data from the table: "source_history" using primary key columns */
+  sourceHistoryByPk?: Maybe<SourceHistory>;
   /** fetch data from the table: "user" */
   user: Array<User>;
   /** fetch aggregated fields from the table: "user" */
@@ -7401,12 +8219,29 @@ export type Query_Root = {
   userHistoryAggregate: UserHistoryAggregate;
   /** fetch data from the table: "user_history" using primary key columns */
   userHistoryByPk?: Maybe<UserHistory>;
-  /** fetch data from the table: "virality" */
-  virality: Array<Virality>;
-  /** fetch aggregated fields from the table: "virality" */
-  viralityAggregate: ViralityAggregate;
-  /** fetch data from the table: "virality" using primary key columns */
-  viralityByPk?: Maybe<Virality>;
+};
+
+
+export type Query_RootCategoryArgs = {
+  distinctOn?: InputMaybe<Array<CategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategoryOrderBy>>;
+  where?: InputMaybe<CategoryBoolExp>;
+};
+
+
+export type Query_RootCategoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategoryOrderBy>>;
+  where?: InputMaybe<CategoryBoolExp>;
+};
+
+
+export type Query_RootCategoryByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -7433,49 +8268,26 @@ export type Query_RootClaimByPkArgs = {
 };
 
 
-export type Query_RootClaimFactArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type Query_RootClaimCategoryArgs = {
+  distinctOn?: InputMaybe<Array<ClaimCategorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<ClaimCategoryOrderBy>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
 };
 
 
-export type Query_RootClaimFactAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type Query_RootClaimCategoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ClaimCategorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<ClaimCategoryOrderBy>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
 };
 
 
-export type Query_RootClaimFactByPkArgs = {
+export type Query_RootClaimCategoryByPkArgs = {
   id: Scalars['uuid']['input'];
-};
-
-
-export type Query_RootClaimFactHistoryArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactHistoryOrderBy>>;
-  where?: InputMaybe<ClaimFactHistoryBoolExp>;
-};
-
-
-export type Query_RootClaimFactHistoryAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactHistoryOrderBy>>;
-  where?: InputMaybe<ClaimFactHistoryBoolExp>;
-};
-
-
-export type Query_RootClaimFactHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
 };
 
 
@@ -7499,75 +8311,6 @@ export type Query_RootClaimHistoryAggregateArgs = {
 
 export type Query_RootClaimHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
-};
-
-
-export type Query_RootClaimResourceArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-export type Query_RootClaimResourceAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-export type Query_RootClaimResourceByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Query_RootClaimResourceHistoryArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceHistoryOrderBy>>;
-  where?: InputMaybe<ClaimResourceHistoryBoolExp>;
-};
-
-
-export type Query_RootClaimResourceHistoryAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceHistoryOrderBy>>;
-  where?: InputMaybe<ClaimResourceHistoryBoolExp>;
-};
-
-
-export type Query_RootClaimResourceHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
-export type Query_RootClaimSubmissionTokenArgs = {
-  distinctOn?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimSubmissionTokenOrderBy>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-};
-
-
-export type Query_RootClaimSubmissionTokenAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimSubmissionTokenOrderBy>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-};
-
-
-export type Query_RootClaimSubmissionTokenByPkArgs = {
-  id: Scalars['uuid']['input'];
 };
 
 
@@ -7663,52 +8406,6 @@ export type Query_RootFactHistoryByPkArgs = {
 };
 
 
-export type Query_RootFactResourceArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
-export type Query_RootFactResourceAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
-export type Query_RootFactResourceByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Query_RootFactResourceHistoryArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceHistoryOrderBy>>;
-  where?: InputMaybe<FactResourceHistoryBoolExp>;
-};
-
-
-export type Query_RootFactResourceHistoryAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceHistoryOrderBy>>;
-  where?: InputMaybe<FactResourceHistoryBoolExp>;
-};
-
-
-export type Query_RootFactResourceHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
 export type Query_RootFileArgs = {
   distinctOn?: InputMaybe<Array<FileSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -7751,6 +8448,144 @@ export type Query_RootFileHistoryAggregateArgs = {
 
 
 export type Query_RootFileHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootOriginArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+export type Query_RootOriginAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+export type Query_RootOriginByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootOriginHistoryArgs = {
+  distinctOn?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginHistoryOrderBy>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+
+export type Query_RootOriginHistoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginHistoryOrderBy>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+
+export type Query_RootOriginHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootRatingArgs = {
+  distinctOn?: InputMaybe<Array<RatingSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingOrderBy>>;
+  where?: InputMaybe<RatingBoolExp>;
+};
+
+
+export type Query_RootRatingAggregateArgs = {
+  distinctOn?: InputMaybe<Array<RatingSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingOrderBy>>;
+  where?: InputMaybe<RatingBoolExp>;
+};
+
+
+export type Query_RootRatingByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootRatingHistoryArgs = {
+  distinctOn?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingHistoryOrderBy>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+
+export type Query_RootRatingHistoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingHistoryOrderBy>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+
+export type Query_RootRatingHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootSourceArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+export type Query_RootSourceAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+export type Query_RootSourceByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootSourceHistoryArgs = {
+  distinctOn?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceHistoryOrderBy>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+
+export type Query_RootSourceHistoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceHistoryOrderBy>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+
+export type Query_RootSourceHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
 };
 
@@ -7800,53 +8635,51 @@ export type Query_RootUserHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
 };
 
-
-export type Query_RootViralityArgs = {
-  distinctOn?: InputMaybe<Array<ViralitySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ViralityOrderBy>>;
-  where?: InputMaybe<ViralityBoolExp>;
+export type RatingHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<RatingHistoryBoolExp>;
+  predicate: IntComparisonExp;
 };
 
-
-export type Query_RootViralityAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ViralitySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ViralityOrderBy>>;
-  where?: InputMaybe<ViralityBoolExp>;
+export type SourceAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<SourceSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<SourceBoolExp>;
+  predicate: IntComparisonExp;
 };
 
-
-export type Query_RootViralityByPkArgs = {
-  id: Scalars['uuid']['input'];
+export type SourceHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<SourceHistoryBoolExp>;
+  predicate: IntComparisonExp;
 };
 
 export type Subscription_Root = {
   __typename?: 'subscription_root';
+  /** fetch data from the table: "category" */
+  category: Array<Category>;
+  /** fetch aggregated fields from the table: "category" */
+  categoryAggregate: CategoryAggregate;
+  /** fetch data from the table: "category" using primary key columns */
+  categoryByPk?: Maybe<Category>;
+  /** fetch data from the table in a streaming manner: "category" */
+  categoryStream: Array<Category>;
   /** fetch data from the table: "claim" */
   claim: Array<Claim>;
   /** fetch aggregated fields from the table: "claim" */
   claimAggregate: ClaimAggregate;
   /** fetch data from the table: "claim" using primary key columns */
   claimByPk?: Maybe<Claim>;
-  /** fetch data from the table: "claim_fact" */
-  claimFact: Array<ClaimFact>;
-  /** fetch aggregated fields from the table: "claim_fact" */
-  claimFactAggregate: ClaimFactAggregate;
-  /** fetch data from the table: "claim_fact" using primary key columns */
-  claimFactByPk?: Maybe<ClaimFact>;
-  /** fetch data from the table: "claim_fact_history" */
-  claimFactHistory: Array<ClaimFactHistory>;
-  /** fetch aggregated fields from the table: "claim_fact_history" */
-  claimFactHistoryAggregate: ClaimFactHistoryAggregate;
-  /** fetch data from the table: "claim_fact_history" using primary key columns */
-  claimFactHistoryByPk?: Maybe<ClaimFactHistory>;
-  /** fetch data from the table in a streaming manner: "claim_fact_history" */
-  claimFactHistoryStream: Array<ClaimFactHistory>;
-  /** fetch data from the table in a streaming manner: "claim_fact" */
-  claimFactStream: Array<ClaimFact>;
+  /** fetch data from the table: "claim_category" */
+  claimCategory: Array<ClaimCategory>;
+  /** fetch aggregated fields from the table: "claim_category" */
+  claimCategoryAggregate: ClaimCategoryAggregate;
+  /** fetch data from the table: "claim_category" using primary key columns */
+  claimCategoryByPk?: Maybe<ClaimCategory>;
+  /** fetch data from the table in a streaming manner: "claim_category" */
+  claimCategoryStream: Array<ClaimCategory>;
   /** fetch data from the table: "claim_history" */
   claimHistory: Array<ClaimHistory>;
   /** fetch aggregated fields from the table: "claim_history" */
@@ -7855,32 +8688,8 @@ export type Subscription_Root = {
   claimHistoryByPk?: Maybe<ClaimHistory>;
   /** fetch data from the table in a streaming manner: "claim_history" */
   claimHistoryStream: Array<ClaimHistory>;
-  /** fetch data from the table: "claim_resource" */
-  claimResource: Array<ClaimResource>;
-  /** fetch aggregated fields from the table: "claim_resource" */
-  claimResourceAggregate: ClaimResourceAggregate;
-  /** fetch data from the table: "claim_resource" using primary key columns */
-  claimResourceByPk?: Maybe<ClaimResource>;
-  /** fetch data from the table: "claim_resource_history" */
-  claimResourceHistory: Array<ClaimResourceHistory>;
-  /** fetch aggregated fields from the table: "claim_resource_history" */
-  claimResourceHistoryAggregate: ClaimResourceHistoryAggregate;
-  /** fetch data from the table: "claim_resource_history" using primary key columns */
-  claimResourceHistoryByPk?: Maybe<ClaimResourceHistory>;
-  /** fetch data from the table in a streaming manner: "claim_resource_history" */
-  claimResourceHistoryStream: Array<ClaimResourceHistory>;
-  /** fetch data from the table in a streaming manner: "claim_resource" */
-  claimResourceStream: Array<ClaimResource>;
   /** fetch data from the table in a streaming manner: "claim" */
   claimStream: Array<Claim>;
-  /** fetch data from the table: "claim_submission_token" */
-  claimSubmissionToken: Array<ClaimSubmissionToken>;
-  /** fetch aggregated fields from the table: "claim_submission_token" */
-  claimSubmissionTokenAggregate: ClaimSubmissionTokenAggregate;
-  /** fetch data from the table: "claim_submission_token" using primary key columns */
-  claimSubmissionTokenByPk?: Maybe<ClaimSubmissionToken>;
-  /** fetch data from the table in a streaming manner: "claim_submission_token" */
-  claimSubmissionTokenStream: Array<ClaimSubmissionToken>;
   /** fetch data from the table: "comment" */
   comment: Array<Comment>;
   /** fetch aggregated fields from the table: "comment" */
@@ -7911,22 +8720,6 @@ export type Subscription_Root = {
   factHistoryByPk?: Maybe<FactHistory>;
   /** fetch data from the table in a streaming manner: "fact_history" */
   factHistoryStream: Array<FactHistory>;
-  /** fetch data from the table: "fact_resource" */
-  factResource: Array<FactResource>;
-  /** fetch aggregated fields from the table: "fact_resource" */
-  factResourceAggregate: FactResourceAggregate;
-  /** fetch data from the table: "fact_resource" using primary key columns */
-  factResourceByPk?: Maybe<FactResource>;
-  /** fetch data from the table: "fact_resource_history" */
-  factResourceHistory: Array<FactResourceHistory>;
-  /** fetch aggregated fields from the table: "fact_resource_history" */
-  factResourceHistoryAggregate: FactResourceHistoryAggregate;
-  /** fetch data from the table: "fact_resource_history" using primary key columns */
-  factResourceHistoryByPk?: Maybe<FactResourceHistory>;
-  /** fetch data from the table in a streaming manner: "fact_resource_history" */
-  factResourceHistoryStream: Array<FactResourceHistory>;
-  /** fetch data from the table in a streaming manner: "fact_resource" */
-  factResourceStream: Array<FactResource>;
   /** fetch data from the table in a streaming manner: "fact" */
   factStream: Array<Fact>;
   /** fetch data from the table: "file" */
@@ -7945,6 +8738,54 @@ export type Subscription_Root = {
   fileHistoryStream: Array<FileHistory>;
   /** fetch data from the table in a streaming manner: "file" */
   fileStream: Array<File>;
+  /** fetch data from the table: "origin" */
+  origin: Array<Origin>;
+  /** fetch aggregated fields from the table: "origin" */
+  originAggregate: OriginAggregate;
+  /** fetch data from the table: "origin" using primary key columns */
+  originByPk?: Maybe<Origin>;
+  /** fetch data from the table: "origin_history" */
+  originHistory: Array<OriginHistory>;
+  /** fetch aggregated fields from the table: "origin_history" */
+  originHistoryAggregate: OriginHistoryAggregate;
+  /** fetch data from the table: "origin_history" using primary key columns */
+  originHistoryByPk?: Maybe<OriginHistory>;
+  /** fetch data from the table in a streaming manner: "origin_history" */
+  originHistoryStream: Array<OriginHistory>;
+  /** fetch data from the table in a streaming manner: "origin" */
+  originStream: Array<Origin>;
+  /** fetch data from the table: "rating" */
+  rating: Array<Rating>;
+  /** fetch aggregated fields from the table: "rating" */
+  ratingAggregate: RatingAggregate;
+  /** fetch data from the table: "rating" using primary key columns */
+  ratingByPk?: Maybe<Rating>;
+  /** fetch data from the table: "rating_history" */
+  ratingHistory: Array<RatingHistory>;
+  /** fetch aggregated fields from the table: "rating_history" */
+  ratingHistoryAggregate: RatingHistoryAggregate;
+  /** fetch data from the table: "rating_history" using primary key columns */
+  ratingHistoryByPk?: Maybe<RatingHistory>;
+  /** fetch data from the table in a streaming manner: "rating_history" */
+  ratingHistoryStream: Array<RatingHistory>;
+  /** fetch data from the table in a streaming manner: "rating" */
+  ratingStream: Array<Rating>;
+  /** fetch data from the table: "source" */
+  source: Array<Source>;
+  /** fetch aggregated fields from the table: "source" */
+  sourceAggregate: SourceAggregate;
+  /** fetch data from the table: "source" using primary key columns */
+  sourceByPk?: Maybe<Source>;
+  /** fetch data from the table: "source_history" */
+  sourceHistory: Array<SourceHistory>;
+  /** fetch aggregated fields from the table: "source_history" */
+  sourceHistoryAggregate: SourceHistoryAggregate;
+  /** fetch data from the table: "source_history" using primary key columns */
+  sourceHistoryByPk?: Maybe<SourceHistory>;
+  /** fetch data from the table in a streaming manner: "source_history" */
+  sourceHistoryStream: Array<SourceHistory>;
+  /** fetch data from the table in a streaming manner: "source" */
+  sourceStream: Array<Source>;
   /** fetch data from the table: "user" */
   user: Array<User>;
   /** fetch aggregated fields from the table: "user" */
@@ -7961,14 +8802,36 @@ export type Subscription_Root = {
   userHistoryStream: Array<UserHistory>;
   /** fetch data from the table in a streaming manner: "user" */
   userStream: Array<User>;
-  /** fetch data from the table: "virality" */
-  virality: Array<Virality>;
-  /** fetch aggregated fields from the table: "virality" */
-  viralityAggregate: ViralityAggregate;
-  /** fetch data from the table: "virality" using primary key columns */
-  viralityByPk?: Maybe<Virality>;
-  /** fetch data from the table in a streaming manner: "virality" */
-  viralityStream: Array<Virality>;
+};
+
+
+export type Subscription_RootCategoryArgs = {
+  distinctOn?: InputMaybe<Array<CategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategoryOrderBy>>;
+  where?: InputMaybe<CategoryBoolExp>;
+};
+
+
+export type Subscription_RootCategoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategoryOrderBy>>;
+  where?: InputMaybe<CategoryBoolExp>;
+};
+
+
+export type Subscription_RootCategoryByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootCategoryStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<CategoryStreamCursorInput>>;
+  where?: InputMaybe<CategoryBoolExp>;
 };
 
 
@@ -7995,63 +8858,33 @@ export type Subscription_RootClaimByPkArgs = {
 };
 
 
-export type Subscription_RootClaimFactArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type Subscription_RootClaimCategoryArgs = {
+  distinctOn?: InputMaybe<Array<ClaimCategorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<ClaimCategoryOrderBy>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
 };
 
 
-export type Subscription_RootClaimFactAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactSelectColumn>>;
+export type Subscription_RootClaimCategoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ClaimCategorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactOrderBy>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  orderBy?: InputMaybe<Array<ClaimCategoryOrderBy>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
 };
 
 
-export type Subscription_RootClaimFactByPkArgs = {
+export type Subscription_RootClaimCategoryByPkArgs = {
   id: Scalars['uuid']['input'];
 };
 
 
-export type Subscription_RootClaimFactHistoryArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactHistoryOrderBy>>;
-  where?: InputMaybe<ClaimFactHistoryBoolExp>;
-};
-
-
-export type Subscription_RootClaimFactHistoryAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimFactHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimFactHistoryOrderBy>>;
-  where?: InputMaybe<ClaimFactHistoryBoolExp>;
-};
-
-
-export type Subscription_RootClaimFactHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootClaimFactHistoryStreamArgs = {
+export type Subscription_RootClaimCategoryStreamArgs = {
   batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<ClaimFactHistoryStreamCursorInput>>;
-  where?: InputMaybe<ClaimFactHistoryBoolExp>;
-};
-
-
-export type Subscription_RootClaimFactStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<ClaimFactStreamCursorInput>>;
-  where?: InputMaybe<ClaimFactBoolExp>;
+  cursor: Array<InputMaybe<ClaimCategoryStreamCursorInput>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
 };
 
 
@@ -8085,100 +8918,10 @@ export type Subscription_RootClaimHistoryStreamArgs = {
 };
 
 
-export type Subscription_RootClaimResourceArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-export type Subscription_RootClaimResourceAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceOrderBy>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
-export type Subscription_RootClaimResourceByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootClaimResourceHistoryArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceHistoryOrderBy>>;
-  where?: InputMaybe<ClaimResourceHistoryBoolExp>;
-};
-
-
-export type Subscription_RootClaimResourceHistoryAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimResourceHistoryOrderBy>>;
-  where?: InputMaybe<ClaimResourceHistoryBoolExp>;
-};
-
-
-export type Subscription_RootClaimResourceHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootClaimResourceHistoryStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<ClaimResourceHistoryStreamCursorInput>>;
-  where?: InputMaybe<ClaimResourceHistoryBoolExp>;
-};
-
-
-export type Subscription_RootClaimResourceStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<ClaimResourceStreamCursorInput>>;
-  where?: InputMaybe<ClaimResourceBoolExp>;
-};
-
-
 export type Subscription_RootClaimStreamArgs = {
   batchSize: Scalars['Int']['input'];
   cursor: Array<InputMaybe<ClaimStreamCursorInput>>;
   where?: InputMaybe<ClaimBoolExp>;
-};
-
-
-export type Subscription_RootClaimSubmissionTokenArgs = {
-  distinctOn?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimSubmissionTokenOrderBy>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-};
-
-
-export type Subscription_RootClaimSubmissionTokenAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ClaimSubmissionTokenSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ClaimSubmissionTokenOrderBy>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
-};
-
-
-export type Subscription_RootClaimSubmissionTokenByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootClaimSubmissionTokenStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<ClaimSubmissionTokenStreamCursorInput>>;
-  where?: InputMaybe<ClaimSubmissionTokenBoolExp>;
 };
 
 
@@ -8295,66 +9038,6 @@ export type Subscription_RootFactHistoryStreamArgs = {
 };
 
 
-export type Subscription_RootFactResourceArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
-export type Subscription_RootFactResourceAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceSelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceOrderBy>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
-export type Subscription_RootFactResourceByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootFactResourceHistoryArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceHistoryOrderBy>>;
-  where?: InputMaybe<FactResourceHistoryBoolExp>;
-};
-
-
-export type Subscription_RootFactResourceHistoryAggregateArgs = {
-  distinctOn?: InputMaybe<Array<FactResourceHistorySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<FactResourceHistoryOrderBy>>;
-  where?: InputMaybe<FactResourceHistoryBoolExp>;
-};
-
-
-export type Subscription_RootFactResourceHistoryByPkArgs = {
-  historyId: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootFactResourceHistoryStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<FactResourceHistoryStreamCursorInput>>;
-  where?: InputMaybe<FactResourceHistoryBoolExp>;
-};
-
-
-export type Subscription_RootFactResourceStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<FactResourceStreamCursorInput>>;
-  where?: InputMaybe<FactResourceBoolExp>;
-};
-
-
 export type Subscription_RootFactStreamArgs = {
   batchSize: Scalars['Int']['input'];
   cursor: Array<InputMaybe<FactStreamCursorInput>>;
@@ -8422,6 +9105,186 @@ export type Subscription_RootFileStreamArgs = {
 };
 
 
+export type Subscription_RootOriginArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+export type Subscription_RootOriginAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginOrderBy>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+export type Subscription_RootOriginByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootOriginHistoryArgs = {
+  distinctOn?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginHistoryOrderBy>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+
+export type Subscription_RootOriginHistoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<OriginHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OriginHistoryOrderBy>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+
+export type Subscription_RootOriginHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootOriginHistoryStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<OriginHistoryStreamCursorInput>>;
+  where?: InputMaybe<OriginHistoryBoolExp>;
+};
+
+
+export type Subscription_RootOriginStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<OriginStreamCursorInput>>;
+  where?: InputMaybe<OriginBoolExp>;
+};
+
+
+export type Subscription_RootRatingArgs = {
+  distinctOn?: InputMaybe<Array<RatingSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingOrderBy>>;
+  where?: InputMaybe<RatingBoolExp>;
+};
+
+
+export type Subscription_RootRatingAggregateArgs = {
+  distinctOn?: InputMaybe<Array<RatingSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingOrderBy>>;
+  where?: InputMaybe<RatingBoolExp>;
+};
+
+
+export type Subscription_RootRatingByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootRatingHistoryArgs = {
+  distinctOn?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingHistoryOrderBy>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+
+export type Subscription_RootRatingHistoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<RatingHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RatingHistoryOrderBy>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+
+export type Subscription_RootRatingHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootRatingHistoryStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<RatingHistoryStreamCursorInput>>;
+  where?: InputMaybe<RatingHistoryBoolExp>;
+};
+
+
+export type Subscription_RootRatingStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<RatingStreamCursorInput>>;
+  where?: InputMaybe<RatingBoolExp>;
+};
+
+
+export type Subscription_RootSourceArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+export type Subscription_RootSourceAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceOrderBy>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
+export type Subscription_RootSourceByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootSourceHistoryArgs = {
+  distinctOn?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceHistoryOrderBy>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+
+export type Subscription_RootSourceHistoryAggregateArgs = {
+  distinctOn?: InputMaybe<Array<SourceHistorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SourceHistoryOrderBy>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+
+export type Subscription_RootSourceHistoryByPkArgs = {
+  historyId: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootSourceHistoryStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<SourceHistoryStreamCursorInput>>;
+  where?: InputMaybe<SourceHistoryBoolExp>;
+};
+
+
+export type Subscription_RootSourceStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<SourceStreamCursorInput>>;
+  where?: InputMaybe<SourceBoolExp>;
+};
+
+
 export type Subscription_RootUserArgs = {
   distinctOn?: InputMaybe<Array<UserSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -8481,47 +9344,20 @@ export type Subscription_RootUserStreamArgs = {
   where?: InputMaybe<UserBoolExp>;
 };
 
-
-export type Subscription_RootViralityArgs = {
-  distinctOn?: InputMaybe<Array<ViralitySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ViralityOrderBy>>;
-  where?: InputMaybe<ViralityBoolExp>;
-};
-
-
-export type Subscription_RootViralityAggregateArgs = {
-  distinctOn?: InputMaybe<Array<ViralitySelectColumn>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ViralityOrderBy>>;
-  where?: InputMaybe<ViralityBoolExp>;
-};
-
-
-export type Subscription_RootViralityByPkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootViralityStreamArgs = {
-  batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<ViralityStreamCursorInput>>;
-  where?: InputMaybe<ViralityBoolExp>;
-};
-
-export type ViralityAggregateBoolExpCount = {
-  arguments?: InputMaybe<Array<ViralitySelectColumn>>;
+export type UserHistoryAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<UserHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<ViralityBoolExp>;
+  filter?: InputMaybe<UserHistoryBoolExp>;
   predicate: IntComparisonExp;
 };
 
-export type DeleteExpiredSubmissionTokensMutationVariables = Exact<{ [key: string]: never; }>;
+export type InsertClaimMutationVariables = Exact<{
+  submitterNotes?: InputMaybe<Scalars['String']['input']>;
+  origins?: InputMaybe<Array<OriginInsertInput> | OriginInsertInput>;
+}>;
 
 
-export type DeleteExpiredSubmissionTokensMutation = { __typename?: 'mutation_root', deleteClaimSubmissionToken?: { __typename?: 'ClaimSubmissionTokenMutationResponse', returning: Array<{ __typename?: 'ClaimSubmissionToken', id: any }> } | null };
+export type InsertClaimMutation = { __typename?: 'mutation_root', insertClaim?: { __typename?: 'ClaimMutationResponse', returning: Array<{ __typename?: 'Claim', id: any, createdAt?: any | null, updatedAt?: any | null }> } | null };
 
 export type GetFileByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -8543,11 +9379,15 @@ export type InsertFileMutationVariables = Exact<{
 export type InsertFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null };
 
 
-export const DeleteExpiredSubmissionTokensDocument = gql`
-    mutation deleteExpiredSubmissionTokens {
-  deleteClaimSubmissionToken(where: {expiresAt: {_lt: now}}) {
+export const InsertClaimDocument = gql`
+    mutation InsertClaim($submitterNotes: String = "", $origins: [OriginInsertInput!] = []) {
+  insertClaim(
+    objects: {submitterNotes: $submitterNotes, origins: {data: $origins}}
+  ) {
     returning {
       id
+      createdAt
+      updatedAt
     }
   }
 }
@@ -8581,8 +9421,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    deleteExpiredSubmissionTokens(variables?: DeleteExpiredSubmissionTokensMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteExpiredSubmissionTokensMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteExpiredSubmissionTokensMutation>(DeleteExpiredSubmissionTokensDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteExpiredSubmissionTokens', 'mutation', variables);
+    InsertClaim(variables?: InsertClaimMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertClaimMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertClaimMutation>(InsertClaimDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsertClaim', 'mutation', variables);
     },
     getFileById(variables: GetFileByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetFileByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetFileByIdQuery>(GetFileByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFileById', 'query', variables);

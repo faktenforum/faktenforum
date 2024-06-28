@@ -1,0 +1,18 @@
+table:
+  name: rating
+  schema: public
+array_relationships:
+  - name: claims
+    using:
+      foreign_key_constraint_on:
+        column: rating_id
+        table:
+          name: claim
+          schema: public
+  - name: ratingHistories
+    using:
+      foreign_key_constraint_on:
+        column: id
+        table:
+          name: rating_history
+          schema: public

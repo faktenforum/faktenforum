@@ -2,6 +2,9 @@ table:
   name: claim
   schema: public
 object_relationships:
+  - name: rating
+    using:
+      foreign_key_constraint_on: rating_id
   - name: user
     using:
       foreign_key_constraint_on: created_by
@@ -9,26 +12,12 @@ object_relationships:
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
-  - name: claim_facts
+  - name: claimHistories
     using:
       foreign_key_constraint_on:
-        column: claim_id
+        column: id
         table:
-          name: claim_fact
-          schema: public
-  - name: claim_resources
-    using:
-      foreign_key_constraint_on:
-        column: claim_id
-        table:
-          name: claim_resource
-          schema: public
-  - name: claim_submission_tokens
-    using:
-      foreign_key_constraint_on:
-        column: claim_id
-        table:
-          name: claim_submission_token
+          name: claim_history
           schema: public
   - name: comments
     using:
@@ -37,12 +26,19 @@ array_relationships:
         table:
           name: comment
           schema: public
-  - name: viralities
+  - name: facts
     using:
       foreign_key_constraint_on:
         column: claim_id
         table:
-          name: virality
+          name: fact
+          schema: public
+  - name: origins
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: origin
           schema: public
 insert_permissions:
   - role: moderator
@@ -51,38 +47,28 @@ insert_permissions:
       set:
         created_at: x-hasura-User-Id
       columns:
-        - archive_at
-        - archive_id
-        - description
-        - label
+        - submitter_notes
         - status
-        - tags
-        - title
     comment: ""
 select_permissions:
   - role: junior
     permission:
       columns:
-        - archive_at
-        - archive_id
         - created_at
         - created_by
-        - description
+        - submitter_notes
         - id
-        - label
         - process_id
         - status
         - sys_period
-        - tags
-        - title
         - updated_at
         - updated_by
       filter:
         status:
           _in:
-            - ready_to_check
+            - accepted
             - in_progress
-            - archived
+            - stale
             - checked
             - published
       allow_aggregations: true
@@ -90,18 +76,13 @@ select_permissions:
   - role: moderator
     permission:
       columns:
-        - archive_at
-        - archive_id
         - created_at
         - created_by
-        - description
+        - submitter_notes
         - id
-        - label
         - process_id
         - status
         - sys_period
-        - tags
-        - title
         - updated_at
         - updated_by
       filter: {}
@@ -111,13 +92,8 @@ update_permissions:
   - role: moderator
     permission:
       columns:
-        - archive_at
-        - archive_id
-        - description
-        - label
+        - submitter_notes
         - status
-        - tags
-        - title
       filter: {}
       check: null
       set:

@@ -1,19 +1,7 @@
 table:
   name: comment_history
   schema: public
-select_permissions:
-  - role: moderator
-    permission:
-      columns:
-        - content
-        - created_at
-        - updated_at
-        - sys_period
-        - claim_id
-        - created_by
-        - history_id
-        - id
-        - updated_by
-      filter: {}
-      allow_aggregations: true
-    comment: ""
+object_relationships:
+  - name: comment
+    using:
+      foreign_key_constraint_on: id

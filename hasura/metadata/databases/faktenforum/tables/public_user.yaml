@@ -2,33 +2,12 @@ table:
   name: user
   schema: public
 array_relationships:
-  - name: claimFactsByUpdatedBy
-    using:
-      foreign_key_constraint_on:
-        column: updated_by
-        table:
-          name: claim_fact
-          schema: public
   - name: claimResourcesByUpdatedBy
     using:
       foreign_key_constraint_on:
         column: updated_by
         table:
-          name: claim_resource
-          schema: public
-  - name: claim_facts
-    using:
-      foreign_key_constraint_on:
-        column: created_by
-        table:
-          name: claim_fact
-          schema: public
-  - name: claim_resources
-    using:
-      foreign_key_constraint_on:
-        column: created_by
-        table:
-          name: claim_resource
+          name: origin
           schema: public
   - name: claims
     using:
@@ -63,14 +42,7 @@ array_relationships:
       foreign_key_constraint_on:
         column: updated_by
         table:
-          name: fact_resource
-          schema: public
-  - name: fact_resources
-    using:
-      foreign_key_constraint_on:
-        column: created_by
-        table:
-          name: fact_resource
+          name: source
           schema: public
   - name: facts
     using:
@@ -99,6 +71,27 @@ array_relationships:
         column: updated_by
         table:
           name: file
+          schema: public
+  - name: origins
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: origin
+          schema: public
+  - name: sources
+    using:
+      foreign_key_constraint_on:
+        column: created_by
+        table:
+          name: source
+          schema: public
+  - name: userHistories
+    using:
+      foreign_key_constraint_on:
+        column: id
+        table:
+          name: user_history
           schema: public
 select_permissions:
   - role: moderator

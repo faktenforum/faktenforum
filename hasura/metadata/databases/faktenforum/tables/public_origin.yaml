@@ -1,19 +1,27 @@
 table:
-  name: claim_fact
+  name: origin
   schema: public
 object_relationships:
   - name: claim
     using:
       foreign_key_constraint_on: claim_id
-  - name: fact
+  - name: file
     using:
-      foreign_key_constraint_on: fact_id
+      foreign_key_constraint_on: file_id
   - name: user
     using:
       foreign_key_constraint_on: created_by
   - name: userByUpdatedBy
     using:
       foreign_key_constraint_on: updated_by
+array_relationships:
+  - name: originHistories
+    using:
+      foreign_key_constraint_on:
+        column: id
+        table:
+          name: origin_history
+          schema: public
 insert_permissions:
   - role: moderator
     permission:
@@ -22,19 +30,25 @@ insert_permissions:
         created_by: x-hasura-User-Id
       columns:
         - claim_id
-        - fact_id
-        - id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - url
+        - updated_at
     comment: ""
 select_permissions:
   - role: moderator
     permission:
       columns:
+        - excerpt
+        - url
         - created_at
         - updated_at
         - sys_period
         - claim_id
         - created_by
-        - fact_id
+        - file_id
         - id
         - updated_by
       filter: {}
@@ -44,11 +58,17 @@ update_permissions:
   - role: moderator
     permission:
       columns:
-        - claim_id
-        - fact_id
-        - id
+        - excerpt
+        - url
+        - sys_period
+        - updated_by
       filter: {}
       check: null
       set:
-        updated_by: x-hasura-User-Id
+        created_by: x-hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
     comment: ""

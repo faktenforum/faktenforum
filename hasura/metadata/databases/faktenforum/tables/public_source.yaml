@@ -1,5 +1,5 @@
 table:
-  name: fact_resource
+  name: source
   schema: public
 object_relationships:
   - name: fact
@@ -14,11 +14,19 @@ object_relationships:
   - name: userByUpdatedBy
     using:
       foreign_key_constraint_on: updated_by
+array_relationships:
+  - name: sourceHistories
+    using:
+      foreign_key_constraint_on:
+        column: id
+        table:
+          name: source_history
+          schema: public
 select_permissions:
   - role: moderator
     permission:
       columns:
-        - description
+        - excerpt
         - original_url
         - created_at
         - updated_at

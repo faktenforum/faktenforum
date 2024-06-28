@@ -8,120 +8,81 @@ datasource db {
 }
 
 model claim_history {
+  id              String                    @db.Uuid
+  short_id        String?
+  process_id      BigInt?
+  submitter_notes String?
+  status          claim_status
+  synopsis        String?
+  rating_id       String?                   @db.Uuid
+  created_by      String?                   @db.Uuid
+  updated_by      String?                   @db.Uuid
+  created_at      DateTime?                 @db.Timestamptz(6)
+  updated_at      DateTime?                 @db.Timestamptz(6)
+  sys_period      Unsupported("tstzrange")?
+  history_id      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  claim           claim                     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
+}
+
+model claim {
+  id                          String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  short_id                    String?                     @unique @default(dbgenerated("generate_unique_claim_short_id()"))
+  process_id                  BigInt?                     @unique(map: "claim_process_id")
+  submitter_notes             String?
+  status                      claim_status                @default(submitted)
+  synopsis                    String?
+  rating_id                   String?                     @db.Uuid
+  created_by                  String?                     @db.Uuid
+  updated_by                  String?                     @db.Uuid
+  created_at                  DateTime?                   @default(now()) @db.Timestamptz(6)
+  updated_at                  DateTime?                   @default(now()) @db.Timestamptz(6)
+  sys_period                  Unsupported("tstzrange")?
+  user_claim_created_byTouser user?                       @relation("claim_created_byTouser", fields: [created_by], references: [id])
+  rating                      rating?                     @relation(fields: [rating_id], references: [id])
+  user_claim_updated_byTouser user?                       @relation("claim_updated_byTouser", fields: [updated_by], references: [id])
+  claim_fact_index_tracker    claim_fact_index_tracker?
+  claim_history               claim_history[]
+  claim_origin_index_tracker  claim_origin_index_tracker?
+  comment                     comment[]
+  fact                        fact[]
+  origin                      origin[]
+}
+
+model origin {
+  id                           String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  claim_id                     String                    @db.Uuid
+  index                        Int?
+  url                          String?
+  excerpt                      String?
+  archive_url                  String?
+  file_id                      String?                   @db.Uuid
+  created_by                   String?                   @db.Uuid
+  updated_by                   String?                   @db.Uuid
+  created_at                   DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at                   DateTime?                 @default(now()) @db.Timestamptz(6)
+  sys_period                   Unsupported("tstzrange")?
+  claim                        claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+  user_origin_created_byTouser user?                     @relation("origin_created_byTouser", fields: [created_by], references: [id])
+  file                         file?                     @relation(fields: [file_id], references: [id])
+  user_origin_updated_byTouser user?                     @relation("origin_updated_byTouser", fields: [updated_by], references: [id])
+  origin_history               origin_history[]
+}
+
+model origin_history {
   id          String                    @db.Uuid
-  title       String?
-  description String?
-  tags        String[]
-  label       claim_label?
-  status      claim_status
-  archive_id  String?                   @db.Uuid
-  archive_at  DateTime?
+  claim_id    String                    @db.Uuid
+  index       Int?
+  url         String?
+  excerpt     String?
+  archive_url String?
+  file_id     String?                   @db.Uuid
   created_by  String?                   @db.Uuid
   updated_by  String?                   @db.Uuid
   created_at  DateTime?                 @db.Timestamptz(6)
   updated_at  DateTime?                 @db.Timestamptz(6)
   sys_period  Unsupported("tstzrange")?
   history_id  String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  process_id  Int?
-  claim       claim                     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
-}
-
-model claim {
-  id                          String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title                       String?
-  description                 String?
-  tags                        String[]                  @default([])
-  label                       claim_label?
-  status                      claim_status              @default(submitted)
-  archive_id                  String?                   @db.Uuid
-  archive_at                  DateTime?
-  created_by                  String?                   @db.Uuid
-  updated_by                  String?                   @db.Uuid
-  created_at                  DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at                  DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period                  Unsupported("tstzrange")?
-  process_id                  Int?
-  user_claim_created_byTouser user?                     @relation("claim_created_byTouser", fields: [created_by], references: [id])
-  user_claim_updated_byTouser user?                     @relation("claim_updated_byTouser", fields: [updated_by], references: [id])
-  claim_fact                  claim_fact[]
-  claim_history               claim_history[]
-  claim_resource              claim_resource[]
-  claim_submission_token      claim_submission_token[]
-  comment                     comment[]
-  virality                    virality[]
-}
-
-model claim_fact {
-  id                               String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  claim_id                         String                    @db.Uuid
-  fact_id                          String                    @db.Uuid
-  created_by                       String?                   @db.Uuid
-  updated_by                       String?                   @db.Uuid
-  created_at                       DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at                       DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period                       Unsupported("tstzrange")?
-  claim                            claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
-  user_claim_fact_created_byTouser user?                     @relation("claim_fact_created_byTouser", fields: [created_by], references: [id])
-  fact                             fact                      @relation(fields: [fact_id], references: [id], onDelete: Cascade)
-  user_claim_fact_updated_byTouser user?                     @relation("claim_fact_updated_byTouser", fields: [updated_by], references: [id])
-  claim_fact_history               claim_fact_history[]
-}
-
-model claim_fact_history {
-  id         String                    @db.Uuid
-  claim_id   String                    @db.Uuid
-  fact_id    String                    @db.Uuid
-  created_by String?                   @db.Uuid
-  updated_by String?                   @db.Uuid
-  created_at DateTime?                 @db.Timestamptz(6)
-  updated_at DateTime?                 @db.Timestamptz(6)
-  sys_period Unsupported("tstzrange")?
-  history_id String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  claim_fact claim_fact                @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_fact_history")
-}
-
-model claim_resource {
-  id                                   String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  original_url                         String?
-  description                          String?
-  file_id                              String?                   @db.Uuid
-  claim_id                             String                    @db.Uuid
-  created_by                           String?                   @db.Uuid
-  updated_by                           String?                   @db.Uuid
-  created_at                           DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at                           DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period                           Unsupported("tstzrange")?
-  claim                                claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
-  user_claim_resource_created_byTouser user?                     @relation("claim_resource_created_byTouser", fields: [created_by], references: [id])
-  file                                 file?                     @relation(fields: [file_id], references: [id])
-  user_claim_resource_updated_byTouser user?                     @relation("claim_resource_updated_byTouser", fields: [updated_by], references: [id])
-  claim_resource_history               claim_resource_history[]
-}
-
-model claim_resource_history {
-  id             String                    @db.Uuid
-  original_url   String?
-  description    String?
-  file_id        String?                   @db.Uuid
-  claim_id       String                    @db.Uuid
-  created_by     String?                   @db.Uuid
-  updated_by     String?                   @db.Uuid
-  created_at     DateTime?                 @db.Timestamptz(6)
-  updated_at     DateTime?                 @db.Timestamptz(6)
-  sys_period     Unsupported("tstzrange")?
-  history_id     String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  claim_resource claim_resource            @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_resource_history")
-}
-
-model claim_submission_token {
-  id         String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  token      String                    @unique
-  claim_id   String                    @db.Uuid
-  expires_at DateTime
-  created_at DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period Unsupported("tstzrange")?
-  claim      claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+  origin      origin                    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_origin_history")
 }
 
 model comment {
@@ -153,65 +114,70 @@ model comment_history {
 }
 
 model fact {
-  id                         String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title                      String?
-  description                String?
-  created_by                 String?                   @db.Uuid
-  updated_by                 String?                   @db.Uuid
-  created_at                 DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at                 DateTime?                 @default(now()) @db.Timestamptz(6)
+  id                         String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  claim_id                   String                     @db.Uuid
+  index                      Int?
+  text                       String?
+  created_by                 String?                    @db.Uuid
+  updated_by                 String?                    @db.Uuid
+  created_at                 DateTime?                  @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime?                  @default(now()) @db.Timestamptz(6)
   sys_period                 Unsupported("tstzrange")?
-  claim_fact                 claim_fact[]
-  user_fact_created_byTouser user?                     @relation("fact_created_byTouser", fields: [created_by], references: [id])
-  user_fact_updated_byTouser user?                     @relation("fact_updated_byTouser", fields: [updated_by], references: [id])
+  claim                      claim                      @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+  user_fact_created_byTouser user?                      @relation("fact_created_byTouser", fields: [created_by], references: [id])
+  user_fact_updated_byTouser user?                      @relation("fact_updated_byTouser", fields: [updated_by], references: [id])
   fact_history               fact_history[]
-  fact_resource              fact_resource[]
+  fact_source_index_tracker  fact_source_index_tracker?
+  source                     source[]
 }
 
 model fact_history {
-  id          String                    @db.Uuid
-  title       String?
-  description String?
-  created_by  String?                   @db.Uuid
-  updated_by  String?                   @db.Uuid
-  created_at  DateTime?                 @db.Timestamptz(6)
-  updated_at  DateTime?                 @db.Timestamptz(6)
-  sys_period  Unsupported("tstzrange")?
-  history_id  String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fact        fact                      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_fact_history")
+  id         String                    @db.Uuid
+  claim_id   String                    @db.Uuid
+  index      Int?
+  text       String?
+  created_by String?                   @db.Uuid
+  updated_by String?                   @db.Uuid
+  created_at DateTime?                 @db.Timestamptz(6)
+  updated_at DateTime?                 @db.Timestamptz(6)
+  sys_period Unsupported("tstzrange")?
+  history_id String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fact       fact                      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_fact_history")
 }
 
-model fact_resource {
-  id                                  String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  original_url                        String?
-  description                         String?
-  file_id                             String?                   @db.Uuid
-  fact_id                             String                    @db.Uuid
-  created_by                          String?                   @db.Uuid
-  updated_by                          String?                   @db.Uuid
-  created_at                          DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at                          DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period                          Unsupported("tstzrange")?
-  user_fact_resource_created_byTouser user?                     @relation("fact_resource_created_byTouser", fields: [created_by], references: [id])
-  fact                                fact                      @relation(fields: [fact_id], references: [id], onDelete: Cascade)
-  file                                file?                     @relation(fields: [file_id], references: [id])
-  user_fact_resource_updated_byTouser user?                     @relation("fact_resource_updated_byTouser", fields: [updated_by], references: [id])
-  fact_resource_history               fact_resource_history[]
+model source {
+  id                           String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fact_id                      String                    @db.Uuid
+  index                        Int?
+  original_url                 String?
+  excerpt                      String?
+  file_id                      String?                   @db.Uuid
+  created_by                   String?                   @db.Uuid
+  updated_by                   String?                   @db.Uuid
+  created_at                   DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at                   DateTime?                 @default(now()) @db.Timestamptz(6)
+  sys_period                   Unsupported("tstzrange")?
+  user_source_created_byTouser user?                     @relation("source_created_byTouser", fields: [created_by], references: [id])
+  fact                         fact                      @relation(fields: [fact_id], references: [id], onDelete: Cascade)
+  file                         file?                     @relation(fields: [file_id], references: [id])
+  user_source_updated_byTouser user?                     @relation("source_updated_byTouser", fields: [updated_by], references: [id])
+  source_history               source_history[]
 }
 
-model fact_resource_history {
-  id            String                    @db.Uuid
-  original_url  String?
-  description   String?
-  file_id       String?                   @db.Uuid
-  fact_id       String                    @db.Uuid
-  created_by    String?                   @db.Uuid
-  updated_by    String?                   @db.Uuid
-  created_at    DateTime?                 @db.Timestamptz(6)
-  updated_at    DateTime?                 @db.Timestamptz(6)
-  sys_period    Unsupported("tstzrange")?
-  history_id    String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fact_resource fact_resource             @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_fact_resource_history")
+model source_history {
+  id           String                    @db.Uuid
+  fact_id      String                    @db.Uuid
+  index        Int?
+  original_url String?
+  excerpt      String?
+  file_id      String?                   @db.Uuid
+  created_by   String?                   @db.Uuid
+  updated_by   String?                   @db.Uuid
+  created_at   DateTime?                 @db.Timestamptz(6)
+  updated_at   DateTime?                 @db.Timestamptz(6)
+  sys_period   Unsupported("tstzrange")?
+  history_id   String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  source       source                    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_source_history")
 }
 
 model file {
@@ -226,11 +192,11 @@ model file {
   created_at                 DateTime?                 @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime?                 @default(now()) @db.Timestamptz(6)
   sys_period                 Unsupported("tstzrange")?
-  claim_resource             claim_resource[]
-  fact_resource              fact_resource[]
   user_file_created_byTouser user?                     @relation("file_created_byTouser", fields: [created_by], references: [id])
   user_file_updated_byTouser user?                     @relation("file_updated_byTouser", fields: [updated_by], references: [id])
   file_history               file_history[]
+  origin                     origin[]
+  source                     source[]
 }
 
 model file_history {
@@ -250,33 +216,31 @@ model file_history {
 }
 
 model user {
-  id                                             String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                                          String                    @unique
-  username                                       String                    @unique
-  first_name                                     String?
-  last_name                                      String?
-  pronouns                                       String?
-  profile_image                                  String?
-  bio                                            String?
-  mobile_number                                  String?
-  created_at                                     DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at                                     DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period                                     Unsupported("tstzrange")?
-  claim_claim_created_byTouser                   claim[]                   @relation("claim_created_byTouser")
-  claim_claim_updated_byTouser                   claim[]                   @relation("claim_updated_byTouser")
-  claim_fact_claim_fact_created_byTouser         claim_fact[]              @relation("claim_fact_created_byTouser")
-  claim_fact_claim_fact_updated_byTouser         claim_fact[]              @relation("claim_fact_updated_byTouser")
-  claim_resource_claim_resource_created_byTouser claim_resource[]          @relation("claim_resource_created_byTouser")
-  claim_resource_claim_resource_updated_byTouser claim_resource[]          @relation("claim_resource_updated_byTouser")
-  comment_comment_created_byTouser               comment[]                 @relation("comment_created_byTouser")
-  comment_comment_updated_byTouser               comment[]                 @relation("comment_updated_byTouser")
-  fact_fact_created_byTouser                     fact[]                    @relation("fact_created_byTouser")
-  fact_fact_updated_byTouser                     fact[]                    @relation("fact_updated_byTouser")
-  fact_resource_fact_resource_created_byTouser   fact_resource[]           @relation("fact_resource_created_byTouser")
-  fact_resource_fact_resource_updated_byTouser   fact_resource[]           @relation("fact_resource_updated_byTouser")
-  file_file_created_byTouser                     file[]                    @relation("file_created_byTouser")
-  file_file_updated_byTouser                     file[]                    @relation("file_updated_byTouser")
-  user_history                                   user_history[]
+  id                               String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                            String                    @unique
+  username                         String                    @unique
+  first_name                       String?
+  last_name                        String?
+  pronouns                         String?
+  profile_image                    String?
+  bio                              String?
+  mobile_number                    String?
+  created_at                       DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at                       DateTime?                 @default(now()) @db.Timestamptz(6)
+  sys_period                       Unsupported("tstzrange")?
+  claim_claim_created_byTouser     claim[]                   @relation("claim_created_byTouser")
+  claim_claim_updated_byTouser     claim[]                   @relation("claim_updated_byTouser")
+  comment_comment_created_byTouser comment[]                 @relation("comment_created_byTouser")
+  comment_comment_updated_byTouser comment[]                 @relation("comment_updated_byTouser")
+  fact_fact_created_byTouser       fact[]                    @relation("fact_created_byTouser")
+  fact_fact_updated_byTouser       fact[]                    @relation("fact_updated_byTouser")
+  file_file_created_byTouser       file[]                    @relation("file_created_byTouser")
+  file_file_updated_byTouser       file[]                    @relation("file_updated_byTouser")
+  origin_origin_created_byTouser   origin[]                  @relation("origin_created_byTouser")
+  origin_origin_updated_byTouser   origin[]                  @relation("origin_updated_byTouser")
+  source_source_created_byTouser   source[]                  @relation("source_created_byTouser")
+  source_source_updated_byTouser   source[]                  @relation("source_updated_byTouser")
+  user_history                     user_history[]
 }
 
 model user_history {
@@ -296,35 +260,73 @@ model user_history {
   user          user                      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
 }
 
-model virality {
-  id               String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  claim_id         String                    @db.Uuid
-  facebook_likes   Int?
-  facebook_shares  Int?
-  youtube_views    Int?
-  youtube_likes    Int?
-  youtube_dislikes Int?
-  instagram_likes  Int?
-  instagram_shares Int?
-  created_at       DateTime?                 @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime?                 @default(now()) @db.Timestamptz(6)
-  sys_period       Unsupported("tstzrange")?
-  claim            claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+model category {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title    String?
+  name     String?
+  label_de String?
+  label_en String?
 }
 
-enum claim_label {
-  false
-  miss_leading
-  true
+model claim_category {
+  id          String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  claim_id    String                    @db.Uuid
+  category_id String                    @db.Uuid
+  created_at  DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime?                 @default(now()) @db.Timestamptz(6)
+  sys_period  Unsupported("tstzrange")?
+}
+
+model claim_fact_index_tracker {
+  claim_id      String @id @db.Uuid
+  current_index Int
+  claim         claim  @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+}
+
+model claim_origin_index_tracker {
+  claim_id      String @id @db.Uuid
+  current_index Int
+  claim         claim  @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model claim_process_id_tracker {
+  current_index Int? @default(0)
+
+  @@ignore
+}
+
+model fact_source_index_tracker {
+  fact_id       String @id @db.Uuid
+  current_index Int
+  fact          fact   @relation(fields: [fact_id], references: [id], onDelete: Cascade)
+}
+
+model rating {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String?
+  summary        String?
+  label_id       String?          @db.Uuid
+  claim          claim[]
+  rating_history rating_history[]
+}
+
+model rating_history {
+  id         String  @db.Uuid
+  title      String?
+  summary    String?
+  label_id   String? @db.Uuid
+  history_id String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rating     rating  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
 }
 
 enum claim_status {
   submitted
-  ready_to_check
-  in_progress
-  archived
+  accepted
+  observed
+  stale
   spam
-  closed
+  rejected
   checked
   published
 }
