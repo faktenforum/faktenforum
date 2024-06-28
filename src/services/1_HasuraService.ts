@@ -33,7 +33,7 @@ export class HasuraService {
   ): Promise<T> {
     try {
       return await this.graphQLClient.request(document, variables, {
-        "x-hasura-admin-secret": this.envService.apiKeys.hasura
+        "x-hasura-admin-secret": this.envService.hasuraAdminSecret
       });
     } catch (error) {
       this.handleError(error);
