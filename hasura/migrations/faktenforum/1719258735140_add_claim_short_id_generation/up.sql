@@ -4,16 +4,26 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     new_id text;
+    lock_key bigint;
 BEGIN
     LOOP
         new_id := nanoid(9, '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-        -- Assuming public.claim is your table and short_id is the column to be unique
-        PERFORM 1 FROM public.claim WHERE short_id = new_id;
-        -- Exit loop if no conflict found
-        IF NOT FOUND THEN
-            RETURN new_id;
+        lock_key := hashtext(new_id);
+
+        -- Try to acquire an advisory lock
+        IF pg_try_advisory_lock(lock_key) THEN
+            -- Check if the generated short_id is unique
+            PERFORM 1 FROM public.claim WHERE short_id = new_id;
+            IF NOT FOUND THEN
+                -- Release the lock before returning
+                PERFORM pg_advisory_unlock(lock_key);
+                RETURN new_id;
+            ELSE
+                -- Release the lock if not unique
+                PERFORM pg_advisory_unlock(lock_key);
+            END IF;
         END IF;
-        -- Otherwise, loop again to generate a new ID
+        -- If lock was not acquired, loop again to generate a new ID
     END LOOP;
 END
 $$;
