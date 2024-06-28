@@ -1,0 +1,14 @@
+input origins_insert_input {
+  url: String
+  fileId: uuid
+}
+
+mutation InsertClaim($submitterNotes: String = "", $origins: [OriginInsertInput!] = []) {
+  insertClaim(objects: {submitterNotes: $submitterNotes, origins: {data: $origins}}) {
+    returning {
+      id
+      createdAt
+      updatedAt
+    }
+  }
+}

@@ -52,12 +52,16 @@ export class FileService {
   async deleteFile(key: string) {
     return this.minioClient.removeObject(this.envService.minioBucketName, key);
   }
+
+  async deleteFiles(keys: string[]) {
+    await Promise.all(keys.map((key: string) => this.minioClient.removeObject(this.envService.minioBucketName, key)));
+  }
   // TODO: Replace with Hasura Request
   getClaimFileMetaData(claimId: string, fileId: string): Promise<file | null> {
     return this.prisma.file.findFirst({
       where: {
         id: fileId,
-        claim_resource: {
+        origin: {
           some: {
             claim_id: claimId
           }

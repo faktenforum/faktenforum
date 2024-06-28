@@ -4,11 +4,6 @@ import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, FileService, UsersService, HasuraService } from "~/services";
-import { DeleteExpiredSubmissionTokensDocument } from "~/generated/graphql";
-import type {
-  DeleteExpiredSubmissionTokensMutation,
-  DeleteExpiredSubmissionTokensMutationVariables
-} from "~/generated/graphql";
 
 @Controller("/webhooks")
 export class WebHookController {
@@ -74,19 +69,6 @@ export class WebHookController {
   @Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")
   async deleteFile(@BodyParams() body: { id: string }) {
     this.fileService.deleteFile(body.id);
-    return {}; // Returning an empty object with a 200 status code
-  }
-
-  @Delete("/delete-expired-submission-tokens")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @Returns(200, Object)
-    .Description("Successfully deleted expired-submission-tokens")
-    .ContentType("application/json")
-  async deleteExpiredSubmissionTokens() {
-    await this.hasuraService.adminRequest<
-      DeleteExpiredSubmissionTokensMutation,
-      DeleteExpiredSubmissionTokensMutationVariables
-    >(DeleteExpiredSubmissionTokensDocument, {});
     return {}; // Returning an empty object with a 200 status code
   }
 }
