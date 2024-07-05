@@ -3,9 +3,6 @@
 -- claim table
 DROP TRIGGER IF EXISTS log_claim_event ON public.claim;
 
--- rating table
-DROP TRIGGER IF EXISTS log_rating_event ON public.rating;
-
 -- claim_category table
 DROP TRIGGER IF EXISTS log_claim_category_event ON public.claim_category;
 

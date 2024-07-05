@@ -34,7 +34,9 @@ CREATE TABLE public.claim (
     submitter_notes text,
     status public.claim_status DEFAULT 'submitted'::public.claim_status NOT NULL,
     synopsis text,
-    rating_id uuid,
+    rating_title text,
+    rating_summary text,
+    rating_label_id uuid
     created_by uuid,
     updated_by uuid,
     created_at timestamp with time zone DEFAULT now(),
@@ -51,12 +53,15 @@ CREATE TABLE public.category (
     label_en text
 );
 
-CREATE TABLE public.rating (
+
+CREATE TABLE public.rating_label (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     title text,
-    summary text,
-    label_id uuid
+    name text,
+    label_de text,
+    label_en text
 );
+
 
 CREATE TABLE public.claim_category (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -146,8 +151,8 @@ CREATE TABLE public.user (
 
 ALTER TABLE ONLY public.category
 ADD CONSTRAINT category_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.rating
-ADD CONSTRAINT rating_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.rating_label
+ADD CONSTRAINT rating_label_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.claim_category
 ADD CONSTRAINT claim_category_pkey PRIMARY KEY (id);
 
@@ -208,9 +213,7 @@ SET NULL;
 ALTER TABLE ONLY public.origin
 ADD CONSTRAINT origin_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
 SET NULL;
-ALTER TABLE ONLY public.claim
-ADD CONSTRAINT claim_rating_id_fkey FOREIGN KEY (rating_id) REFERENCES public.rating(id) ON UPDATE CASCADE ON DELETE
-SET NULL;
+
 ALTER TABLE ONLY public.claim
 ADD CONSTRAINT claim_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
 SET NULL;
@@ -247,3 +250,13 @@ SET NULL;
 ALTER TABLE ONLY public.file
 ADD CONSTRAINT file_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.user(id) ON UPDATE CASCADE ON DELETE
 SET NULL;
+
+ALTER TABLE ONLY public.claim_category
+ADD CONSTRAINT claim_category_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.claim_category
+ADD CONSTRAINT claim_category_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.category(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+ALTER TABLE ONLY public.claim
+ADD CONSTRAINT claim_rating_label_rating_label_id_fkey FOREIGN KEY (rating_label_id) REFERENCES public.rating_label(id) ON UPDATE CASCADE ON DELETE CASCADE;

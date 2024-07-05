@@ -4,12 +4,7 @@ CREATE TABLE public.claim_history (
     PRIMARY KEY (history_id),
     CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.claim(id) ON DELETE CASCADE
 );
-CREATE TABLE public.rating_history (
-    LIKE public.rating,
-    history_id UUID NOT NULL DEFAULT gen_random_uuid(),
-    PRIMARY KEY (history_id),
-    CONSTRAINT fk_claim_history FOREIGN KEY (id) REFERENCES public.rating(id) ON DELETE CASCADE
-);
+
 CREATE TABLE public.user_history (
     LIKE public.user,
     history_id UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -79,14 +74,7 @@ UPDATE ON public.origin FOR EACH ROW EXECUTE PROCEDURE versioning(
         'origin_history',
         true
     );
-CREATE TRIGGER versioning_trigger BEFORE
-INSERT
-    OR
-UPDATE ON public.rating FOR EACH ROW EXECUTE PROCEDURE versioning(
-        'sys_period',
-        'origin_history',
-        true
-    );
+
 -- Workaround for sql bug in LIKE operator https://www.postgresql.org/message-id/20150707072942.1186.98151@wrigleys.postgresql.org
 -- this script iterates over each history table in the database, identifies array columns, and converts them into single-dimensional arrays by altering their data types. It's a way to fix a specific issue related to array columns in the history tables.
 DO $$

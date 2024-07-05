@@ -172,9 +172,6 @@ $$;
 CREATE TRIGGER log_claim_event AFTER INSERT OR UPDATE OR DELETE ON public.claim
 FOR EACH ROW EXECUTE FUNCTION public.log_event();
 
--- rating table
-CREATE TRIGGER log_rating_event AFTER INSERT OR UPDATE OR DELETE ON public.rating
-FOR EACH ROW EXECUTE FUNCTION public.log_event();
 
 -- claim_category table
 CREATE TRIGGER log_claim_category_event AFTER INSERT OR UPDATE OR DELETE ON public.claim_category
