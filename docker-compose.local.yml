@@ -82,6 +82,7 @@ services:
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       APPLY_METADATA: "true"
       APPLY_MIGRATIONS: "true"
+      APPLY_SEEDS: "true"
 
     # import current files as volume so a rebuild is no required on database/metada changes
     volumes:

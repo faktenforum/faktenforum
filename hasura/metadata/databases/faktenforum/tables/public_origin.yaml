@@ -29,28 +29,31 @@ insert_permissions:
       set:
         created_by: x-hasura-User-Id
       columns:
+        - archive_url
         - claim_id
         - created_at
         - created_by
         - excerpt
         - file_id
-        - url
         - updated_at
+        - url
     comment: ""
 select_permissions:
   - role: moderator
     permission:
       columns:
-        - excerpt
-        - url
-        - created_at
-        - updated_at
-        - sys_period
+        - archive_url
         - claim_id
+        - created_at
         - created_by
+        - excerpt
         - file_id
         - id
+        - index
+        - sys_period
+        - updated_at
         - updated_by
+        - url
       filter: {}
       allow_aggregations: true
     comment: ""

@@ -1,3 +1,39 @@
 table:
   name: category
   schema: public
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      columns:
+        - label_de
+        - label_en
+        - name
+        - id
+    comment: ""
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+        - id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+        - id
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

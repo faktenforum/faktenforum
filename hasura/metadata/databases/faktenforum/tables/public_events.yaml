@@ -1,0 +1,17 @@
+table:
+  name: events
+  schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - action
+        - table_name
+        - created_at
+        - claim_status
+        - claim_id
+        - entry_id
+        - id
+        - user_id
+      filter: {}
+    comment: ""

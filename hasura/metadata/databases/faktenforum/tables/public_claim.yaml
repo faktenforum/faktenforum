@@ -2,9 +2,9 @@ table:
   name: claim
   schema: public
 object_relationships:
-  - name: rating
+  - name: ratingLabel
     using:
-      foreign_key_constraint_on: rating_id
+      foreign_key_constraint_on: rating_label_id
   - name: user
     using:
       foreign_key_constraint_on: created_by
@@ -12,6 +12,13 @@ object_relationships:
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
+  - name: claimCategories
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: claim_category
+          schema: public
   - name: claimHistories
     using:
       foreign_key_constraint_on:
@@ -78,10 +85,15 @@ select_permissions:
       columns:
         - created_at
         - created_by
-        - submitter_notes
         - id
         - process_id
+        - rating_label_id
+        - rating_summary
+        - rating_title
+        - short_id
         - status
+        - submitter_notes
+        - synopsis
         - sys_period
         - updated_at
         - updated_by

@@ -60,6 +60,7 @@ const generateDummyData = () => {
     } else {
       origin.fileIndex = genDummyFile() as any;
     }
+    console.log("Origin:", JSON.stringify(origin, null, 2));
     return origin;
   };
   return {
@@ -72,8 +73,16 @@ const generateDummyData = () => {
 };
 
 // Upload dummy data
-const uploadDummyData = async () => {
-  const url = "http://dev-app.faktenforum.org/api/v1/submission"; // Replace with your actual endpoint
+const uploadDummyData = async (environment: string) => {
+  let url;
+  if (environment === "local") {
+    url = "http://app.localhost:8000/api/v1/submission";
+  } else if (environment === "staging") {
+    url = "http://dev-app.faktenforum.org/api/v1/submission";
+  } else {
+    console.error("Invalid environment. Use 'local' or 'staging'.");
+    return;
+  }
 
   for (let i = 0; i < 10; i++) {
     const dummyData = generateDummyData();
@@ -85,13 +94,19 @@ const uploadDummyData = async () => {
     });
 
     try {
-      await axios.post(url, form, {
+      console.log(`Uploading dummy data to ${url}`);
+      const result = await axios.post(url, form, {
         headers: form.getHeaders()
       });
+
+      console.log(`Result status ${result.status} data:`, result.data);
     } catch (error) {
       console.error("Error uploading dummy data:", error.message);
     }
   }
 };
 
-uploadDummyData();
+// Command line argument processing
+const environment = process.argv[2];
+
+uploadDummyData(environment);

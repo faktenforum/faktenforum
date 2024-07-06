@@ -1,0 +1,3 @@
+table:
+  name: rating_label
+  schema: public

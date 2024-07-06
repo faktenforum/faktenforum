@@ -33,6 +33,7 @@ insert_permissions:
       set:
         created_by: x-hasura-User-Id
       columns:
+        - claim_id
         - created_by
         - text
     comment: ""
@@ -40,12 +41,14 @@ select_permissions:
   - role: moderator
     permission:
       columns:
-        - text
+        - claim_id
         - created_at
-        - updated_at
-        - sys_period
         - created_by
         - id
+        - index
+        - sys_period
+        - text
+        - updated_at
         - updated_by
       filter: {}
       allow_aggregations: true
