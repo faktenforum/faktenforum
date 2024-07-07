@@ -8,22 +8,22 @@ datasource db {
 }
 
 model claim_history {
-  id              String                    @db.Uuid
-  short_id        String?
-  process_id      BigInt?
-  submitter_notes String?
-  status          claim_status
-  synopsis        String?
-  rating_title    String?
-  rating_summary  String?
-  rating_label_id String?                   @db.Uuid
-  created_by      String?                   @db.Uuid
-  updated_by      String?                   @db.Uuid
-  created_at      DateTime?                 @db.Timestamptz(6)
-  updated_at      DateTime?                 @db.Timestamptz(6)
-  sys_period      Unsupported("tstzrange")?
-  history_id      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  claim           claim                     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
+  id                String                    @db.Uuid
+  short_id          String?
+  process_id        BigInt?
+  submitter_notes   String?
+  status            claim_status
+  synopsis          String?
+  rating_title      String?
+  rating_summary    String?
+  rating_label_name String?
+  created_by        String?                   @db.Uuid
+  updated_by        String?                   @db.Uuid
+  created_at        DateTime?                 @db.Timestamptz(6)
+  updated_at        DateTime?                 @db.Timestamptz(6)
+  sys_period        Unsupported("tstzrange")?
+  history_id        String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  claim             claim                     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
 }
 
 model claim {
@@ -35,14 +35,14 @@ model claim {
   synopsis                    String?
   rating_title                String?
   rating_summary              String?
-  rating_label_id             String?                     @db.Uuid
+  rating_label_name           String?
   created_by                  String?                     @db.Uuid
   updated_by                  String?                     @db.Uuid
   created_at                  DateTime?                   @default(now()) @db.Timestamptz(6)
   updated_at                  DateTime?                   @default(now()) @db.Timestamptz(6)
   sys_period                  Unsupported("tstzrange")?
   user_claim_created_byTouser user?                       @relation("claim_created_byTouser", fields: [created_by], references: [id])
-  rating_label                rating_label?               @relation(fields: [rating_label_id], references: [id], onDelete: Cascade, map: "claim_rating_label_rating_label_id_fkey")
+  rating_label                rating_label?               @relation(fields: [rating_label_name], references: [name], onDelete: Cascade, map: "claim_rating_label_rating_label_name_fkey")
   user_claim_updated_byTouser user?                       @relation("claim_updated_byTouser", fields: [updated_by], references: [id])
   claim_category              claim_category[]
   claim_fact_index_tracker    claim_fact_index_tracker?
@@ -268,8 +268,7 @@ model user_history {
 }
 
 model category {
-  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name           String?
+  name           String           @id
   label_de       String?
   label_en       String?
   claim_category claim_category[]
@@ -278,13 +277,13 @@ model category {
 model claim_category {
   id                                   String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   claim_id                             String                    @db.Uuid
-  category_id                          String                    @db.Uuid
+  category_name                        String
   created_by                           String?                   @db.Uuid
   updated_by                           String?                   @db.Uuid
   created_at                           DateTime?                 @default(now()) @db.Timestamptz(6)
   updated_at                           DateTime?                 @default(now()) @db.Timestamptz(6)
   sys_period                           Unsupported("tstzrange")?
-  category                             category                  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category                             category                  @relation(fields: [category_name], references: [name], onDelete: Cascade, map: "claim_category_category_id_fkey")
   claim                                claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
   user_claim_category_created_byTouser user?                     @relation("claim_category_created_byTouser", fields: [created_by], references: [id])
   user_claim_category_updated_byTouser user?                     @relation("claim_category_updated_byTouser", fields: [updated_by], references: [id])
@@ -330,8 +329,7 @@ model events {
 }
 
 model rating_label {
-  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name     String?
+  name     String  @id
   label_de String?
   label_en String?
   claim    claim[]

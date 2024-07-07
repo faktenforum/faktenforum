@@ -53,12 +53,12 @@ const generateDummyData = () => {
   const generateDummyOrigin = () => {
     const origin = { url: undefined, fileIndex: undefined };
     if (faker.datatype.boolean()) {
-      origin.url = faker.helpers.arrayElement(urls) as any;
+      origin.url = faker.helpers.arrayElement(urls) as never;
       if (faker.datatype.boolean()) {
-        origin.fileIndex = genDummyFile() as any;
+        origin.fileIndex = genDummyFile() as never;
       }
     } else {
-      origin.fileIndex = genDummyFile() as any;
+      origin.fileIndex = genDummyFile() as never;
     }
     console.log("Origin:", JSON.stringify(origin, null, 2));
     return origin;

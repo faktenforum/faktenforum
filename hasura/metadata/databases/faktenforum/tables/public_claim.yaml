@@ -4,7 +4,7 @@ table:
 object_relationships:
   - name: ratingLabel
     using:
-      foreign_key_constraint_on: rating_label_id
+      foreign_key_constraint_on: rating_label_name
   - name: user
     using:
       foreign_key_constraint_on: created_by
@@ -78,26 +78,6 @@ select_permissions:
             - stale
             - checked
             - published
-      allow_aggregations: true
-    comment: ""
-  - role: moderator
-    permission:
-      columns:
-        - created_at
-        - created_by
-        - id
-        - process_id
-        - rating_label_id
-        - rating_summary
-        - rating_title
-        - short_id
-        - status
-        - submitter_notes
-        - synopsis
-        - sys_period
-        - updated_at
-        - updated_by
-      filter: {}
       allow_aggregations: true
     comment: ""
 update_permissions:

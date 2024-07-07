@@ -34,7 +34,7 @@ CREATE TABLE public.claim (
     synopsis text,
     rating_title text,
     rating_summary text,
-    rating_label_id uuid,
+    rating_label_name text,
     created_by uuid,
     updated_by uuid,
     created_at timestamp with time zone DEFAULT now(),
@@ -42,21 +42,19 @@ CREATE TABLE public.claim (
     sys_period tstzrange
 );
 CREATE TABLE public.category (
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
-    name text,
+    name text NOT NULL,
     label_de text,
     label_en text
 );
 CREATE TABLE public.rating_label (
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
-    name text,
+    name text NOT NULL,
     label_de text,
     label_en text
 );
 CREATE TABLE public.claim_category (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     claim_id uuid NOT NULL,
-    category_id uuid NOT NULL,
+    category_name text NOT NULL,
     created_by uuid,
     updated_by uuid,
     created_at timestamp with time zone DEFAULT now(),
@@ -139,9 +137,9 @@ CREATE TABLE public.user (
     sys_period tstzrange
 );
 ALTER TABLE ONLY public.category
-ADD CONSTRAINT category_pkey PRIMARY KEY (id);
+ADD CONSTRAINT category_pkey PRIMARY KEY (name);
 ALTER TABLE ONLY public.rating_label
-ADD CONSTRAINT rating_label_pkey PRIMARY KEY (id);
+ADD CONSTRAINT rating_label_pkey PRIMARY KEY (name);
 ALTER TABLE ONLY public.claim_category
 ADD CONSTRAINT claim_category_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.origin
@@ -244,6 +242,6 @@ SET NULL;
 ALTER TABLE ONLY public.claim_category
 ADD CONSTRAINT claim_category_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.claim_category
-ADD CONSTRAINT claim_category_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.category(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ADD CONSTRAINT claim_category_category_id_fkey FOREIGN KEY (category_name) REFERENCES public.category(name) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.claim
-ADD CONSTRAINT claim_rating_label_rating_label_id_fkey FOREIGN KEY (rating_label_id) REFERENCES public.rating_label(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ADD CONSTRAINT claim_rating_label_rating_label_name_fkey FOREIGN KEY (rating_label_name) REFERENCES public.rating_label(name) ON UPDATE CASCADE ON DELETE CASCADE;
