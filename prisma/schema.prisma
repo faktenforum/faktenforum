@@ -49,6 +49,7 @@ model claim {
   claim_history               claim_history[]
   claim_origin_index_tracker  claim_origin_index_tracker?
   comment                     comment[]
+  events                      events[]                    @ignore
   fact                        fact[]
   origin                      origin[]
 }
@@ -93,6 +94,7 @@ model origin_history {
 model comment {
   id                            String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   claim_id                      String                    @db.Uuid
+  thread_id                     String?                   @db.Uuid
   content                       String
   created_by                    String                    @db.Uuid
   updated_by                    String?                   @db.Uuid
@@ -100,6 +102,8 @@ model comment {
   updated_at                    DateTime?                 @default(now()) @db.Timestamptz(6)
   sys_period                    Unsupported("tstzrange")?
   claim                         claim                     @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+  comment                       comment?                  @relation("commentTocomment", fields: [thread_id], references: [id], onDelete: Cascade, map: "comment_comment_thread_id_fkey")
+  other_comment                 comment[]                 @relation("commentTocomment")
   user_comment_created_byTouser user                      @relation("comment_created_byTouser", fields: [created_by], references: [id], onDelete: Cascade)
   user_comment_updated_byTouser user?                     @relation("comment_updated_byTouser", fields: [updated_by], references: [id])
   comment_history               comment_history[]
@@ -108,6 +112,7 @@ model comment {
 model comment_history {
   id         String                    @db.Uuid
   claim_id   String                    @db.Uuid
+  thread_id  String?                   @db.Uuid
   content    String
   created_by String                    @db.Uuid
   updated_by String?                   @db.Uuid
@@ -239,6 +244,7 @@ model user {
   claim_category_claim_category_updated_byTouser claim_category[]          @relation("claim_category_updated_byTouser")
   comment_comment_created_byTouser               comment[]                 @relation("comment_created_byTouser")
   comment_comment_updated_byTouser               comment[]                 @relation("comment_updated_byTouser")
+  events                                         events[]                   @ignore
   fact_fact_created_byTouser                     fact[]                    @relation("fact_created_byTouser")
   fact_fact_updated_byTouser                     fact[]                    @relation("fact_updated_byTouser")
   file_file_created_byTouser                     file[]                    @relation("file_created_byTouser")
@@ -316,7 +322,7 @@ model fact_source_index_tracker {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model events {
-  id           String        @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   claim_id     String?       @db.Uuid
   claim_status claim_status?
   user_id      String?       @db.Uuid
@@ -324,6 +330,8 @@ model events {
   table_name   String?
   created_at   DateTime?     @default(now()) @db.Timestamptz(6)
   entry_id     String?       @db.Uuid
+  claim        claim?        @relation(fields: [claim_id], references: [id])
+  user         user?         @relation(fields: [user_id], references: [id])
 
   @@ignore
 }
