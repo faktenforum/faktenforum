@@ -1,4 +1,4 @@
--- Step 1: Create the events table
+-- Create the events table
 CREATE TABLE public.events (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     claim_id uuid,
@@ -10,7 +10,17 @@ CREATE TABLE public.events (
     entry_id uuid
 );
 
--- Step 2: Create the logging function with proper handling for different operations and table structures
+ALTER TABLE ONLY public.events
+ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.events
+ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.events
+ADD CONSTRAINT events_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.claim(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+-- Create the logging function with proper handling for different operations and table structures
 CREATE FUNCTION public.log_event() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE
     v_claim_id uuid;
@@ -166,7 +176,7 @@ BEGIN
 END;
 $$;
 
--- Step 3: Add triggers for each table
+-- Add triggers for each table
 
 -- claim table
 CREATE TRIGGER log_claim_event AFTER INSERT OR UPDATE OR DELETE ON public.claim

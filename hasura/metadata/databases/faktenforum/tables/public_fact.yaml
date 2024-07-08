@@ -5,20 +5,13 @@ object_relationships:
   - name: claim
     using:
       foreign_key_constraint_on: claim_id
-  - name: user
+  - name: createdByUser
     using:
       foreign_key_constraint_on: created_by
-  - name: userByUpdatedBy
+  - name: updatedByUser
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
-  - name: factHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: fact_history
-          schema: public
   - name: sources
     using:
       foreign_key_constraint_on:
@@ -58,7 +51,6 @@ update_permissions:
     permission:
       columns:
         - text
-        - updated_by
       filter: {}
       check: null
       set:

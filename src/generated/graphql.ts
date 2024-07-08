@@ -38,10 +38,9 @@ export type BigintComparisonExp = {
 /** columns and relationships of "category" */
 export type Category = {
   __typename?: 'Category';
-  id: Scalars['uuid']['output'];
   labelDe?: Maybe<Scalars['String']['output']>;
   labelEn?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 /** aggregated selection of "category" */
@@ -71,7 +70,6 @@ export type CategoryBoolExp = {
   _and?: InputMaybe<Array<CategoryBoolExp>>;
   _not?: InputMaybe<CategoryBoolExp>;
   _or?: InputMaybe<Array<CategoryBoolExp>>;
-  id?: InputMaybe<UuidComparisonExp>;
   labelDe?: InputMaybe<StringComparisonExp>;
   labelEn?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
@@ -79,13 +77,12 @@ export type CategoryBoolExp = {
 
 /** unique or primary key constraints on table "category" */
 export enum CategoryConstraint {
-  /** unique or primary key constraint on columns "id" */
+  /** unique or primary key constraint on columns "name" */
   CategoryPkey = 'category_pkey'
 }
 
 /** input type for inserting data into table "category" */
 export type CategoryInsertInput = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -94,7 +91,6 @@ export type CategoryInsertInput = {
 /** aggregate max on columns */
 export type CategoryMaxFields = {
   __typename?: 'CategoryMaxFields';
-  id?: Maybe<Scalars['uuid']['output']>;
   labelDe?: Maybe<Scalars['String']['output']>;
   labelEn?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -103,7 +99,6 @@ export type CategoryMaxFields = {
 /** aggregate min on columns */
 export type CategoryMinFields = {
   __typename?: 'CategoryMinFields';
-  id?: Maybe<Scalars['uuid']['output']>;
   labelDe?: Maybe<Scalars['String']['output']>;
   labelEn?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -134,7 +129,6 @@ export type CategoryOnConflict = {
 
 /** Ordering options when selecting data from "category". */
 export type CategoryOrderBy = {
-  id?: InputMaybe<OrderBy>;
   labelDe?: InputMaybe<OrderBy>;
   labelEn?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
@@ -142,13 +136,11 @@ export type CategoryOrderBy = {
 
 /** primary key columns input for table: category */
 export type CategoryPkColumnsInput = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 /** select columns of table "category" */
 export enum CategorySelectColumn {
-  /** column name */
-  Id = 'id',
   /** column name */
   LabelDe = 'labelDe',
   /** column name */
@@ -159,7 +151,6 @@ export enum CategorySelectColumn {
 
 /** input type for updating data in table "category" */
 export type CategorySetInput = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -175,7 +166,6 @@ export type CategoryStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type CategoryStreamCursorValueInput = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -183,8 +173,6 @@ export type CategoryStreamCursorValueInput = {
 
 /** update columns of table "category" */
 export enum CategoryUpdateColumn {
-  /** column name */
-  Id = 'id',
   /** column name */
   LabelDe = 'labelDe',
   /** column name */
@@ -229,7 +217,7 @@ export type Claim = {
   processId?: Maybe<Scalars['bigint']['output']>;
   /** An object relationship */
   ratingLabel?: Maybe<RatingLabel>;
-  ratingLabelId?: Maybe<Scalars['uuid']['output']>;
+  ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
   ratingTitle?: Maybe<Scalars['String']['output']>;
   shortId?: Maybe<Scalars['String']['output']>;
@@ -432,7 +420,7 @@ export type ClaimBoolExp = {
   originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
   processId?: InputMaybe<BigintComparisonExp>;
   ratingLabel?: InputMaybe<RatingLabelBoolExp>;
-  ratingLabelId?: InputMaybe<UuidComparisonExp>;
+  ratingLabelName?: InputMaybe<StringComparisonExp>;
   ratingSummary?: InputMaybe<StringComparisonExp>;
   ratingTitle?: InputMaybe<StringComparisonExp>;
   shortId?: InputMaybe<StringComparisonExp>;
@@ -451,7 +439,7 @@ export type ClaimCategory = {
   __typename?: 'ClaimCategory';
   /** An object relationship */
   category: Category;
-  categoryId: Scalars['uuid']['output'];
+  categoryName: Scalars['String']['output'];
   claimId: Scalars['uuid']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
@@ -511,7 +499,7 @@ export type ClaimCategoryBoolExp = {
   _not?: InputMaybe<ClaimCategoryBoolExp>;
   _or?: InputMaybe<Array<ClaimCategoryBoolExp>>;
   category?: InputMaybe<CategoryBoolExp>;
-  categoryId?: InputMaybe<UuidComparisonExp>;
+  categoryName?: InputMaybe<StringComparisonExp>;
   claimId?: InputMaybe<UuidComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
@@ -532,7 +520,7 @@ export enum ClaimCategoryConstraint {
 /** input type for inserting data into table "claim_category" */
 export type ClaimCategoryInsertInput = {
   category?: InputMaybe<CategoryObjRelInsertInput>;
-  categoryId?: InputMaybe<Scalars['uuid']['input']>;
+  categoryName?: InputMaybe<Scalars['String']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -547,7 +535,7 @@ export type ClaimCategoryInsertInput = {
 /** aggregate max on columns */
 export type ClaimCategoryMaxFields = {
   __typename?: 'ClaimCategoryMaxFields';
-  categoryId?: Maybe<Scalars['uuid']['output']>;
+  categoryName?: Maybe<Scalars['String']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
@@ -558,7 +546,7 @@ export type ClaimCategoryMaxFields = {
 
 /** order by max() on columns of table "claim_category" */
 export type ClaimCategoryMaxOrderBy = {
-  categoryId?: InputMaybe<OrderBy>;
+  categoryName?: InputMaybe<OrderBy>;
   claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
@@ -570,7 +558,7 @@ export type ClaimCategoryMaxOrderBy = {
 /** aggregate min on columns */
 export type ClaimCategoryMinFields = {
   __typename?: 'ClaimCategoryMinFields';
-  categoryId?: Maybe<Scalars['uuid']['output']>;
+  categoryName?: Maybe<Scalars['String']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
@@ -581,7 +569,7 @@ export type ClaimCategoryMinFields = {
 
 /** order by min() on columns of table "claim_category" */
 export type ClaimCategoryMinOrderBy = {
-  categoryId?: InputMaybe<OrderBy>;
+  categoryName?: InputMaybe<OrderBy>;
   claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
@@ -609,7 +597,7 @@ export type ClaimCategoryOnConflict = {
 /** Ordering options when selecting data from "claim_category". */
 export type ClaimCategoryOrderBy = {
   category?: InputMaybe<CategoryOrderBy>;
-  categoryId?: InputMaybe<OrderBy>;
+  categoryName?: InputMaybe<OrderBy>;
   claimId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
@@ -629,7 +617,7 @@ export type ClaimCategoryPkColumnsInput = {
 /** select columns of table "claim_category" */
 export enum ClaimCategorySelectColumn {
   /** column name */
-  CategoryId = 'categoryId',
+  CategoryName = 'categoryName',
   /** column name */
   ClaimId = 'claimId',
   /** column name */
@@ -648,7 +636,7 @@ export enum ClaimCategorySelectColumn {
 
 /** input type for updating data in table "claim_category" */
 export type ClaimCategorySetInput = {
-  categoryId?: InputMaybe<Scalars['uuid']['input']>;
+  categoryName?: InputMaybe<Scalars['String']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -668,7 +656,7 @@ export type ClaimCategoryStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type ClaimCategoryStreamCursorValueInput = {
-  categoryId?: InputMaybe<Scalars['uuid']['input']>;
+  categoryName?: InputMaybe<Scalars['String']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -681,7 +669,7 @@ export type ClaimCategoryStreamCursorValueInput = {
 /** update columns of table "claim_category" */
 export enum ClaimCategoryUpdateColumn {
   /** column name */
-  CategoryId = 'categoryId',
+  CategoryName = 'categoryName',
   /** column name */
   ClaimId = 'claimId',
   /** column name */
@@ -725,7 +713,7 @@ export type ClaimHistory = {
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
   processId?: Maybe<Scalars['bigint']['output']>;
-  ratingLabelId?: Maybe<Scalars['uuid']['output']>;
+  ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
   ratingTitle?: Maybe<Scalars['String']['output']>;
   shortId?: Maybe<Scalars['String']['output']>;
@@ -815,7 +803,7 @@ export type ClaimHistoryBoolExp = {
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   processId?: InputMaybe<BigintComparisonExp>;
-  ratingLabelId?: InputMaybe<UuidComparisonExp>;
+  ratingLabelName?: InputMaybe<StringComparisonExp>;
   ratingSummary?: InputMaybe<StringComparisonExp>;
   ratingTitle?: InputMaybe<StringComparisonExp>;
   shortId?: InputMaybe<StringComparisonExp>;
@@ -846,7 +834,7 @@ export type ClaimHistoryInsertInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
-  ratingLabelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
   ratingTitle?: InputMaybe<Scalars['String']['input']>;
   shortId?: InputMaybe<Scalars['String']['input']>;
@@ -866,7 +854,7 @@ export type ClaimHistoryMaxFields = {
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   processId?: Maybe<Scalars['bigint']['output']>;
-  ratingLabelId?: Maybe<Scalars['uuid']['output']>;
+  ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
   ratingTitle?: Maybe<Scalars['String']['output']>;
   shortId?: Maybe<Scalars['String']['output']>;
@@ -884,7 +872,7 @@ export type ClaimHistoryMaxOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
-  ratingLabelId?: InputMaybe<OrderBy>;
+  ratingLabelName?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
   ratingTitle?: InputMaybe<OrderBy>;
   shortId?: InputMaybe<OrderBy>;
@@ -903,7 +891,7 @@ export type ClaimHistoryMinFields = {
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   processId?: Maybe<Scalars['bigint']['output']>;
-  ratingLabelId?: Maybe<Scalars['uuid']['output']>;
+  ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
   ratingTitle?: Maybe<Scalars['String']['output']>;
   shortId?: Maybe<Scalars['String']['output']>;
@@ -921,7 +909,7 @@ export type ClaimHistoryMinOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
-  ratingLabelId?: InputMaybe<OrderBy>;
+  ratingLabelName?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
   ratingTitle?: InputMaybe<OrderBy>;
   shortId?: InputMaybe<OrderBy>;
@@ -956,7 +944,7 @@ export type ClaimHistoryOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
-  ratingLabelId?: InputMaybe<OrderBy>;
+  ratingLabelName?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
   ratingTitle?: InputMaybe<OrderBy>;
   shortId?: InputMaybe<OrderBy>;
@@ -986,7 +974,7 @@ export enum ClaimHistorySelectColumn {
   /** column name */
   ProcessId = 'processId',
   /** column name */
-  RatingLabelId = 'ratingLabelId',
+  RatingLabelName = 'ratingLabelName',
   /** column name */
   RatingSummary = 'ratingSummary',
   /** column name */
@@ -1014,7 +1002,7 @@ export type ClaimHistorySetInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
-  ratingLabelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
   ratingTitle?: InputMaybe<Scalars['String']['input']>;
   shortId?: InputMaybe<Scalars['String']['input']>;
@@ -1074,7 +1062,7 @@ export type ClaimHistoryStreamCursorValueInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
-  ratingLabelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
   ratingTitle?: InputMaybe<Scalars['String']['input']>;
   shortId?: InputMaybe<Scalars['String']['input']>;
@@ -1110,7 +1098,7 @@ export enum ClaimHistoryUpdateColumn {
   /** column name */
   ProcessId = 'processId',
   /** column name */
-  RatingLabelId = 'ratingLabelId',
+  RatingLabelName = 'ratingLabelName',
   /** column name */
   RatingSummary = 'ratingSummary',
   /** column name */
@@ -1190,7 +1178,7 @@ export type ClaimInsertInput = {
   origins?: InputMaybe<OriginArrRelInsertInput>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
   ratingLabel?: InputMaybe<RatingLabelObjRelInsertInput>;
-  ratingLabelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
   ratingTitle?: InputMaybe<Scalars['String']['input']>;
   shortId?: InputMaybe<Scalars['String']['input']>;
@@ -1211,7 +1199,7 @@ export type ClaimMaxFields = {
   createdBy?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   processId?: Maybe<Scalars['bigint']['output']>;
-  ratingLabelId?: Maybe<Scalars['uuid']['output']>;
+  ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
   ratingTitle?: Maybe<Scalars['String']['output']>;
   shortId?: Maybe<Scalars['String']['output']>;
@@ -1228,7 +1216,7 @@ export type ClaimMaxOrderBy = {
   createdBy?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
-  ratingLabelId?: InputMaybe<OrderBy>;
+  ratingLabelName?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
   ratingTitle?: InputMaybe<OrderBy>;
   shortId?: InputMaybe<OrderBy>;
@@ -1246,7 +1234,7 @@ export type ClaimMinFields = {
   createdBy?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   processId?: Maybe<Scalars['bigint']['output']>;
-  ratingLabelId?: Maybe<Scalars['uuid']['output']>;
+  ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
   ratingTitle?: Maybe<Scalars['String']['output']>;
   shortId?: Maybe<Scalars['String']['output']>;
@@ -1263,7 +1251,7 @@ export type ClaimMinOrderBy = {
   createdBy?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
-  ratingLabelId?: InputMaybe<OrderBy>;
+  ratingLabelName?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
   ratingTitle?: InputMaybe<OrderBy>;
   shortId?: InputMaybe<OrderBy>;
@@ -1309,7 +1297,7 @@ export type ClaimOrderBy = {
   originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   processId?: InputMaybe<OrderBy>;
   ratingLabel?: InputMaybe<RatingLabelOrderBy>;
-  ratingLabelId?: InputMaybe<OrderBy>;
+  ratingLabelName?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
   ratingTitle?: InputMaybe<OrderBy>;
   shortId?: InputMaybe<OrderBy>;
@@ -1339,7 +1327,7 @@ export enum ClaimSelectColumn {
   /** column name */
   ProcessId = 'processId',
   /** column name */
-  RatingLabelId = 'ratingLabelId',
+  RatingLabelName = 'ratingLabelName',
   /** column name */
   RatingSummary = 'ratingSummary',
   /** column name */
@@ -1366,7 +1354,7 @@ export type ClaimSetInput = {
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
-  ratingLabelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
   ratingTitle?: InputMaybe<Scalars['String']['input']>;
   shortId?: InputMaybe<Scalars['String']['input']>;
@@ -1438,7 +1426,7 @@ export type ClaimStreamCursorValueInput = {
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
-  ratingLabelId?: InputMaybe<Scalars['uuid']['input']>;
+  ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
   ratingTitle?: InputMaybe<Scalars['String']['input']>;
   shortId?: InputMaybe<Scalars['String']['input']>;
@@ -1472,7 +1460,7 @@ export enum ClaimUpdateColumn {
   /** column name */
   ProcessId = 'processId',
   /** column name */
-  RatingLabelId = 'ratingLabelId',
+  RatingLabelName = 'ratingLabelName',
   /** column name */
   RatingSummary = 'ratingSummary',
   /** column name */
@@ -4945,10 +4933,9 @@ export type OriginVarianceOrderBy = {
 /** columns and relationships of "rating_label" */
 export type RatingLabel = {
   __typename?: 'RatingLabel';
-  id: Scalars['uuid']['output'];
   labelDe?: Maybe<Scalars['String']['output']>;
   labelEn?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 /** aggregated selection of "rating_label" */
@@ -4978,7 +4965,6 @@ export type RatingLabelBoolExp = {
   _and?: InputMaybe<Array<RatingLabelBoolExp>>;
   _not?: InputMaybe<RatingLabelBoolExp>;
   _or?: InputMaybe<Array<RatingLabelBoolExp>>;
-  id?: InputMaybe<UuidComparisonExp>;
   labelDe?: InputMaybe<StringComparisonExp>;
   labelEn?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
@@ -4986,13 +4972,12 @@ export type RatingLabelBoolExp = {
 
 /** unique or primary key constraints on table "rating_label" */
 export enum RatingLabelConstraint {
-  /** unique or primary key constraint on columns "id" */
+  /** unique or primary key constraint on columns "name" */
   RatingLabelPkey = 'rating_label_pkey'
 }
 
 /** input type for inserting data into table "rating_label" */
 export type RatingLabelInsertInput = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -5001,7 +4986,6 @@ export type RatingLabelInsertInput = {
 /** aggregate max on columns */
 export type RatingLabelMaxFields = {
   __typename?: 'RatingLabelMaxFields';
-  id?: Maybe<Scalars['uuid']['output']>;
   labelDe?: Maybe<Scalars['String']['output']>;
   labelEn?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -5010,7 +4994,6 @@ export type RatingLabelMaxFields = {
 /** aggregate min on columns */
 export type RatingLabelMinFields = {
   __typename?: 'RatingLabelMinFields';
-  id?: Maybe<Scalars['uuid']['output']>;
   labelDe?: Maybe<Scalars['String']['output']>;
   labelEn?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -5041,7 +5024,6 @@ export type RatingLabelOnConflict = {
 
 /** Ordering options when selecting data from "rating_label". */
 export type RatingLabelOrderBy = {
-  id?: InputMaybe<OrderBy>;
   labelDe?: InputMaybe<OrderBy>;
   labelEn?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
@@ -5049,13 +5031,11 @@ export type RatingLabelOrderBy = {
 
 /** primary key columns input for table: rating_label */
 export type RatingLabelPkColumnsInput = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 /** select columns of table "rating_label" */
 export enum RatingLabelSelectColumn {
-  /** column name */
-  Id = 'id',
   /** column name */
   LabelDe = 'labelDe',
   /** column name */
@@ -5066,7 +5046,6 @@ export enum RatingLabelSelectColumn {
 
 /** input type for updating data in table "rating_label" */
 export type RatingLabelSetInput = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -5082,7 +5061,6 @@ export type RatingLabelStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type RatingLabelStreamCursorValueInput = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -5090,8 +5068,6 @@ export type RatingLabelStreamCursorValueInput = {
 
 /** update columns of table "rating_label" */
 export enum RatingLabelUpdateColumn {
-  /** column name */
-  Id = 'id',
   /** column name */
   LabelDe = 'labelDe',
   /** column name */
@@ -7318,7 +7294,7 @@ export type Mutation_RootDeleteCategoryArgs = {
 
 /** mutation root */
 export type Mutation_RootDeleteCategoryByPkArgs = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -7468,7 +7444,7 @@ export type Mutation_RootDeleteRatingLabelArgs = {
 
 /** mutation root */
 export type Mutation_RootDeleteRatingLabelByPkArgs = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -8286,7 +8262,7 @@ export type Query_RootCategoryAggregateArgs = {
 
 
 export type Query_RootCategoryByPkArgs = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -8580,7 +8556,7 @@ export type Query_RootRatingLabelAggregateArgs = {
 
 
 export type Query_RootRatingLabelByPkArgs = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -8855,7 +8831,7 @@ export type Subscription_RootCategoryAggregateArgs = {
 
 
 export type Subscription_RootCategoryByPkArgs = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -9240,7 +9216,7 @@ export type Subscription_RootRatingLabelAggregateArgs = {
 
 
 export type Subscription_RootRatingLabelByPkArgs = {
-  id: Scalars['uuid']['input'];
+  name: Scalars['String']['input'];
 };
 
 

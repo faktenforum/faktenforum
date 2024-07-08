@@ -84,7 +84,7 @@ const uploadDummyData = async (environment: string) => {
     return;
   }
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 50; i++) {
     const dummyData = generateDummyData();
     const form = new FormData();
     form.append("payload", dummyData.payload);

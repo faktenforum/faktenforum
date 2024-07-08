@@ -5,9 +5,35 @@ object_relationships:
   - name: category
     using:
       foreign_key_constraint_on: category_name
-  - name: user
+  - name: createdByUser
     using:
       foreign_key_constraint_on: created_by
-  - name: userByUpdatedBy
-    using:
-      foreign_key_constraint_on: updated_by
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - category_name
+        - claim_id
+    comment: ""
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - updated_at
+        - sys_period
+        - claim_id
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""
