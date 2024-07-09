@@ -4,5 +4,6 @@
 
 export * from "./files";
 export * from "./submission";
+export * from "./urlInfo";
 export * from "./version";
 export * from "./webhooks";

@@ -10,4 +10,5 @@ export * from "./requests/SubmissionRequest";
 export * from "./responses/FileUploadResponse";
 export * from "./responses/RegistrationPreResponse";
 export * from "./responses/SubmissionCreateResponse";
+export * from "./responses/UrlInfoResponse";
 export * from "./responses/VersionResponse";

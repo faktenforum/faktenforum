@@ -69,6 +69,7 @@
     "graphql-request": "^6.1.0",
     "import": "^0.0.6",
     "jsonwebtoken": "^9.0.2",
+    "metadata-scraper": "0.2.61",
     "method-override": "^3.0.0",
     "minio": "^7.1.3",
     "mino": "^0.0.0",
