@@ -2088,9 +2088,9 @@ export enum CursorOrdering {
   Desc = 'DESC'
 }
 
-/** columns and relationships of "events" */
-export type Events = {
-  __typename?: 'Events';
+/** columns and relationships of "event" */
+export type Event = {
+  __typename?: 'Event';
   action?: Maybe<Scalars['String']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   claimStatus?: Maybe<Scalars['claim_status']['output']>;
@@ -2098,50 +2098,52 @@ export type Events = {
   entryId?: Maybe<Scalars['uuid']['output']>;
   id: Scalars['bigint']['output'];
   tableName?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  user?: Maybe<User>;
   userId?: Maybe<Scalars['uuid']['output']>;
 };
 
-/** aggregated selection of "events" */
-export type EventsAggregate = {
-  __typename?: 'EventsAggregate';
-  aggregate?: Maybe<EventsAggregateFields>;
-  nodes: Array<Events>;
+/** aggregated selection of "event" */
+export type EventAggregate = {
+  __typename?: 'EventAggregate';
+  aggregate?: Maybe<EventAggregateFields>;
+  nodes: Array<Event>;
 };
 
-/** aggregate fields of "events" */
-export type EventsAggregateFields = {
-  __typename?: 'EventsAggregateFields';
-  avg?: Maybe<EventsAvgFields>;
+/** aggregate fields of "event" */
+export type EventAggregateFields = {
+  __typename?: 'EventAggregateFields';
+  avg?: Maybe<EventAvgFields>;
   count: Scalars['Int']['output'];
-  max?: Maybe<EventsMaxFields>;
-  min?: Maybe<EventsMinFields>;
-  stddev?: Maybe<EventsStddevFields>;
-  stddevPop?: Maybe<EventsStddevPopFields>;
-  stddevSamp?: Maybe<EventsStddevSampFields>;
-  sum?: Maybe<EventsSumFields>;
-  varPop?: Maybe<EventsVarPopFields>;
-  varSamp?: Maybe<EventsVarSampFields>;
-  variance?: Maybe<EventsVarianceFields>;
+  max?: Maybe<EventMaxFields>;
+  min?: Maybe<EventMinFields>;
+  stddev?: Maybe<EventStddevFields>;
+  stddevPop?: Maybe<EventStddevPopFields>;
+  stddevSamp?: Maybe<EventStddevSampFields>;
+  sum?: Maybe<EventSumFields>;
+  varPop?: Maybe<EventVarPopFields>;
+  varSamp?: Maybe<EventVarSampFields>;
+  variance?: Maybe<EventVarianceFields>;
 };
 
 
-/** aggregate fields of "events" */
-export type EventsAggregateFieldsCountArgs = {
-  columns?: InputMaybe<Array<EventsSelectColumn>>;
+/** aggregate fields of "event" */
+export type EventAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<EventSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** aggregate avg on columns */
-export type EventsAvgFields = {
-  __typename?: 'EventsAvgFields';
+export type EventAvgFields = {
+  __typename?: 'EventAvgFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
-/** Boolean expression to filter rows from the table "events". All fields are combined with a logical 'AND'. */
-export type EventsBoolExp = {
-  _and?: InputMaybe<Array<EventsBoolExp>>;
-  _not?: InputMaybe<EventsBoolExp>;
-  _or?: InputMaybe<Array<EventsBoolExp>>;
+/** Boolean expression to filter rows from the table "event". All fields are combined with a logical 'AND'. */
+export type EventBoolExp = {
+  _and?: InputMaybe<Array<EventBoolExp>>;
+  _not?: InputMaybe<EventBoolExp>;
+  _or?: InputMaybe<Array<EventBoolExp>>;
   action?: InputMaybe<StringComparisonExp>;
   claimId?: InputMaybe<UuidComparisonExp>;
   claimStatus?: InputMaybe<ClaimStatusComparisonExp>;
@@ -2149,22 +2151,23 @@ export type EventsBoolExp = {
   entryId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<BigintComparisonExp>;
   tableName?: InputMaybe<StringComparisonExp>;
+  user?: InputMaybe<UserBoolExp>;
   userId?: InputMaybe<UuidComparisonExp>;
 };
 
-/** unique or primary key constraints on table "events" */
-export enum EventsConstraint {
+/** unique or primary key constraints on table "event" */
+export enum EventConstraint {
   /** unique or primary key constraint on columns "id" */
-  EventsPkey = 'events_pkey'
+  EventPkey = 'event_pkey'
 }
 
-/** input type for incrementing numeric columns in table "events" */
-export type EventsIncInput = {
+/** input type for incrementing numeric columns in table "event" */
+export type EventIncInput = {
   id?: InputMaybe<Scalars['bigint']['input']>;
 };
 
-/** input type for inserting data into table "events" */
-export type EventsInsertInput = {
+/** input type for inserting data into table "event" */
+export type EventInsertInput = {
   action?: InputMaybe<Scalars['String']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   claimStatus?: InputMaybe<Scalars['claim_status']['input']>;
@@ -2172,12 +2175,13 @@ export type EventsInsertInput = {
   entryId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['bigint']['input']>;
   tableName?: InputMaybe<Scalars['String']['input']>;
+  user?: InputMaybe<UserObjRelInsertInput>;
   userId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
-export type EventsMaxFields = {
-  __typename?: 'EventsMaxFields';
+export type EventMaxFields = {
+  __typename?: 'EventMaxFields';
   action?: Maybe<Scalars['String']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   claimStatus?: Maybe<Scalars['claim_status']['output']>;
@@ -2189,8 +2193,8 @@ export type EventsMaxFields = {
 };
 
 /** aggregate min on columns */
-export type EventsMinFields = {
-  __typename?: 'EventsMinFields';
+export type EventMinFields = {
+  __typename?: 'EventMinFields';
   action?: Maybe<Scalars['String']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   claimStatus?: Maybe<Scalars['claim_status']['output']>;
@@ -2201,24 +2205,24 @@ export type EventsMinFields = {
   userId?: Maybe<Scalars['uuid']['output']>;
 };
 
-/** response of any mutation on the table "events" */
-export type EventsMutationResponse = {
-  __typename?: 'EventsMutationResponse';
+/** response of any mutation on the table "event" */
+export type EventMutationResponse = {
+  __typename?: 'EventMutationResponse';
   /** number of rows affected by the mutation */
   affectedRows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
-  returning: Array<Events>;
+  returning: Array<Event>;
 };
 
-/** on_conflict condition type for table "events" */
-export type EventsOnConflict = {
-  constraint: EventsConstraint;
-  updateColumns?: Array<EventsUpdateColumn>;
-  where?: InputMaybe<EventsBoolExp>;
+/** on_conflict condition type for table "event" */
+export type EventOnConflict = {
+  constraint: EventConstraint;
+  updateColumns?: Array<EventUpdateColumn>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
-/** Ordering options when selecting data from "events". */
-export type EventsOrderBy = {
+/** Ordering options when selecting data from "event". */
+export type EventOrderBy = {
   action?: InputMaybe<OrderBy>;
   claimId?: InputMaybe<OrderBy>;
   claimStatus?: InputMaybe<OrderBy>;
@@ -2226,16 +2230,17 @@ export type EventsOrderBy = {
   entryId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   tableName?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UserOrderBy>;
   userId?: InputMaybe<OrderBy>;
 };
 
-/** primary key columns input for table: events */
-export type EventsPkColumnsInput = {
+/** primary key columns input for table: event */
+export type EventPkColumnsInput = {
   id: Scalars['bigint']['input'];
 };
 
-/** select columns of table "events" */
-export enum EventsSelectColumn {
+/** select columns of table "event" */
+export enum EventSelectColumn {
   /** column name */
   Action = 'action',
   /** column name */
@@ -2254,8 +2259,8 @@ export enum EventsSelectColumn {
   UserId = 'userId'
 }
 
-/** input type for updating data in table "events" */
-export type EventsSetInput = {
+/** input type for updating data in table "event" */
+export type EventSetInput = {
   action?: InputMaybe<Scalars['String']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   claimStatus?: InputMaybe<Scalars['claim_status']['input']>;
@@ -2267,33 +2272,33 @@ export type EventsSetInput = {
 };
 
 /** aggregate stddev on columns */
-export type EventsStddevFields = {
-  __typename?: 'EventsStddevFields';
+export type EventStddevFields = {
+  __typename?: 'EventStddevFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate stddevPop on columns */
-export type EventsStddevPopFields = {
-  __typename?: 'EventsStddevPopFields';
+export type EventStddevPopFields = {
+  __typename?: 'EventStddevPopFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate stddevSamp on columns */
-export type EventsStddevSampFields = {
-  __typename?: 'EventsStddevSampFields';
+export type EventStddevSampFields = {
+  __typename?: 'EventStddevSampFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
-/** Streaming cursor of the table "events" */
-export type EventsStreamCursorInput = {
+/** Streaming cursor of the table "event" */
+export type EventStreamCursorInput = {
   /** Stream column input with initial value */
-  initialValue: EventsStreamCursorValueInput;
+  initialValue: EventStreamCursorValueInput;
   /** cursor ordering */
   ordering?: InputMaybe<CursorOrdering>;
 };
 
 /** Initial value of the column from where the streaming should start */
-export type EventsStreamCursorValueInput = {
+export type EventStreamCursorValueInput = {
   action?: InputMaybe<Scalars['String']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   claimStatus?: InputMaybe<Scalars['claim_status']['input']>;
@@ -2305,13 +2310,13 @@ export type EventsStreamCursorValueInput = {
 };
 
 /** aggregate sum on columns */
-export type EventsSumFields = {
-  __typename?: 'EventsSumFields';
+export type EventSumFields = {
+  __typename?: 'EventSumFields';
   id?: Maybe<Scalars['bigint']['output']>;
 };
 
-/** update columns of table "events" */
-export enum EventsUpdateColumn {
+/** update columns of table "event" */
+export enum EventUpdateColumn {
   /** column name */
   Action = 'action',
   /** column name */
@@ -2330,30 +2335,30 @@ export enum EventsUpdateColumn {
   UserId = 'userId'
 }
 
-export type EventsUpdates = {
+export type EventUpdates = {
   /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<EventsIncInput>;
+  _inc?: InputMaybe<EventIncInput>;
   /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<EventsSetInput>;
+  _set?: InputMaybe<EventSetInput>;
   /** filter the rows which have to be updated */
-  where: EventsBoolExp;
+  where: EventBoolExp;
 };
 
 /** aggregate varPop on columns */
-export type EventsVarPopFields = {
-  __typename?: 'EventsVarPopFields';
+export type EventVarPopFields = {
+  __typename?: 'EventVarPopFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate varSamp on columns */
-export type EventsVarSampFields = {
-  __typename?: 'EventsVarSampFields';
+export type EventVarSampFields = {
+  __typename?: 'EventVarSampFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate variance on columns */
-export type EventsVarianceFields = {
-  __typename?: 'EventsVarianceFields';
+export type EventVarianceFields = {
+  __typename?: 'EventVarianceFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
@@ -7160,10 +7165,10 @@ export type Mutation_Root = {
   deleteCommentHistory?: Maybe<CommentHistoryMutationResponse>;
   /** delete single row from the table: "comment_history" */
   deleteCommentHistoryByPk?: Maybe<CommentHistory>;
-  /** delete data from the table: "events" */
-  deleteEvents?: Maybe<EventsMutationResponse>;
-  /** delete single row from the table: "events" */
-  deleteEventsByPk?: Maybe<Events>;
+  /** delete data from the table: "event" */
+  deleteEvent?: Maybe<EventMutationResponse>;
+  /** delete single row from the table: "event" */
+  deleteEventByPk?: Maybe<Event>;
   /** delete data from the table: "fact" */
   deleteFact?: Maybe<FactMutationResponse>;
   /** delete single row from the table: "fact" */
@@ -7232,10 +7237,10 @@ export type Mutation_Root = {
   insertCommentHistoryOne?: Maybe<CommentHistory>;
   /** insert a single row into the table: "comment" */
   insertCommentOne?: Maybe<Comment>;
-  /** insert data into the table: "events" */
-  insertEvents?: Maybe<EventsMutationResponse>;
-  /** insert a single row into the table: "events" */
-  insertEventsOne?: Maybe<Events>;
+  /** insert data into the table: "event" */
+  insertEvent?: Maybe<EventMutationResponse>;
+  /** insert a single row into the table: "event" */
+  insertEventOne?: Maybe<Event>;
   /** insert data into the table: "fact" */
   insertFact?: Maybe<FactMutationResponse>;
   /** insert data into the table: "fact_history" */
@@ -7316,12 +7321,12 @@ export type Mutation_Root = {
   updateCommentHistoryMany?: Maybe<Array<Maybe<CommentHistoryMutationResponse>>>;
   /** update multiples rows of table: "comment" */
   updateCommentMany?: Maybe<Array<Maybe<CommentMutationResponse>>>;
-  /** update data of the table: "events" */
-  updateEvents?: Maybe<EventsMutationResponse>;
-  /** update single row of the table: "events" */
-  updateEventsByPk?: Maybe<Events>;
-  /** update multiples rows of table: "events" */
-  updateEventsMany?: Maybe<Array<Maybe<EventsMutationResponse>>>;
+  /** update data of the table: "event" */
+  updateEvent?: Maybe<EventMutationResponse>;
+  /** update single row of the table: "event" */
+  updateEventByPk?: Maybe<Event>;
+  /** update multiples rows of table: "event" */
+  updateEventMany?: Maybe<Array<Maybe<EventMutationResponse>>>;
   /** update data of the table: "fact" */
   updateFact?: Maybe<FactMutationResponse>;
   /** update single row of the table: "fact" */
@@ -7464,13 +7469,13 @@ export type Mutation_RootDeleteCommentHistoryByPkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDeleteEventsArgs = {
-  where: EventsBoolExp;
+export type Mutation_RootDeleteEventArgs = {
+  where: EventBoolExp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDeleteEventsByPkArgs = {
+export type Mutation_RootDeleteEventByPkArgs = {
   id: Scalars['bigint']['input'];
 };
 
@@ -7692,16 +7697,16 @@ export type Mutation_RootInsertCommentOneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsertEventsArgs = {
-  objects: Array<EventsInsertInput>;
-  onConflict?: InputMaybe<EventsOnConflict>;
+export type Mutation_RootInsertEventArgs = {
+  objects: Array<EventInsertInput>;
+  onConflict?: InputMaybe<EventOnConflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsertEventsOneArgs = {
-  object: EventsInsertInput;
-  onConflict?: InputMaybe<EventsOnConflict>;
+export type Mutation_RootInsertEventOneArgs = {
+  object: EventInsertInput;
+  onConflict?: InputMaybe<EventOnConflict>;
 };
 
 
@@ -7984,24 +7989,24 @@ export type Mutation_RootUpdateCommentManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdateEventsArgs = {
-  _inc?: InputMaybe<EventsIncInput>;
-  _set?: InputMaybe<EventsSetInput>;
-  where: EventsBoolExp;
+export type Mutation_RootUpdateEventArgs = {
+  _inc?: InputMaybe<EventIncInput>;
+  _set?: InputMaybe<EventSetInput>;
+  where: EventBoolExp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdateEventsByPkArgs = {
-  _inc?: InputMaybe<EventsIncInput>;
-  _set?: InputMaybe<EventsSetInput>;
-  pkColumns: EventsPkColumnsInput;
+export type Mutation_RootUpdateEventByPkArgs = {
+  _inc?: InputMaybe<EventIncInput>;
+  _set?: InputMaybe<EventSetInput>;
+  pkColumns: EventPkColumnsInput;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdateEventsManyArgs = {
-  updates: Array<EventsUpdates>;
+export type Mutation_RootUpdateEventManyArgs = {
+  updates: Array<EventUpdates>;
 };
 
 
@@ -8292,12 +8297,12 @@ export type Query_Root = {
   commentHistoryAggregate: CommentHistoryAggregate;
   /** fetch data from the table: "comment_history" using primary key columns */
   commentHistoryByPk?: Maybe<CommentHistory>;
-  /** fetch data from the table: "events" */
-  events: Array<Events>;
-  /** fetch aggregated fields from the table: "events" */
-  eventsAggregate: EventsAggregate;
-  /** fetch data from the table: "events" using primary key columns */
-  eventsByPk?: Maybe<Events>;
+  /** fetch data from the table: "event" */
+  event: Array<Event>;
+  /** fetch aggregated fields from the table: "event" */
+  eventAggregate: EventAggregate;
+  /** fetch data from the table: "event" using primary key columns */
+  eventByPk?: Maybe<Event>;
   /** fetch data from the table: "fact" */
   fact: Array<Fact>;
   /** fetch aggregated fields from the table: "fact" */
@@ -8505,25 +8510,25 @@ export type Query_RootCommentHistoryByPkArgs = {
 };
 
 
-export type Query_RootEventsArgs = {
-  distinctOn?: InputMaybe<Array<EventsSelectColumn>>;
+export type Query_RootEventArgs = {
+  distinctOn?: InputMaybe<Array<EventSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventsOrderBy>>;
-  where?: InputMaybe<EventsBoolExp>;
+  orderBy?: InputMaybe<Array<EventOrderBy>>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
 
-export type Query_RootEventsAggregateArgs = {
-  distinctOn?: InputMaybe<Array<EventsSelectColumn>>;
+export type Query_RootEventAggregateArgs = {
+  distinctOn?: InputMaybe<Array<EventSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventsOrderBy>>;
-  where?: InputMaybe<EventsBoolExp>;
+  orderBy?: InputMaybe<Array<EventOrderBy>>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
 
-export type Query_RootEventsByPkArgs = {
+export type Query_RootEventByPkArgs = {
   id: Scalars['bigint']['input'];
 };
 
@@ -8844,14 +8849,14 @@ export type Subscription_Root = {
   commentHistoryStream: Array<CommentHistory>;
   /** fetch data from the table in a streaming manner: "comment" */
   commentStream: Array<Comment>;
-  /** fetch data from the table: "events" */
-  events: Array<Events>;
-  /** fetch aggregated fields from the table: "events" */
-  eventsAggregate: EventsAggregate;
-  /** fetch data from the table: "events" using primary key columns */
-  eventsByPk?: Maybe<Events>;
-  /** fetch data from the table in a streaming manner: "events" */
-  eventsStream: Array<Events>;
+  /** fetch data from the table: "event" */
+  event: Array<Event>;
+  /** fetch aggregated fields from the table: "event" */
+  eventAggregate: EventAggregate;
+  /** fetch data from the table: "event" using primary key columns */
+  eventByPk?: Maybe<Event>;
+  /** fetch data from the table in a streaming manner: "event" */
+  eventStream: Array<Event>;
   /** fetch data from the table: "fact" */
   fact: Array<Fact>;
   /** fetch aggregated fields from the table: "fact" */
@@ -9123,33 +9128,33 @@ export type Subscription_RootCommentStreamArgs = {
 };
 
 
-export type Subscription_RootEventsArgs = {
-  distinctOn?: InputMaybe<Array<EventsSelectColumn>>;
+export type Subscription_RootEventArgs = {
+  distinctOn?: InputMaybe<Array<EventSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventsOrderBy>>;
-  where?: InputMaybe<EventsBoolExp>;
+  orderBy?: InputMaybe<Array<EventOrderBy>>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
 
-export type Subscription_RootEventsAggregateArgs = {
-  distinctOn?: InputMaybe<Array<EventsSelectColumn>>;
+export type Subscription_RootEventAggregateArgs = {
+  distinctOn?: InputMaybe<Array<EventSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventsOrderBy>>;
-  where?: InputMaybe<EventsBoolExp>;
+  orderBy?: InputMaybe<Array<EventOrderBy>>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
 
-export type Subscription_RootEventsByPkArgs = {
+export type Subscription_RootEventByPkArgs = {
   id: Scalars['bigint']['input'];
 };
 
 
-export type Subscription_RootEventsStreamArgs = {
+export type Subscription_RootEventStreamArgs = {
   batchSize: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<EventsStreamCursorInput>>;
-  where?: InputMaybe<EventsBoolExp>;
+  cursor: Array<InputMaybe<EventStreamCursorInput>>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
 

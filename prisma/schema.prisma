@@ -38,7 +38,7 @@ model claim {
   claim_history               claim_history[]
   claim_origin_index_tracker  claim_origin_index_tracker?
   comment                     comment[]
-  events                      events[]
+  event                       event[]
   fact                        fact[]
   origin                      origin[]
 }
@@ -122,19 +122,6 @@ model comment_history {
   sys_period Unsupported("tstzrange")?
   history_id String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   comment    comment                   @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment_history")
-}
-
-model events {
-  id           BigInt        @id
-  claim_id     String?       @db.Uuid
-  claim_status claim_status?
-  user_id      String?       @db.Uuid
-  action       String?
-  table_name   String?
-  created_at   DateTime?     @default(now()) @db.Timestamptz(6)
-  entry_id     String?       @db.Uuid
-  claim        claim?        @relation(fields: [claim_id], references: [id], onDelete: Cascade)
-  user         user?         @relation(fields: [user_id], references: [id])
 }
 
 model fact {
@@ -308,7 +295,7 @@ model user {
   claim_category_claim_category_updated_byTouser claim_category[]          @relation("claim_category_updated_byTouser")
   comment_comment_created_byTouser               comment[]                 @relation("comment_created_byTouser")
   comment_comment_updated_byTouser               comment[]                 @relation("comment_updated_byTouser")
-  events                                         events[]
+  event                                          event[]
   fact_fact_created_byTouser                     fact[]                    @relation("fact_created_byTouser")
   fact_fact_updated_byTouser                     fact[]                    @relation("fact_updated_byTouser")
   file_file_created_byTouser                     file[]                    @relation("file_created_byTouser")
@@ -335,6 +322,19 @@ model user_history {
   sys_period    Unsupported("tstzrange")?
   history_id    String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user          user                      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_claim_history")
+}
+
+model event {
+  id           BigInt        @id
+  claim_id     String?       @db.Uuid
+  claim_status claim_status?
+  user_id      String?       @db.Uuid
+  action       String?
+  table_name   String?
+  created_at   DateTime?     @default(now()) @db.Timestamptz(6)
+  entry_id     String?       @db.Uuid
+  claim        claim?        @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+  user         user?         @relation(fields: [user_id], references: [id])
 }
 
 enum claim_status {
