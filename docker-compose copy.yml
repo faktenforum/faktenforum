@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: dev_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs:/etc/ssl/certs  # Optional: for SSL certs if needed
+    networks:
+      - dev_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+networks:
+  dev_network:
+    driver: bridge

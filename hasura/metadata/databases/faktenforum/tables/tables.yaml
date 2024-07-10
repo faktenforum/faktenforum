@@ -4,7 +4,7 @@
 - "!include public_claim_history.yaml"
 - "!include public_comment.yaml"
 - "!include public_comment_history.yaml"
-- "!include public_events.yaml"
+- "!include public_event.yaml"
 - "!include public_fact.yaml"
 - "!include public_fact_history.yaml"
 - "!include public_file.yaml"

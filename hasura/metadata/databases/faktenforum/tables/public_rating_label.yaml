@@ -1,3 +1,36 @@
 table:
   name: rating_label
   schema: public
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      columns:
+        - label_de
+        - label_en
+        - name
+    comment: ""
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

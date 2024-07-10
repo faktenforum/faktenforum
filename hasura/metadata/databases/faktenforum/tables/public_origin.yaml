@@ -5,13 +5,13 @@ object_relationships:
   - name: claim
     using:
       foreign_key_constraint_on: claim_id
+  - name: createdByUser
+    using:
+      foreign_key_constraint_on: created_by
   - name: file
     using:
       foreign_key_constraint_on: file_id
-  - name: user
-    using:
-      foreign_key_constraint_on: created_by
-  - name: userByUpdatedBy
+  - name: updatedByUser
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
@@ -61,14 +61,15 @@ update_permissions:
   - role: moderator
     permission:
       columns:
+        - archive_url
         - excerpt
-        - url
         - sys_period
         - updated_by
+        - url
       filter: {}
       check: null
       set:
-        created_by: x-hasura-User-Id
+        updated_by: x-hasura-User-Id
     comment: ""
 delete_permissions:
   - role: moderator

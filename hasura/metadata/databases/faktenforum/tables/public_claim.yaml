@@ -2,13 +2,13 @@ table:
   name: claim
   schema: public
 object_relationships:
+  - name: createdByUser
+    using:
+      foreign_key_constraint_on: created_by
   - name: ratingLabel
     using:
       foreign_key_constraint_on: rating_label_name
-  - name: user
-    using:
-      foreign_key_constraint_on: created_by
-  - name: userByUpdatedBy
+  - name: updatedByUser
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
@@ -80,6 +80,25 @@ select_permissions:
             - published
       allow_aggregations: true
     comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - process_id
+        - rating_label_name
+        - rating_summary
+        - rating_title
+        - short_id
+        - submitter_notes
+        - synopsis
+        - created_at
+        - updated_at
+        - sys_period
+        - status
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+    comment: ""
 update_permissions:
   - role: moderator
     permission:
@@ -89,7 +108,7 @@ update_permissions:
       filter: {}
       check: null
       set:
-        created_by: x-hasura-User-Id
+        updated_by: x-hasura-User-Id
     comment: ""
 delete_permissions:
   - role: moderator
