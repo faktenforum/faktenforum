@@ -1540,6 +1540,7 @@ export type Comment = {
   createdByUser: User;
   id: Scalars['uuid']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
@@ -1621,6 +1622,7 @@ export type CommentBoolExp = {
   createdByUser?: InputMaybe<UserBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  threadId?: InputMaybe<UuidComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
   updatedByUser?: InputMaybe<UserBoolExp>;
@@ -1644,6 +1646,7 @@ export type CommentHistory = {
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -1701,6 +1704,7 @@ export type CommentHistoryBoolExp = {
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  threadId?: InputMaybe<UuidComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
 };
@@ -1721,6 +1725,7 @@ export type CommentHistoryInsertInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -1734,6 +1739,7 @@ export type CommentHistoryMaxFields = {
   createdBy?: Maybe<Scalars['uuid']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -1746,6 +1752,7 @@ export type CommentHistoryMaxOrderBy = {
   createdBy?: InputMaybe<OrderBy>;
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1759,6 +1766,7 @@ export type CommentHistoryMinFields = {
   createdBy?: Maybe<Scalars['uuid']['output']>;
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -1771,6 +1779,7 @@ export type CommentHistoryMinOrderBy = {
   createdBy?: InputMaybe<OrderBy>;
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1801,6 +1810,7 @@ export type CommentHistoryOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
+  threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1827,6 +1837,8 @@ export enum CommentHistorySelectColumn {
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
+  ThreadId = 'threadId',
+  /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
   UpdatedBy = 'updatedBy'
@@ -1841,6 +1853,7 @@ export type CommentHistorySetInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -1862,6 +1875,7 @@ export type CommentHistoryStreamCursorValueInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -1882,6 +1896,8 @@ export enum CommentHistoryUpdateColumn {
   Id = 'id',
   /** column name */
   SysPeriod = 'sysPeriod',
+  /** column name */
+  ThreadId = 'threadId',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -1906,6 +1922,7 @@ export type CommentInsertInput = {
   createdByUser?: InputMaybe<UserObjRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
   updatedByUser?: InputMaybe<UserObjRelInsertInput>;
@@ -1919,6 +1936,7 @@ export type CommentMaxFields = {
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -1930,6 +1948,7 @@ export type CommentMaxOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1942,6 +1961,7 @@ export type CommentMinFields = {
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
@@ -1953,6 +1973,7 @@ export type CommentMinOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
 };
@@ -1991,6 +2012,7 @@ export type CommentOrderBy = {
   createdByUser?: InputMaybe<UserOrderBy>;
   id?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
+  threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   updatedByUser?: InputMaybe<UserOrderBy>;
@@ -2016,6 +2038,8 @@ export enum CommentSelectColumn {
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
+  ThreadId = 'threadId',
+  /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
   UpdatedBy = 'updatedBy'
@@ -2029,6 +2053,7 @@ export type CommentSetInput = {
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -2049,6 +2074,7 @@ export type CommentStreamCursorValueInput = {
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -2067,6 +2093,8 @@ export enum CommentUpdateColumn {
   Id = 'id',
   /** column name */
   SysPeriod = 'sysPeriod',
+  /** column name */
+  ThreadId = 'threadId',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
