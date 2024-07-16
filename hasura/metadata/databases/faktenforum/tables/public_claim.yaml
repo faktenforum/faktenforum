@@ -54,8 +54,12 @@ insert_permissions:
       set:
         created_at: x-hasura-User-Id
       columns:
-        - submitter_notes
+        - rating_label_name
+        - rating_summary
+        - rating_title
         - status
+        - submitter_notes
+        - synopsis
     comment: ""
 select_permissions:
   - role: junior
@@ -103,8 +107,13 @@ update_permissions:
   - role: moderator
     permission:
       columns:
-        - submitter_notes
+        - rating_label_name
+        - rating_summary
+        - rating_title
+        - short_id
         - status
+        - submitter_notes
+        - synopsis
       filter: {}
       check: null
       set:
