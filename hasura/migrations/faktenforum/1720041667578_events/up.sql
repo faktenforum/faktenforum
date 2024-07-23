@@ -30,6 +30,8 @@ ADD CONSTRAINT event_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.clai
 -- Add the trigger to generate the monotonic id
 CREATE TRIGGER add_monotonic_id_trigger BEFORE
 INSERT ON public.event FOR EACH ROW EXECUTE FUNCTION add_monotonic_id();
+-- Add index for to find last claim reladed update
+CREATE INDEX idx_event_claim_id_created_at ON public.event (claim_id, created_at DESC);
 -- Step 2: Create the logging function with proper handling for different operations and table structures
 CREATE FUNCTION public.log_event() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE v_claim_id uuid;

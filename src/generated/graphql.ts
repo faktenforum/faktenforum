@@ -208,6 +208,10 @@ export type Claim = {
   /** An object relationship */
   createdByUser?: Maybe<User>;
   /** An array relationship */
+  events: Array<Event>;
+  /** An aggregate relationship */
+  eventsAggregate: EventAggregate;
+  /** An array relationship */
   facts: Array<Fact>;
   /** An aggregate relationship */
   factsAggregate: FactAggregate;
@@ -291,6 +295,26 @@ export type ClaimCommentsAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CommentOrderBy>>;
   where?: InputMaybe<CommentBoolExp>;
+};
+
+
+/** columns and relationships of "claim" */
+export type ClaimEventsArgs = {
+  distinctOn?: InputMaybe<Array<EventSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventOrderBy>>;
+  where?: InputMaybe<EventBoolExp>;
+};
+
+
+/** columns and relationships of "claim" */
+export type ClaimEventsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<EventSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventOrderBy>>;
+  where?: InputMaybe<EventBoolExp>;
 };
 
 
@@ -414,6 +438,8 @@ export type ClaimBoolExp = {
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   createdByUser?: InputMaybe<UserBoolExp>;
+  events?: InputMaybe<EventBoolExp>;
+  eventsAggregate?: InputMaybe<EventAggregateBoolExp>;
   facts?: InputMaybe<FactBoolExp>;
   factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
@@ -1174,6 +1200,7 @@ export type ClaimInsertInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   createdByUser?: InputMaybe<UserObjRelInsertInput>;
+  events?: InputMaybe<EventArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   origins?: InputMaybe<OriginArrRelInsertInput>;
@@ -1293,6 +1320,7 @@ export type ClaimOrderBy = {
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   createdByUser?: InputMaybe<UserOrderBy>;
+  eventsAggregate?: InputMaybe<EventAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   id?: InputMaybe<OrderBy>;
   originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
@@ -2138,6 +2166,10 @@ export type EventAggregate = {
   nodes: Array<Event>;
 };
 
+export type EventAggregateBoolExp = {
+  count?: InputMaybe<EventAggregateBoolExpCount>;
+};
+
 /** aggregate fields of "event" */
 export type EventAggregateFields = {
   __typename?: 'EventAggregateFields';
@@ -2161,10 +2193,37 @@ export type EventAggregateFieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "event" */
+export type EventAggregateOrderBy = {
+  avg?: InputMaybe<EventAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<EventMaxOrderBy>;
+  min?: InputMaybe<EventMinOrderBy>;
+  stddev?: InputMaybe<EventStddevOrderBy>;
+  stddevPop?: InputMaybe<EventStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<EventStddevSampOrderBy>;
+  sum?: InputMaybe<EventSumOrderBy>;
+  varPop?: InputMaybe<EventVarPopOrderBy>;
+  varSamp?: InputMaybe<EventVarSampOrderBy>;
+  variance?: InputMaybe<EventVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "event" */
+export type EventArrRelInsertInput = {
+  data: Array<EventInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<EventOnConflict>;
+};
+
 /** aggregate avg on columns */
 export type EventAvgFields = {
   __typename?: 'EventAvgFields';
   id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "event" */
+export type EventAvgOrderBy = {
+  id?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "event". All fields are combined with a logical 'AND'. */
@@ -2220,6 +2279,18 @@ export type EventMaxFields = {
   userId?: Maybe<Scalars['uuid']['output']>;
 };
 
+/** order by max() on columns of table "event" */
+export type EventMaxOrderBy = {
+  action?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  claimStatus?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  entryId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  tableName?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
 /** aggregate min on columns */
 export type EventMinFields = {
   __typename?: 'EventMinFields';
@@ -2231,6 +2302,18 @@ export type EventMinFields = {
   id?: Maybe<Scalars['bigint']['output']>;
   tableName?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "event" */
+export type EventMinOrderBy = {
+  action?: InputMaybe<OrderBy>;
+  claimId?: InputMaybe<OrderBy>;
+  claimStatus?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  entryId?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  tableName?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "event" */
@@ -2305,16 +2388,31 @@ export type EventStddevFields = {
   id?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddev() on columns of table "event" */
+export type EventStddevOrderBy = {
+  id?: InputMaybe<OrderBy>;
+};
+
 /** aggregate stddevPop on columns */
 export type EventStddevPopFields = {
   __typename?: 'EventStddevPopFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by stddevPop() on columns of table "event" */
+export type EventStddevPopOrderBy = {
+  id?: InputMaybe<OrderBy>;
+};
+
 /** aggregate stddevSamp on columns */
 export type EventStddevSampFields = {
   __typename?: 'EventStddevSampFields';
   id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddevSamp() on columns of table "event" */
+export type EventStddevSampOrderBy = {
+  id?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "event" */
@@ -2341,6 +2439,11 @@ export type EventStreamCursorValueInput = {
 export type EventSumFields = {
   __typename?: 'EventSumFields';
   id?: Maybe<Scalars['bigint']['output']>;
+};
+
+/** order by sum() on columns of table "event" */
+export type EventSumOrderBy = {
+  id?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "event" */
@@ -2378,16 +2481,31 @@ export type EventVarPopFields = {
   id?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by varPop() on columns of table "event" */
+export type EventVarPopOrderBy = {
+  id?: InputMaybe<OrderBy>;
+};
+
 /** aggregate varSamp on columns */
 export type EventVarSampFields = {
   __typename?: 'EventVarSampFields';
   id?: Maybe<Scalars['Float']['output']>;
 };
 
+/** order by varSamp() on columns of table "event" */
+export type EventVarSampOrderBy = {
+  id?: InputMaybe<OrderBy>;
+};
+
 /** aggregate variance on columns */
 export type EventVarianceFields = {
   __typename?: 'EventVarianceFields';
   id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "event" */
+export type EventVarianceOrderBy = {
+  id?: InputMaybe<OrderBy>;
 };
 
 /** columns and relationships of "fact" */
@@ -5220,6 +5338,7 @@ export type RatingLabelUpdates = {
 /** columns and relationships of "source" */
 export type Source = {
   __typename?: 'Source';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
@@ -5233,7 +5352,6 @@ export type Source = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id: Scalars['uuid']['output'];
   index?: Maybe<Scalars['Int']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   sourceHistories: Array<SourceHistory>;
   /** An aggregate relationship */
@@ -5243,6 +5361,7 @@ export type Source = {
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
   updatedByUser?: Maybe<User>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -5337,6 +5456,7 @@ export type SourceBoolExp = {
   _and?: InputMaybe<Array<SourceBoolExp>>;
   _not?: InputMaybe<SourceBoolExp>;
   _or?: InputMaybe<Array<SourceBoolExp>>;
+  archiveUrl?: InputMaybe<StringComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   createdByUser?: InputMaybe<UserBoolExp>;
@@ -5347,13 +5467,13 @@ export type SourceBoolExp = {
   fileId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   index?: InputMaybe<IntComparisonExp>;
-  originalUrl?: InputMaybe<StringComparisonExp>;
   sourceHistories?: InputMaybe<SourceHistoryBoolExp>;
   sourceHistoriesAggregate?: InputMaybe<SourceHistoryAggregateBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
   updatedByUser?: InputMaybe<UserBoolExp>;
+  url?: InputMaybe<StringComparisonExp>;
 };
 
 /** unique or primary key constraints on table "source" */
@@ -5365,6 +5485,7 @@ export enum SourceConstraint {
 /** columns and relationships of "source_history" */
 export type SourceHistory = {
   __typename?: 'SourceHistory';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
@@ -5373,12 +5494,12 @@ export type SourceHistory = {
   historyId: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
   index?: Maybe<Scalars['Int']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   source: Source;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregated selection of "source_history" */
@@ -5453,6 +5574,7 @@ export type SourceHistoryBoolExp = {
   _and?: InputMaybe<Array<SourceHistoryBoolExp>>;
   _not?: InputMaybe<SourceHistoryBoolExp>;
   _or?: InputMaybe<Array<SourceHistoryBoolExp>>;
+  archiveUrl?: InputMaybe<StringComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   excerpt?: InputMaybe<StringComparisonExp>;
@@ -5461,11 +5583,11 @@ export type SourceHistoryBoolExp = {
   historyId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   index?: InputMaybe<IntComparisonExp>;
-  originalUrl?: InputMaybe<StringComparisonExp>;
   source?: InputMaybe<SourceBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
+  url?: InputMaybe<StringComparisonExp>;
 };
 
 /** unique or primary key constraints on table "source_history" */
@@ -5481,6 +5603,7 @@ export type SourceHistoryIncInput = {
 
 /** input type for inserting data into table "source_history" */
 export type SourceHistoryInsertInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   excerpt?: InputMaybe<Scalars['String']['input']>;
@@ -5489,16 +5612,17 @@ export type SourceHistoryInsertInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
   source?: InputMaybe<SourceObjRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type SourceHistoryMaxFields = {
   __typename?: 'SourceHistoryMaxFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
@@ -5507,13 +5631,14 @@ export type SourceHistoryMaxFields = {
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by max() on columns of table "source_history" */
 export type SourceHistoryMaxOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   excerpt?: InputMaybe<OrderBy>;
@@ -5522,14 +5647,15 @@ export type SourceHistoryMaxOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
 };
 
 /** aggregate min on columns */
 export type SourceHistoryMinFields = {
   __typename?: 'SourceHistoryMinFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
@@ -5538,13 +5664,14 @@ export type SourceHistoryMinFields = {
   historyId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by min() on columns of table "source_history" */
 export type SourceHistoryMinOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   excerpt?: InputMaybe<OrderBy>;
@@ -5553,9 +5680,9 @@ export type SourceHistoryMinOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "source_history" */
@@ -5576,6 +5703,7 @@ export type SourceHistoryOnConflict = {
 
 /** Ordering options when selecting data from "source_history". */
 export type SourceHistoryOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   excerpt?: InputMaybe<OrderBy>;
@@ -5584,11 +5712,11 @@ export type SourceHistoryOrderBy = {
   historyId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
   source?: InputMaybe<SourceOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
 };
 
 /** primary key columns input for table: source_history */
@@ -5598,6 +5726,8 @@ export type SourceHistoryPkColumnsInput = {
 
 /** select columns of table "source_history" */
 export enum SourceHistorySelectColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -5615,17 +5745,18 @@ export enum SourceHistorySelectColumn {
   /** column name */
   Index = 'index',
   /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  UpdatedBy = 'updatedBy'
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
 }
 
 /** input type for updating data in table "source_history" */
 export type SourceHistorySetInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   excerpt?: InputMaybe<Scalars['String']['input']>;
@@ -5634,10 +5765,10 @@ export type SourceHistorySetInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate stddev on columns */
@@ -5683,6 +5814,7 @@ export type SourceHistoryStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type SourceHistoryStreamCursorValueInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   excerpt?: InputMaybe<Scalars['String']['input']>;
@@ -5691,10 +5823,10 @@ export type SourceHistoryStreamCursorValueInput = {
   historyId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate sum on columns */
@@ -5710,6 +5842,8 @@ export type SourceHistorySumOrderBy = {
 
 /** update columns of table "source_history" */
 export enum SourceHistoryUpdateColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -5727,13 +5861,13 @@ export enum SourceHistoryUpdateColumn {
   /** column name */
   Index = 'index',
   /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  UpdatedBy = 'updatedBy'
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
 }
 
 export type SourceHistoryUpdates = {
@@ -5785,6 +5919,7 @@ export type SourceIncInput = {
 
 /** input type for inserting data into table "source" */
 export type SourceInsertInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   createdByUser?: InputMaybe<UserObjRelInsertInput>;
@@ -5795,17 +5930,18 @@ export type SourceInsertInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
   sourceHistories?: InputMaybe<SourceHistoryArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
   updatedByUser?: InputMaybe<UserObjRelInsertInput>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type SourceMaxFields = {
   __typename?: 'SourceMaxFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
@@ -5813,13 +5949,14 @@ export type SourceMaxFields = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by max() on columns of table "source" */
 export type SourceMaxOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   excerpt?: InputMaybe<OrderBy>;
@@ -5827,14 +5964,15 @@ export type SourceMaxOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
 };
 
 /** aggregate min on columns */
 export type SourceMinFields = {
   __typename?: 'SourceMinFields';
+  archiveUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
@@ -5842,13 +5980,14 @@ export type SourceMinFields = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by min() on columns of table "source" */
 export type SourceMinOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   excerpt?: InputMaybe<OrderBy>;
@@ -5856,9 +5995,9 @@ export type SourceMinOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
+  url?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "source" */
@@ -5886,6 +6025,7 @@ export type SourceOnConflict = {
 
 /** Ordering options when selecting data from "source". */
 export type SourceOrderBy = {
+  archiveUrl?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   createdByUser?: InputMaybe<UserOrderBy>;
@@ -5896,12 +6036,12 @@ export type SourceOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
-  originalUrl?: InputMaybe<OrderBy>;
   sourceHistoriesAggregate?: InputMaybe<SourceHistoryAggregateOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   updatedByUser?: InputMaybe<UserOrderBy>;
+  url?: InputMaybe<OrderBy>;
 };
 
 /** primary key columns input for table: source */
@@ -5911,6 +6051,8 @@ export type SourcePkColumnsInput = {
 
 /** select columns of table "source" */
 export enum SourceSelectColumn {
+  /** column name */
+  ArchiveUrl = 'archiveUrl',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -5926,17 +6068,18 @@ export enum SourceSelectColumn {
   /** column name */
   Index = 'index',
   /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  UpdatedBy = 'updatedBy'
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
 }
 
 /** input type for updating data in table "source" */
 export type SourceSetInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   excerpt?: InputMaybe<Scalars['String']['input']>;
@@ -5944,10 +6087,10 @@ export type SourceSetInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate stddev on columns */
@@ -5993,6 +6136,7 @@ export type SourceStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type SourceStreamCursorValueInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   excerpt?: InputMaybe<Scalars['String']['input']>;
@@ -6000,10 +6144,10 @@ export type SourceStreamCursorValueInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  originalUrl?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate sum on columns */
@@ -6020,6 +6164,8 @@ export type SourceSumOrderBy = {
 /** update columns of table "source" */
 export enum SourceUpdateColumn {
   /** column name */
+  ArchiveUrl = 'archiveUrl',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
@@ -6034,13 +6180,13 @@ export enum SourceUpdateColumn {
   /** column name */
   Index = 'index',
   /** column name */
-  OriginalUrl = 'originalUrl',
-  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  UpdatedBy = 'updatedBy'
+  UpdatedBy = 'updatedBy',
+  /** column name */
+  Url = 'url'
 }
 
 export type SourceUpdates = {
@@ -7135,6 +7281,13 @@ export type CommentHistoryAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<CommentHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
   filter?: InputMaybe<CommentHistoryBoolExp>;
+  predicate: IntComparisonExp;
+};
+
+export type EventAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<EventSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<EventBoolExp>;
   predicate: IntComparisonExp;
 };
 

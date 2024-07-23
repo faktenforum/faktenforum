@@ -33,6 +33,13 @@ array_relationships:
         table:
           name: comment
           schema: public
+  - name: events
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: event
+          schema: public
   - name: facts
     using:
       foreign_key_constraint_on:
@@ -110,7 +117,6 @@ update_permissions:
         - rating_label_name
         - rating_summary
         - rating_title
-        - short_id
         - status
         - submitter_notes
         - synopsis

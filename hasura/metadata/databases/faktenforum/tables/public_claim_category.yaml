@@ -19,7 +19,13 @@ insert_permissions:
         created_by: x-hasura-User-Id
       columns:
         - category_name
+        - created_at
+        - updated_at
+        - sys_period
         - claim_id
+        - created_by
+        - id
+        - updated_by
     comment: ""
 select_permissions:
   - role: moderator

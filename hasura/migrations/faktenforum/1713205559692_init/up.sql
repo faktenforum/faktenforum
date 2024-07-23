@@ -101,7 +101,8 @@ CREATE TABLE public.source (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     fact_id uuid NOT NULL,
     index integer,
-    original_url text,
+    url text,
+    archive_url text,
     excerpt text,
     file_id uuid,
     created_by uuid,
@@ -246,6 +247,5 @@ ALTER TABLE ONLY public.claim_category
 ADD CONSTRAINT claim_category_category_id_fkey FOREIGN KEY (category_name) REFERENCES public.category(name) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.claim
 ADD CONSTRAINT claim_rating_label_rating_label_name_fkey FOREIGN KEY (rating_label_name) REFERENCES public.rating_label(name) ON UPDATE CASCADE ON DELETE CASCADE;
-
 ALTER TABLE ONLY public.comment
 ADD CONSTRAINT comment_comment_thread_id_fkey FOREIGN KEY (thread_id) REFERENCES public.comment(id) ON UPDATE CASCADE ON DELETE CASCADE;
