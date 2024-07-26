@@ -7236,6 +7236,17 @@ export type UserUpdates = {
   where: UserBoolExp;
 };
 
+export type UserWithRole = {
+  __typename?: 'UserWithRole';
+  email: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
+  pronouns: Scalars['String']['output'];
+  role: Scalars['String']['output'];
+  username: Scalars['String']['output'];
+};
+
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
 export type UuidComparisonExp = {
   _eq?: InputMaybe<Scalars['uuid']['input']>;
@@ -8442,6 +8453,8 @@ export type OriginHistoryAggregateBoolExpCount = {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  /** Get all users with their assigned role */
+  allUsersWithRoles: Array<UserWithRole>;
   /** fetch data from the table: "category" */
   category: Array<Category>;
   /** fetch aggregated fields from the table: "category" */

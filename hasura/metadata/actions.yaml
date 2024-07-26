@@ -1,6 +1,15 @@
-actions: []
+actions:
+  - name: allUsersWithRoles
+    definition:
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/all-users-with-roles'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+    comment: Get all users with their assigned role
 custom_types:
   enums: []
   input_objects: []
-  objects: []
+  objects:
+    - name: UserWithRole
   scalars: []
