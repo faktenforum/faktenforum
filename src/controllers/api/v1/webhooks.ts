@@ -3,6 +3,7 @@ import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
+import { UpdateUserRoleRequest } from "~/models/requests/UpdateUserRoleRequest";
 import { KratosUserSchema } from "~/models/responses/KratosUserSchema";
 import { AuthService, FileService, UsersService, HasuraService, KratosUser } from "~/services";
 
@@ -89,5 +90,12 @@ export class WebHookController {
     const kratosUsers = await this.authService.getAllUsers();
     return kratosUsers.map(this.transformKratosUser);
   }
+
+  @Post("/update-user-role")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @Returns(200, KratosUserSchema).ContentType("application/json")
+  async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
+    const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
+    return this.transformKratosUser(kratosUser);
   }
 }

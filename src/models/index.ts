@@ -7,6 +7,7 @@ export * from "./Session";
 export * from "./requests/DeleteFileRequest";
 export * from "./requests/RegistrationRequest";
 export * from "./requests/SubmissionRequest";
+export * from "./requests/UpdateUserRoleRequest";
 export * from "./responses/FileUploadResponse";
 export * from "./responses/KratosUserSchema";
 export * from "./responses/RegistrationPreResponse";
