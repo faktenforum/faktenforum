@@ -5,7 +5,7 @@ import type { Session } from "@ory/client";
 import type { UserRole } from "~/models";
 type ValidatedSession = Session & { identity: { metadata_public: { role: UserRole } }; expires_at: string };
 
-type KratosAddress = {
+export type KratosAddress = {
   id: string;
   value: string;
   via: "email";
@@ -13,13 +13,13 @@ type KratosAddress = {
   updated_at: "2024-07-25T10:54:39.940218Z";
 };
 
-type KratosVerifiableAddress = KratosAddress & {
+export type KratosVerifiableAddress = KratosAddress & {
   verified: true;
   status: "completed";
   verified_at: "2024-07-25T10:55:01.966571Z";
 };
 
-enum KratosRole {
+export enum KratosRole {
   junior = "junior",
   intermediate = "intermediate",
   senior = "senior",
@@ -27,7 +27,7 @@ enum KratosRole {
   admin = "admin"
 }
 
-type KratosPerson = {
+export type KratosUser = {
   id: "fa4c3f21-ee87-4196-ac70-e9c401ac166b";
   schema_id: string;
   schema_url: string;
@@ -85,7 +85,7 @@ export class AuthService {
     }
   }
 
-  async getAllUsers(): Promise<KratosPerson[]> {
+  async getAllUsers(): Promise<KratosUser[]> {
     const response = await fetch(`${this.envService.kratosPublicUrl}/admin/identities`);
     if (!response.ok) {
       throw new Exception(response.status, await response.text());

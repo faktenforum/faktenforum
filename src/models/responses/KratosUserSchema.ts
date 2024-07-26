@@ -1,6 +1,6 @@
 import { Property, Required } from "@tsed/schema";
 
-export class AllUsersWithRolesResponse {
+export class KratosUserSchema {
   @Property()
   @Required()
   id: string;
