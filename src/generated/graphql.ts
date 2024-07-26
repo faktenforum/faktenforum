@@ -7133,6 +7133,14 @@ export type UserPkColumnsInput = {
   id: Scalars['uuid']['input'];
 };
 
+export enum UserRole {
+  Admin = 'admin',
+  Intermediate = 'intermediate',
+  Junior = 'junior',
+  Manager = 'manager',
+  Senior = 'senior'
+}
+
 /** select columns of table "user" */
 export enum UserSelectColumn {
   /** column name */
@@ -7239,11 +7247,8 @@ export type UserUpdates = {
 export type UserWithRole = {
   __typename?: 'UserWithRole';
   email: Scalars['String']['output'];
-  firstName: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  lastName: Scalars['String']['output'];
-  pronouns: Scalars['String']['output'];
-  role: Scalars['String']['output'];
+  role: UserRole;
   username: Scalars['String']['output'];
 };
 
@@ -7585,6 +7590,8 @@ export type Mutation_Root = {
   updateUserHistoryMany?: Maybe<Array<Maybe<UserHistoryMutationResponse>>>;
   /** update multiples rows of table: "user" */
   updateUserMany?: Maybe<Array<Maybe<UserMutationResponse>>>;
+  /** Update user role */
+  updateUserRole: UserWithRole;
 };
 
 
@@ -8435,6 +8442,13 @@ export type Mutation_RootUpdateUserHistoryManyArgs = {
 /** mutation root */
 export type Mutation_RootUpdateUserManyArgs = {
   updates: Array<UserUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateUserRoleArgs = {
+  role: UserRole;
+  userId: Scalars['uuid']['input'];
 };
 
 export type OriginAggregateBoolExpCount = {
