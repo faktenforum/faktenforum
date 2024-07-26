@@ -92,4 +92,28 @@ export class AuthService {
     }
     return await response.json();
   }
+
+  async updateUserRole(userId: string, role: KratosRole): Promise<KratosUser> {
+    const updates = [
+      {
+        op: "replace",
+        path: "/metadata_public/role",
+        value: role
+      }
+    ];
+
+    const response = await fetch(`${this.envService.kratosPublicUrl}/admin/identities/${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify(updates),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Exception(response.status, await response.text());
+    }
+
+    return await response.json();
+  }
 }
