@@ -11,4 +11,5 @@ export * from "./responses/FileUploadResponse";
 export * from "./responses/RegistrationPreResponse";
 export * from "./responses/SubmissionCreateResponse";
 export * from "./responses/UrlInfoResponse";
+export * from "./responses/AllUsersWithRolesResponse";
 export * from "./responses/VersionResponse";

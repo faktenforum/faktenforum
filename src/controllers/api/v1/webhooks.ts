@@ -3,6 +3,7 @@ import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
+import { AllUsersWithRolesResponse } from "~/models/responses/AllUsersWithRolesResponse";
 import { AuthService, FileService, UsersService, HasuraService } from "~/services";
 
 @Controller("/webhooks")
@@ -70,5 +71,18 @@ export class WebHookController {
   async deleteFile(@BodyParams() body: { id: string }) {
     this.fileService.deleteFile(body.id);
     return {}; // Returning an empty object with a 200 status code
+  }
+
+  @Post("/all-users-with-roles")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @Returns(200, [AllUsersWithRolesResponse]).ContentType("application/json")
+  async allUsersWithRoles() {
+    const kratosUsers = await this.authService.getAllUsers();
+    return kratosUsers.map((user) => ({
+      id: user.id,
+      email: user.traits.email,
+      username: user.traits.username,
+      role: user.metadata_public.role
+    }));
   }
 }

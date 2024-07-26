@@ -5,6 +5,49 @@ import type { Session } from "@ory/client";
 import type { UserRole } from "~/models";
 type ValidatedSession = Session & { identity: { metadata_public: { role: UserRole } }; expires_at: string };
 
+type KratosAddress = {
+  id: string;
+  value: string;
+  via: "email";
+  created_at: "2024-07-25T10:54:39.940218Z";
+  updated_at: "2024-07-25T10:54:39.940218Z";
+};
+
+type KratosVerifiableAddress = KratosAddress & {
+  verified: true;
+  status: "completed";
+  verified_at: "2024-07-25T10:55:01.966571Z";
+};
+
+enum KratosRole {
+  junior = "junior",
+  intermediate = "intermediate",
+  senior = "senior",
+  moderator = "moderator",
+  admin = "admin"
+}
+
+type KratosPerson = {
+  id: "fa4c3f21-ee87-4196-ac70-e9c401ac166b";
+  schema_id: string;
+  schema_url: string;
+  state: string;
+  state_changed_at: string;
+  traits: {
+    email: string;
+    username: string;
+  };
+  verifiable_addresses: KratosVerifiableAddress[];
+  recovery_addresses: KratosAddress[];
+  metadata_public: {
+    role: KratosRole;
+  };
+  metadata_admin: null | unknown;
+  created_at: string;
+  updated_at: string;
+  organization_id: null | unknown;
+};
+
 @Service()
 export class AuthService {
   @Inject()
@@ -40,5 +83,13 @@ export class AuthService {
     } else {
       throw new Exception(response.status, `Kratos error: ${response.statusText}`);
     }
+  }
+
+  async getAllUsers(): Promise<KratosPerson[]> {
+    const response = await fetch(`${this.envService.kratosPublicUrl}/admin/identities`);
+    if (!response.ok) {
+      throw new Exception(response.status, await response.text());
+    }
+    return await response.json();
   }
 }
