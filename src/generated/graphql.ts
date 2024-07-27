@@ -7137,7 +7137,7 @@ export enum UserRole {
   Admin = 'admin',
   Intermediate = 'intermediate',
   Junior = 'junior',
-  Manager = 'manager',
+  Moderator = 'moderator',
   Senior = 'senior'
 }
 

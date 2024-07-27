@@ -10,6 +10,6 @@ export class UpdateUserRoleRequest {
 
   @Required()
   @Property()
-  @Enum(Object.values(KratosRole))
+  @Enum(Object.keys(KratosRole))
   role: KratosRole;
 }

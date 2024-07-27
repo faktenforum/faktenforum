@@ -13,7 +13,7 @@ enum UserRole {
   junior
   intermediate
   senior
-  manager
+  moderator
   admin
 }
 

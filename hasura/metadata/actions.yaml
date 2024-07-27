@@ -36,7 +36,7 @@ custom_types:
           value: senior
         - description: null
           is_deprecated: null
-          value: manager
+          value: moderator
         - description: null
           is_deprecated: null
           value: admin
