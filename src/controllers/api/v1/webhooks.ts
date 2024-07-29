@@ -82,7 +82,8 @@ export class WebHookController {
       id: user.id,
       email: user.traits.email,
       username: user.traits.username,
-      role: user.metadata_public.role
+      role: user.metadata_public.role,
+      lang: user.metadata_public.lang ?? DEFAULT_LANGUAGE
     };
   }
 
