@@ -124,6 +124,14 @@ identity:
 courier:
   smtp:
     connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true
+  templates:
+    verification_code:
+      valid:
+        email:
+          body:
+            html: file:///etc/config/kratos/templates/verification_code_valid_email_body.html.gotmpl
+            plaintext: file:///etc/config/kratos/templates/verification_code_valid_email_body.plaintext.gotmpl
+          subject: file:///etc/config/kratos/templates/verification_code_valid_email_subject.gotmpl
 
 feature_flags:
   use_continue_with_transitions: true
