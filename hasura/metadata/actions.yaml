@@ -6,6 +6,8 @@ actions:
       headers:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
+    permissions:
+      - role: moderator
     comment: Get all users with their assigned role
   - name: updateUserRole
     definition:
@@ -20,6 +22,8 @@ actions:
           template: '{{$body.input}}'
         template_engine: Kriti
         version: 2
+    permissions:
+      - role: moderator
     comment: Update user role
 custom_types:
   enums:
