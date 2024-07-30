@@ -19,6 +19,10 @@ export class UrlInfoController {
     } else if (!["http://", "https://"].includes(schemaMatch[0])) {
       throw new BadRequest("Invalid URL: Unsupported schema schema");
     }
+    if (/^https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/.test(url)) {
+      // TODO add more prohibited domains, like docker containers hostnames
+      throw new BadRequest("Invalid URL: Cannot get information for IPs and localhost");
+    }
     try {
       return await getMetaData(url);
     } catch (e) {
