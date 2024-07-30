@@ -7133,6 +7133,14 @@ export type UserPkColumnsInput = {
   id: Scalars['uuid']['input'];
 };
 
+export enum UserRole {
+  Admin = 'admin',
+  Intermediate = 'intermediate',
+  Junior = 'junior',
+  Moderator = 'moderator',
+  Senior = 'senior'
+}
+
 /** select columns of table "user" */
 export enum UserSelectColumn {
   /** column name */
@@ -7234,6 +7242,14 @@ export type UserUpdates = {
   _set?: InputMaybe<UserSetInput>;
   /** filter the rows which have to be updated */
   where: UserBoolExp;
+};
+
+export type UserWithRole = {
+  __typename?: 'UserWithRole';
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  role: UserRole;
+  username: Scalars['String']['output'];
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
@@ -7574,6 +7590,8 @@ export type Mutation_Root = {
   updateUserHistoryMany?: Maybe<Array<Maybe<UserHistoryMutationResponse>>>;
   /** update multiples rows of table: "user" */
   updateUserMany?: Maybe<Array<Maybe<UserMutationResponse>>>;
+  /** Update user role */
+  updateUserRole: UserWithRole;
 };
 
 
@@ -8426,6 +8444,13 @@ export type Mutation_RootUpdateUserManyArgs = {
   updates: Array<UserUpdates>;
 };
 
+
+/** mutation root */
+export type Mutation_RootUpdateUserRoleArgs = {
+  role: UserRole;
+  userId: Scalars['uuid']['input'];
+};
+
 export type OriginAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<OriginSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8442,6 +8467,8 @@ export type OriginHistoryAggregateBoolExpCount = {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  /** Get all users with their assigned role */
+  allUsersWithRoles: Array<UserWithRole>;
   /** fetch data from the table: "category" */
   category: Array<Category>;
   /** fetch aggregated fields from the table: "category" */

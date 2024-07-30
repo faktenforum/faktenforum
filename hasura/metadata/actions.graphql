@@ -1,0 +1,26 @@
+type Query {
+  allUsersWithRoles: [UserWithRole!]!
+}
+
+type Mutation {
+  updateUserRole(
+    userId: uuid!
+    role: UserRole!
+  ): UserWithRole!
+}
+
+enum UserRole {
+  junior
+  intermediate
+  senior
+  moderator
+  admin
+}
+
+type UserWithRole {
+  id: String!
+  username: String!
+  email: String!
+  role: UserRole!
+}
+
