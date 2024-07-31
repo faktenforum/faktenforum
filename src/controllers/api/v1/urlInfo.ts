@@ -1,47 +1,26 @@
-import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { Controller, Get, Inject } from "@tsed/common";
+import { Exception } from "@tsed/exceptions";
 import { PathParams } from "@tsed/platform-params";
-import { ContentType, Get, Returns } from "@tsed/schema";
-import getMetaData from "metadata-scraper";
+import { ContentType, Returns } from "@tsed/schema";
 import { UrlInfoResponse } from "~/models/responses/UrlInfoResponse";
+import { UrlInfoService } from "~/services";
 
 @Controller("/url-info")
 export class UrlInfoController {
+  @Inject(UrlInfoService)
+  urlInfo: UrlInfoService;
+
   @Get("/:url")
   @Returns(400)
   @Returns(404)
   @Returns(200, UrlInfoResponse)
   @ContentType("application/json")
   async getUrlInfo(@PathParams("url") url: string) {
-    const schemaMatch = url.match(/^(.*):\/\//);
-    if (!schemaMatch) {
-      url = `http://${url}`;
-    } else if (!["http://", "https://"].includes(schemaMatch[0])) {
-      throw new BadRequest("Invalid URL: Unsupported schema schema");
+    const result = await this.urlInfo.get(url);
+    if (result.ok) {
+      return result.info;
     }
-    if (/^https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/.test(url)) {
-      // TODO add more prohibited domains, like docker containers hostnames
-      throw new BadRequest("Invalid URL: Cannot get information for IPs and localhost");
-    }
-    try {
-      return await getMetaData(url);
-    } catch (e) {
-      switch (e.code) {
-        case "ENOTFOUND":
-          return new BadRequest("Invalid URL: Unable to resolve");
 
-        case "ERR_INVALID_URL":
-          return new BadRequest("Invalid URL: URL is malformed");
-
-        case "ERR_NON_2XX_3XX_RESPONSE":
-          if (e.response.statusCode === 404) {
-            return new NotFound("Invalid URL: Resource not found");
-          }
-          throw e;
-
-        default:
-          throw e;
-      }
-    }
+    return new Exception(result.status, result.message);
   }
 }
