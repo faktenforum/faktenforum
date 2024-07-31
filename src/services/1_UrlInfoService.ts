@@ -17,6 +17,10 @@ type UrlInfoResult =
 export class UrlInfoService {
   @UseCache({ ttl: 24 * 60 * 60 })
   async get(url: string): Promise<UrlInfoResult> {
+    if (!url) {
+      return { ok: false, status: 400, message: "URL missing" };
+    }
+
     const schemaMatch = url.match(/^(.*):\/\//);
     if (!schemaMatch) {
       url = `http://${url}`;
