@@ -86,7 +86,7 @@ export class AuthService {
   }
 
   async getAllUsers(): Promise<KratosUser[]> {
-    const response = await fetch(`${this.envService.kratosPublicUrl}/admin/identities`);
+    const response = await fetch(`${this.envService.kratosAdminUrl}/admin/identities`);
     if (!response.ok) {
       throw new Exception(response.status, await response.text());
     }
@@ -102,7 +102,7 @@ export class AuthService {
       }
     ];
 
-    const response = await fetch(`${this.envService.kratosPublicUrl}/admin/identities/${userId}`, {
+    const response = await fetch(`${this.envService.kratosAdminUrl}/admin/identities/${userId}`, {
       method: "PATCH",
       body: JSON.stringify(updates),
       headers: {
