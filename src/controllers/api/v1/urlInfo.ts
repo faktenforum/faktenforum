@@ -21,6 +21,6 @@ export class UrlInfoController {
       return result.info;
     }
 
-    return new Exception(result.status, result.message);
+    throw new Exception(result.status, result.message);
   }
 }
