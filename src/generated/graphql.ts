@@ -38,9 +38,33 @@ export type BigintComparisonExp = {
 /** columns and relationships of "category" */
 export type Category = {
   __typename?: 'Category';
+  /** An aggregate relationship */
+  claimCategoriesAggregate: ClaimCategoryAggregate;
+  /** An array relationship */
+  claim_categories: Array<ClaimCategory>;
   labelDe: Scalars['String']['output'];
   labelEn: Scalars['String']['output'];
   name: Scalars['String']['output'];
+};
+
+
+/** columns and relationships of "category" */
+export type CategoryClaimCategoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ClaimCategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ClaimCategoryOrderBy>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
+};
+
+
+/** columns and relationships of "category" */
+export type CategoryClaim_CategoriesArgs = {
+  distinctOn?: InputMaybe<Array<ClaimCategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ClaimCategoryOrderBy>>;
+  where?: InputMaybe<ClaimCategoryBoolExp>;
 };
 
 /** aggregated selection of "category" */
@@ -70,6 +94,8 @@ export type CategoryBoolExp = {
   _and?: InputMaybe<Array<CategoryBoolExp>>;
   _not?: InputMaybe<CategoryBoolExp>;
   _or?: InputMaybe<Array<CategoryBoolExp>>;
+  claim_categories?: InputMaybe<ClaimCategoryBoolExp>;
+  claim_categoriesAggregate?: InputMaybe<ClaimCategoryAggregateBoolExp>;
   labelDe?: InputMaybe<StringComparisonExp>;
   labelEn?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
@@ -83,6 +109,7 @@ export enum CategoryConstraint {
 
 /** input type for inserting data into table "category" */
 export type CategoryInsertInput = {
+  claim_categories?: InputMaybe<ClaimCategoryArrRelInsertInput>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -129,6 +156,7 @@ export type CategoryOnConflict = {
 
 /** Ordering options when selecting data from "category". */
 export type CategoryOrderBy = {
+  claim_categoriesAggregate?: InputMaybe<ClaimCategoryAggregateOrderBy>;
   labelDe?: InputMaybe<OrderBy>;
   labelEn?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
