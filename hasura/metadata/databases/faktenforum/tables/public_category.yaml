@@ -1,6 +1,14 @@
 table:
   name: category
   schema: public
+array_relationships:
+  - name: claim_categories
+    using:
+      foreign_key_constraint_on:
+        column: category_name
+        table:
+          name: claim_category
+          schema: public
 insert_permissions:
   - role: moderator
     permission:
