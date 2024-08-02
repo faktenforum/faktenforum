@@ -32,7 +32,7 @@ CREATE TABLE public.claim (
     submitter_notes text,
     status public.claim_status DEFAULT 'submitted'::public.claim_status NOT NULL,
     synopsis text,
-    rating_title text,
+    rating_statement text,
     rating_summary text,
     rating_label_name text,
     created_by uuid,
@@ -43,13 +43,13 @@ CREATE TABLE public.claim (
 );
 CREATE TABLE public.category (
     name text NOT NULL,
-    label_de text,
-    label_en text
+    label_de text NOT NULL,
+    label_en text NOT NULL,
 );
 CREATE TABLE public.rating_label (
     name text NOT NULL,
-    label_de text,
-    label_en text
+    label_de text NOT NULL,
+    label_en text NOT NULL,
 );
 CREATE TABLE public.claim_category (
     id uuid NOT NULL DEFAULT gen_random_uuid(),

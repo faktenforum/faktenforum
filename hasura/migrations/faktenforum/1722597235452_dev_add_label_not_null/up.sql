@@ -1,0 +1,12 @@
+ALTER TABLE public.category
+ALTER COLUMN label_en
+SET NOT NULL;
+ALTER TABLE public.category
+ALTER COLUMN label_de
+SET NOT NULL;
+ALTER TABLE public.rating_label
+ALTER COLUMN label_en
+SET NOT NULL;
+ALTER TABLE public.rating_label
+ALTER COLUMN label_de
+SET NOT NULL;
