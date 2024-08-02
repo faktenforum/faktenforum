@@ -31,6 +31,7 @@ import { FileService, UsersService } from "./services";
     "json-parser",
     { use: "urlencoded-parser", options: { extended: true } }
   ],
+  cache: { store: "memory" },
 
   exclude: ["**/*.spec.ts"]
 })
