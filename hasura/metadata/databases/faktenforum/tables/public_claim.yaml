@@ -64,7 +64,7 @@ insert_permissions:
       columns:
         - rating_label_name
         - rating_summary
-        - rating_title
+        - rating_statement
         - submitter_notes
         - synopsis
     comment: ""
@@ -97,7 +97,7 @@ select_permissions:
         - process_id
         - rating_label_name
         - rating_summary
-        - rating_title
+        - rating_statement
         - short_id
         - submitter_notes
         - synopsis
@@ -116,7 +116,7 @@ update_permissions:
       columns:
         - rating_label_name
         - rating_summary
-        - rating_title
+        - rating_statement
         - status
         - submitter_notes
         - synopsis
