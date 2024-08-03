@@ -44,12 +44,12 @@ CREATE TABLE public.claim (
 CREATE TABLE public.category (
     name text NOT NULL,
     label_de text NOT NULL,
-    label_en text NOT NULL,
+    label_en text NOT NULL
 );
 CREATE TABLE public.rating_label (
     name text NOT NULL,
     label_de text NOT NULL,
-    label_en text NOT NULL,
+    label_en text NOT NULL
 );
 CREATE TABLE public.claim_category (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
