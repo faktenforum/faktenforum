@@ -35,6 +35,19 @@ export type BigintComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['bigint']['input']>>;
 };
 
+/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
+export type BooleanComparisonExp = {
+  _eq?: InputMaybe<Scalars['Boolean']['input']>;
+  _gt?: InputMaybe<Scalars['Boolean']['input']>;
+  _gte?: InputMaybe<Scalars['Boolean']['input']>;
+  _in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['Boolean']['input']>;
+  _lte?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Scalars['Boolean']['input']>;
+  _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+};
+
 /** columns and relationships of "category" */
 export type Category = {
   __typename?: 'Category';
@@ -235,6 +248,10 @@ export type Claim = {
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
   updatedByUser?: Maybe<User>;
+  /** An array relationship */
+  userClaimStatuses: Array<UserClaimStatus>;
+  /** An aggregate relationship */
+  userClaimStatusesAggregate: UserClaimStatusAggregate;
 };
 
 
@@ -357,6 +374,26 @@ export type ClaimOriginsAggregateArgs = {
   where?: InputMaybe<OriginBoolExp>;
 };
 
+
+/** columns and relationships of "claim" */
+export type ClaimUserClaimStatusesArgs = {
+  distinctOn?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserClaimStatusOrderBy>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+
+/** columns and relationships of "claim" */
+export type ClaimUserClaimStatusesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserClaimStatusOrderBy>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
 /** aggregated selection of "claim" */
 export type ClaimAggregate = {
   __typename?: 'ClaimAggregate';
@@ -458,6 +495,8 @@ export type ClaimBoolExp = {
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
   updatedByUser?: InputMaybe<UserBoolExp>;
+  userClaimStatuses?: InputMaybe<UserClaimStatusBoolExp>;
+  userClaimStatusesAggregate?: InputMaybe<UserClaimStatusAggregateBoolExp>;
 };
 
 /** columns and relationships of "claim_category" */
@@ -1217,6 +1256,7 @@ export type ClaimInsertInput = {
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
   updatedByUser?: InputMaybe<UserObjRelInsertInput>;
+  userClaimStatuses?: InputMaybe<UserClaimStatusArrRelInsertInput>;
 };
 
 /** aggregate max on columns */
@@ -1337,6 +1377,7 @@ export type ClaimOrderBy = {
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   updatedByUser?: InputMaybe<UserOrderBy>;
+  userClaimStatusesAggregate?: InputMaybe<UserClaimStatusAggregateOrderBy>;
 };
 
 /** primary key columns input for table: claim */
@@ -6686,6 +6727,237 @@ export type UserBoolExp = {
   username?: InputMaybe<StringComparisonExp>;
 };
 
+/** columns and relationships of "user_claim_status" */
+export type UserClaimStatus = {
+  __typename?: 'UserClaimStatus';
+  claimId: Scalars['uuid']['output'];
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  hasMarked: Scalars['Boolean']['output'];
+  hasRead: Scalars['Boolean']['output'];
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  userId: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "user_claim_status" */
+export type UserClaimStatusAggregate = {
+  __typename?: 'UserClaimStatusAggregate';
+  aggregate?: Maybe<UserClaimStatusAggregateFields>;
+  nodes: Array<UserClaimStatus>;
+};
+
+export type UserClaimStatusAggregateBoolExp = {
+  bool_and?: InputMaybe<UserClaimStatusAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<UserClaimStatusAggregateBoolExpBool_Or>;
+  count?: InputMaybe<UserClaimStatusAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "user_claim_status" */
+export type UserClaimStatusAggregateFields = {
+  __typename?: 'UserClaimStatusAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<UserClaimStatusMaxFields>;
+  min?: Maybe<UserClaimStatusMinFields>;
+};
+
+
+/** aggregate fields of "user_claim_status" */
+export type UserClaimStatusAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "user_claim_status" */
+export type UserClaimStatusAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<UserClaimStatusMaxOrderBy>;
+  min?: InputMaybe<UserClaimStatusMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "user_claim_status" */
+export type UserClaimStatusArrRelInsertInput = {
+  data: Array<UserClaimStatusInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<UserClaimStatusOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "user_claim_status". All fields are combined with a logical 'AND'. */
+export type UserClaimStatusBoolExp = {
+  _and?: InputMaybe<Array<UserClaimStatusBoolExp>>;
+  _not?: InputMaybe<UserClaimStatusBoolExp>;
+  _or?: InputMaybe<Array<UserClaimStatusBoolExp>>;
+  claimId?: InputMaybe<UuidComparisonExp>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  hasMarked?: InputMaybe<BooleanComparisonExp>;
+  hasRead?: InputMaybe<BooleanComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  userId?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "user_claim_status" */
+export enum UserClaimStatusConstraint {
+  /** unique or primary key constraint on columns "user_id", "claim_id" */
+  UserClaimStatusPkey = 'user_claim_status_pkey'
+}
+
+/** input type for inserting data into table "user_claim_status" */
+export type UserClaimStatusInsertInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  hasMarked?: InputMaybe<Scalars['Boolean']['input']>;
+  hasRead?: InputMaybe<Scalars['Boolean']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type UserClaimStatusMaxFields = {
+  __typename?: 'UserClaimStatusMaxFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  userId?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "user_claim_status" */
+export type UserClaimStatusMaxOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type UserClaimStatusMinFields = {
+  __typename?: 'UserClaimStatusMinFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  userId?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "user_claim_status" */
+export type UserClaimStatusMinOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "user_claim_status" */
+export type UserClaimStatusMutationResponse = {
+  __typename?: 'UserClaimStatusMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<UserClaimStatus>;
+};
+
+/** on_conflict condition type for table "user_claim_status" */
+export type UserClaimStatusOnConflict = {
+  constraint: UserClaimStatusConstraint;
+  updateColumns?: Array<UserClaimStatusUpdateColumn>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+/** Ordering options when selecting data from "user_claim_status". */
+export type UserClaimStatusOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  hasMarked?: InputMaybe<OrderBy>;
+  hasRead?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: user_claim_status */
+export type UserClaimStatusPkColumnsInput = {
+  claimId: Scalars['uuid']['input'];
+  userId: Scalars['uuid']['input'];
+};
+
+/** select columns of table "user_claim_status" */
+export enum UserClaimStatusSelectColumn {
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  HasMarked = 'hasMarked',
+  /** column name */
+  HasRead = 'hasRead',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UserId = 'userId'
+}
+
+/** select "userClaimStatusAggregateBoolExpBool_andArgumentsColumns" columns of table "user_claim_status" */
+export enum UserClaimStatusSelectColumnUserClaimStatusAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  HasMarked = 'hasMarked',
+  /** column name */
+  HasRead = 'hasRead'
+}
+
+/** select "userClaimStatusAggregateBoolExpBool_orArgumentsColumns" columns of table "user_claim_status" */
+export enum UserClaimStatusSelectColumnUserClaimStatusAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  HasMarked = 'hasMarked',
+  /** column name */
+  HasRead = 'hasRead'
+}
+
+/** input type for updating data in table "user_claim_status" */
+export type UserClaimStatusSetInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  hasMarked?: InputMaybe<Scalars['Boolean']['input']>;
+  hasRead?: InputMaybe<Scalars['Boolean']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "user_claim_status" */
+export type UserClaimStatusStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: UserClaimStatusStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type UserClaimStatusStreamCursorValueInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  hasMarked?: InputMaybe<Scalars['Boolean']['input']>;
+  hasRead?: InputMaybe<Scalars['Boolean']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "user_claim_status" */
+export enum UserClaimStatusUpdateColumn {
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  HasMarked = 'hasMarked',
+  /** column name */
+  HasRead = 'hasRead',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UserId = 'userId'
+}
+
+export type UserClaimStatusUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<UserClaimStatusSetInput>;
+  /** filter the rows which have to be updated */
+  where: UserClaimStatusBoolExp;
+};
+
 /** unique or primary key constraints on table "user" */
 export enum UserConstraint {
   /** unique or primary key constraint on columns "email" */
@@ -7406,6 +7678,10 @@ export type Mutation_Root = {
   deleteUser?: Maybe<UserMutationResponse>;
   /** delete single row from the table: "user" */
   deleteUserByPk?: Maybe<User>;
+  /** delete data from the table: "user_claim_status" */
+  deleteUserClaimStatus?: Maybe<UserClaimStatusMutationResponse>;
+  /** delete single row from the table: "user_claim_status" */
+  deleteUserClaimStatusByPk?: Maybe<UserClaimStatus>;
   /** delete data from the table: "user_history" */
   deleteUserHistory?: Maybe<UserHistoryMutationResponse>;
   /** delete single row from the table: "user_history" */
@@ -7476,6 +7752,10 @@ export type Mutation_Root = {
   insertSourceOne?: Maybe<Source>;
   /** insert data into the table: "user" */
   insertUser?: Maybe<UserMutationResponse>;
+  /** insert data into the table: "user_claim_status" */
+  insertUserClaimStatus?: Maybe<UserClaimStatusMutationResponse>;
+  /** insert a single row into the table: "user_claim_status" */
+  insertUserClaimStatusOne?: Maybe<UserClaimStatus>;
   /** insert data into the table: "user_history" */
   insertUserHistory?: Maybe<UserHistoryMutationResponse>;
   /** insert a single row into the table: "user_history" */
@@ -7582,6 +7862,12 @@ export type Mutation_Root = {
   updateUser?: Maybe<UserMutationResponse>;
   /** update single row of the table: "user" */
   updateUserByPk?: Maybe<User>;
+  /** update data of the table: "user_claim_status" */
+  updateUserClaimStatus?: Maybe<UserClaimStatusMutationResponse>;
+  /** update single row of the table: "user_claim_status" */
+  updateUserClaimStatusByPk?: Maybe<UserClaimStatus>;
+  /** update multiples rows of table: "user_claim_status" */
+  updateUserClaimStatusMany?: Maybe<Array<Maybe<UserClaimStatusMutationResponse>>>;
   /** update data of the table: "user_history" */
   updateUserHistory?: Maybe<UserHistoryMutationResponse>;
   /** update single row of the table: "user_history" */
@@ -7796,6 +8082,19 @@ export type Mutation_RootDeleteUserArgs = {
 /** mutation root */
 export type Mutation_RootDeleteUserByPkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteUserClaimStatusArgs = {
+  where: UserClaimStatusBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteUserClaimStatusByPkArgs = {
+  claimId: Scalars['uuid']['input'];
+  userId: Scalars['uuid']['input'];
 };
 
 
@@ -8039,6 +8338,20 @@ export type Mutation_RootInsertSourceOneArgs = {
 export type Mutation_RootInsertUserArgs = {
   objects: Array<UserInsertInput>;
   onConflict?: InputMaybe<UserOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertUserClaimStatusArgs = {
+  objects: Array<UserClaimStatusInsertInput>;
+  onConflict?: InputMaybe<UserClaimStatusOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertUserClaimStatusOneArgs = {
+  object: UserClaimStatusInsertInput;
+  onConflict?: InputMaybe<UserClaimStatusOnConflict>;
 };
 
 
@@ -8420,6 +8733,26 @@ export type Mutation_RootUpdateUserByPkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdateUserClaimStatusArgs = {
+  _set?: InputMaybe<UserClaimStatusSetInput>;
+  where: UserClaimStatusBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateUserClaimStatusByPkArgs = {
+  _set?: InputMaybe<UserClaimStatusSetInput>;
+  pkColumns: UserClaimStatusPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateUserClaimStatusManyArgs = {
+  updates: Array<UserClaimStatusUpdates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdateUserHistoryArgs = {
   _set?: InputMaybe<UserHistorySetInput>;
   where: UserHistoryBoolExp;
@@ -8571,6 +8904,12 @@ export type Query_Root = {
   userAggregate: UserAggregate;
   /** fetch data from the table: "user" using primary key columns */
   userByPk?: Maybe<User>;
+  /** fetch data from the table: "user_claim_status" */
+  userClaimStatus: Array<UserClaimStatus>;
+  /** fetch aggregated fields from the table: "user_claim_status" */
+  userClaimStatusAggregate: UserClaimStatusAggregate;
+  /** fetch data from the table: "user_claim_status" using primary key columns */
+  userClaimStatusByPk?: Maybe<UserClaimStatus>;
   /** fetch data from the table: "user_history" */
   userHistory: Array<UserHistory>;
   /** fetch aggregated fields from the table: "user_history" */
@@ -8971,6 +9310,30 @@ export type Query_RootUserByPkArgs = {
 };
 
 
+export type Query_RootUserClaimStatusArgs = {
+  distinctOn?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserClaimStatusOrderBy>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+
+export type Query_RootUserClaimStatusAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserClaimStatusOrderBy>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+
+export type Query_RootUserClaimStatusByPkArgs = {
+  claimId: Scalars['uuid']['input'];
+  userId: Scalars['uuid']['input'];
+};
+
+
 export type Query_RootUserHistoryArgs = {
   distinctOn?: InputMaybe<Array<UserHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -9143,6 +9506,14 @@ export type Subscription_Root = {
   userAggregate: UserAggregate;
   /** fetch data from the table: "user" using primary key columns */
   userByPk?: Maybe<User>;
+  /** fetch data from the table: "user_claim_status" */
+  userClaimStatus: Array<UserClaimStatus>;
+  /** fetch aggregated fields from the table: "user_claim_status" */
+  userClaimStatusAggregate: UserClaimStatusAggregate;
+  /** fetch data from the table: "user_claim_status" using primary key columns */
+  userClaimStatusByPk?: Maybe<UserClaimStatus>;
+  /** fetch data from the table in a streaming manner: "user_claim_status" */
+  userClaimStatusStream: Array<UserClaimStatus>;
   /** fetch data from the table: "user_history" */
   userHistory: Array<UserHistory>;
   /** fetch aggregated fields from the table: "user_history" */
@@ -9659,6 +10030,37 @@ export type Subscription_RootUserByPkArgs = {
 };
 
 
+export type Subscription_RootUserClaimStatusArgs = {
+  distinctOn?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserClaimStatusOrderBy>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+
+export type Subscription_RootUserClaimStatusAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserClaimStatusOrderBy>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+
+export type Subscription_RootUserClaimStatusByPkArgs = {
+  claimId: Scalars['uuid']['input'];
+  userId: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootUserClaimStatusStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<UserClaimStatusStreamCursorInput>>;
+  where?: InputMaybe<UserClaimStatusBoolExp>;
+};
+
+
 export type Subscription_RootUserHistoryArgs = {
   distinctOn?: InputMaybe<Array<UserHistorySelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -9693,6 +10095,27 @@ export type Subscription_RootUserStreamArgs = {
   batchSize: Scalars['Int']['input'];
   cursor: Array<InputMaybe<UserStreamCursorInput>>;
   where?: InputMaybe<UserBoolExp>;
+};
+
+export type UserClaimStatusAggregateBoolExpBool_And = {
+  arguments: UserClaimStatusSelectColumnUserClaimStatusAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UserClaimStatusBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type UserClaimStatusAggregateBoolExpBool_Or = {
+  arguments: UserClaimStatusSelectColumnUserClaimStatusAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UserClaimStatusBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type UserClaimStatusAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<UserClaimStatusSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UserClaimStatusBoolExp>;
+  predicate: IntComparisonExp;
 };
 
 export type UserHistoryAggregateBoolExpCount = {
