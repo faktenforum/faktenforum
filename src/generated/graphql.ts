@@ -5213,9 +5213,33 @@ export type OriginVarianceOrderBy = {
 /** columns and relationships of "rating_label" */
 export type RatingLabel = {
   __typename?: 'RatingLabel';
+  /** An array relationship */
+  claims: Array<Claim>;
+  /** An aggregate relationship */
+  claimsAggregate: ClaimAggregate;
   labelDe: Scalars['String']['output'];
   labelEn: Scalars['String']['output'];
   name: Scalars['String']['output'];
+};
+
+
+/** columns and relationships of "rating_label" */
+export type RatingLabelClaimsArgs = {
+  distinctOn?: InputMaybe<Array<ClaimSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ClaimOrderBy>>;
+  where?: InputMaybe<ClaimBoolExp>;
+};
+
+
+/** columns and relationships of "rating_label" */
+export type RatingLabelClaimsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ClaimSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ClaimOrderBy>>;
+  where?: InputMaybe<ClaimBoolExp>;
 };
 
 /** aggregated selection of "rating_label" */
@@ -5245,6 +5269,8 @@ export type RatingLabelBoolExp = {
   _and?: InputMaybe<Array<RatingLabelBoolExp>>;
   _not?: InputMaybe<RatingLabelBoolExp>;
   _or?: InputMaybe<Array<RatingLabelBoolExp>>;
+  claims?: InputMaybe<ClaimBoolExp>;
+  claimsAggregate?: InputMaybe<ClaimAggregateBoolExp>;
   labelDe?: InputMaybe<StringComparisonExp>;
   labelEn?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
@@ -5258,6 +5284,7 @@ export enum RatingLabelConstraint {
 
 /** input type for inserting data into table "rating_label" */
 export type RatingLabelInsertInput = {
+  claims?: InputMaybe<ClaimArrRelInsertInput>;
   labelDe?: InputMaybe<Scalars['String']['input']>;
   labelEn?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -5304,6 +5331,7 @@ export type RatingLabelOnConflict = {
 
 /** Ordering options when selecting data from "rating_label". */
 export type RatingLabelOrderBy = {
+  claimsAggregate?: InputMaybe<ClaimAggregateOrderBy>;
   labelDe?: InputMaybe<OrderBy>;
   labelEn?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
