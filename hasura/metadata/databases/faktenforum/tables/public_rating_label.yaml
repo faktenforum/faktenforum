@@ -1,6 +1,14 @@
 table:
   name: rating_label
   schema: public
+array_relationships:
+  - name: claims
+    using:
+      foreign_key_constraint_on:
+        column: rating_label_name
+        table:
+          name: claim
+          schema: public
 insert_permissions:
   - role: moderator
     permission:
