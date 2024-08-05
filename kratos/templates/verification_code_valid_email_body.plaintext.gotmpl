@@ -1,0 +1,17 @@
+{{define "en"}}
+    Welcome to Faktenforum, a way to debunk fake news - as a community.
+
+    To finish your registration, please enter the code "{{ .VerificationCode }}" or visiting: {{ .VerificationURL }}
+{{end}}
+
+{{define "de"}}
+    Willkommen beim Faktenforum, der Weg um Faktenews aufzudecken - als eine Community.
+
+    Um deine Registrierung abzuschließen, gib bitten diesen Code ein "{{ .VerificationCode }}" oder besuche {{ .VerificationURL }}
+{{end}}
+
+{{- if eq .Identity.metadata_public.lang "en" -}}
+    {{ template "en" . }}
+{{- else -}}
+    {{ template "de" . }}
+{{- end -}}

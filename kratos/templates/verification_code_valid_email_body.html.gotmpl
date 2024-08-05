@@ -1,0 +1,21 @@
+{{define "en"}}
+    <h4>Welcome to Faktenforum, a way to debunk fake news - as a community.</h4>
+    <p>
+        To finish your registration, please enter the code "{{ .VerificationCode }}" or open the
+        following link: <a href="{{ .VerificationURL }}">{{ .VerificationURL }}</a>
+    </p>
+{{end}}
+
+{{define "de"}}
+    <h4>Willkommen beim Faktenforum, der Weg um Faktenews aufzudecken - als eine Community.</h4>
+    <p>
+        Um deine Registrierung abzuschließen, gib bitten diesen Code ein "{{ .VerificationCode }}"
+        oder fole diesem Link: <a href="{{ .VerificationURL }}">{{ .VerificationURL }}</a>
+    </p>
+{{end}}
+
+{{- if eq .Identity.metadata_public.lang "en" -}}
+    {{ template "en" . }}
+{{- else -}}
+    {{ template "de" . }}
+{{- end -}}

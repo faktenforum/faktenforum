@@ -27,6 +27,14 @@ actions:
     comment: Update user role
 custom_types:
   enums:
+    - name: Language
+      values:
+        - description: null
+          is_deprecated: null
+          value: en
+        - description: null
+          is_deprecated: null
+          value: de
     - name: UserRole
       values:
         - description: null

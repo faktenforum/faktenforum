@@ -60,6 +60,15 @@
             "junior"
           ]
         },
+        "lang": {
+          "title": "Language",
+          "type": "string",
+          "default": "de",
+          "enum": [
+            "en",
+            "de"
+          ]
+        },
         "additionalProperties": false
       }
     }

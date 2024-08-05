@@ -7,6 +7,8 @@ import { UpdateUserRoleRequest } from "~/models/requests/UpdateUserRoleRequest";
 import { KratosUserSchema } from "~/models/responses/KratosUserSchema";
 import { AuthService, FileService, UsersService, HasuraService, KratosUser } from "~/services";
 
+const DEFAULT_LANGUAGE = "de";
+
 @Controller("/webhooks")
 export class WebHookController {
   @Inject(UsersService)
@@ -60,7 +62,8 @@ export class WebHookController {
     return {
       identity: {
         metadata_public: {
-          role: "junior"
+          role: "junior",
+          lang: DEFAULT_LANGUAGE // TODO take from language selector on the page, once it exists
         }
       }
     };
@@ -79,7 +82,8 @@ export class WebHookController {
       id: user.id,
       email: user.traits.email,
       username: user.traits.username,
-      role: user.metadata_public.role
+      role: user.metadata_public.role,
+      lang: user.metadata_public.lang ?? DEFAULT_LANGUAGE
     };
   }
 

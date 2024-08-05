@@ -27,6 +27,11 @@ export enum KratosRole {
   admin = "admin"
 }
 
+export enum KratosLang {
+  de = "de",
+  en = "en"
+}
+
 export type KratosUser = {
   id: "fa4c3f21-ee87-4196-ac70-e9c401ac166b";
   schema_id: string;
@@ -41,6 +46,7 @@ export type KratosUser = {
   recovery_addresses: KratosAddress[];
   metadata_public: {
     role: KratosRole;
+    lang?: KratosLang;
   };
   metadata_admin: null | unknown;
   created_at: string;

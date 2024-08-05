@@ -9,6 +9,11 @@ type Mutation {
   ): UserWithRole!
 }
 
+enum Language {
+  en
+  de
+}
+
 enum UserRole {
   junior
   intermediate
@@ -22,5 +27,6 @@ type UserWithRole {
   username: String!
   email: String!
   role: UserRole!
+  lang: Language!
 }
 

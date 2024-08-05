@@ -4339,6 +4339,11 @@ export type IntComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export enum Language {
+  De = 'de',
+  En = 'en'
+}
+
 /** column ordering options */
 export enum OrderBy {
   /** in ascending order, nulls last */
@@ -7576,6 +7581,7 @@ export type UserWithRole = {
   __typename?: 'UserWithRole';
   email: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  lang: Language;
   role: UserRole;
   username: Scalars['String']['output'];
 };

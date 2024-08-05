@@ -16,4 +16,8 @@ export class KratosUserSchema {
   @Property()
   @Required()
   role: string;
+
+  @Property()
+  @Required()
+  lang: string;
 }
