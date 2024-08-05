@@ -26,6 +26,7 @@ select_permissions:
         - label_en
         - name
       filter: {}
+      allow_aggregations: true
     comment: ""
 update_permissions:
   - role: moderator

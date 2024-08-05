@@ -116,6 +116,7 @@ select_permissions:
         - id
         - updated_by
       filter: {}
+      allow_aggregations: true
     comment: ""
 update_permissions:
   - role: moderator
