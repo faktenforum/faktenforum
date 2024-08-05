@@ -54,6 +54,13 @@ array_relationships:
         table:
           name: origin
           schema: public
+  - name: userClaimStatuses
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: user_claim_status
+          schema: public
 insert_permissions:
   - role: moderator
     permission:
