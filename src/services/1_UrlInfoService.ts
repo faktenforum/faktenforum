@@ -1,6 +1,8 @@
+import dns from "node:dns/promises";
 import { Injectable } from "@tsed/di";
 import { UseCache } from "@tsed/platform-cache";
 import getMetaData, { type MetaData } from "metadata-scraper";
+import isReservedIp from "reserved-ip";
 
 type UrlInfoResult =
   | {
@@ -16,23 +18,31 @@ type UrlInfoResult =
 @Injectable()
 export class UrlInfoService {
   @UseCache({ ttl: 24 * 60 * 60 })
-  async get(url: string): Promise<UrlInfoResult> {
-    if (!url) {
+  async get(address: string): Promise<UrlInfoResult> {
+    if (!address) {
       return { ok: false, status: 400, message: "URL missing" };
     }
 
-    const schemaMatch = url.match(/^(.*):\/\//);
+    const schemaMatch = address.match(/^(.*):\/\//);
     if (!schemaMatch) {
-      url = `http://${url}`;
+      address = `http://${address}`;
     } else if (!["http://", "https://"].includes(schemaMatch[0])) {
-      return { ok: false, status: 400, message: "Invalid URL: Unsupported schema schema" };
+      return { ok: false, status: 400, message: "Invalid URL: Unsupported schema" };
     }
-    if (/^https?:\/\/(localhost|\d+\.\d+\.\d+\.\d+)/.test(url)) {
-      // TODO add more prohibited domains, like docker containers hostnames
-      return { ok: false, status: 400, message: "Invalid URL: Cannot get information for IPs and localhost" };
-    }
+
     try {
-      return { ok: true, info: await getMetaData(url) };
+      const url = new URL(address);
+      const ipv4 = await dns.resolve4(url.hostname);
+      const ipv6 = await dns.resolve6(url.hostname);
+      if (ipv4.some(isReservedIp) || ipv6.some(isReservedIp)) {
+        return { ok: false, status: 400, message: "Invalid URL: Resolved to reserved IP" };
+      }
+    } catch {
+      return { ok: false, status: 400, message: "Invalid URL: Unable to resolve" };
+    }
+
+    try {
+      return { ok: true, info: await getMetaData(address) };
     } catch (e) {
       switch (e.code) {
         case "ENOTFOUND":
