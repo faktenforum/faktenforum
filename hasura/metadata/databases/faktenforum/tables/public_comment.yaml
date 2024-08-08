@@ -16,7 +16,7 @@ array_relationships:
         table:
           name: comment
           schema: public
-  - name: user_reactions
+  - name: userReactions
     using:
       foreign_key_constraint_on:
         column: comment_id
