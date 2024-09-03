@@ -56,3 +56,51 @@ CREATE TRIGGER trg_add_event_for_comment_reaction
 AFTER INSERT ON public.comment_user_reactions
 FOR EACH ROW
 EXECUTE FUNCTION public.add_event_for_comment_reaction();
+
+
+
+
+-- Function to handle DELETE event for comment_user_reactions
+CREATE OR REPLACE FUNCTION public.add_event_for_comment_reaction_delete()
+RETURNS TRIGGER AS $$
+DECLARE
+    claim_id uuid;
+    claim_status public.claim_status;
+BEGIN
+    -- Look up the claim_id from the comment table
+    SELECT c.claim_id INTO claim_id
+    FROM public.comment c
+    WHERE c.id = OLD.comment_id;
+
+    SELECT c.status into claim_status
+    FROM public.claim c
+    WHERE c.id = claim_id;
+
+    -- Insert a new row into the event table
+    INSERT INTO public.event (
+        claim_id,
+        user_id,
+        action,
+        table_name,
+        created_at,
+        entry_id,
+        claim_status
+    ) VALUES (
+        claim_id,
+        OLD.user_id,
+        'DELETE',
+        'comment_user_reactions',
+        now(),
+        OLD.id,
+        claim_status
+    );
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger on comment_user_reactions for DELETE
+CREATE TRIGGER trg_add_event_for_comment_reaction_delete
+AFTER DELETE ON public.comment_user_reactions
+FOR EACH ROW
+EXECUTE FUNCTION public.add_event_for_comment_reaction_delete();

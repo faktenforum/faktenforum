@@ -2188,7 +2188,7 @@ export type CommentUpdates = {
 export type CommentUserReactions = {
   __typename?: 'CommentUserReactions';
   commentId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdAt: Scalars['timestamptz']['output'];
   emoji: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
   /** An object relationship */
@@ -2252,7 +2252,9 @@ export type CommentUserReactionsBoolExp = {
 /** unique or primary key constraints on table "comment_user_reactions" */
 export enum CommentUserReactionsConstraint {
   /** unique or primary key constraint on columns "id" */
-  CommentUserReactionsPkey = 'comment_user_reactions_pkey'
+  CommentUserReactionsPkey = 'comment_user_reactions_pkey',
+  /** unique or primary key constraint on columns "comment_id", "user_id", "emoji" */
+  UniqueUserCommentEmoji = 'unique_user_comment_emoji'
 }
 
 /** input type for inserting data into table "comment_user_reactions" */
