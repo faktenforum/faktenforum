@@ -1623,13 +1623,7 @@ export type ClaimVarianceOrderBy = {
 /** columns and relationships of "comment" */
 export type Comment = {
   __typename?: 'Comment';
-  /** An object relationship */
-  claim: Claim;
   claimId: Scalars['uuid']['output'];
-  /** An array relationship */
-  commentHistories: Array<CommentHistory>;
-  /** An aggregate relationship */
-  commentHistoriesAggregate: CommentHistoryAggregate;
   content: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy: Scalars['uuid']['output'];
@@ -1637,31 +1631,59 @@ export type Comment = {
   createdByUser: User;
   id: Scalars['uuid']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
+  /** An array relationship */
+  thread: Array<Comment>;
+  /** An aggregate relationship */
+  threadAggregate: CommentAggregate;
   threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
   updatedByUser?: Maybe<User>;
+  /** An array relationship */
+  userReactions: Array<CommentUserReactions>;
+  /** An aggregate relationship */
+  userReactionsAggregate: CommentUserReactionsAggregate;
 };
 
 
 /** columns and relationships of "comment" */
-export type CommentCommentHistoriesArgs = {
-  distinctOn?: InputMaybe<Array<CommentHistorySelectColumn>>;
+export type CommentThreadArgs = {
+  distinctOn?: InputMaybe<Array<CommentSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CommentHistoryOrderBy>>;
-  where?: InputMaybe<CommentHistoryBoolExp>;
+  orderBy?: InputMaybe<Array<CommentOrderBy>>;
+  where?: InputMaybe<CommentBoolExp>;
 };
 
 
 /** columns and relationships of "comment" */
-export type CommentCommentHistoriesAggregateArgs = {
-  distinctOn?: InputMaybe<Array<CommentHistorySelectColumn>>;
+export type CommentThreadAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CommentSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CommentHistoryOrderBy>>;
-  where?: InputMaybe<CommentHistoryBoolExp>;
+  orderBy?: InputMaybe<Array<CommentOrderBy>>;
+  where?: InputMaybe<CommentBoolExp>;
+};
+
+
+/** columns and relationships of "comment" */
+export type CommentUserReactionsArgs = {
+  distinctOn?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentUserReactionsOrderBy>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
+};
+
+
+/** columns and relationships of "comment" */
+export type CommentUserReactionsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentUserReactionsOrderBy>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
 };
 
 /** aggregated selection of "comment" */
@@ -1709,20 +1731,21 @@ export type CommentBoolExp = {
   _and?: InputMaybe<Array<CommentBoolExp>>;
   _not?: InputMaybe<CommentBoolExp>;
   _or?: InputMaybe<Array<CommentBoolExp>>;
-  claim?: InputMaybe<ClaimBoolExp>;
   claimId?: InputMaybe<UuidComparisonExp>;
-  commentHistories?: InputMaybe<CommentHistoryBoolExp>;
-  commentHistoriesAggregate?: InputMaybe<CommentHistoryAggregateBoolExp>;
   content?: InputMaybe<StringComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   createdByUser?: InputMaybe<UserBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
+  thread?: InputMaybe<CommentBoolExp>;
+  threadAggregate?: InputMaybe<CommentAggregateBoolExp>;
   threadId?: InputMaybe<UuidComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
   updatedByUser?: InputMaybe<UserBoolExp>;
+  userReactions?: InputMaybe<CommentUserReactionsBoolExp>;
+  userReactionsAggregate?: InputMaybe<CommentUserReactionsAggregateBoolExp>;
 };
 
 /** unique or primary key constraints on table "comment" */
@@ -1755,10 +1778,6 @@ export type CommentHistoryAggregate = {
   nodes: Array<CommentHistory>;
 };
 
-export type CommentHistoryAggregateBoolExp = {
-  count?: InputMaybe<CommentHistoryAggregateBoolExpCount>;
-};
-
 /** aggregate fields of "comment_history" */
 export type CommentHistoryAggregateFields = {
   __typename?: 'CommentHistoryAggregateFields';
@@ -1772,20 +1791,6 @@ export type CommentHistoryAggregateFields = {
 export type CommentHistoryAggregateFieldsCountArgs = {
   columns?: InputMaybe<Array<CommentHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "comment_history" */
-export type CommentHistoryAggregateOrderBy = {
-  count?: InputMaybe<OrderBy>;
-  max?: InputMaybe<CommentHistoryMaxOrderBy>;
-  min?: InputMaybe<CommentHistoryMinOrderBy>;
-};
-
-/** input type for inserting array relation for remote table "comment_history" */
-export type CommentHistoryArrRelInsertInput = {
-  data: Array<CommentHistoryInsertInput>;
-  /** upsert condition */
-  onConflict?: InputMaybe<CommentHistoryOnConflict>;
 };
 
 /** Boolean expression to filter rows from the table "comment_history". All fields are combined with a logical 'AND'. */
@@ -1841,19 +1846,6 @@ export type CommentHistoryMaxFields = {
   updatedBy?: Maybe<Scalars['uuid']['output']>;
 };
 
-/** order by max() on columns of table "comment_history" */
-export type CommentHistoryMaxOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  content?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  historyId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  threadId?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
-};
-
 /** aggregate min on columns */
 export type CommentHistoryMinFields = {
   __typename?: 'CommentHistoryMinFields';
@@ -1866,19 +1858,6 @@ export type CommentHistoryMinFields = {
   threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by min() on columns of table "comment_history" */
-export type CommentHistoryMinOrderBy = {
-  claimId?: InputMaybe<OrderBy>;
-  content?: InputMaybe<OrderBy>;
-  createdAt?: InputMaybe<OrderBy>;
-  createdBy?: InputMaybe<OrderBy>;
-  historyId?: InputMaybe<OrderBy>;
-  id?: InputMaybe<OrderBy>;
-  threadId?: InputMaybe<OrderBy>;
-  updatedAt?: InputMaybe<OrderBy>;
-  updatedBy?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "comment_history" */
@@ -2010,19 +1989,19 @@ export type CommentHistoryUpdates = {
 
 /** input type for inserting data into table "comment" */
 export type CommentInsertInput = {
-  claim?: InputMaybe<ClaimObjRelInsertInput>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
-  commentHistories?: InputMaybe<CommentHistoryArrRelInsertInput>;
   content?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   createdByUser?: InputMaybe<UserObjRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
+  thread?: InputMaybe<CommentArrRelInsertInput>;
   threadId?: InputMaybe<Scalars['uuid']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
   updatedByUser?: InputMaybe<UserObjRelInsertInput>;
+  userReactions?: InputMaybe<CommentUserReactionsArrRelInsertInput>;
 };
 
 /** aggregate max on columns */
@@ -2100,19 +2079,19 @@ export type CommentOnConflict = {
 
 /** Ordering options when selecting data from "comment". */
 export type CommentOrderBy = {
-  claim?: InputMaybe<ClaimOrderBy>;
   claimId?: InputMaybe<OrderBy>;
-  commentHistoriesAggregate?: InputMaybe<CommentHistoryAggregateOrderBy>;
   content?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   createdByUser?: InputMaybe<UserOrderBy>;
   id?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
+  threadAggregate?: InputMaybe<CommentAggregateOrderBy>;
   threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   updatedByUser?: InputMaybe<UserOrderBy>;
+  userReactionsAggregate?: InputMaybe<CommentUserReactionsAggregateOrderBy>;
 };
 
 /** primary key columns input for table: comment */
@@ -2203,6 +2182,219 @@ export type CommentUpdates = {
   _set?: InputMaybe<CommentSetInput>;
   /** filter the rows which have to be updated */
   where: CommentBoolExp;
+};
+
+/** columns and relationships of "comment_user_reactions" */
+export type CommentUserReactions = {
+  __typename?: 'CommentUserReactions';
+  commentId: Scalars['uuid']['output'];
+  createdAt: Scalars['timestamptz']['output'];
+  emoji: Scalars['String']['output'];
+  id: Scalars['uuid']['output'];
+  /** An object relationship */
+  user: User;
+  userId: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "comment_user_reactions" */
+export type CommentUserReactionsAggregate = {
+  __typename?: 'CommentUserReactionsAggregate';
+  aggregate?: Maybe<CommentUserReactionsAggregateFields>;
+  nodes: Array<CommentUserReactions>;
+};
+
+export type CommentUserReactionsAggregateBoolExp = {
+  count?: InputMaybe<CommentUserReactionsAggregateBoolExpCount>;
+};
+
+/** aggregate fields of "comment_user_reactions" */
+export type CommentUserReactionsAggregateFields = {
+  __typename?: 'CommentUserReactionsAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<CommentUserReactionsMaxFields>;
+  min?: Maybe<CommentUserReactionsMinFields>;
+};
+
+
+/** aggregate fields of "comment_user_reactions" */
+export type CommentUserReactionsAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "comment_user_reactions" */
+export type CommentUserReactionsAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<CommentUserReactionsMaxOrderBy>;
+  min?: InputMaybe<CommentUserReactionsMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "comment_user_reactions" */
+export type CommentUserReactionsArrRelInsertInput = {
+  data: Array<CommentUserReactionsInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<CommentUserReactionsOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "comment_user_reactions". All fields are combined with a logical 'AND'. */
+export type CommentUserReactionsBoolExp = {
+  _and?: InputMaybe<Array<CommentUserReactionsBoolExp>>;
+  _not?: InputMaybe<CommentUserReactionsBoolExp>;
+  _or?: InputMaybe<Array<CommentUserReactionsBoolExp>>;
+  commentId?: InputMaybe<UuidComparisonExp>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  emoji?: InputMaybe<StringComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  user?: InputMaybe<UserBoolExp>;
+  userId?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "comment_user_reactions" */
+export enum CommentUserReactionsConstraint {
+  /** unique or primary key constraint on columns "id" */
+  CommentUserReactionsPkey = 'comment_user_reactions_pkey',
+  /** unique or primary key constraint on columns "comment_id", "user_id", "emoji" */
+  UniqueUserCommentEmoji = 'unique_user_comment_emoji'
+}
+
+/** input type for inserting data into table "comment_user_reactions" */
+export type CommentUserReactionsInsertInput = {
+  commentId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user?: InputMaybe<UserObjRelInsertInput>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type CommentUserReactionsMaxFields = {
+  __typename?: 'CommentUserReactionsMaxFields';
+  commentId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  emoji?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  userId?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "comment_user_reactions" */
+export type CommentUserReactionsMaxOrderBy = {
+  commentId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  emoji?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type CommentUserReactionsMinFields = {
+  __typename?: 'CommentUserReactionsMinFields';
+  commentId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  emoji?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  userId?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "comment_user_reactions" */
+export type CommentUserReactionsMinOrderBy = {
+  commentId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  emoji?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "comment_user_reactions" */
+export type CommentUserReactionsMutationResponse = {
+  __typename?: 'CommentUserReactionsMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<CommentUserReactions>;
+};
+
+/** on_conflict condition type for table "comment_user_reactions" */
+export type CommentUserReactionsOnConflict = {
+  constraint: CommentUserReactionsConstraint;
+  updateColumns?: Array<CommentUserReactionsUpdateColumn>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
+};
+
+/** Ordering options when selecting data from "comment_user_reactions". */
+export type CommentUserReactionsOrderBy = {
+  commentId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  emoji?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UserOrderBy>;
+  userId?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: comment_user_reactions */
+export type CommentUserReactionsPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "comment_user_reactions" */
+export enum CommentUserReactionsSelectColumn {
+  /** column name */
+  CommentId = 'commentId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Emoji = 'emoji',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'userId'
+}
+
+/** input type for updating data in table "comment_user_reactions" */
+export type CommentUserReactionsSetInput = {
+  commentId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "comment_user_reactions" */
+export type CommentUserReactionsStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: CommentUserReactionsStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type CommentUserReactionsStreamCursorValueInput = {
+  commentId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "comment_user_reactions" */
+export enum CommentUserReactionsUpdateColumn {
+  /** column name */
+  CommentId = 'commentId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Emoji = 'emoji',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'userId'
+}
+
+export type CommentUserReactionsUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<CommentUserReactionsSetInput>;
+  /** filter the rows which have to be updated */
+  where: CommentUserReactionsBoolExp;
 };
 
 /** ordering argument of a cursor */
@@ -7627,10 +7819,10 @@ export type CommentAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type CommentHistoryAggregateBoolExpCount = {
-  arguments?: InputMaybe<Array<CommentHistorySelectColumn>>;
+export type CommentUserReactionsAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<CommentHistoryBoolExp>;
+  filter?: InputMaybe<CommentUserReactionsBoolExp>;
   predicate: IntComparisonExp;
 };
 
@@ -7696,6 +7888,10 @@ export type Mutation_Root = {
   deleteCommentHistory?: Maybe<CommentHistoryMutationResponse>;
   /** delete single row from the table: "comment_history" */
   deleteCommentHistoryByPk?: Maybe<CommentHistory>;
+  /** delete data from the table: "comment_user_reactions" */
+  deleteCommentUserReactions?: Maybe<CommentUserReactionsMutationResponse>;
+  /** delete single row from the table: "comment_user_reactions" */
+  deleteCommentUserReactionsByPk?: Maybe<CommentUserReactions>;
   /** delete data from the table: "event" */
   deleteEvent?: Maybe<EventMutationResponse>;
   /** delete single row from the table: "event" */
@@ -7772,6 +7968,10 @@ export type Mutation_Root = {
   insertCommentHistoryOne?: Maybe<CommentHistory>;
   /** insert a single row into the table: "comment" */
   insertCommentOne?: Maybe<Comment>;
+  /** insert data into the table: "comment_user_reactions" */
+  insertCommentUserReactions?: Maybe<CommentUserReactionsMutationResponse>;
+  /** insert a single row into the table: "comment_user_reactions" */
+  insertCommentUserReactionsOne?: Maybe<CommentUserReactions>;
   /** insert data into the table: "event" */
   insertEvent?: Maybe<EventMutationResponse>;
   /** insert a single row into the table: "event" */
@@ -7860,6 +8060,12 @@ export type Mutation_Root = {
   updateCommentHistoryMany?: Maybe<Array<Maybe<CommentHistoryMutationResponse>>>;
   /** update multiples rows of table: "comment" */
   updateCommentMany?: Maybe<Array<Maybe<CommentMutationResponse>>>;
+  /** update data of the table: "comment_user_reactions" */
+  updateCommentUserReactions?: Maybe<CommentUserReactionsMutationResponse>;
+  /** update single row of the table: "comment_user_reactions" */
+  updateCommentUserReactionsByPk?: Maybe<CommentUserReactions>;
+  /** update multiples rows of table: "comment_user_reactions" */
+  updateCommentUserReactionsMany?: Maybe<Array<Maybe<CommentUserReactionsMutationResponse>>>;
   /** update data of the table: "event" */
   updateEvent?: Maybe<EventMutationResponse>;
   /** update single row of the table: "event" */
@@ -8012,6 +8218,18 @@ export type Mutation_RootDeleteCommentHistoryArgs = {
 /** mutation root */
 export type Mutation_RootDeleteCommentHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteCommentUserReactionsArgs = {
+  where: CommentUserReactionsBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteCommentUserReactionsByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -8253,6 +8471,20 @@ export type Mutation_RootInsertCommentHistoryOneArgs = {
 export type Mutation_RootInsertCommentOneArgs = {
   object: CommentInsertInput;
   onConflict?: InputMaybe<CommentOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertCommentUserReactionsArgs = {
+  objects: Array<CommentUserReactionsInsertInput>;
+  onConflict?: InputMaybe<CommentUserReactionsOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertCommentUserReactionsOneArgs = {
+  object: CommentUserReactionsInsertInput;
+  onConflict?: InputMaybe<CommentUserReactionsOnConflict>;
 };
 
 
@@ -8559,6 +8791,26 @@ export type Mutation_RootUpdateCommentHistoryManyArgs = {
 /** mutation root */
 export type Mutation_RootUpdateCommentManyArgs = {
   updates: Array<CommentUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCommentUserReactionsArgs = {
+  _set?: InputMaybe<CommentUserReactionsSetInput>;
+  where: CommentUserReactionsBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCommentUserReactionsByPkArgs = {
+  _set?: InputMaybe<CommentUserReactionsSetInput>;
+  pkColumns: CommentUserReactionsPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCommentUserReactionsManyArgs = {
+  updates: Array<CommentUserReactionsUpdates>;
 };
 
 
@@ -8900,6 +9152,12 @@ export type Query_Root = {
   commentHistoryAggregate: CommentHistoryAggregate;
   /** fetch data from the table: "comment_history" using primary key columns */
   commentHistoryByPk?: Maybe<CommentHistory>;
+  /** fetch data from the table: "comment_user_reactions" */
+  commentUserReactions: Array<CommentUserReactions>;
+  /** fetch aggregated fields from the table: "comment_user_reactions" */
+  commentUserReactionsAggregate: CommentUserReactionsAggregate;
+  /** fetch data from the table: "comment_user_reactions" using primary key columns */
+  commentUserReactionsByPk?: Maybe<CommentUserReactions>;
   /** fetch data from the table: "event" */
   event: Array<Event>;
   /** fetch aggregated fields from the table: "event" */
@@ -9116,6 +9374,29 @@ export type Query_RootCommentHistoryAggregateArgs = {
 
 export type Query_RootCommentHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootCommentUserReactionsArgs = {
+  distinctOn?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentUserReactionsOrderBy>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
+};
+
+
+export type Query_RootCommentUserReactionsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentUserReactionsOrderBy>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
+};
+
+
+export type Query_RootCommentUserReactionsByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -9482,6 +9763,14 @@ export type Subscription_Root = {
   commentHistoryStream: Array<CommentHistory>;
   /** fetch data from the table in a streaming manner: "comment" */
   commentStream: Array<Comment>;
+  /** fetch data from the table: "comment_user_reactions" */
+  commentUserReactions: Array<CommentUserReactions>;
+  /** fetch aggregated fields from the table: "comment_user_reactions" */
+  commentUserReactionsAggregate: CommentUserReactionsAggregate;
+  /** fetch data from the table: "comment_user_reactions" using primary key columns */
+  commentUserReactionsByPk?: Maybe<CommentUserReactions>;
+  /** fetch data from the table in a streaming manner: "comment_user_reactions" */
+  commentUserReactionsStream: Array<CommentUserReactions>;
   /** fetch data from the table: "event" */
   event: Array<Event>;
   /** fetch aggregated fields from the table: "event" */
@@ -9766,6 +10055,36 @@ export type Subscription_RootCommentStreamArgs = {
   batchSize: Scalars['Int']['input'];
   cursor: Array<InputMaybe<CommentStreamCursorInput>>;
   where?: InputMaybe<CommentBoolExp>;
+};
+
+
+export type Subscription_RootCommentUserReactionsArgs = {
+  distinctOn?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentUserReactionsOrderBy>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
+};
+
+
+export type Subscription_RootCommentUserReactionsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CommentUserReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CommentUserReactionsOrderBy>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
+};
+
+
+export type Subscription_RootCommentUserReactionsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootCommentUserReactionsStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<CommentUserReactionsStreamCursorInput>>;
+  where?: InputMaybe<CommentUserReactionsBoolExp>;
 };
 
 
