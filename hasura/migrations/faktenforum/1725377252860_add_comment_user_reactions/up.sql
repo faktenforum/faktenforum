@@ -12,7 +12,7 @@ CREATE TABLE public.comment_user_reactions (
 );
 
 
-CREATE OR REPLACE FUNCTION public.add_event_for_comment_reaction()
+CREATE OR REPLACE FUNCTION public.add_event_for_comment_reaction_insert()
 RETURNS TRIGGER AS $$
 DECLARE
     claim_id uuid;
@@ -52,10 +52,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Create the trigger on comment_user_reactions
-CREATE TRIGGER trg_add_event_for_comment_reaction
+CREATE TRIGGER trg_add_event_for_comment_reaction_insert
 AFTER INSERT ON public.comment_user_reactions
 FOR EACH ROW
-EXECUTE FUNCTION public.add_event_for_comment_reaction();
+EXECUTE FUNCTION public.add_event_for_comment_reaction_insert();
 
 
 
