@@ -7,7 +7,7 @@ import { $log } from "@tsed/logger";
 import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
-
+import helmet from "helmet";
 import { config } from "./config/index";
 import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
@@ -24,6 +24,7 @@ import { FileService, UsersService } from "./services";
     "/api/": [...Object.values(pages)]
   },
   middlewares: [
+    helmet(), 
     "cors",
     "cookie-parser",
     "compression",
