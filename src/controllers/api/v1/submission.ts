@@ -7,7 +7,7 @@ import Ajv from "ajv";
 import { S3MulterFile } from "~/config/minio";
 import { SubmissionRequest } from "~/models";
 import { SubmissionCreateResponse } from "~/models";
-import { EnvService, FileService, HasuraService } from "~/services";
+import { EnvService, FileService, HasuraService, ImageService } from "~/services";
 
 import { InsertClaimDocument } from "~/generated/graphql";
 import type {
@@ -24,6 +24,9 @@ export class SubmissionController {
 
   @Inject()
   fileService: FileService;
+
+  @Inject()
+  imageService: ImageService;
 
   @Inject(HasuraService)
   hasuraService: HasuraService;
@@ -57,6 +60,12 @@ export class SubmissionController {
               }
             }
           : undefined;
+      if (files[fileIndex].mimetype.startsWith("image/")) {
+        // Resize and upload the image
+        console.log("--------------------------------------resizing and uploading image");
+        this.imageService.resizeAndUpload(files[fileIndex].key, files[fileIndex].mimetype);
+      }
+
       return {
         url: origin.url,
         file

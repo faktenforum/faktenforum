@@ -45,8 +45,8 @@ const generateDummyData = () => {
   const files: string[] = [];
 
   const genDummyFile = () => {
-    const randomFile = faker.helpers.arrayElement(assetFiles);
-    files.push(randomFile);
+    //const randomFile = assetFiles.splice(0, 1); //faker.helpers.arrayElement(assetFiles);
+    files.push(assetFiles[0]);
     return files.length - 1;
   };
 
@@ -54,9 +54,8 @@ const generateDummyData = () => {
     const origin = { url: undefined, fileIndex: undefined };
     if (faker.datatype.boolean()) {
       origin.url = faker.helpers.arrayElement(urls) as never;
-      if (faker.datatype.boolean()) {
-        origin.fileIndex = genDummyFile() as never;
-      }
+
+      origin.fileIndex = genDummyFile() as never;
     } else {
       origin.fileIndex = genDummyFile() as never;
     }
@@ -84,7 +83,7 @@ const uploadDummyData = async (environment: string) => {
     return;
   }
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 1; i++) {
     const dummyData = generateDummyData();
     const form = new FormData();
     form.append("payload", dummyData.payload);

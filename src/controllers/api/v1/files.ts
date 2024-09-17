@@ -3,7 +3,7 @@ import { PathParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
-import { FileService, HasuraService } from "~/services";
+import { FileService, HasuraService, ImageService } from "~/services";
 import { GetFileByIdDocument, InsertFileDocument } from "~/generated/graphql";
 import { isUUID } from "class-validator";
 import type { Session } from "~/models";
@@ -24,6 +24,9 @@ export class ClaimsController {
   @Inject()
   hasuraService: HasuraService;
 
+  @Inject()
+  imageService: ImageService;
+
   @Get("/:fileId")
   @Returns(200, String).ContentType("*/*").Description("File content")
   @Returns(400, String).Description("Bad request. The request or parameters are incorrect.")
@@ -40,6 +43,7 @@ export class ClaimsController {
       if (!isUUID(fileId)) {
         throw new NotFound("File not found");
       }
+      // This is also checks if user has access to this file
       const { file: fileMetaData } = await this.hasuraService.clientRequest<
         GetFileByIdQuery,
         GetFileByIdQueryVariables
@@ -47,13 +51,56 @@ export class ClaimsController {
       if (!fileMetaData) {
         throw new NotFound("File not found");
       }
+      const metaData = await this.fileService.getFileMetaData(fileMetaData.id);
       const stream = await this.fileService.getFileStream(fileMetaData?.id || "");
       response.set({
-        "Content-Type": fileMetaData?.mimeType,
-        "Content-Disposition": `filename=${fileMetaData?.name}`,
-        "Content-Length": fileMetaData?.size,
+        "Content-Type": metaData?.metaData.contentType,
+        "Content-Disposition": `filename=${fileMetaData.name}`,
+        "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
-        ETag: fileMetaData?.eTag
+        ETag: metaData?.etag
+      });
+
+      stream.pipe(response as never);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  @Get("/:fileId/:size")
+  @Returns(200, String).ContentType("*/*").Description("File content")
+  @Returns(400, String).Description("Bad request. The request or parameters are incorrect.")
+  @Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.")
+  @Returns(404, String).Description("File not found. The requested file does not exist.")
+  @Returns(500, String).Description("Internal server error. An unexpected error occurred.")
+  async getFileSized(
+    @PathParams("fileId") fileId: string,
+    @PathParams("size") size: string,
+    @Req() request: Request,
+    @Res() response: Response & { set: (object: unknown) => void },
+    @Next() next: (error: unknown) => void
+  ) {
+    try {
+      if (!isUUID(fileId)) {
+        throw new NotFound("File not found");
+      }
+      // This is also checks if user has access to this file
+      const { file: fileMetaData } = await this.hasuraService.clientRequest<
+        GetFileByIdQuery,
+        GetFileByIdQueryVariables
+      >(GetFileByIdDocument, { id: fileId }, request.headers);
+      if (!fileMetaData) {
+        throw new NotFound("File not found");
+      }
+      const fileSized = `${fileId}-${size}`;
+      const metaData = await this.fileService.getFileMetaData(fileSized);
+      const stream = await this.fileService.getFileStream(fileSized);
+      response.set({
+        "Content-Type": metaData?.metaData.contentType,
+        "Content-Disposition": `filename=${fileMetaData.name}`,
+        "Content-Length": metaData?.size,
+        "Last-Modified": fileMetaData?.updatedAt,
+        ETag: metaData?.etag
       });
 
       stream.pipe(response as never);
@@ -79,6 +126,10 @@ export class ClaimsController {
         eTag: file.etag, // minio uses md5 as etag
         createdBy: request.user.userId
       });
+      if (file.mimetype.startsWith("image/")) {
+        // Resize and upload the image
+        await this.imageService.resizeAndUpload(file.key, file.mimetype);
+      }
 
       return { id: insertFileOne?.id };
     } catch (error) {
