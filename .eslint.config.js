@@ -1,0 +1,20 @@
+// eslint.config.js
+module.exports = {
+  parser: "@typescript-eslint/parser",
+  extends: ["prettier", "plugin:@typescript-eslint/recommended"],
+  plugins: ["@typescript-eslint", "prettier"],
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: "module",
+    project: "./tsconfig.json"
+  },
+  env: {
+    node: true,
+    es6: true
+  },
+  rules: {
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-var-requires": "off"
+  }
+};
