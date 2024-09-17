@@ -28,11 +28,16 @@ export class ClaimsController {
   imageService: ImageService;
 
   @Get("/:fileId")
-  @Returns(200, String).ContentType("*/*").Description("File content")
-  @Returns(400, String).Description("Bad request. The request or parameters are incorrect.")
-  @Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.")
-  @Returns(404, String).Description("File not found. The requested file does not exist.")
-  @Returns(500, String).Description("Internal server error. An unexpected error occurred.")
+  @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(404, String).Description("File not found. The requested file does not exist.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(500, String).Description("Internal server error. An unexpected error occurred.") // prettier-ignore
+    ) // prettier-ignore
   async getFile(
     @PathParams("fileId") fileId: string,
     @Req() request: Request,
@@ -68,11 +73,14 @@ export class ClaimsController {
   }
 
   @Get("/:fileId/:size")
-  @Returns(200, String).ContentType("*/*").Description("File content")
-  @Returns(400, String).Description("Bad request. The request or parameters are incorrect.")
-  @Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.")
-  @Returns(404, String).Description("File not found. The requested file does not exist.")
-  @Returns(500, String).Description("Internal server error. An unexpected error occurred.")
+  @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
+  @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.")) // prettier-ignore
+  @(Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(404, String).Description("File not found. The requested file does not exist.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(500, String).Description("Internal server error. An unexpected error occurred.") // prettier-ignore
+    ) // prettier-ignore
   async getFileSized(
     @PathParams("fileId") fileId: string,
     @PathParams("size") size: string,
@@ -111,8 +119,8 @@ export class ClaimsController {
 
   @Post("/")
   @Description("This endpoint allows for uploading a file to the server.")
-  @Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")
   @Consumes("multipart/form-data")
+  @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore
   async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request & { user: Session }) {
     try {
       const { insertFileOne } = await this.hasuraService.adminRequest<
@@ -128,7 +136,7 @@ export class ClaimsController {
       });
       if (file.mimetype.startsWith("image/")) {
         // Resize and upload the image
-        await this.imageService.resizeAndUpload(file.key, file.mimetype);
+        await this.imageService.resizeAndUpload(file.key);
       }
 
       return { id: insertFileOne?.id };

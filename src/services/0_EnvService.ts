@@ -129,6 +129,7 @@ export class EnvService {
   }
 
   private validate() {
+    /* eslint-disable @typescript-eslint/no-unused-expressions */
     this.baseUrl;
     this.hasuraApiUrl;
     this.kratosPublicUrl;
@@ -139,7 +140,7 @@ export class EnvService {
     this.minioHost;
     this.minioSecretKey;
     this.minioRegion;
-
+    /* eslint-enable @typescript-eslint/no-unused-expressions */
     // TODO add check for string format of Token lifetimes
     // check if env is one of the following values: development, production or undefined
 

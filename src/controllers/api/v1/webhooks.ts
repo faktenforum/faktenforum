@@ -24,7 +24,8 @@ export class WebHookController {
   hasuraService: HasuraService;
 
   @Get("/session")
-  @Returns(200, String).ContentType("application/json") // Returns not a  because of It crashes on '-' in body response key values
+  @(Returns(200, String).ContentType("application/json") ) // prettier-ignore
+  // Returns not a  because of It crashes on '-' in body response key values
   async getSessions(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session"); // return host header || "";
 
@@ -41,7 +42,7 @@ export class WebHookController {
 
   @Post("/registration-creation")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
-  @Returns(200, String).ContentType("application/json")
+  @(Returns(200, String).ContentType("application/json") ) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
     await this.usersService.createUser({
       id: body.id,
@@ -71,7 +72,7 @@ export class WebHookController {
 
   @Delete("/delete-file")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")
+  @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async deleteFile(@BodyParams() body: { id: string }) {
     this.fileService.deleteFile(body.id);
     return {}; // Returning an empty object with a 200 status code
@@ -89,7 +90,7 @@ export class WebHookController {
 
   @Post("/all-users-with-roles")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @Returns(200, [KratosUserSchema]).ContentType("application/json")
+  @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
   async allUsersWithRoles() {
     const kratosUsers = await this.authService.getAllUsers();
     return kratosUsers.map(this.transformKratosUser);
@@ -97,7 +98,7 @@ export class WebHookController {
 
   @Post("/update-user-role")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @Returns(200, KratosUserSchema).ContentType("application/json")
+  @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
     return this.transformKratosUser(kratosUser);

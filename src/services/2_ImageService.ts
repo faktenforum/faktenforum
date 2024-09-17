@@ -8,7 +8,7 @@ export class ImageService {
   @Inject()
   fileService: FileService;
 
-  async resizeAndUpload(fileKey: string, mimetype: string): Promise<void> {
+  async resizeAndUpload(fileKey: string): Promise<void> {
     // Get the original file as a stream from Minio
     const originalFileStream = await this.fileService.getFileStream(fileKey);
 
@@ -28,7 +28,6 @@ export class ImageService {
     fileKey: string
   ): Promise<void> {
     // Apply transformations
-    console.log(`Resizing image to ${size.width} for key ${fileKey}`);
     const transformedStream = pipeline
       .resize(size.width)
       .toFormat(TO_FORMAT)

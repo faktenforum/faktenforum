@@ -57,9 +57,7 @@ export class FileService {
 
   async saveFile(key: string, stream: Readable, metaData: Minio.MetadataItem): Promise<void> {
     try {
-      console.log("Saving file:" + key + " to bucket: " + this.envService.minioBucketName);
       await this.minioClient.putObject(this.envService.minioBucketName, key, stream, metaData);
-      console.log("File saved successfully");
     } catch (error) {
       console.error("Error saving file:", error);
     }
