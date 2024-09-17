@@ -8,7 +8,7 @@ export interface ApiKeyAccessControlDecoratorOptions extends Record<string, unkn
   service: "kratos" | "hasura";
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line
 export function ApiKeyAccessControlDecorator(options: ApiKeyAccessControlDecoratorOptions): Function {
   return useDecorators(
     Returns(401, Unauthorized).Description("Unauthorized"),

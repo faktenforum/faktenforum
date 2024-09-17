@@ -5,6 +5,7 @@ import { s3storage } from "./minio";
 
 const pkg = JSON.parse(readFileSync("./package.json", { encoding: "utf8" }));
 
+// eslint-disable-next-line no-undef
 export const config: Partial<TsED.Configuration> = {
   version: pkg.version,
   envs,

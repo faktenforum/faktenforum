@@ -9,7 +9,6 @@ export class UsersService {
     this.prisma = new PrismaClient();
   }
   async createUser(data: Partial<user> & { email: string; username: string }): Promise<user> {
-    console.log(data);
     return this.prisma.user.create({
       data: { ...data }
     });

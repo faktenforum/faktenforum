@@ -12,7 +12,7 @@ export class IndexController {
 
   @Get("/")
   @View("swagger.ejs")
-  @Returns(200, String).ContentType("text/html")
+  @(Returns(200, String).ContentType("text/html")) // prettier-ignore
   get(@HeaderParams("x-forwarded-proto") protocol: string, @HeaderParams("host") host: string) {
     const baseUrl = `${protocol || "http"}://${host}`;
 
