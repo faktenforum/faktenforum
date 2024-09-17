@@ -35,7 +35,7 @@ selfservice:
       ui_url: http://app.localhost:8000/error
 
     settings:
-      ui_url: http://app.localhost:8000/settings
+      ui_url: http://app.localhost:8000/authentication-settings
       privileged_session_max_age: 15m
       required_aal: highest_available
 
