@@ -1,12 +1,10 @@
 import { Inject, Service } from "@tsed/di";
 import { $log } from "@tsed/logger";
 import { file, PrismaClient } from "@prisma/client";
-import { SIZES } from "~/utils/consts"; // Adjust the path as per your project structure
 import * as Minio from "minio";
 import type {} from "minio";
 import { Readable } from "stream";
 import { EnvService } from "~/services";
-import { ImageService } from "~/services/2_ImageService";
 
 @Service()
 export class FileService {
@@ -65,15 +63,7 @@ export class FileService {
   }
 
   async deleteFile(key: string) {
-    return Promise.all([
-      ...SIZES.map((size) => {
-        return this.minioClient.removeObject(
-          this.envService.minioBucketName,
-          ImageService.generateKey(key, size)
-        );
-      }),
-      this.minioClient.removeObject(this.envService.minioBucketName, key)
-    ]);
+    return this.minioClient.removeObject(this.envService.minioBucketName, key);
   }
 
   async deleteFiles(keys: string[]) {

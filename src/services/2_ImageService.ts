@@ -22,6 +22,14 @@ export class ImageService {
     await Promise.all(SIZES.map((size) => this.resizeAndUploadSingleSize(pipeline.clone(), size, fileKey)));
   }
 
+  async deleteImageVersions(fileKey: string) {
+    return Promise.all([
+      ...SIZES.map((size) => {
+        return this.fileService.deleteFile(ImageService.generateKey(fileKey, size));
+      })
+    ]);
+  }
+
   private async resizeAndUploadSingleSize(
     pipeline: sharp.Sharp,
     size: { key: string; width: number },

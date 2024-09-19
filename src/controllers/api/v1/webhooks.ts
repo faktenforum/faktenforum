@@ -5,7 +5,7 @@ import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { UpdateUserRoleRequest } from "~/models/requests/UpdateUserRoleRequest";
 import { KratosUserSchema } from "~/models/responses/KratosUserSchema";
-import { AuthService, FileService, UsersService, HasuraService, KratosUser } from "~/services";
+import { AuthService, FileService, UsersService, HasuraService, KratosUser, ImageService } from "~/services";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -19,6 +19,9 @@ export class WebHookController {
 
   @Inject(FileService)
   fileService: FileService;
+
+  @Inject(ImageService)
+  imageService: ImageService;
 
   @Inject(HasuraService)
   hasuraService: HasuraService;
@@ -75,6 +78,7 @@ export class WebHookController {
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async deleteFile(@BodyParams() body: { id: string }) {
     this.fileService.deleteFile(body.id);
+    this.imageService.deleteImageVersions(body.id);
     return {}; // Returning an empty object with a 200 status code
   }
 
