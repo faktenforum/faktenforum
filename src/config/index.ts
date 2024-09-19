@@ -46,7 +46,7 @@ export const config: Partial<TsED.Configuration> = {
     storage: s3storage,
     limits: {
       files: 10,
-      fileSize: 50 * 1024 * 1024
+      fileSize: 50 * 1024 * 1024 // 50MB
     },
     fileFilter
   }
