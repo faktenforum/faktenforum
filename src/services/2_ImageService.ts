@@ -35,12 +35,13 @@ export class ImageService {
         console.error(`Error processing image for size ${size.key}:`, err);
       });
 
-    // Key for the resized file
-    const resizedFileKey = `${fileKey}-${size.key}`;
-
     // Upload the transformed stream to Minio
-    this.fileService.saveFile(resizedFileKey, transformedStream, {
+    this.fileService.saveFile(ImageService.generateKey(fileKey, size), transformedStream, {
       "Content-Type": `image/${TO_FORMAT}`
     });
+  }
+
+  public static generateKey(fileKey: string, size: { key: string; width: number }): string {
+    return `${fileKey}-${size.key}`;
   }
 }

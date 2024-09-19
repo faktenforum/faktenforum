@@ -6,6 +6,7 @@ import * as Minio from "minio";
 import type {} from "minio";
 import { Readable } from "stream";
 import { EnvService } from "~/services";
+import { ImageService } from "~/services/2_ImageService";
 
 @Service()
 export class FileService {
@@ -66,7 +67,10 @@ export class FileService {
   async deleteFile(key: string) {
     return Promise.all([
       ...SIZES.map((size) => {
-        return this.minioClient.removeObject(this.envService.minioBucketName, `${key}/${size.key}`);
+        return this.minioClient.removeObject(
+          this.envService.minioBucketName,
+          ImageService.generateKey(key, size)
+        );
       }),
       this.minioClient.removeObject(this.envService.minioBucketName, key)
     ]);
