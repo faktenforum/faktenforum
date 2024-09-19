@@ -82,7 +82,8 @@ event_triggers:
         action: transform
         template: |-
           {
-            "id": {{$body.id}}
+            "id": {{$body.id}},
+            "mimeType":{{$body.mimeType}}
           }
       method: DELETE
       query_params: {}
