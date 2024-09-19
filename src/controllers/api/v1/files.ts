@@ -74,6 +74,7 @@ export class ClaimsController {
     }
   }
 
+  // route to get file by id and size, Size is in Bucket format xs sm md lg xl
   @Get("/:fileId/:size")
   @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
