@@ -15,6 +15,7 @@ import type {
 } from "~/generated/graphql";
 import { S3MulterFile } from "~/config/minio";
 import { FileUploadResponse } from "~/models/responses/FileUploadResponse";
+import { AccessControlDecorator } from "~/decorators";
 
 @Controller("/files")
 export class ClaimsController {
@@ -28,6 +29,7 @@ export class ClaimsController {
   imageService: ImageService;
 
   @Get("/:fileId")
+  @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore
@@ -73,6 +75,7 @@ export class ClaimsController {
   }
 
   @Get("/:fileId/:size")
+  @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.")) // prettier-ignore
   @(Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.") // prettier-ignore
@@ -120,6 +123,7 @@ export class ClaimsController {
   @Post("/")
   @Description("This endpoint allows for uploading a file to the server.")
   @Consumes("multipart/form-data")
+  @AccessControlDecorator({})
   @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore
   async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request & { user: Session }) {
     try {
