@@ -112,3 +112,20 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+        - username
+      filter: {}
+      check: null
+      set:
+        id: x-hasura-User-Id
+    comment: ""
