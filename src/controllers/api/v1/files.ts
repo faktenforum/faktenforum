@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { PathParams } from "@tsed/platform-params";
+import { PathParams, BodyParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
@@ -126,7 +126,11 @@ export class ClaimsController {
   @Consumes("multipart/form-data")
   @AccessControlDecorator({})
   @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore
-  async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request & { user: Session }) {
+  async uploadFile(
+    @BodyParams() body: { table: string; column: string },
+    @MultipartFile("file") file: S3MulterFile,
+    @Req() request: Request & { user: Session }
+  ) {
     try {
       const { insertFileOne } = await this.hasuraService.adminRequest<
         InsertFileMutation,
@@ -139,6 +143,7 @@ export class ClaimsController {
         eTag: file.etag, // minio uses md5 as etag
         createdBy: request.user.userId
       });
+      console.log("body", body);
       if (file.mimetype.startsWith("image/")) {
         // Resize and upload the image
         await this.imageService.resizeAndUpload(file.key);
