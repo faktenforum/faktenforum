@@ -16,7 +16,8 @@ import type {
 import { S3MulterFile } from "~/config/minio";
 import { FileUploadResponse, FileUploadFormData } from "~/models";
 import { AccessControlDecorator } from "~/decorators";
-import { TableType } from "~/utils/consts";
+
+import { BadRequest } from "@tsed/exceptions";
 
 @Controller("/files")
 export class ClaimsController {
@@ -133,39 +134,37 @@ export class ClaimsController {
     @Req() request: Request & { user: Session }
   ) {
     try {
-      const { insertFileOne } = await this.hasuraService.clientRequest<
-        InsertFileMutation,
-        InsertFileMutationVariables
-      >(
-        InsertFileAndUpdateUserProfileImageDocument,
-        {
-          fileId: file.key,
-          mimeType: file.mimetype,
-          name: file.originalname,
-          size: file.size,
-          eTag: file.etag, // minio uses md5 as etag
-          userId: request.user.userId
-        },
-        request.headers
-      );
+      switch (body.table) {
+        case "user": {
+          const { insertFileOne } = await this.hasuraService.clientRequest<
+            InsertFileMutation,
+            InsertFileMutationVariables
+          >(
+            InsertFileAndUpdateUserProfileImageDocument,
+            {
+              fileId: file.key,
+              mimeType: file.mimetype,
+              name: file.originalname,
+              size: file.size,
+              eTag: file.etag, // minio uses md5 as etag
+              userId: request.user.userId
+            },
+            request.headers
+          );
 
-      if (file.mimetype.startsWith("image/")) {
-        // Resize and upload the image
-        await this.imageService.resizeAndUpload(file.key);
+          if (file.mimetype.startsWith("image/")) {
+            // Resize and upload the image
+            await this.imageService.resizeAndUpload(file.key);
+          }
+
+          return { id: insertFileOne?.id };
+        }
+        default:
+          throw new BadRequest("Invalid table type");
       }
-
-      return { id: insertFileOne?.id };
     } catch (error) {
       this.fileService.deleteFile(file.key);
       throw error;
     }
   }
-  private static tableHandlers: {
-    [key in TableType]: (file: S3MulterFile, userId: string) => Promise<void>;
-  } = {
-    user: async (entryId, fileId) => {
-      // Resize and upload the image
-      await this.imageService.resizeAndUpload(file.key);
-    }
-  };
 }
