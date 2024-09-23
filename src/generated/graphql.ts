@@ -6622,6 +6622,8 @@ export type User = {
   factsByUpdatedBy: Array<Fact>;
   /** An aggregate relationship */
   factsByUpdatedByAggregate: FactAggregate;
+  /** An object relationship */
+  file?: Maybe<File>;
   /** An array relationship */
   files: Array<File>;
   /** An aggregate relationship */
@@ -6638,7 +6640,7 @@ export type User = {
   origins: Array<Origin>;
   /** An aggregate relationship */
   originsAggregate: OriginAggregate;
-  profileImage?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   sources: Array<Source>;
@@ -6959,6 +6961,7 @@ export type UserBoolExp = {
   factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   factsByUpdatedBy?: InputMaybe<FactBoolExp>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateBoolExp>;
+  file?: InputMaybe<FileBoolExp>;
   files?: InputMaybe<FileBoolExp>;
   filesAggregate?: InputMaybe<FileAggregateBoolExp>;
   filesByUpdatedBy?: InputMaybe<FileBoolExp>;
@@ -6969,7 +6972,7 @@ export type UserBoolExp = {
   mobileNumber?: InputMaybe<StringComparisonExp>;
   origins?: InputMaybe<OriginBoolExp>;
   originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
-  profileImage?: InputMaybe<StringComparisonExp>;
+  profileImage?: InputMaybe<UuidComparisonExp>;
   pronouns?: InputMaybe<StringComparisonExp>;
   sources?: InputMaybe<SourceBoolExp>;
   sourcesAggregate?: InputMaybe<SourceAggregateBoolExp>;
@@ -7232,7 +7235,7 @@ export type UserHistory = {
   id: Scalars['uuid']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   mobileNumber?: Maybe<Scalars['String']['output']>;
-  profileImage?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
@@ -7294,7 +7297,7 @@ export type UserHistoryBoolExp = {
   id?: InputMaybe<UuidComparisonExp>;
   lastName?: InputMaybe<StringComparisonExp>;
   mobileNumber?: InputMaybe<StringComparisonExp>;
-  profileImage?: InputMaybe<StringComparisonExp>;
+  profileImage?: InputMaybe<UuidComparisonExp>;
   pronouns?: InputMaybe<StringComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
@@ -7318,7 +7321,7 @@ export type UserHistoryInsertInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  profileImage?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7337,7 +7340,7 @@ export type UserHistoryMaxFields = {
   id?: Maybe<Scalars['uuid']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   mobileNumber?: Maybe<Scalars['String']['output']>;
-  profileImage?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   username?: Maybe<Scalars['String']['output']>;
@@ -7370,7 +7373,7 @@ export type UserHistoryMinFields = {
   id?: Maybe<Scalars['uuid']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   mobileNumber?: Maybe<Scalars['String']['output']>;
-  profileImage?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   username?: Maybe<Scalars['String']['output']>;
@@ -7471,7 +7474,7 @@ export type UserHistorySetInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  profileImage?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7496,7 +7499,7 @@ export type UserHistoryStreamCursorValueInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  profileImage?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7553,6 +7556,7 @@ export type UserInsertInput = {
   factResourcesByUpdatedBy?: InputMaybe<SourceArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
   factsByUpdatedBy?: InputMaybe<FactArrRelInsertInput>;
+  file?: InputMaybe<FileObjRelInsertInput>;
   files?: InputMaybe<FileArrRelInsertInput>;
   filesByUpdatedBy?: InputMaybe<FileArrRelInsertInput>;
   firstName?: InputMaybe<Scalars['String']['input']>;
@@ -7560,7 +7564,7 @@ export type UserInsertInput = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<OriginArrRelInsertInput>;
-  profileImage?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sources?: InputMaybe<SourceArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
@@ -7579,7 +7583,7 @@ export type UserMaxFields = {
   id?: Maybe<Scalars['uuid']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   mobileNumber?: Maybe<Scalars['String']['output']>;
-  profileImage?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   username?: Maybe<Scalars['String']['output']>;
@@ -7595,7 +7599,7 @@ export type UserMinFields = {
   id?: Maybe<Scalars['uuid']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   mobileNumber?: Maybe<Scalars['String']['output']>;
-  profileImage?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   username?: Maybe<Scalars['String']['output']>;
@@ -7637,6 +7641,7 @@ export type UserOrderBy = {
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateOrderBy>;
+  file?: InputMaybe<FileOrderBy>;
   filesAggregate?: InputMaybe<FileAggregateOrderBy>;
   filesByUpdatedByAggregate?: InputMaybe<FileAggregateOrderBy>;
   firstName?: InputMaybe<OrderBy>;
@@ -7703,7 +7708,7 @@ export type UserSetInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  profileImage?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7727,7 +7732,7 @@ export type UserStreamCursorValueInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  profileImage?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -10533,6 +10538,18 @@ export type InsertFileMutationVariables = Exact<{
 
 export type InsertFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null };
 
+export type InsertFileAndUpdateUserProfileImageMutationVariables = Exact<{
+  fileId: Scalars['uuid']['input'];
+  eTag: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+  userId: Scalars['uuid']['input'];
+}>;
+
+
+export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateUserByPk?: { __typename?: 'User', profileImage?: any | null } | null };
+
 
 export const InsertClaimDocument = gql`
     mutation InsertClaim($submitterNotes: String = "", $origins: [OriginInsertInput!] = []) {
@@ -10568,6 +10585,18 @@ export const InsertFileDocument = gql`
   }
 }
     `;
+export const InsertFileAndUpdateUserProfileImageDocument = gql`
+    mutation insertFileAndUpdateUserProfileImage($fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $userId: uuid!) {
+  insertFileOne(
+    object: {id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size}
+  ) {
+    id
+  }
+  updateUserByPk(pkColumns: {id: $userId}, _set: {profileImage: $fileId}) {
+    profileImage
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -10584,6 +10613,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     insertFile(variables: InsertFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertFileMutation>(InsertFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFile', 'mutation', variables);
+    },
+    insertFileAndUpdateUserProfileImage(variables: InsertFileAndUpdateUserProfileImageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndUpdateUserProfileImageMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndUpdateUserProfileImageMutation>(InsertFileAndUpdateUserProfileImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndUpdateUserProfileImage', 'mutation', variables);
     }
   };
 }

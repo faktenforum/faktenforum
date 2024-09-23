@@ -4,7 +4,7 @@ import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
-import { GetFileByIdDocument, InsertFileDocument } from "~/generated/graphql";
+import { GetFileByIdDocument, InsertFileAndUpdateUserProfileImageDocument } from "~/generated/graphql";
 import { isUUID } from "class-validator";
 import type { Session } from "~/models";
 import type {
@@ -14,8 +14,9 @@ import type {
   InsertFileMutationVariables
 } from "~/generated/graphql";
 import { S3MulterFile } from "~/config/minio";
-import { FileUploadResponse } from "~/models/responses/FileUploadResponse";
+import { FileUploadResponse, FileUploadFormData } from "~/models";
 import { AccessControlDecorator } from "~/decorators";
+import { TableType } from "~/utils/consts";
 
 @Controller("/files")
 export class ClaimsController {
@@ -127,23 +128,27 @@ export class ClaimsController {
   @AccessControlDecorator({})
   @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore
   async uploadFile(
-    @BodyParams() body: { table: string; column: string },
+    @BodyParams() body: FileUploadFormData,
     @MultipartFile("file") file: S3MulterFile,
     @Req() request: Request & { user: Session }
   ) {
     try {
-      const { insertFileOne } = await this.hasuraService.adminRequest<
+      const { insertFileOne } = await this.hasuraService.clientRequest<
         InsertFileMutation,
         InsertFileMutationVariables
-      >(InsertFileDocument, {
-        id: file.key,
-        mimeType: file.mimetype,
-        name: file.originalname,
-        size: file.size,
-        eTag: file.etag, // minio uses md5 as etag
-        createdBy: request.user.userId
-      });
-      console.log("body", body);
+      >(
+        InsertFileAndUpdateUserProfileImageDocument,
+        {
+          fileId: file.key,
+          mimeType: file.mimetype,
+          name: file.originalname,
+          size: file.size,
+          eTag: file.etag, // minio uses md5 as etag
+          userId: request.user.userId
+        },
+        request.headers
+      );
+
       if (file.mimetype.startsWith("image/")) {
         // Resize and upload the image
         await this.imageService.resizeAndUpload(file.key);
@@ -155,4 +160,12 @@ export class ClaimsController {
       throw error;
     }
   }
+  private static tableHandlers: {
+    [key in TableType]: (file: S3MulterFile, userId: string) => Promise<void>;
+  } = {
+    user: async (entryId, fileId) => {
+      // Resize and upload the image
+      await this.imageService.resizeAndUpload(file.key);
+    }
+  };
 }

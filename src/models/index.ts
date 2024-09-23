@@ -5,6 +5,7 @@
 export * from "./Claim";
 export * from "./Session";
 export * from "./requests/DeleteFileRequest";
+export * from "./requests/FileUploadFormData";
 export * from "./requests/RegistrationRequest";
 export * from "./requests/SubmissionRequest";
 export * from "./requests/UpdateUserRoleRequest";

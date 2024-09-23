@@ -2,20 +2,12 @@ import { readFileSync } from "fs";
 import { envs } from "./envs/index";
 import loggerConfig from "./logger/index";
 import { S3MulterFile, s3storage } from "./minio";
-
+import { allowedMimeTypes, type MimeType } from "~/utils/consts";
 const pkg = JSON.parse(readFileSync("./package.json", { encoding: "utf8" }));
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const fileFilter = (req: Request, file: S3MulterFile, cb: Function) => {
-  const allowedMimeTypes = [
-    "application/pdf",
-    "image/jpeg",
-    "image/png",
-    "image/gif",
-    "image/webp",
-    "image/avif"
-  ];
-  if (allowedMimeTypes.includes(file.mimetype)) {
+  if (allowedMimeTypes.includes(file.mimetype as MimeType)) {
     cb(null, true);
   } else {
     cb(new Error("Invalid file type. Only PDF and image files are allowed."), false);
