@@ -18,3 +18,5 @@ DROP COLUMN profile_image;
 -- Step 2: Add the new profile_image column with type uuid, default null
 ALTER TABLE public.user_history
 ADD COLUMN profile_image uuid DEFAULT NULL;
+
+
