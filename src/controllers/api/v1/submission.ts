@@ -39,8 +39,6 @@ export class SubmissionController {
     @MultipartFile("files", 10) files: S3MulterFile[]
   ) {
     const claim: SubmissionRequest = JSON.parse(body.payload);
-    console.log(body.payload);
-    console.log(files);
     const isValid = ajv.validate(SubmissionDtoJsonSchema, claim);
 
     if (!isValid) {

@@ -1,0 +1,15 @@
+mutation insertFileAndUpdateUserProfileImage(
+  $fileId: uuid!
+  $eTag: String!
+  $mimeType: String!
+  $name: String!
+  $size: Int!
+  $userId: uuid!
+) {
+  insertFileOne(object: { id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size }) {
+    id
+  }
+  updateUserByPk(pkColumns: { id: $userId }, _set: { profileImage: $fileId }) {
+    profileImage
+  }
+}

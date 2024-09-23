@@ -1,10 +1,10 @@
 import { Controller, Inject } from "@tsed/di";
-import { PathParams } from "@tsed/platform-params";
+import { PathParams, BodyParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
-import { GetFileByIdDocument, InsertFileDocument } from "~/generated/graphql";
+import { GetFileByIdDocument, InsertFileAndUpdateUserProfileImageDocument } from "~/generated/graphql";
 import { isUUID } from "class-validator";
 import type { Session } from "~/models";
 import type {
@@ -14,7 +14,10 @@ import type {
   InsertFileMutationVariables
 } from "~/generated/graphql";
 import { S3MulterFile } from "~/config/minio";
-import { FileUploadResponse } from "~/models/responses/FileUploadResponse";
+import { FileUploadResponse, FileUploadFormData } from "~/models";
+import { AccessControlDecorator } from "~/decorators";
+
+import { BadRequest } from "@tsed/exceptions";
 
 @Controller("/files")
 export class ClaimsController {
@@ -28,6 +31,7 @@ export class ClaimsController {
   imageService: ImageService;
 
   @Get("/:fileId")
+  @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore
@@ -72,7 +76,9 @@ export class ClaimsController {
     }
   }
 
+  // route to get file by id and size, Size is in Bucket format xs sm md lg xl
   @Get("/:fileId/:size")
+  @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.")) // prettier-ignore
   @(Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.") // prettier-ignore
@@ -120,26 +126,42 @@ export class ClaimsController {
   @Post("/")
   @Description("This endpoint allows for uploading a file to the server.")
   @Consumes("multipart/form-data")
+  @AccessControlDecorator({})
   @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore
-  async uploadFile(@MultipartFile("file") file: S3MulterFile, @Req() request: Request & { user: Session }) {
+  async uploadFile(
+    @BodyParams() body: FileUploadFormData,
+    @MultipartFile("file") file: S3MulterFile,
+    @Req() request: Request & { user: Session }
+  ) {
     try {
-      const { insertFileOne } = await this.hasuraService.adminRequest<
-        InsertFileMutation,
-        InsertFileMutationVariables
-      >(InsertFileDocument, {
-        id: file.key,
-        mimeType: file.mimetype,
-        name: file.originalname,
-        size: file.size,
-        eTag: file.etag, // minio uses md5 as etag
-        createdBy: request.user.userId
-      });
-      if (file.mimetype.startsWith("image/")) {
-        // Resize and upload the image
-        await this.imageService.resizeAndUpload(file.key);
-      }
+      switch (body.table) {
+        case "user": {
+          const { insertFileOne } = await this.hasuraService.clientRequest<
+            InsertFileMutation,
+            InsertFileMutationVariables
+          >(
+            InsertFileAndUpdateUserProfileImageDocument,
+            {
+              fileId: file.key,
+              mimeType: file.mimetype,
+              name: file.originalname,
+              size: file.size,
+              eTag: file.etag, // minio uses md5 as etag
+              userId: request.user.userId
+            },
+            request.headers
+          );
 
-      return { id: insertFileOne?.id };
+          if (file.mimetype.startsWith("image/")) {
+            // Resize and upload the image
+            await this.imageService.resizeAndUpload(file.key);
+          }
+
+          return { id: insertFileOne?.id };
+        }
+        default:
+          throw new BadRequest("Invalid table type");
+      }
     } catch (error) {
       this.fileService.deleteFile(file.key);
       throw error;

@@ -17,11 +17,10 @@ export class AccessControlMiddleware implements MiddlewareMethods {
     const session = await this.authService.getKratosSession(request.cookies["ory_kratos_session"]);
 
     const user: Session = {
-      userId: session.id,
+      userId: session.identity.id,
       role: session.identity.metadata_public.role
     };
     request.user = user;
-
     if (!options.role || options.role === "ALL") {
       // if no role is given, we assume that the route is accessible to all
       // if role is ALL, we assume that the route is accessible to all

@@ -30,6 +30,21 @@ array_relationships:
         table:
           name: source
           schema: public
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - created_by
+        - e_tag
+        - id
+        - mime_type
+        - name
+        - size
+        - transcription
+    comment: ""
 select_permissions:
   - role: moderator
     permission:

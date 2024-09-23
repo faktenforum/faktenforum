@@ -1,6 +1,10 @@
 table:
   name: user
   schema: public
+object_relationships:
+  - name: file
+    using:
+      foreign_key_constraint_on: profile_image
 array_relationships:
   - name: claimResourcesByUpdatedBy
     using:
@@ -98,19 +102,33 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
+        - first_name
+        - id
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+        - updated_at
+        - username
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - bio
         - first_name
         - last_name
         - mobile_number
         - profile_image
         - pronouns
-        - username
-        - created_at
-        - updated_at
-        - sys_period
-        - id
-      filter: {}
-      allow_aggregations: true
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
     comment: ""
 update_permissions:
   - role: moderator
