@@ -44,7 +44,7 @@ $$;
 
 -- Step 3: Update the claim table to use the new function
 ALTER TABLE public.claim
-ALTER COLUMN id SET DEFAULT generate_unique_claim_short_id();
+ALTER COLUMN short_id SET DEFAULT generate_unique_claim_short_id();
 
 ALTER TABLE public.claim
-ADD CONSTRAINT claim_id_format_check CHECK (id ~ '^\d{4}/\d{2}/\d{2}-\d+$');
+ADD CONSTRAINT claim_id_format_check CHECK (short_id ~ '^\d{4}/\d{2}/\d{2}-\d+$');
