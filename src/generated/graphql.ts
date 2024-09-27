@@ -2188,7 +2188,7 @@ export type CommentUpdates = {
 export type CommentUserReactions = {
   __typename?: 'CommentUserReactions';
   commentId: Scalars['uuid']['output'];
-  createdAt: Scalars['timestamptz']['output'];
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
   emoji: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
   /** An object relationship */
@@ -2252,9 +2252,7 @@ export type CommentUserReactionsBoolExp = {
 /** unique or primary key constraints on table "comment_user_reactions" */
 export enum CommentUserReactionsConstraint {
   /** unique or primary key constraint on columns "id" */
-  CommentUserReactionsPkey = 'comment_user_reactions_pkey',
-  /** unique or primary key constraint on columns "comment_id", "user_id", "emoji" */
-  UniqueUserCommentEmoji = 'unique_user_comment_emoji'
+  CommentUserReactionsPkey = 'comment_user_reactions_pkey'
 }
 
 /** input type for inserting data into table "comment_user_reactions" */
@@ -6622,8 +6620,6 @@ export type User = {
   factsByUpdatedBy: Array<Fact>;
   /** An aggregate relationship */
   factsByUpdatedByAggregate: FactAggregate;
-  /** An object relationship */
-  file?: Maybe<File>;
   /** An array relationship */
   files: Array<File>;
   /** An aggregate relationship */
@@ -6961,7 +6957,6 @@ export type UserBoolExp = {
   factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   factsByUpdatedBy?: InputMaybe<FactBoolExp>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateBoolExp>;
-  file?: InputMaybe<FileBoolExp>;
   files?: InputMaybe<FileBoolExp>;
   filesAggregate?: InputMaybe<FileAggregateBoolExp>;
   filesByUpdatedBy?: InputMaybe<FileBoolExp>;
@@ -7556,7 +7551,6 @@ export type UserInsertInput = {
   factResourcesByUpdatedBy?: InputMaybe<SourceArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
   factsByUpdatedBy?: InputMaybe<FactArrRelInsertInput>;
-  file?: InputMaybe<FileObjRelInsertInput>;
   files?: InputMaybe<FileArrRelInsertInput>;
   filesByUpdatedBy?: InputMaybe<FileArrRelInsertInput>;
   firstName?: InputMaybe<Scalars['String']['input']>;
@@ -7641,7 +7635,6 @@ export type UserOrderBy = {
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateOrderBy>;
-  file?: InputMaybe<FileOrderBy>;
   filesAggregate?: InputMaybe<FileAggregateOrderBy>;
   filesByUpdatedByAggregate?: InputMaybe<FileAggregateOrderBy>;
   firstName?: InputMaybe<OrderBy>;
