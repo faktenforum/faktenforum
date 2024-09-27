@@ -1,5 +1,6 @@
 DROP TRIGGER IF EXISTS log_file_event ON public.file;
-
+-- Drop the existing log_user_event trigger if it exists
+DROP TRIGGER IF EXISTS log_user_event ON public.user;
 
 CREATE TRIGGER log_user_event
 AFTER
