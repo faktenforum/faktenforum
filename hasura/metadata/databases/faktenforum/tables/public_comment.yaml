@@ -38,7 +38,7 @@ select_permissions:
   - role: moderator
     permission:
       columns:
-        - censored
+        - blocked
         - claim_id
         - content
         - created_at
@@ -56,7 +56,7 @@ update_permissions:
   - role: moderator
     permission:
       columns:
-        - censored
+        - blocked
         - claim_id
         - content
         - deleted
