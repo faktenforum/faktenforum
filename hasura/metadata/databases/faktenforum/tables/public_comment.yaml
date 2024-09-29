@@ -38,10 +38,13 @@ select_permissions:
   - role: moderator
     permission:
       columns:
+        - blocked
         - claim_id
         - content
         - created_at
         - created_by
+        - deleted
+        - displayed_content
         - id
         - sys_period
         - thread_id
@@ -54,8 +57,10 @@ update_permissions:
   - role: moderator
     permission:
       columns:
+        - blocked
         - claim_id
         - content
+        - deleted
       filter: {}
       check: null
       set:
