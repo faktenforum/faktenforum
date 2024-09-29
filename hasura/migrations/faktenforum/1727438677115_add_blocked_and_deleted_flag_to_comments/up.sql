@@ -1,8 +1,9 @@
 ALTER TABLE public.comment
-ADD COLUMN deleted boolean DEFAULT FALSE;
+ADD COLUMN deleted boolean DEFAULT FALSE NOT NULL;
+
 -- Add the censored column to the public.comment table
 ALTER TABLE public.comment
-ADD COLUMN blocked boolean DEFAULT FALSE;
+ADD COLUMN blocked boolean DEFAULT FALSE NOT NULL;
 
 -- Add a generated column for displayed_content
 ALTER TABLE public.comment

@@ -1623,12 +1623,15 @@ export type ClaimVarianceOrderBy = {
 /** columns and relationships of "comment" */
 export type Comment = {
   __typename?: 'Comment';
+  blocked?: Maybe<Scalars['Boolean']['output']>;
   claimId: Scalars['uuid']['output'];
   content: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy: Scalars['uuid']['output'];
   /** An object relationship */
   createdByUser: User;
+  deleted?: Maybe<Scalars['Boolean']['output']>;
+  displayedContent?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   /** An array relationship */
@@ -1694,6 +1697,8 @@ export type CommentAggregate = {
 };
 
 export type CommentAggregateBoolExp = {
+  bool_and?: InputMaybe<CommentAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<CommentAggregateBoolExpBool_Or>;
   count?: InputMaybe<CommentAggregateBoolExpCount>;
 };
 
@@ -1731,11 +1736,14 @@ export type CommentBoolExp = {
   _and?: InputMaybe<Array<CommentBoolExp>>;
   _not?: InputMaybe<CommentBoolExp>;
   _or?: InputMaybe<Array<CommentBoolExp>>;
+  blocked?: InputMaybe<BooleanComparisonExp>;
   claimId?: InputMaybe<UuidComparisonExp>;
   content?: InputMaybe<StringComparisonExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
   createdBy?: InputMaybe<UuidComparisonExp>;
   createdByUser?: InputMaybe<UserBoolExp>;
+  deleted?: InputMaybe<BooleanComparisonExp>;
+  displayedContent?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   thread?: InputMaybe<CommentBoolExp>;
@@ -1989,11 +1997,13 @@ export type CommentHistoryUpdates = {
 
 /** input type for inserting data into table "comment" */
 export type CommentInsertInput = {
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   createdByUser?: InputMaybe<UserObjRelInsertInput>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   thread?: InputMaybe<CommentArrRelInsertInput>;
@@ -2011,6 +2021,7 @@ export type CommentMaxFields = {
   content?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  displayedContent?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
@@ -2023,6 +2034,7 @@ export type CommentMaxOrderBy = {
   content?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
+  displayedContent?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
@@ -2036,6 +2048,7 @@ export type CommentMinFields = {
   content?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy?: Maybe<Scalars['uuid']['output']>;
+  displayedContent?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   threadId?: Maybe<Scalars['uuid']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
@@ -2048,6 +2061,7 @@ export type CommentMinOrderBy = {
   content?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
+  displayedContent?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   threadId?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
@@ -2079,11 +2093,14 @@ export type CommentOnConflict = {
 
 /** Ordering options when selecting data from "comment". */
 export type CommentOrderBy = {
+  blocked?: InputMaybe<OrderBy>;
   claimId?: InputMaybe<OrderBy>;
   content?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   createdBy?: InputMaybe<OrderBy>;
   createdByUser?: InputMaybe<UserOrderBy>;
+  deleted?: InputMaybe<OrderBy>;
+  displayedContent?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   threadAggregate?: InputMaybe<CommentAggregateOrderBy>;
@@ -2102,6 +2119,8 @@ export type CommentPkColumnsInput = {
 /** select columns of table "comment" */
 export enum CommentSelectColumn {
   /** column name */
+  Blocked = 'blocked',
+  /** column name */
   ClaimId = 'claimId',
   /** column name */
   Content = 'content',
@@ -2109,6 +2128,10 @@ export enum CommentSelectColumn {
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
+  /** column name */
+  Deleted = 'deleted',
+  /** column name */
+  DisplayedContent = 'displayedContent',
   /** column name */
   Id = 'id',
   /** column name */
@@ -2121,12 +2144,30 @@ export enum CommentSelectColumn {
   UpdatedBy = 'updatedBy'
 }
 
+/** select "commentAggregateBoolExpBool_andArgumentsColumns" columns of table "comment" */
+export enum CommentSelectColumnCommentAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Blocked = 'blocked',
+  /** column name */
+  Deleted = 'deleted'
+}
+
+/** select "commentAggregateBoolExpBool_orArgumentsColumns" columns of table "comment" */
+export enum CommentSelectColumnCommentAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Blocked = 'blocked',
+  /** column name */
+  Deleted = 'deleted'
+}
+
 /** input type for updating data in table "comment" */
 export type CommentSetInput = {
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   threadId?: InputMaybe<Scalars['uuid']['input']>;
@@ -2144,10 +2185,13 @@ export type CommentStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type CommentStreamCursorValueInput = {
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  displayedContent?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   threadId?: InputMaybe<Scalars['uuid']['input']>;
@@ -2158,6 +2202,8 @@ export type CommentStreamCursorValueInput = {
 /** update columns of table "comment" */
 export enum CommentUpdateColumn {
   /** column name */
+  Blocked = 'blocked',
+  /** column name */
   ClaimId = 'claimId',
   /** column name */
   Content = 'content',
@@ -2165,6 +2211,8 @@ export enum CommentUpdateColumn {
   CreatedAt = 'createdAt',
   /** column name */
   CreatedBy = 'createdBy',
+  /** column name */
+  Deleted = 'deleted',
   /** column name */
   Id = 'id',
   /** column name */
@@ -6620,6 +6668,8 @@ export type User = {
   factsByUpdatedBy: Array<Fact>;
   /** An aggregate relationship */
   factsByUpdatedByAggregate: FactAggregate;
+  /** An object relationship */
+  file?: Maybe<File>;
   /** An array relationship */
   files: Array<File>;
   /** An aggregate relationship */
@@ -6957,6 +7007,7 @@ export type UserBoolExp = {
   factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   factsByUpdatedBy?: InputMaybe<FactBoolExp>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateBoolExp>;
+  file?: InputMaybe<FileBoolExp>;
   files?: InputMaybe<FileBoolExp>;
   filesAggregate?: InputMaybe<FileAggregateBoolExp>;
   filesByUpdatedBy?: InputMaybe<FileBoolExp>;
@@ -7551,6 +7602,7 @@ export type UserInsertInput = {
   factResourcesByUpdatedBy?: InputMaybe<SourceArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
   factsByUpdatedBy?: InputMaybe<FactArrRelInsertInput>;
+  file?: InputMaybe<FileObjRelInsertInput>;
   files?: InputMaybe<FileArrRelInsertInput>;
   filesByUpdatedBy?: InputMaybe<FileArrRelInsertInput>;
   firstName?: InputMaybe<Scalars['String']['input']>;
@@ -7635,6 +7687,7 @@ export type UserOrderBy = {
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   factsByUpdatedByAggregate?: InputMaybe<FactAggregateOrderBy>;
+  file?: InputMaybe<FileOrderBy>;
   filesAggregate?: InputMaybe<FileAggregateOrderBy>;
   filesByUpdatedByAggregate?: InputMaybe<FileAggregateOrderBy>;
   firstName?: InputMaybe<OrderBy>;
@@ -7808,6 +7861,20 @@ export type ClaimHistoryAggregateBoolExpCount = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
   filter?: InputMaybe<ClaimHistoryBoolExp>;
   predicate: IntComparisonExp;
+};
+
+export type CommentAggregateBoolExpBool_And = {
+  arguments: CommentSelectColumnCommentAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<CommentBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type CommentAggregateBoolExpBool_Or = {
+  arguments: CommentSelectColumnCommentAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<CommentBoolExp>;
+  predicate: BooleanComparisonExp;
 };
 
 export type CommentAggregateBoolExpCount = {
