@@ -9,8 +9,8 @@ ADD COLUMN blocked boolean DEFAULT FALSE NOT NULL;
 ALTER TABLE public.comment
 ADD COLUMN displayed_content TEXT GENERATED ALWAYS AS (
     CASE
-        WHEN deleted THEN 'Content deleted'
-        WHEN blocked THEN 'Content blocked'
+        WHEN deleted THEN '"Content deleted"'
+        WHEN blocked THEN '"Content blocked"'
         ELSE content
     END
 ) STORED;
