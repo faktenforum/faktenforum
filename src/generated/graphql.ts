@@ -1623,14 +1623,14 @@ export type ClaimVarianceOrderBy = {
 /** columns and relationships of "comment" */
 export type Comment = {
   __typename?: 'Comment';
-  blocked?: Maybe<Scalars['Boolean']['output']>;
+  blocked: Scalars['Boolean']['output'];
   claimId: Scalars['uuid']['output'];
   content: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   createdBy: Scalars['uuid']['output'];
   /** An object relationship */
   createdByUser: User;
-  deleted?: Maybe<Scalars['Boolean']['output']>;
+  deleted: Scalars['Boolean']['output'];
   displayedContent?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
@@ -2236,7 +2236,7 @@ export type CommentUpdates = {
 export type CommentUserReactions = {
   __typename?: 'CommentUserReactions';
   commentId: Scalars['uuid']['output'];
-  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  createdAt: Scalars['timestamptz']['output'];
   emoji: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
   /** An object relationship */
@@ -2300,7 +2300,9 @@ export type CommentUserReactionsBoolExp = {
 /** unique or primary key constraints on table "comment_user_reactions" */
 export enum CommentUserReactionsConstraint {
   /** unique or primary key constraint on columns "id" */
-  CommentUserReactionsPkey = 'comment_user_reactions_pkey'
+  CommentUserReactionsPkey = 'comment_user_reactions_pkey',
+  /** unique or primary key constraint on columns "comment_id", "user_id", "emoji" */
+  UniqueUserCommentEmoji = 'unique_user_comment_emoji'
 }
 
 /** input type for inserting data into table "comment_user_reactions" */
@@ -10598,17 +10600,41 @@ export type InsertFileMutationVariables = Exact<{
 
 export type InsertFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null };
 
+export type InsertFileAndUpdateOriginFileMutationVariables = Exact<{
+  fileId: Scalars['uuid']['input'];
+  eTag: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+  entryId: Scalars['uuid']['input'];
+}>;
+
+
+export type InsertFileAndUpdateOriginFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateOriginByPk?: { __typename?: 'Origin', id: any } | null };
+
+export type InsertFileAndUpdateSourceFileMutationVariables = Exact<{
+  fileId: Scalars['uuid']['input'];
+  eTag: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+  entryId: Scalars['uuid']['input'];
+}>;
+
+
+export type InsertFileAndUpdateSourceFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateSourceByPk?: { __typename?: 'Source', id: any } | null };
+
 export type InsertFileAndUpdateUserProfileImageMutationVariables = Exact<{
   fileId: Scalars['uuid']['input'];
   eTag: Scalars['String']['input'];
   mimeType: Scalars['String']['input'];
   name: Scalars['String']['input'];
   size: Scalars['Int']['input'];
-  userId: Scalars['uuid']['input'];
+  entryId: Scalars['uuid']['input'];
 }>;
 
 
-export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateUserByPk?: { __typename?: 'User', profileImage?: any | null } | null };
+export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateUserByPk?: { __typename?: 'User', id: any } | null };
 
 
 export const InsertClaimDocument = gql`
@@ -10645,15 +10671,39 @@ export const InsertFileDocument = gql`
   }
 }
     `;
-export const InsertFileAndUpdateUserProfileImageDocument = gql`
-    mutation insertFileAndUpdateUserProfileImage($fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $userId: uuid!) {
+export const InsertFileAndUpdateOriginFileDocument = gql`
+    mutation insertFileAndUpdateOriginFile($fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $entryId: uuid!) {
   insertFileOne(
     object: {id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size}
   ) {
     id
   }
-  updateUserByPk(pkColumns: {id: $userId}, _set: {profileImage: $fileId}) {
-    profileImage
+  updateOriginByPk(pkColumns: {id: $entryId}, _set: {fileId: $fileId}) {
+    id
+  }
+}
+    `;
+export const InsertFileAndUpdateSourceFileDocument = gql`
+    mutation insertFileAndUpdateSourceFile($fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $entryId: uuid!) {
+  insertFileOne(
+    object: {id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size}
+  ) {
+    id
+  }
+  updateSourceByPk(pkColumns: {id: $entryId}, _set: {fileId: $fileId}) {
+    id
+  }
+}
+    `;
+export const InsertFileAndUpdateUserProfileImageDocument = gql`
+    mutation insertFileAndUpdateUserProfileImage($fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $entryId: uuid!) {
+  insertFileOne(
+    object: {id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size}
+  ) {
+    id
+  }
+  updateUserByPk(pkColumns: {id: $entryId}, _set: {profileImage: $fileId}) {
+    id
   }
 }
     `;
@@ -10673,6 +10723,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     insertFile(variables: InsertFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertFileMutation>(InsertFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFile', 'mutation', variables);
+    },
+    insertFileAndUpdateOriginFile(variables: InsertFileAndUpdateOriginFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndUpdateOriginFileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndUpdateOriginFileMutation>(InsertFileAndUpdateOriginFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndUpdateOriginFile', 'mutation', variables);
+    },
+    insertFileAndUpdateSourceFile(variables: InsertFileAndUpdateSourceFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndUpdateSourceFileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndUpdateSourceFileMutation>(InsertFileAndUpdateSourceFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndUpdateSourceFile', 'mutation', variables);
     },
     insertFileAndUpdateUserProfileImage(variables: InsertFileAndUpdateUserProfileImageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndUpdateUserProfileImageMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndUpdateUserProfileImageMutation>(InsertFileAndUpdateUserProfileImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndUpdateUserProfileImage', 'mutation', variables);

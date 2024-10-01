@@ -1,4 +1,4 @@
-mutation insertFileAndUpdateUserProfileImage(
+mutation insertFileAndUpdateSourceFile(
   $fileId: uuid!
   $eTag: String!
   $mimeType: String!
@@ -9,7 +9,7 @@ mutation insertFileAndUpdateUserProfileImage(
   insertFileOne(object: { id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size }) {
     id
   }
-  updateUserByPk(pkColumns: { id: $entryId }, _set: { profileImage: $fileId }) {
+  updateSourceByPk(pkColumns: { id: $entryId }, _set: { fileId: $fileId }) {
     id
   }
 }

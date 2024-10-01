@@ -18,6 +18,6 @@ export const allowedMimeTypes = [
 
 export type MimeType = (typeof allowedMimeTypes)[number];
 
-export const allowedTableTypes = ["user", "source", "origin", "forum", "thread", "chat", "message"] as const;
+export const allowedTableTypes = ["user", "source", "origin", "comment", "message"] as const;
 
 export type TableType = (typeof allowedTableTypes)[number];
