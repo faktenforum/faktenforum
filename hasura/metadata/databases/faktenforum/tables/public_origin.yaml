@@ -63,6 +63,7 @@ update_permissions:
       columns:
         - archive_url
         - excerpt
+        - file_id
         - sys_period
         - updated_by
         - url

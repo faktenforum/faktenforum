@@ -4,14 +4,23 @@ import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
-import { GetFileByIdDocument, InsertFileAndUpdateUserProfileImageDocument } from "~/generated/graphql";
+import {
+  GetFileByIdDocument,
+  InsertFileAndUpdateUserProfileImageDocument,
+  InsertFileAndUpdateOriginFileDocument,
+  InsertFileAndUpdateSourceFileDocument
+} from "~/generated/graphql";
 import { isUUID } from "class-validator";
 import type { Session } from "~/models";
 import type {
   GetFileByIdQuery,
   GetFileByIdQueryVariables,
   InsertFileMutation,
-  InsertFileMutationVariables
+  InsertFileMutationVariables,
+  InsertFileAndUpdateOriginFileMutation,
+  InsertFileAndUpdateOriginFileMutationVariables,
+  InsertFileAndUpdateSourceFileMutation,
+  InsertFileAndUpdateSourceFileMutationVariables
 } from "~/generated/graphql";
 import { S3MulterFile } from "~/config/minio";
 import { FileUploadResponse, FileUploadFormData } from "~/models";
@@ -134,34 +143,49 @@ export class ClaimsController {
     @Req() request: Request & { user: Session }
   ) {
     try {
+      let response;
+      const vars = {
+        fileId: file.key,
+        mimeType: file.mimetype,
+        name: file.originalname,
+        size: file.size,
+        eTag: file.etag, // minio uses md5 as etag
+        entryId: body.id
+      };
       switch (body.table) {
         case "user": {
           const { insertFileOne } = await this.hasuraService.clientRequest<
             InsertFileMutation,
             InsertFileMutationVariables
-          >(
-            InsertFileAndUpdateUserProfileImageDocument,
-            {
-              fileId: file.key,
-              mimeType: file.mimetype,
-              name: file.originalname,
-              size: file.size,
-              eTag: file.etag, // minio uses md5 as etag
-              userId: request.user.userId
-            },
-            request.headers
-          );
+          >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
 
-          if (file.mimetype.startsWith("image/")) {
-            // Resize and upload the image
-            await this.imageService.resizeAndUpload(file.key);
-          }
-
-          return { id: insertFileOne?.id };
+          response = { id: insertFileOne?.id };
+          break;
+        }
+        case "source": {
+          const { insertFileOne } = await this.hasuraService.clientRequest<
+            InsertFileAndUpdateSourceFileMutation,
+            InsertFileAndUpdateSourceFileMutationVariables
+          >(InsertFileAndUpdateSourceFileDocument, vars, request.headers);
+          response = { id: insertFileOne?.id };
+          break;
+        }
+        case "origin": {
+          const { insertFileOne } = await this.hasuraService.clientRequest<
+            InsertFileAndUpdateOriginFileMutation,
+            InsertFileAndUpdateOriginFileMutationVariables
+          >(InsertFileAndUpdateOriginFileDocument, vars, request.headers);
+          response = { id: insertFileOne?.id };
+          break;
         }
         default:
           throw new BadRequest("Invalid table type");
       }
+      if (file.mimetype.startsWith("image/")) {
+        // Resize and upload the image
+        this.imageService.resizeAndUpload(file.key);
+      }
+      return response;
     } catch (error) {
       this.fileService.deleteFile(file.key);
       throw error;
