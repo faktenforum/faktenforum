@@ -4621,6 +4621,7 @@ export type Origin = {
   originHistories: Array<OriginHistory>;
   /** An aggregate relationship */
   originHistoriesAggregate: OriginHistoryAggregate;
+  remarks?: Maybe<Scalars['String']['output']>;
   sysPeriod?: Maybe<Scalars['tstzrange']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
@@ -4734,6 +4735,7 @@ export type OriginBoolExp = {
   index?: InputMaybe<IntComparisonExp>;
   originHistories?: InputMaybe<OriginHistoryBoolExp>;
   originHistoriesAggregate?: InputMaybe<OriginHistoryAggregateBoolExp>;
+  remarks?: InputMaybe<StringComparisonExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   updatedBy?: InputMaybe<UuidComparisonExp>;
@@ -5196,6 +5198,7 @@ export type OriginInsertInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
   originHistories?: InputMaybe<OriginHistoryArrRelInsertInput>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -5214,6 +5217,7 @@ export type OriginMaxFields = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
+  remarks?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   url?: Maybe<Scalars['String']['output']>;
@@ -5229,6 +5233,7 @@ export type OriginMaxOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
+  remarks?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   url?: InputMaybe<OrderBy>;
@@ -5245,6 +5250,7 @@ export type OriginMinFields = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
+  remarks?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   url?: Maybe<Scalars['String']['output']>;
@@ -5260,6 +5266,7 @@ export type OriginMinOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
+  remarks?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   url?: InputMaybe<OrderBy>;
@@ -5302,6 +5309,7 @@ export type OriginOrderBy = {
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
   originHistoriesAggregate?: InputMaybe<OriginHistoryAggregateOrderBy>;
+  remarks?: InputMaybe<OrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
@@ -5333,6 +5341,8 @@ export enum OriginSelectColumn {
   /** column name */
   Index = 'index',
   /** column name */
+  Remarks = 'remarks',
+  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
@@ -5352,6 +5362,7 @@ export type OriginSetInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -5409,6 +5420,7 @@ export type OriginStreamCursorValueInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -5444,6 +5456,8 @@ export enum OriginUpdateColumn {
   Id = 'id',
   /** column name */
   Index = 'index',
+  /** column name */
+  Remarks = 'remarks',
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
@@ -5694,6 +5708,7 @@ export type Source = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id: Scalars['uuid']['output'];
   index?: Maybe<Scalars['Int']['output']>;
+  remarks?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   sourceHistories: Array<SourceHistory>;
   /** An aggregate relationship */
@@ -5809,6 +5824,7 @@ export type SourceBoolExp = {
   fileId?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   index?: InputMaybe<IntComparisonExp>;
+  remarks?: InputMaybe<StringComparisonExp>;
   sourceHistories?: InputMaybe<SourceHistoryBoolExp>;
   sourceHistoriesAggregate?: InputMaybe<SourceHistoryAggregateBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
@@ -6272,6 +6288,7 @@ export type SourceInsertInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
   sourceHistories?: InputMaybe<SourceHistoryArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -6291,6 +6308,7 @@ export type SourceMaxFields = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
+  remarks?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   url?: Maybe<Scalars['String']['output']>;
@@ -6306,6 +6324,7 @@ export type SourceMaxOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
+  remarks?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   url?: InputMaybe<OrderBy>;
@@ -6322,6 +6341,7 @@ export type SourceMinFields = {
   fileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   index?: Maybe<Scalars['Int']['output']>;
+  remarks?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   updatedBy?: Maybe<Scalars['uuid']['output']>;
   url?: Maybe<Scalars['String']['output']>;
@@ -6337,6 +6357,7 @@ export type SourceMinOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
+  remarks?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   updatedBy?: InputMaybe<OrderBy>;
   url?: InputMaybe<OrderBy>;
@@ -6378,6 +6399,7 @@ export type SourceOrderBy = {
   fileId?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   index?: InputMaybe<OrderBy>;
+  remarks?: InputMaybe<OrderBy>;
   sourceHistoriesAggregate?: InputMaybe<SourceHistoryAggregateOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
@@ -6410,6 +6432,8 @@ export enum SourceSelectColumn {
   /** column name */
   Index = 'index',
   /** column name */
+  Remarks = 'remarks',
+  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
@@ -6429,6 +6453,7 @@ export type SourceSetInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -6486,6 +6511,7 @@ export type SourceStreamCursorValueInput = {
   fileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   updatedBy?: InputMaybe<Scalars['uuid']['input']>;
@@ -6521,6 +6547,8 @@ export enum SourceUpdateColumn {
   Id = 'id',
   /** column name */
   Index = 'index',
+  /** column name */
+  Remarks = 'remarks',
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
@@ -10600,6 +10628,38 @@ export type InsertFileMutationVariables = Exact<{
 
 export type InsertFileMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null };
 
+export type InsertFileAndInsertOriginMutationVariables = Exact<{
+  claimId: Scalars['uuid']['input'];
+  fileId: Scalars['uuid']['input'];
+  eTag: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type InsertFileAndInsertOriginMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, insertOriginOne?: { __typename?: 'Origin', id: any, claimId: any, index?: number | null, url?: string | null, archiveUrl?: string | null, excerpt?: string | null, remarks?: string | null, file?: { __typename?: 'File', id: any, mimeType: string, name: string, eTag: string, transcription?: string | null } | null } | null };
+
+export type InsertFileAndInsertSourceMutationVariables = Exact<{
+  factId: Scalars['uuid']['input'];
+  fileId: Scalars['uuid']['input'];
+  eTag: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  remarks?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type InsertFileAndInsertSourceMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, insertSourceOne?: { __typename?: 'Source', id: any, index?: number | null, factId: any, url?: string | null, archiveUrl?: string | null, excerpt?: string | null, remarks?: string | null, file?: { __typename?: 'File', id: any, mimeType: string, name: string, eTag: string, transcription?: string | null } | null, fact: { __typename?: 'Fact', claimId: any } } | null };
+
 export type InsertFileAndUpdateOriginFileMutationVariables = Exact<{
   fileId: Scalars['uuid']['input'];
   eTag: Scalars['String']['input'];
@@ -10671,6 +10731,63 @@ export const InsertFileDocument = gql`
   }
 }
     `;
+export const InsertFileAndInsertOriginDocument = gql`
+    mutation insertFileAndInsertOrigin($claimId: uuid!, $fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $url: String = null, $excerpt: String = null, $archiveUrl: String = null, $remarks: String = null) {
+  insertFileOne(
+    object: {id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size}
+  ) {
+    id
+  }
+  insertOriginOne(
+    object: {archiveUrl: $archiveUrl, excerpt: $excerpt, fileId: $fileId, url: $url, claimId: $claimId, remarks: $remarks}
+  ) {
+    id
+    claimId
+    index
+    url
+    archiveUrl
+    excerpt
+    remarks
+    file {
+      id
+      mimeType
+      name
+      eTag
+      transcription
+    }
+  }
+}
+    `;
+export const InsertFileAndInsertSourceDocument = gql`
+    mutation insertFileAndInsertSource($factId: uuid!, $fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $url: String = null, $excerpt: String = null, $archiveUrl: String = null, $remarks: String = null) {
+  insertFileOne(
+    object: {id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size}
+  ) {
+    id
+  }
+  insertSourceOne(
+    object: {factId: $factId, fileId: $fileId, url: $url, excerpt: $excerpt, archiveUrl: $archiveUrl, remarks: $remarks}
+  ) {
+    id
+    index
+    factId
+    url
+    archiveUrl
+    excerpt
+    remarks
+    file {
+      id
+      mimeType
+      name
+      eTag
+      transcription
+    }
+    fact {
+      claimId
+    }
+  }
+}
+    `;
 export const InsertFileAndUpdateOriginFileDocument = gql`
     mutation insertFileAndUpdateOriginFile($fileId: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $entryId: uuid!) {
   insertFileOne(
@@ -10723,6 +10840,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     insertFile(variables: InsertFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertFileMutation>(InsertFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFile', 'mutation', variables);
+    },
+    insertFileAndInsertOrigin(variables: InsertFileAndInsertOriginMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndInsertOriginMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndInsertOriginMutation>(InsertFileAndInsertOriginDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndInsertOrigin', 'mutation', variables);
+    },
+    insertFileAndInsertSource(variables: InsertFileAndInsertSourceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndInsertSourceMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndInsertSourceMutation>(InsertFileAndInsertSourceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndInsertSource', 'mutation', variables);
     },
     insertFileAndUpdateOriginFile(variables: InsertFileAndUpdateOriginFileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndUpdateOriginFileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndUpdateOriginFileMutation>(InsertFileAndUpdateOriginFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndUpdateOriginFile', 'mutation', variables);

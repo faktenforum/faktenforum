@@ -35,6 +35,7 @@ insert_permissions:
         - created_by
         - excerpt
         - file_id
+        - remarks
         - updated_at
         - url
     comment: ""
@@ -50,6 +51,7 @@ select_permissions:
         - file_id
         - id
         - index
+        - remarks
         - sys_period
         - updated_at
         - updated_by
@@ -64,6 +66,7 @@ update_permissions:
         - archive_url
         - excerpt
         - file_id
+        - remarks
         - sys_period
         - updated_by
         - url

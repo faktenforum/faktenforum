@@ -1,6 +1,5 @@
 # Use the official PostgreSQL image as the base image
-FROM postgres:16
-
+FROM postgres:16.4-bookworm
 # Install Python, pip, and setup virtual environment, along with necessary compilers and PostgreSQL dev tools
 RUN apt-get update \
     && apt-get install -y \
@@ -10,7 +9,7 @@ RUN apt-get update \
     gcc \
     make \
     libpq-dev \
-    postgresql-server-dev-all \
+    postgresql-server-dev-16 \
     && rm -rf /var/lib/apt/lists/* \
     && python3 -m venv /opt/venv
 
@@ -25,7 +24,11 @@ ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=postgres
 
 # Install the temporal_tables extension via pgxnclient
-RUN pgxn install temporal_tables
+# ... existing code ...
 
+# Install the temporal_tables extension via pgxnclient
+RUN pgxn install temporal_tables 
+
+# ... existing code ...
 # Copy initialization scripts to the container
 COPY init-db.sh /docker-entrypoint-initdb.d/

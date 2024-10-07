@@ -33,6 +33,7 @@ insert_permissions:
         - excerpt
         - fact_id
         - file_id
+        - remarks
         - url
     comment: ""
 select_permissions:
@@ -47,6 +48,7 @@ select_permissions:
         - file_id
         - id
         - index
+        - remarks
         - sys_period
         - updated_at
         - updated_by
@@ -61,6 +63,7 @@ update_permissions:
         - archive_url
         - excerpt
         - file_id
+        - remarks
         - url
       filter: {}
       check: null
