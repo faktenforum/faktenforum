@@ -1,14 +1,18 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams, BodyParams } from "@tsed/platform-params";
-import { Consumes, Description, Get, Post, Returns } from "@tsed/schema";
+import { Consumes, Description, Get, Post, Returns, getJsonSchema } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
+import Ajv from "ajv";
+
 import {
   GetFileByIdDocument,
   InsertFileAndUpdateUserProfileImageDocument,
   InsertFileAndUpdateOriginFileDocument,
-  InsertFileAndUpdateSourceFileDocument
+  InsertFileAndUpdateSourceFileDocument,
+  InsertFileAndInsertOriginDocument,
+  InsertFileAndInsertSourceDocument
 } from "~/generated/graphql";
 import { isUUID } from "class-validator";
 import type { Session } from "~/models";
@@ -20,14 +24,19 @@ import type {
   InsertFileAndUpdateOriginFileMutation,
   InsertFileAndUpdateOriginFileMutationVariables,
   InsertFileAndUpdateSourceFileMutation,
-  InsertFileAndUpdateSourceFileMutationVariables
+  InsertFileAndUpdateSourceFileMutationVariables,
+  InsertFileAndInsertSourceMutation,
+  InsertFileAndInsertSourceMutationVariables,
+  InsertFileAndInsertOriginMutation,
+  InsertFileAndInsertOriginMutationVariables
 } from "~/generated/graphql";
 import { S3MulterFile } from "~/config/minio";
-import { FileUploadResponse, FileUploadFormData } from "~/models";
+import { FileUploadResponse, FileUploadFormData, OrginSourceData } from "~/models";
 import { AccessControlDecorator } from "~/decorators";
-
 import { BadRequest } from "@tsed/exceptions";
 
+const ajv = new Ajv();
+const OriginSourceDataJsonSchema = getJsonSchema(OrginSourceData);
 @Controller("/files")
 export class ClaimsController {
   @Inject()
@@ -152,6 +161,15 @@ export class ClaimsController {
         eTag: file.etag, // minio uses md5 as etag
         entryId: body.id
       };
+      let tableData;
+      if (body.tableData) {
+        tableData = JSON.parse(body.tableData);
+      } else {
+        tableData = null; // or handle the case as needed
+      }
+      if (tableData && !ajv.validate(OriginSourceDataJsonSchema, tableData)) {
+        throw new BadRequest("TableData validation failed!");
+      }
       switch (body.table) {
         case "user": {
           const { insertFileOne } = await this.hasuraService.clientRequest<
@@ -163,20 +181,40 @@ export class ClaimsController {
           break;
         }
         case "source": {
-          const { insertFileOne } = await this.hasuraService.clientRequest<
-            InsertFileAndUpdateSourceFileMutation,
-            InsertFileAndUpdateSourceFileMutationVariables
-          >(InsertFileAndUpdateSourceFileDocument, vars, request.headers);
-          response = { id: insertFileOne?.id };
-          break;
+          if (!body.tableData) {
+            const { insertFileOne } = await this.hasuraService.clientRequest<
+              InsertFileAndUpdateSourceFileMutation,
+              InsertFileAndUpdateSourceFileMutationVariables
+            >(InsertFileAndUpdateSourceFileDocument, vars, request.headers);
+            response = { id: insertFileOne?.id };
+            break;
+          } else {
+            delete tableData.claimId; // claimid is maybe send by the client but not used at the moment
+            const { insertFileOne } = await this.hasuraService.clientRequest<
+              InsertFileAndInsertSourceMutation,
+              InsertFileAndInsertSourceMutationVariables
+            >(InsertFileAndInsertSourceDocument, { ...vars, ...tableData }, request.headers);
+            response = { id: insertFileOne?.id };
+            break;
+          }
         }
         case "origin": {
-          const { insertFileOne } = await this.hasuraService.clientRequest<
-            InsertFileAndUpdateOriginFileMutation,
-            InsertFileAndUpdateOriginFileMutationVariables
-          >(InsertFileAndUpdateOriginFileDocument, vars, request.headers);
-          response = { id: insertFileOne?.id };
-          break;
+          if (!body.tableData) {
+            const { insertFileOne } = await this.hasuraService.clientRequest<
+              InsertFileAndUpdateOriginFileMutation,
+              InsertFileAndUpdateOriginFileMutationVariables
+            >(InsertFileAndUpdateOriginFileDocument, vars, request.headers);
+            response = { id: insertFileOne?.id };
+            break;
+          } else {
+            delete tableData.factId;
+            const { insertFileOne } = await this.hasuraService.clientRequest<
+              InsertFileAndInsertOriginMutation,
+              InsertFileAndInsertOriginMutationVariables
+            >(InsertFileAndInsertOriginDocument, { ...vars, ...tableData }, request.headers);
+            response = { id: insertFileOne?.id };
+            break;
+          }
         }
         default:
           throw new BadRequest("Invalid table type");

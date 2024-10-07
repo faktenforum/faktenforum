@@ -48,6 +48,7 @@ export class KratosWebHookController {
   @Post("/registration-metadata")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, RegistrationPreResponse)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async preFinalizeAccount(@BodyParams() body: RegistrationRequest) {
     return {
       identity: {

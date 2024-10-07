@@ -1,0 +1,44 @@
+mutation insertFileAndInsertSource(
+  $factId: uuid!
+  $fileId: uuid!
+  $eTag: String!
+  $mimeType: String!
+  $name: String!
+  $size: Int!
+  $url: String = null
+  $excerpt: String = null
+  $archiveUrl: String = null
+  $remarks: String = null
+) {
+  insertFileOne(object: { id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size }) {
+    id
+  }
+  insertSourceOne(
+    object: {
+      factId: $factId
+      fileId: $fileId
+      url: $url
+      excerpt: $excerpt
+      archiveUrl: $archiveUrl
+      remarks: $remarks
+    }
+  ) {
+    id
+    index
+    factId
+    url
+    archiveUrl
+    excerpt
+    remarks
+    file {
+      id
+      mimeType
+      name
+      eTag
+      transcription
+    }
+    fact {
+      claimId
+    }
+  }
+}
