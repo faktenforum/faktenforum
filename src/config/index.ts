@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 import { envs } from "./envs/index";
 import loggerConfig from "./logger/index";
-import { type S3MulterFile, s3storage } from "./minio";
-import type S3MulterFile from "~/config/minio";
+import { s3storage } from "./minio";
+import type { S3MulterFile } from "~/config/minio";
 import { allowedMimeTypes, type MimeType } from "~/utils/consts";
 const pkg = JSON.parse(readFileSync("./package.json", { encoding: "utf8" }));
 
