@@ -6,8 +6,8 @@
   "scripts": {
     "build": "npm run barrels && tsc --project tsconfig.compile.json && tsc-alias -p tsconfig.compile.json",
     "barrels": "barrelsby --config .barrelsby.json",
-    "start": "npm run graphql && npm run barrels && npm run prisma && tsnd --inspect --exit-child --cls --ignore-watch node_modules --respawn -r tsconfig-paths/register --loader ts-node/esm src/index.ts src/index.ts",
-    "start:prod": "cross-env NODE_ENV=production node ./dist/src/index.js",
+    "start": "npm run graphql && npm run barrels && bun run --watch src/index.ts",
+    "start:prod": "cross-env NODE_ENV=production bun ./dist/src/index.js",
     "prepare:dev": "docker-compose -f docker-compose.local.yml up -d",
     "test": "npm run test:lint && npm run test:coverage",
     "test:unit": "cross-env NODE_ENV=test vitest run",

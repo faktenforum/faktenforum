@@ -32,7 +32,8 @@ export class EnvService {
       MATRIX_ACCOUNT: process.env.MATRIX_ACCOUNT,
       MATRIX_PASSWORD: process.env.MATRIX_PASSWORD,
       NODE_ENV: process.env.NODE_ENV,
-      MATRIX_URL: process.env.MATRIX_URL
+      MATRIX_URL: process.env.MATRIX_URL,
+      MATRIX_DOMAIN: process.env.MATRIX_DOMAIN
     };
 
     // Delete environment variables to prevent security risks
@@ -162,6 +163,14 @@ export class EnvService {
     return this.envVars.MATRIX_URL;
   }
 
+  get matrixDomain(): string {
+    if (!this.envVars.MATRIX_DOMAIN) {
+      $log.error("MATRIX_DOMAIN is not set!");
+      process.exit(1);
+    }
+    return this.envVars.MATRIX_DOMAIN;
+  }
+
   get env(): Environment {
     return (process.env.NODE_ENV || "development") as Environment;
   }
@@ -204,7 +213,7 @@ export class EnvService {
     if (!this.envVars.MATRIX_ACCOUNT) errors.push("MATRIX_ACCOUNT is not set!");
     if (!this.envVars.MATRIX_PASSWORD) errors.push("MATRIX_PASSWORD is not set!");
     if (!this.envVars.MATRIX_URL) errors.push("MATRIX_URL is not set!");
-
+    if (!this.envVars.MATRIX_DOMAIN) errors.push("MATRIX_DOMAIN is not set!");
     if (!this.validEnvs.includes(this.env)) {
       errors.push(`NODE_ENV is not set or invalid! It has to be ${this.validEnvs.join(" | ")}`);
     }
