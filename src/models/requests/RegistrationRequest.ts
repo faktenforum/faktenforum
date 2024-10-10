@@ -13,11 +13,11 @@ class KratosTraits {
 class KratosTransientPayload {
   @Optional()
   @Property()
-  first_name?: string;
+  firstName?: string;
 
   @Optional()
   @Property()
-  last_name?: string;
+  lastName?: string;
 }
 
 export class RegistrationRequest {
@@ -31,5 +31,5 @@ export class RegistrationRequest {
   traits: KratosTraits;
   @Required()
   @Property()
-  transient_payload: KratosTransientPayload;
+  transientPayload: KratosTransientPayload;
 }

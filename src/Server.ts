@@ -10,7 +10,7 @@ import "@tsed/swagger";
 import { config } from "./config/index";
 import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
-import { FileService, UsersService } from "./services";
+import { FileService } from "./services";
 import { SetSecurityResponseHeaders } from "~/middlewares";
 
 @Configuration({
@@ -45,9 +45,6 @@ export class Server {
 
   @Inject()
   protected fileService: FileService;
-
-  @Inject()
-  protected userService: UsersService;
 
   async $onReady() {
     try {

@@ -1,0 +1,13 @@
+mutation insertUser(
+  $id: uuid!
+  $email: String!
+  $username: String!
+  $firstName: String!
+  $lastName: String!
+) {
+  insertUserOne(
+    object: { id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName }
+  ) {
+    id
+  }
+}

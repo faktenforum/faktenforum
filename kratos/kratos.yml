@@ -71,7 +71,7 @@ selfservice:
                 url: http://host.docker.internal:8083/api/v1/webhooks/registration-metadata
                 method: POST
                 can_interrupt: true
-                body: /etc/config/kratos/jsonnet/register.jsonnet
+                body: file:///etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: true
                 auth:
@@ -85,7 +85,7 @@ selfservice:
                 url: http://host.docker.internal:8083/api/v1/webhooks/registration-creation
                 method: POST
                 can_interrupt: false
-                body: /etc/config/kratos/jsonnet/register.jsonnet
+                body: file:///etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: false
                 auth:

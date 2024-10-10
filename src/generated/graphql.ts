@@ -10601,6 +10601,17 @@ export type UserHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type InsertUserMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  email: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+}>;
+
+
+export type InsertUserMutation = { __typename?: 'mutation_root', insertUserOne?: { __typename?: 'User', id: any } | null };
+
 export type InsertClaimMutationVariables = Exact<{
   submitterNotes?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<Array<OriginInsertInput> | OriginInsertInput>;
@@ -10697,6 +10708,15 @@ export type InsertFileAndUpdateUserProfileImageMutationVariables = Exact<{
 export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateUserByPk?: { __typename?: 'User', id: any } | null };
 
 
+export const InsertUserDocument = gql`
+    mutation insertUser($id: uuid!, $email: String!, $username: String!, $firstName: String!, $lastName: String!) {
+  insertUserOne(
+    object: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName}
+  ) {
+    id
+  }
+}
+    `;
 export const InsertClaimDocument = gql`
     mutation InsertClaim($submitterNotes: String = "", $origins: [OriginInsertInput!] = []) {
   insertClaim(
@@ -10739,7 +10759,7 @@ export const InsertFileAndInsertOriginDocument = gql`
     id
   }
   insertOriginOne(
-    object: {archiveUrl: $archiveUrl, excerpt: $excerpt, fileId: $fileId, url: $url, claimId: $claimId, remarks: $remarks}
+    object: {claimId: $claimId, fileId: $fileId, url: $url, excerpt: $excerpt, archiveUrl: $archiveUrl, remarks: $remarks}
   ) {
     id
     claimId
@@ -10832,6 +10852,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    insertUser(variables: InsertUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertUserMutation>(InsertUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertUser', 'mutation', variables);
+    },
     InsertClaim(variables?: InsertClaimMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertClaimMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertClaimMutation>(InsertClaimDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsertClaim', 'mutation', variables);
     },

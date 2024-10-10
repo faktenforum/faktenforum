@@ -3,14 +3,17 @@ import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
-import { AuthService, UsersService } from "~/services";
+import { AuthService, HasuraService } from "~/services";
+
+import { InsertUserDocument } from "~/generated/graphql";
+import type { InsertUserMutation, InsertUserMutationVariables } from "~/generated/graphql";
 
 const DEFAULT_LANGUAGE = "de";
 
 @Controller("/webhooks")
 export class KratosWebHookController {
-  @Inject(UsersService)
-  usersService: UsersService;
+  @Inject(HasuraService)
+  hasuraService: HasuraService;
 
   @Inject(AuthService)
   authService: AuthService;
@@ -21,13 +24,12 @@ export class KratosWebHookController {
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
 
     const session = await this.authService.getKratosSession(sessionCookie);
-    console.log("Session:", session);
+
     const hasuraSession = {
       "X-Hasura-User-Id": session.identity.id,
       "X-Hasura-Role": session.identity.metadata_public.role.toLowerCase(),
       Expires: new Date(session.expires_at).toUTCString()
     };
-    console.log("Session:", hasuraSession);
     return JSON.stringify(hasuraSession);
   }
 
@@ -35,13 +37,17 @@ export class KratosWebHookController {
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
-    await this.usersService.createUser({
-      id: body.id,
-      email: body.traits.email,
-      username: body.traits.username,
-      first_name: body.transient_payload.first_name,
-      last_name: body.transient_payload.last_name
-    });
+    console.log("body", body);
+    await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
+      InsertUserDocument,
+      {
+        id: body.id,
+        email: body.traits.email,
+        username: body.traits.username,
+        firstName: body.transientPayload.firstName,
+        lastName: body.transientPayload.lastName
+      }
+    );
     return {};
   }
 
