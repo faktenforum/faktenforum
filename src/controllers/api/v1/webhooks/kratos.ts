@@ -37,7 +37,6 @@ export class KratosWebHookController {
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
-    console.log("body", body);
     await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
       InsertUserDocument,
       {

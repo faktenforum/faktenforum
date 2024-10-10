@@ -10,6 +10,7 @@
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
 server_name: "chat.localhost:8000"
+public_baseurl: "http://chat.localhost:8000/"
 pid_file: /data/homeserver.pid
 listeners:
   - port: 8008

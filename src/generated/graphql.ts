@@ -229,6 +229,208 @@ export type CategoryUpdates = {
   where: CategoryBoolExp;
 };
 
+/** Role Based Access Channels  */
+export type Channel = {
+  __typename?: 'Channel';
+  archived: Scalars['Boolean']['output'];
+  descriptionDe: Scalars['String']['output'];
+  descriptionEn: Scalars['String']['output'];
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  internal: Scalars['Boolean']['output'];
+  labelDe: Scalars['String']['output'];
+  labelEn: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+/** aggregated selection of "channel" */
+export type ChannelAggregate = {
+  __typename?: 'ChannelAggregate';
+  aggregate?: Maybe<ChannelAggregateFields>;
+  nodes: Array<Channel>;
+};
+
+/** aggregate fields of "channel" */
+export type ChannelAggregateFields = {
+  __typename?: 'ChannelAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<ChannelMaxFields>;
+  min?: Maybe<ChannelMinFields>;
+};
+
+
+/** aggregate fields of "channel" */
+export type ChannelAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<ChannelSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "channel". All fields are combined with a logical 'AND'. */
+export type ChannelBoolExp = {
+  _and?: InputMaybe<Array<ChannelBoolExp>>;
+  _not?: InputMaybe<ChannelBoolExp>;
+  _or?: InputMaybe<Array<ChannelBoolExp>>;
+  archived?: InputMaybe<BooleanComparisonExp>;
+  descriptionDe?: InputMaybe<StringComparisonExp>;
+  descriptionEn?: InputMaybe<StringComparisonExp>;
+  fileId?: InputMaybe<UuidComparisonExp>;
+  internal?: InputMaybe<BooleanComparisonExp>;
+  labelDe?: InputMaybe<StringComparisonExp>;
+  labelEn?: InputMaybe<StringComparisonExp>;
+  name?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "channel" */
+export enum ChannelConstraint {
+  /** unique or primary key constraint on columns "name" */
+  ChannelPkey = 'channel_pkey'
+}
+
+/** input type for inserting data into table "channel" */
+export type ChannelInsertInput = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
+  descriptionDe?: InputMaybe<Scalars['String']['input']>;
+  descriptionEn?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  internal?: InputMaybe<Scalars['Boolean']['input']>;
+  labelDe?: InputMaybe<Scalars['String']['input']>;
+  labelEn?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type ChannelMaxFields = {
+  __typename?: 'ChannelMaxFields';
+  descriptionDe?: Maybe<Scalars['String']['output']>;
+  descriptionEn?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  labelDe?: Maybe<Scalars['String']['output']>;
+  labelEn?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type ChannelMinFields = {
+  __typename?: 'ChannelMinFields';
+  descriptionDe?: Maybe<Scalars['String']['output']>;
+  descriptionEn?: Maybe<Scalars['String']['output']>;
+  fileId?: Maybe<Scalars['uuid']['output']>;
+  labelDe?: Maybe<Scalars['String']['output']>;
+  labelEn?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "channel" */
+export type ChannelMutationResponse = {
+  __typename?: 'ChannelMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Channel>;
+};
+
+/** on_conflict condition type for table "channel" */
+export type ChannelOnConflict = {
+  constraint: ChannelConstraint;
+  updateColumns?: Array<ChannelUpdateColumn>;
+  where?: InputMaybe<ChannelBoolExp>;
+};
+
+/** Ordering options when selecting data from "channel". */
+export type ChannelOrderBy = {
+  archived?: InputMaybe<OrderBy>;
+  descriptionDe?: InputMaybe<OrderBy>;
+  descriptionEn?: InputMaybe<OrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  internal?: InputMaybe<OrderBy>;
+  labelDe?: InputMaybe<OrderBy>;
+  labelEn?: InputMaybe<OrderBy>;
+  name?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: channel */
+export type ChannelPkColumnsInput = {
+  name: Scalars['String']['input'];
+};
+
+/** select columns of table "channel" */
+export enum ChannelSelectColumn {
+  /** column name */
+  Archived = 'archived',
+  /** column name */
+  DescriptionDe = 'descriptionDe',
+  /** column name */
+  DescriptionEn = 'descriptionEn',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  Internal = 'internal',
+  /** column name */
+  LabelDe = 'labelDe',
+  /** column name */
+  LabelEn = 'labelEn',
+  /** column name */
+  Name = 'name'
+}
+
+/** input type for updating data in table "channel" */
+export type ChannelSetInput = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
+  descriptionDe?: InputMaybe<Scalars['String']['input']>;
+  descriptionEn?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  internal?: InputMaybe<Scalars['Boolean']['input']>;
+  labelDe?: InputMaybe<Scalars['String']['input']>;
+  labelEn?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "channel" */
+export type ChannelStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: ChannelStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type ChannelStreamCursorValueInput = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
+  descriptionDe?: InputMaybe<Scalars['String']['input']>;
+  descriptionEn?: InputMaybe<Scalars['String']['input']>;
+  fileId?: InputMaybe<Scalars['uuid']['input']>;
+  internal?: InputMaybe<Scalars['Boolean']['input']>;
+  labelDe?: InputMaybe<Scalars['String']['input']>;
+  labelEn?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "channel" */
+export enum ChannelUpdateColumn {
+  /** column name */
+  Archived = 'archived',
+  /** column name */
+  DescriptionDe = 'descriptionDe',
+  /** column name */
+  DescriptionEn = 'descriptionEn',
+  /** column name */
+  FileId = 'fileId',
+  /** column name */
+  Internal = 'internal',
+  /** column name */
+  LabelDe = 'labelDe',
+  /** column name */
+  LabelEn = 'labelEn',
+  /** column name */
+  Name = 'name'
+}
+
+export type ChannelUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<ChannelSetInput>;
+  /** filter the rows which have to be updated */
+  where: ChannelBoolExp;
+};
+
 /** columns and relationships of "claim" */
 export type Claim = {
   __typename?: 'Claim';
@@ -7963,6 +8165,10 @@ export type Mutation_Root = {
   deleteCategory?: Maybe<CategoryMutationResponse>;
   /** delete single row from the table: "category" */
   deleteCategoryByPk?: Maybe<Category>;
+  /** delete data from the table: "channel" */
+  deleteChannel?: Maybe<ChannelMutationResponse>;
+  /** delete single row from the table: "channel" */
+  deleteChannelByPk?: Maybe<Channel>;
   /** delete data from the table: "claim" */
   deleteClaim?: Maybe<ClaimMutationResponse>;
   /** delete single row from the table: "claim" */
@@ -8043,6 +8249,10 @@ export type Mutation_Root = {
   insertCategory?: Maybe<CategoryMutationResponse>;
   /** insert a single row into the table: "category" */
   insertCategoryOne?: Maybe<Category>;
+  /** insert data into the table: "channel" */
+  insertChannel?: Maybe<ChannelMutationResponse>;
+  /** insert a single row into the table: "channel" */
+  insertChannelOne?: Maybe<Channel>;
   /** insert data into the table: "claim" */
   insertClaim?: Maybe<ClaimMutationResponse>;
   /** insert data into the table: "claim_category" */
@@ -8125,6 +8335,12 @@ export type Mutation_Root = {
   updateCategoryByPk?: Maybe<Category>;
   /** update multiples rows of table: "category" */
   updateCategoryMany?: Maybe<Array<Maybe<CategoryMutationResponse>>>;
+  /** update data of the table: "channel" */
+  updateChannel?: Maybe<ChannelMutationResponse>;
+  /** update single row of the table: "channel" */
+  updateChannelByPk?: Maybe<Channel>;
+  /** update multiples rows of table: "channel" */
+  updateChannelMany?: Maybe<Array<Maybe<ChannelMutationResponse>>>;
   /** update data of the table: "claim" */
   updateClaim?: Maybe<ClaimMutationResponse>;
   /** update single row of the table: "claim" */
@@ -8252,6 +8468,18 @@ export type Mutation_RootDeleteCategoryArgs = {
 
 /** mutation root */
 export type Mutation_RootDeleteCategoryByPkArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteChannelArgs = {
+  where: ChannelBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteChannelByPkArgs = {
   name: Scalars['String']['input'];
 };
 
@@ -8496,6 +8724,20 @@ export type Mutation_RootInsertCategoryArgs = {
 export type Mutation_RootInsertCategoryOneArgs = {
   object: CategoryInsertInput;
   onConflict?: InputMaybe<CategoryOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertChannelArgs = {
+  objects: Array<ChannelInsertInput>;
+  onConflict?: InputMaybe<ChannelOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertChannelOneArgs = {
+  object: ChannelInsertInput;
+  onConflict?: InputMaybe<ChannelOnConflict>;
 };
 
 
@@ -8782,6 +9024,26 @@ export type Mutation_RootUpdateCategoryByPkArgs = {
 /** mutation root */
 export type Mutation_RootUpdateCategoryManyArgs = {
   updates: Array<CategoryUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateChannelArgs = {
+  _set?: InputMaybe<ChannelSetInput>;
+  where: ChannelBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateChannelByPkArgs = {
+  _set?: InputMaybe<ChannelSetInput>;
+  pkColumns: ChannelPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateChannelManyArgs = {
+  updates: Array<ChannelUpdates>;
 };
 
 
@@ -9217,6 +9479,12 @@ export type Query_Root = {
   categoryAggregate: CategoryAggregate;
   /** fetch data from the table: "category" using primary key columns */
   categoryByPk?: Maybe<Category>;
+  /** fetch data from the table: "channel" */
+  channel: Array<Channel>;
+  /** fetch aggregated fields from the table: "channel" */
+  channelAggregate: ChannelAggregate;
+  /** fetch data from the table: "channel" using primary key columns */
+  channelByPk?: Maybe<Channel>;
   /** fetch data from the table: "claim" */
   claim: Array<Claim>;
   /** fetch aggregated fields from the table: "claim" */
@@ -9353,6 +9621,29 @@ export type Query_RootCategoryAggregateArgs = {
 
 
 export type Query_RootCategoryByPkArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type Query_RootChannelArgs = {
+  distinctOn?: InputMaybe<Array<ChannelSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ChannelOrderBy>>;
+  where?: InputMaybe<ChannelBoolExp>;
+};
+
+
+export type Query_RootChannelAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ChannelSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ChannelOrderBy>>;
+  where?: InputMaybe<ChannelBoolExp>;
+};
+
+
+export type Query_RootChannelByPkArgs = {
   name: Scalars['String']['input'];
 };
 
@@ -9818,6 +10109,14 @@ export type Subscription_Root = {
   categoryByPk?: Maybe<Category>;
   /** fetch data from the table in a streaming manner: "category" */
   categoryStream: Array<Category>;
+  /** fetch data from the table: "channel" */
+  channel: Array<Channel>;
+  /** fetch aggregated fields from the table: "channel" */
+  channelAggregate: ChannelAggregate;
+  /** fetch data from the table: "channel" using primary key columns */
+  channelByPk?: Maybe<Channel>;
+  /** fetch data from the table in a streaming manner: "channel" */
+  channelStream: Array<Channel>;
   /** fetch data from the table: "claim" */
   claim: Array<Claim>;
   /** fetch aggregated fields from the table: "claim" */
@@ -10000,6 +10299,36 @@ export type Subscription_RootCategoryStreamArgs = {
   batchSize: Scalars['Int']['input'];
   cursor: Array<InputMaybe<CategoryStreamCursorInput>>;
   where?: InputMaybe<CategoryBoolExp>;
+};
+
+
+export type Subscription_RootChannelArgs = {
+  distinctOn?: InputMaybe<Array<ChannelSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ChannelOrderBy>>;
+  where?: InputMaybe<ChannelBoolExp>;
+};
+
+
+export type Subscription_RootChannelAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ChannelSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ChannelOrderBy>>;
+  where?: InputMaybe<ChannelBoolExp>;
+};
+
+
+export type Subscription_RootChannelByPkArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootChannelStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<ChannelStreamCursorInput>>;
+  where?: InputMaybe<ChannelBoolExp>;
 };
 
 
@@ -10612,6 +10941,11 @@ export type InsertUserMutationVariables = Exact<{
 
 export type InsertUserMutation = { __typename?: 'mutation_root', insertUserOne?: { __typename?: 'User', id: any } | null };
 
+export type QueryChannelsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type QueryChannelsQuery = { __typename?: 'query_root', channel: Array<{ __typename?: 'Channel', archived: boolean, descriptionDe: string, descriptionEn: string, fileId?: any | null, internal: boolean, labelDe: string, labelEn: string, name: string }> };
+
 export type InsertClaimMutationVariables = Exact<{
   submitterNotes?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<Array<OriginInsertInput> | OriginInsertInput>;
@@ -10714,6 +11048,20 @@ export const InsertUserDocument = gql`
     object: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName}
   ) {
     id
+  }
+}
+    `;
+export const QueryChannelsDocument = gql`
+    query queryChannels {
+  channel {
+    archived
+    descriptionDe
+    descriptionEn
+    fileId
+    internal
+    labelDe
+    labelEn
+    name
   }
 }
     `;
@@ -10854,6 +11202,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     insertUser(variables: InsertUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertUserMutation>(InsertUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertUser', 'mutation', variables);
+    },
+    queryChannels(variables?: QueryChannelsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<QueryChannelsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<QueryChannelsQuery>(QueryChannelsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'queryChannels', 'query', variables);
     },
     InsertClaim(variables?: InsertClaimMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertClaimMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertClaimMutation>(InsertClaimDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsertClaim', 'mutation', variables);
