@@ -30,6 +30,6 @@ EOSQL
 # Create databases without extensions
 create_db "kratos"
 create_db "hasura"
-
+create_db "hydra"
 # Create database with the extension
 create_db_with_extension "faktenforum"

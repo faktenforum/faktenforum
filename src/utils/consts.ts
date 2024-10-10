@@ -16,6 +16,30 @@ export const allowedMimeTypes = [
   "image/avif"
 ] as const;
 
+export enum UserRole {
+  admin = "admin",
+  moderator = "moderator",
+  senior = "senior",
+  intermediate = "intermediate",
+  junior = "junior",
+  aspirant = "aspirant"
+}
+
+export const UserRolePowerLevels: Record<UserRole, number> = {
+  [UserRole.admin]: 100,
+  [UserRole.moderator]: 50,
+  [UserRole.senior]: 30,
+  [UserRole.intermediate]: 20,
+  [UserRole.junior]: 10,
+  [UserRole.aspirant]: 0
+};
+
+export function getPowerLevel(role: string): number | undefined {
+  const userRole = role as UserRole;
+  return UserRolePowerLevels[userRole];
+}
+// create mappinf of user rolte to powerlevel
+
 export type MimeType = (typeof allowedMimeTypes)[number];
 
 export const allowedTableTypes = ["user", "source", "origin", "comment", "message"] as const;
