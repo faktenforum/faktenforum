@@ -26,10 +26,6 @@ COPY package.json package-lock.json tsconfig.json tsconfig.compile.json .barrels
 # Install dependencies
 # RUN npm install --pure-lockfile
 
-# Copy Prisma schema and generate Prisma client
-COPY ./prisma ./prisma
-ENV SKIP_ERD_GENERATION="true"
-RUN npx prisma generate --generator client tsed
 
 # Copy application source
 COPY ./src ./src
