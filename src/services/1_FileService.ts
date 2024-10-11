@@ -38,10 +38,6 @@ export class FileService {
     }
   }
 
-  // async storeFile(bucketName: string, fileName: string, fileContent: Buffer | ReadableStream, metaData: any) {
-  //   await this.minioClient.putObject(bucketName, fileName, fileContent, metaData);
-  // }
-
   getFileStream(key: string): Promise<Readable> {
     return this.minioClient.getObject(this.envService.minioBucketName, key);
   }
