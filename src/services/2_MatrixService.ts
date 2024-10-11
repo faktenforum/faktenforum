@@ -1,14 +1,13 @@
 // src/services/MatrixService.ts
 import { Inject, Injectable } from "@tsed/di";
 import type { MatrixClient, Preset } from "matrix-js-sdk";
-import sdk from "matrix-js-sdk";
-import { EventType, RoomType, Room, Visibility, JoinRule } from "matrix-js-sdk";
+import sdk, { EventType, RoomType, Room, Visibility, JoinRule } from "matrix-js-sdk";
 import { EnvService, HasuraService } from "~/services"; // Import the EnvService
 import { $log } from "@tsed/logger";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
 import { QueryChannelsDocument } from "~/generated/graphql";
 import type { QueryChannelsQuery, QueryChannelsQueryVariables } from "~/generated/graphql";
-import { MessageEvent } from "node:http";
+
 // rewrite matrix logger
 mxLogger.info = (...msg) => $log.info(msg);
 mxLogger.log = (...msg) => $log.debug(msg);

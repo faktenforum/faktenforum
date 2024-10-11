@@ -8,6 +8,7 @@ import { UpdateUserRoleRequest, OnClaimStatusUpdatedRequest, KratosUserSchema } 
 import {
   AuthService,
   FileService,
+  EnvService,
   HasuraService,
   KratosUser,
   ImageService,
@@ -30,6 +31,9 @@ export class HasuraWebHookController {
 
   @Inject(AuthService)
   authService: AuthService;
+
+  @Inject(EnvService)
+  envService: EnvService;
 
   @Inject(MatrixService)
   matrixService: MatrixService;
@@ -75,20 +79,30 @@ export class HasuraWebHookController {
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async onClaimStatusChanged(@BodyParams() body: OnClaimStatusUpdatedRequest) {
-    $log.debug(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
-    switch (body.op) {
-      case HasuraOperations.INSERT:
-        this.matrixService.createRoom(
-          body.claim_short_id,
-          body.internal ? SpaceNames.InternalSubmissions : SpaceNames.CommunitySubmissions
-        );
-        break;
-      case HasuraOperations.UPDATE:
-        break;
-      case HasuraOperations.DELETE:
-        break;
-      default:
-        throw new Error(`Unknown operation: ${body.op}`);
+    // Changed type to 'any' for logging
+    try {
+      $log.debug(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
+
+      // Cast body to expected type after logging
+      const typedBody = body as OnClaimStatusUpdatedRequest;
+
+      switch (typedBody.op) {
+        case HasuraOperations.INSERT:
+          this.matrixService.createRoom(
+            typedBody.claim_short_id,
+            typedBody.claim_internal ? SpaceNames.InternalSubmissions : SpaceNames.CommunitySubmissions,
+            `${this.envService.baseUrl}/claim/${typedBody.claim_short_id}`
+          );
+          break;
+        case HasuraOperations.UPDATE:
+          break;
+        case HasuraOperations.DELETE:
+          break;
+        default:
+          throw new Error(`Unknown operation: ${JSON.stringify(typedBody)}`);
+      }
+    } catch (error) {
+      $log.error(`[HasuraWebHookController] Error processing onClaimStatusChanged: ${error.message}`);
     }
     return {}; // Returning an empty object with a 200 status code
   }

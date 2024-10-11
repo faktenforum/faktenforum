@@ -18,5 +18,5 @@ export class OnClaimStatusUpdatedRequest {
 
   @Property()
   @Required()
-  internal: boolean;
+  claim_internal: boolean;
 }
