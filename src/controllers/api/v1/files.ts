@@ -189,7 +189,7 @@ export class ClaimsController {
             response = { fileId: insertFileOne?.id, entryId: vars.entryId };
             break;
           } else {
-            delete tableData.claimId; // claimid is maybe send by the client but not used at the moment
+            delete tableData.claimId; // claimId is maybe send by the client but not used at the moment
             const { insertFileOne, insertSourceOne } = await this.hasuraService.clientRequest<
               InsertFileAndInsertSourceMutation,
               InsertFileAndInsertSourceMutationVariables
