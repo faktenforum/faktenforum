@@ -1,0 +1,23 @@
+http: 
+  routers:
+    matrix:
+      entryPoints:
+        - web
+      rule: host(`chat.localhost`)
+      service: matrix
+      middlewares:
+        - cors-headers
+
+  services:
+    matrix:
+      loadBalancer:
+        servers:
+        - url: http://matrix-server:8008
+
+  middlewares:
+    cors-headers:
+      headers:
+        accessControlAllowCredentials: true
+        accessControlAllowMethods: "*"
+        accessControlAllowHeaders: "*"
+        accessControlAllowOriginList: "*"

@@ -59,4 +59,12 @@ export class HasuraWebHookController {
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
     return this.transformKratosUser(kratosUser);
   }
+
+  @Post("/on-claim-created")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
+  async onClaimCreated(@BodyParams() body: UpdateUserRoleRequest) {
+    const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
+    return this.transformKratosUser(kratosUser);
+  }
 }

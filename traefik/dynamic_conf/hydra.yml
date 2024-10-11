@@ -1,0 +1,20 @@
+http: 
+  routers:
+    hydra:
+      entryPoints:
+        - web
+      rule: host(`app.localhost`) && PathPrefix(`/api/v1/hydra`)
+      service: hydra
+      middlewares:
+        - hydra
+
+  services:
+    hydra:
+      loadBalancer:
+        servers:
+        - url: http://hydra:4433
+  middlewares:
+    hydra:
+      stripPrefix:
+        prefixes:
+        - /api/v1/hydra

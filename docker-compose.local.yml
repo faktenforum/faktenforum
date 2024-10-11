@@ -121,7 +121,7 @@ services:
       - faktenforum
 
   kratos-migrate:
-    image: oryd/kratos:v1.1
+    image: oryd/kratos:v1.3
     depends_on:
       - postgres-db
     environment:
@@ -137,7 +137,7 @@ services:
       - faktenforum
       - traefik-ingress
   kratos:
-    image: oryd/kratos:v1.1
+    image: oryd/kratos:v1.3
     depends_on:
       - kratos-migrate
     environment:
@@ -161,6 +161,58 @@ services:
       - traefik-ingress
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  hydra-migrate:
+    image: oryd/hydra:v2.2
+    depends_on:
+      - postgres-db
+    environment:
+      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
+    command: migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  hydra:
+    image: oryd/hydra:v2.2
+    depends_on:
+      - hydra-migrate
+    ports:
+      - "4444:4444" # Public port
+      - "4445:4445" # Admin port
+      - "5555:5555" # Port for hydra token user
+    command: serve all --dev
+    restart: on-failure # TODO figure out why we need this (incorporate health check into hydra migrate command?)
+    environment:
+      - LOG_LEAK_SENSITIVE_VALUES=true
+      - URLS_SELF_ISSUER=http://app.localhost:8000
+      - URLS_SELF_PUBLIC=http://app.localhost:8000
+      - URLS_CONSENT=http://app.localhost:8000/api/v1/hydra-consent
+      - URLS_LOGIN=http://app.localhost:8000/login
+      - URLS_LOGOUT=http://pp.localhost:8000/logout
+      - SECRETS_SYSTEM=youReallyNeedToChangeThis
+      - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
+      - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis
+      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
+    networks:
+      - faktenforum
+      - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  hydra-consent:
+    image: ghcr.io/lus/hydra-consent:latest
+    restart: unless-stopped
+    ports:
+      - 4080:8080
+    environment:
+      #ENVIRONMENT: prod
+      LOG_LEVEL: info
+      LISTEN_ADDRESS: :8080
+      HYDRA_ADMIN_API: http://hydra:4445
+      # This field is optional. Only specify it if you want to enable the native Kratos trait propagation.
+      KRATOS_ADMIN_API: http://kratos:4434
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
@@ -169,11 +221,66 @@ services:
     networks:
       - faktenforum
       - traefik-ingress
+  matrix-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: synapse
+      POSTGRES_USER: synapse_user
+      POSTGRES_PASSWORD: synapse_password
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --lc-collate=C --lc-ctype=C
+
+    volumes:
+      - matrix_db_data:/var/lib/postgresql/data
+    networks:
+      - faktenforum
+
+  matrix-server:
+    image: docker.io/matrixdotorg/synapse:latest
+    ports:
+      - "8008:8008" # HTTP
+      - "8448:8448" # Federation
+    environment:
+      SYNAPSE_ADMIN_USER: "@system:chat.localhost"
+      SYNAPSE_ADMIN_PASSWORD: "abcd1234!D"
+      SYNAPSE_CONFIG_PATH: /config/homeserver.yaml
+      SYNAPSE_SERVER_NAME: "matrix.localhost"
+      SYNAPSE_REPORT_STATS: "no"
+      POSTGRES_DB: synapse
+      POSTGRES_USER: synapse_user
+      POSTGRES_PASSWORD: synapse_password
+      POSTGRES_HOST: matrix-db
+      UID: 0
+      GID: 0
+    restart: unless-stopped
+    user: "0:0"
+    volumes:
+      - matrix_data:/data
+      - ./matrix:/config/
+    networks:
+      - faktenforum
+      - traefik-ingress
+    depends_on:
+      - matrix-db
+
+  synapse-admin:
+    image: awesometechnologies/synapse-admin:latest
+    ports:
+      - "8082:80"
+    environment:
+      SYNAPSE_ADMIN_URL: "http://matrix-server:8008"
+    networks:
+      - faktenforum
+      - traefik-ingress
+    depends_on:
+      - matrix-server
+
 volumes:
   db_data:
   minio_data:
   mailhog-data:
   mongodb_data:
+  matrix_db_data:
+  matrix_data:
 
 networks:
   faktenforum:

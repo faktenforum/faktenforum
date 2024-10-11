@@ -139,3 +139,4 @@ feature_flags:
 cookies:
   path: /
   same_site: Lax
+

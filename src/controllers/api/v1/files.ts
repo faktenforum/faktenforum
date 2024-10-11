@@ -30,7 +30,7 @@ import type {
   InsertFileAndInsertOriginMutation,
   InsertFileAndInsertOriginMutationVariables
 } from "~/generated/graphql";
-import { S3MulterFile } from "~/config/minio";
+import type { S3MulterFile } from "~/config/minio";
 import { FileUploadResponse, FileUploadFormData, OrginSourceData } from "~/models";
 import { AccessControlDecorator } from "~/decorators";
 import { BadRequest } from "@tsed/exceptions";
