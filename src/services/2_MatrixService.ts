@@ -2,12 +2,13 @@
 import { Inject, Injectable } from "@tsed/di";
 import type { MatrixClient, Preset } from "matrix-js-sdk";
 import sdk from "matrix-js-sdk";
-import { EventType, RoomType, Room } from "matrix-js-sdk";
+import { EventType, RoomType, Room, Visibility, JoinRule } from "matrix-js-sdk";
 import { EnvService, HasuraService } from "~/services"; // Import the EnvService
 import { $log } from "@tsed/logger";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
 import { QueryChannelsDocument } from "~/generated/graphql";
 import type { QueryChannelsQuery, QueryChannelsQueryVariables } from "~/generated/graphql";
+import { MessageEvent } from "node:http";
 // rewrite matrix logger
 mxLogger.info = (...msg) => $log.info(msg);
 mxLogger.log = (...msg) => $log.debug(msg);
@@ -24,6 +25,14 @@ enum SpaceNames {
   InternalFactchecks = "internal_factchecks",
   Internal = "internal"
 }
+const Topics = {
+  [SpaceNames.Community]: "A space for community channels",
+  [SpaceNames.CommunitySubmissions]: "A space for community submissions",
+  [SpaceNames.CommunityFactchecks]: "A space for community factchecks",
+  [SpaceNames.Internal]: "A space for internal channels",
+  [SpaceNames.InternalSubmissions]: "A space for internal submissions",
+  [SpaceNames.InternalFactchecks]: "A space for internal factchecks"
+};
 
 @Injectable()
 export class MatrixService {
@@ -90,18 +99,18 @@ export class MatrixService {
       if (!room) {
         $log.warn(`[MatrixService] Space ${space} does not exist.`);
         try {
-          const alias = `#${space}:${this.envService.matrixDomain}`; // Create a nice alias
           const response = await this.client.createRoom({
             name: space,
+            topic: "A space for collaboration",
             preset: sdk.Preset.PrivateChat as Preset,
-            room_alias_name: space, // This is the local part of the alias
+            //room_alias_name: space, // This is the local part of the alias
             creation_content: {
-              [EventType.RoomMessage]: RoomType.Space
+              type: "m.space"
             }
           });
           this.spaceIdMap[space] = response.room_id;
           $log.info(
-            `[MatrixService] Private space ${space} created with room ID: ${response.room_id} and alias: ${alias}`
+            `[MatrixService] Private space ${response}:${space}  created with room ID: ${response.room_id} and alias: ${alias}`
           );
         } catch (error) {
           $log.error(`[MatrixService] Error creating private space ${space}:`, error);
@@ -114,6 +123,7 @@ export class MatrixService {
   }
 
   public async initChannels() {
+    $log.info("[MatrixService] Initializing channels");
     if (!this.client) {
       throw new Error("Matrix client is not initialized");
     }
@@ -123,27 +133,74 @@ export class MatrixService {
       const internalSpaceRooms = (await this.client.getRoomHierarchy(this.spaceIdMap[SpaceNames.Internal]))
         .rooms;
 
-      $log.info(`[MatrixService] Rooms in public space:`, publicSpaceRooms);
-      $log.info(`[MatrixService] Rooms in internal space:`, internalSpaceRooms);
+      $log.debug(`[MatrixService] Rooms in public space:`, publicSpaceRooms);
+      $log.debug(`[MatrixService] Rooms in internal space:`, internalSpaceRooms);
 
       const channels = await this.hasuraService.adminRequest<QueryChannelsQuery, QueryChannelsQueryVariables>(
         QueryChannelsDocument,
         {}
       );
-      $log.info(`[MatrixService] Channels:`, channels);
       for (const channel of channels.channel) {
         if (channel.internal && !internalSpaceRooms.some((room) => room.name === channel.name)) {
           $log.info("Creating room in internal space", channel.name);
+          await this.createRoom(channel.name, SpaceNames.Internal);
         } else if (!channel.internal && !publicSpaceRooms.some((room) => room.name === channel.name)) {
           $log.info("Creating room in public space", channel.name);
+          await this.createRoom(channel.name, SpaceNames.Community, channel.descriptionEn);
         }
       }
     } catch (error) {
       $log.error(`[MatrixService] Error during initChannels ${error}`);
       throw error;
     }
+  }
 
-    // get rooms in space Community and Internal
+  private async createRoom(roomName: string, spaceName: SpaceNames, topic?: string): Promise<void> {
+    try {
+      const response = await this.client!.createRoom({
+        name: roomName,
+        preset: sdk.Preset.PublicChat, // Use a preset that allows trusted access
+        room_alias_name: roomName,
+        topic: topic,
+        initial_state: [
+          {
+            type: EventType.RoomJoinRules,
+            state_key: "",
+            content: {
+              join_rule: JoinRule.Restricted,
+              allow: [
+                {
+                  type: "m.room_membership",
+                  room_id: this.spaceIdMap[spaceName]
+                }
+              ]
+            }
+          },
+          {
+            type: EventType.RoomHistoryVisibility,
+            state_key: "",
+            content: {
+              history_visibility: "shared" // Allow members to see the room history
+            }
+          }
+        ],
+        visibility: Visibility.Private // Ensure the room is private but accessible to space members
+      });
+
+      // Add the room to the space hierarchy
+      await this.client!.sendStateEvent(
+        this.spaceIdMap[spaceName],
+        EventType.SpaceChild,
+        {
+          via: [this.envService.matrixDomain]
+        },
+        response.room_id
+      );
+
+      $log.info(`[MatrixService] Room ${roomName} created with room ID: ${response.room_id}`);
+    } catch (error) {
+      $log.error(`[MatrixService] Error creating room ${roomName}:`, error);
+    }
   }
 
   async createPulicRoom(roomName: string): Promise<string> {

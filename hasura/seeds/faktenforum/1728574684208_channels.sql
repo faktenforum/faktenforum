@@ -16,4 +16,4 @@ BEGIN
     PERFORM insert_channel_if_not_exists('events', false, false, 'Veranstaltungen', 'Events', 'Veranstaltungen', 'Events');
 END $$;
 
-DELETE FUNCTION insert_channel_if_not_exists;
+DROP FUNCTION insert_channel_if_not_exists(text, boolean, boolean, text, text, text, text);
