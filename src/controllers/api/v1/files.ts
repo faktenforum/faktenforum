@@ -177,7 +177,7 @@ export class ClaimsController {
             InsertFileMutationVariables
           >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
 
-          response = { id: insertFileOne?.id };
+          response = { fileId: insertFileOne?.id, entryId: vars.entryId };
           break;
         }
         case "source": {
@@ -186,15 +186,15 @@ export class ClaimsController {
               InsertFileAndUpdateSourceFileMutation,
               InsertFileAndUpdateSourceFileMutationVariables
             >(InsertFileAndUpdateSourceFileDocument, vars, request.headers);
-            response = { id: insertFileOne?.id };
+            response = { fileId: insertFileOne?.id, entryId: vars.entryId };
             break;
           } else {
             delete tableData.claimId; // claimid is maybe send by the client but not used at the moment
-            const { insertFileOne } = await this.hasuraService.clientRequest<
+            const { insertFileOne, insertSourceOne } = await this.hasuraService.clientRequest<
               InsertFileAndInsertSourceMutation,
               InsertFileAndInsertSourceMutationVariables
             >(InsertFileAndInsertSourceDocument, { ...vars, ...tableData }, request.headers);
-            response = { id: insertFileOne?.id };
+            response = { fileId: insertFileOne?.id, entryId: insertSourceOne?.id };
             break;
           }
         }
@@ -204,15 +204,15 @@ export class ClaimsController {
               InsertFileAndUpdateOriginFileMutation,
               InsertFileAndUpdateOriginFileMutationVariables
             >(InsertFileAndUpdateOriginFileDocument, vars, request.headers);
-            response = { id: insertFileOne?.id };
+            response = { fileId: insertFileOne?.id, entryId: vars.entryId };
             break;
           } else {
             delete tableData.factId;
-            const { insertFileOne } = await this.hasuraService.clientRequest<
+            const { insertFileOne, insertOriginOne } = await this.hasuraService.clientRequest<
               InsertFileAndInsertOriginMutation,
               InsertFileAndInsertOriginMutationVariables
             >(InsertFileAndInsertOriginDocument, { ...vars, ...tableData }, request.headers);
-            response = { id: insertFileOne?.id };
+            response = { fileId: insertFileOne?.id, entryId: insertOriginOne?.id };
             break;
           }
         }
