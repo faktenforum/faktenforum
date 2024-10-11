@@ -17,7 +17,7 @@ mxLogger.error = (...msg) => $log.error(msg);
 mxLogger.trace = (...msg) => $log.trace(msg);
 mxLogger.debug = (...msg) => $log.debug(msg);
 
-enum SpaceNames {
+export enum SpaceNames {
   CommunitySubmissions = "community_submissions",
   CommunityFactchecks = "community_factchecks",
   Community = "community",
@@ -101,7 +101,7 @@ export class MatrixService {
         try {
           const response = await this.client.createRoom({
             name: space,
-            topic: "A space for collaboration",
+            topic: Topics[space],
             preset: sdk.Preset.PrivateChat as Preset,
             //room_alias_name: space, // This is the local part of the alias
             creation_content: {
@@ -155,7 +155,7 @@ export class MatrixService {
     }
   }
 
-  private async createRoom(roomName: string, spaceName: SpaceNames, topic?: string): Promise<void> {
+  public async createRoom(roomName: string, spaceName: SpaceNames, topic?: string): Promise<void> {
     try {
       const response = await this.client!.createRoom({
         name: roomName,
@@ -203,18 +203,6 @@ export class MatrixService {
     }
   }
 
-  async createPulicRoom(roomName: string): Promise<string> {
-    if (!this.client) {
-      throw new Error("Matrix client is not initialized");
-    }
-    const response = await this.client.createRoom({
-      name: roomName,
-      preset: sdk.Preset.PublicChat as Preset
-    });
-
-    return response.room_id;
-  }
-
   async addUserToRoom(userId: string, roomId: string): Promise<void> {
     if (!this.client) {
       throw new Error("Matrix client is not initialized");
@@ -223,4 +211,31 @@ export class MatrixService {
   }
 
   // Add more methods as needed for other admin tasks
+
+  public async moveRoomToSpace(roomId: string, fromSpace: SpaceNames, toSpace: SpaceNames): Promise<void> {
+    if (!this.client) {
+      throw new Error("Matrix client is not initialized");
+    }
+
+    try {
+      // Remove the room from the current space
+      await this.client.sendStateEvent(this.spaceIdMap[fromSpace], EventType.SpaceChild, {}, roomId);
+
+      $log.info(`[MatrixService] Room ${roomId} removed from space ${fromSpace}`);
+
+      // Add the room to the new space
+      await this.client.sendStateEvent(
+        this.spaceIdMap[toSpace],
+        EventType.SpaceChild,
+        {
+          via: [this.envService.matrixDomain]
+        },
+        roomId
+      );
+
+      $log.info(`[MatrixService] Room ${roomId} added to space ${toSpace}`);
+    } catch (error) {
+      $log.error(`[MatrixService] Error moving room ${roomId} from ${fromSpace} to ${toSpace}:`, error);
+    }
+  }
 }

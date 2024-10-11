@@ -1,10 +1,20 @@
 import { Controller, Inject } from "@tsed/di";
+import { $log } from "@tsed/logger";
 import { BodyParams } from "@tsed/platform-params";
 import { Delete, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
-import { UpdateUserRoleRequest } from "~/models/requests/UpdateUserRoleRequest";
-import { KratosUserSchema } from "~/models/responses/KratosUserSchema";
-import { AuthService, FileService, HasuraService, KratosUser, ImageService } from "~/services";
+import { UpdateUserRoleRequest, OnClaimStatusUpdatedRequest, KratosUserSchema } from "~/models";
+
+import {
+  AuthService,
+  FileService,
+  HasuraService,
+  KratosUser,
+  ImageService,
+  MatrixService,
+  SpaceNames
+} from "~/services";
+import { HasuraOperations } from "~/utils";
 const DEFAULT_LANGUAGE = "de";
 
 @Controller("/webhooks")
@@ -20,6 +30,9 @@ export class HasuraWebHookController {
 
   @Inject(AuthService)
   authService: AuthService;
+
+  @Inject(MatrixService)
+  matrixService: MatrixService;
 
   @Delete("/delete-file")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
@@ -58,11 +71,25 @@ export class HasuraWebHookController {
     return this.transformKratosUser(kratosUser);
   }
 
-  @Post("/on-claim-created")
+  @Post("/on-claim-status-changed")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
-  async onClaimCreated(@BodyParams() body: UpdateUserRoleRequest) {
-    const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
-    return this.transformKratosUser(kratosUser);
+  @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
+  async onClaimStatusChanged(@BodyParams() body: OnClaimStatusUpdatedRequest) {
+    $log.debug(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
+    switch (body.op) {
+      case HasuraOperations.INSERT:
+        this.matrixService.createRoom(
+          body.claim_short_id,
+          body.internal ? SpaceNames.InternalSubmissions : SpaceNames.CommunitySubmissions
+        );
+        break;
+      case HasuraOperations.UPDATE:
+        break;
+      case HasuraOperations.DELETE:
+        break;
+      default:
+        throw new Error(`Unknown operation: ${body.op}`);
+    }
+    return {}; // Returning an empty object with a 200 status code
   }
 }

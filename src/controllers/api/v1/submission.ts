@@ -60,7 +60,6 @@ export class SubmissionController {
           : undefined;
       if (files && files[fileIndex] && files[fileIndex].mimetype.startsWith("image/")) {
         // Resize and upload the image
-        console.log("--------------------------------------resizing and uploading image");
         this.imageService.resizeAndUpload(files[fileIndex].key);
       }
 

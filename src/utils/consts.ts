@@ -7,6 +7,12 @@ export const SIZES = [
   { key: "xl", width: 1024 }
 ];
 
+export enum HasuraOperations {
+  UPDATE = "UPDATE",
+  INSERT = "INSERT",
+  DELETE = "DELETE"
+}
+
 export const allowedMimeTypes = [
   "application/pdf",
   "image/jpeg",
@@ -23,6 +29,17 @@ export enum UserRole {
   intermediate = "intermediate",
   junior = "junior",
   aspirant = "aspirant"
+}
+
+export enum ClaimStatus {
+  submitted = "submitted",
+  accepted = "accepted",
+  observed = "observed",
+  discarded = "discarded",
+  spam = "spam",
+  rejected = "rejected",
+  checked = "checked",
+  published = "published"
 }
 
 export const UserRolePowerLevels: Record<UserRole, number> = {
