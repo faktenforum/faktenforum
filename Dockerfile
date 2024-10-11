@@ -14,7 +14,7 @@
 ##                                                                           ##
 ###############################################################################
 ###############################################################################
-ARG NODE_VERSION=20.12
+ARG NODE_VERSION=20.17
 
 # Build stage
 FROM node:${NODE_VERSION}-alpine as builder
@@ -24,7 +24,7 @@ WORKDIR /app
 COPY package.json package-lock.json tsconfig.json tsconfig.compile.json .barrelsby.json ./
 
 # Install dependencies
-# RUN npm install --pure-lockfile
+RUN npm install --pure-lockfile
 
 
 # Copy application source
@@ -46,12 +46,11 @@ WORKDIR $WORKDIR
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
 COPY ./views ./views
 
 
 # Install production node modules
-RUN npm install --pure-lockfile --production
+RUN npm i --pure-lockfile --production
 
 
 
