@@ -1,7 +1,7 @@
 // src/services/MatrixService.ts
 import { Inject, Injectable } from "@tsed/di";
 import type { MatrixClient, Preset } from "matrix-js-sdk";
-import sdk, { EventType, RoomType, Room, Visibility, JoinRule } from "matrix-js-sdk";
+import sdk, { EventType, RoomType, Room, Visibility, JoinRule, RestrictedAllowType } from "matrix-js-sdk";
 import { EnvService, HasuraService } from "~/services"; // Import the EnvService
 import { $log } from "@tsed/logger";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
@@ -102,7 +102,7 @@ export class MatrixService {
             name: space,
             topic: Topics[space],
             preset: sdk.Preset.PrivateChat as Preset,
-            //room_alias_name: space, // This is the local part of the alias
+            room_alias_name: space, // This is the local part of the alias
             creation_content: {
               type: "m.space"
             }
@@ -169,8 +169,8 @@ export class MatrixService {
               join_rule: JoinRule.Restricted,
               allow: [
                 {
-                  type: "m.room_membership",
-                  room_id: this.spaceIdMap[spaceName]
+                  room_id: this.spaceIdMap[spaceName],
+                  type: RestrictedAllowType.RoomMembership
                 }
               ]
             }
@@ -211,16 +211,28 @@ export class MatrixService {
 
   // Add more methods as needed for other admin tasks
 
-  public async moveRoomToSpace(roomId: string, fromSpace: SpaceNames, toSpace: SpaceNames): Promise<void> {
+  public async moveRoomToSpace(roomAlias: string, fromSpace: SpaceNames, toSpace: SpaceNames): Promise<void> {
     if (!this.client) {
       throw new Error("Matrix client is not initialized");
     }
 
     try {
+      // Get the room ID from the alias
+      $log.info(
+        `[MatrixService] Getting room ID for alias #${roomAlias}:${this.envService.matrixDomain}:8000`
+      );
+      const response = await this.client.getRoomIdForAlias(
+        `#${roomAlias}:${this.envService.matrixDomain}:8000`
+      );
+      $log.error(response);
+      const { room_id } = response;
+      if (!room_id) {
+        throw new Error(`[MatrixService] Room ${roomAlias} not found`);
+      }
       // Remove the room from the current space
-      await this.client.sendStateEvent(this.spaceIdMap[fromSpace], EventType.SpaceChild, {}, roomId);
+      await this.client.sendStateEvent(this.spaceIdMap[fromSpace], EventType.SpaceChild, {}, room_id);
 
-      $log.info(`[MatrixService] Room ${roomId} removed from space ${fromSpace}`);
+      $log.info(`[MatrixService] Room ${room_id} removed from space ${fromSpace}`);
 
       // Add the room to the new space
       await this.client.sendStateEvent(
@@ -229,12 +241,37 @@ export class MatrixService {
         {
           via: [this.envService.matrixDomain]
         },
-        roomId
+        room_id
       );
 
-      $log.info(`[MatrixService] Room ${roomId} added to space ${toSpace}`);
+      await this.client.sendStateEvent(
+        room_id,
+        EventType.RoomJoinRules,
+        {
+          join_rule: JoinRule.Restricted,
+          allow: [
+            {
+              room_id: this.spaceIdMap[toSpace],
+              type: RestrictedAllowType.RoomMembership
+            }
+          ]
+        },
+        ""
+      );
+
+      // Remove users who are not members of the new space
+      const room = await this.client.getRoom(room_id);
+      const members = await room?.getMembers();
+      for (const member of members ?? []) {
+        if (!(await this.isUserInSpace(member.userId, toSpace))) {
+          await this.client.kick(room_id, member.userId, "User is not a member of the new space");
+          $log.info(`[MatrixService] User ${member.userId} removed from room ${room_id}`);
+        }
+      }
+
+      $log.info(`[MatrixService] Room ${room_id} added to space ${toSpace}`);
     } catch (error) {
-      $log.error(`[MatrixService] Error moving room ${roomId} from ${fromSpace} to ${toSpace}:`, error);
+      $log.error(`[MatrixService] Error moving room ${roomAlias} from ${fromSpace} to ${toSpace}:`, error);
     }
   }
 }

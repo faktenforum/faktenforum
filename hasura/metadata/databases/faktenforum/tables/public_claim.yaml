@@ -69,9 +69,10 @@ insert_permissions:
         created_by: x-hasura-User-Id
         status: submitted
       columns:
+        - internal
         - rating_label_name
-        - rating_summary
         - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""

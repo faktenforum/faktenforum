@@ -459,6 +459,7 @@ export type Claim = {
   /** An aggregate relationship */
   factsAggregate: FactAggregate;
   id: Scalars['uuid']['output'];
+  internal?: Maybe<Scalars['Boolean']['output']>;
   /** An array relationship */
   origins: Array<Origin>;
   /** An aggregate relationship */
@@ -632,6 +633,8 @@ export type ClaimAggregate = {
 };
 
 export type ClaimAggregateBoolExp = {
+  bool_and?: InputMaybe<ClaimAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<ClaimAggregateBoolExpBool_Or>;
   count?: InputMaybe<ClaimAggregateBoolExpCount>;
 };
 
@@ -710,6 +713,7 @@ export type ClaimBoolExp = {
   facts?: InputMaybe<FactBoolExp>;
   factsAggregate?: InputMaybe<FactAggregateBoolExp>;
   id?: InputMaybe<UuidComparisonExp>;
+  internal?: InputMaybe<BooleanComparisonExp>;
   origins?: InputMaybe<OriginBoolExp>;
   originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
   processId?: InputMaybe<BigintComparisonExp>;
@@ -1472,6 +1476,7 @@ export type ClaimInsertInput = {
   events?: InputMaybe<EventArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  internal?: InputMaybe<Scalars['Boolean']['input']>;
   origins?: InputMaybe<OriginArrRelInsertInput>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
   ratingLabel?: InputMaybe<RatingLabelObjRelInsertInput>;
@@ -1593,6 +1598,7 @@ export type ClaimOrderBy = {
   eventsAggregate?: InputMaybe<EventAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
   id?: InputMaybe<OrderBy>;
+  internal?: InputMaybe<OrderBy>;
   originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   processId?: InputMaybe<OrderBy>;
   ratingLabel?: InputMaybe<RatingLabelOrderBy>;
@@ -1624,6 +1630,8 @@ export enum ClaimSelectColumn {
   /** column name */
   Id = 'id',
   /** column name */
+  Internal = 'internal',
+  /** column name */
   ProcessId = 'processId',
   /** column name */
   RatingLabelName = 'ratingLabelName',
@@ -1647,11 +1655,24 @@ export enum ClaimSelectColumn {
   UpdatedBy = 'updatedBy'
 }
 
+/** select "claimAggregateBoolExpBool_andArgumentsColumns" columns of table "claim" */
+export enum ClaimSelectColumnClaimAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Internal = 'internal'
+}
+
+/** select "claimAggregateBoolExpBool_orArgumentsColumns" columns of table "claim" */
+export enum ClaimSelectColumnClaimAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Internal = 'internal'
+}
+
 /** input type for updating data in table "claim" */
 export type ClaimSetInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  internal?: InputMaybe<Scalars['Boolean']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
   ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingStatement?: InputMaybe<Scalars['String']['input']>;
@@ -1724,6 +1745,7 @@ export type ClaimStreamCursorValueInput = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdBy?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  internal?: InputMaybe<Scalars['Boolean']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
   ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingStatement?: InputMaybe<Scalars['String']['input']>;
@@ -1756,6 +1778,8 @@ export enum ClaimUpdateColumn {
   CreatedBy = 'createdBy',
   /** column name */
   Id = 'id',
+  /** column name */
+  Internal = 'internal',
   /** column name */
   ProcessId = 'processId',
   /** column name */
@@ -8072,6 +8096,20 @@ export type UuidComparisonExp = {
   _lte?: InputMaybe<Scalars['uuid']['input']>;
   _neq?: InputMaybe<Scalars['uuid']['input']>;
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
+};
+
+export type ClaimAggregateBoolExpBool_And = {
+  arguments: ClaimSelectColumnClaimAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<ClaimBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type ClaimAggregateBoolExpBool_Or = {
+  arguments: ClaimSelectColumnClaimAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<ClaimBoolExp>;
+  predicate: BooleanComparisonExp;
 };
 
 export type ClaimAggregateBoolExpCount = {

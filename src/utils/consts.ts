@@ -42,6 +42,13 @@ export enum ClaimStatus {
   published = "published"
 }
 
+export const SubmissionStatuses = [
+  ClaimStatus.submitted,
+  ClaimStatus.observed,
+  ClaimStatus.spam,
+  ClaimStatus.rejected
+];
+
 export const UserRolePowerLevels: Record<UserRole, number> = {
   [UserRole.admin]: 100,
   [UserRole.moderator]: 50,
