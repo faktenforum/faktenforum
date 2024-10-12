@@ -91,6 +91,7 @@ export class MatrixService {
     }
     const spaces = Object.values(SpaceNames);
     const rooms = await this.client.getRooms();
+    console.log(rooms);
 
     for (const space of spaces) {
       const room = rooms.find((room) => room.name === space);
@@ -102,14 +103,14 @@ export class MatrixService {
             name: space,
             topic: Topics[space],
             preset: sdk.Preset.PrivateChat as Preset,
-            room_alias_name: space, // This is the local part of the alias
+            room_alias_name: "ff-" + space, // This is the local part of the alias
             creation_content: {
               type: "m.space"
             }
           });
           this.spaceIdMap[space] = response.room_id;
           $log.info(
-            `[MatrixService] Private space ${response}:${space}  created with room ID: ${response.room_id} and alias: ${alias}`
+            `[MatrixService] Private space ${response}:${space}  created with room ID: ${response.room_id} and alias: ${space}`
           );
         } catch (error) {
           $log.error(`[MatrixService] Error creating private space ${space}:`, error);
