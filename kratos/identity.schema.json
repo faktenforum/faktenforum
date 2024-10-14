@@ -51,13 +51,14 @@
         "role": {
           "title": "Role",
           "type": "string",
-          "default": "junior",
+          "default": "aspirant",
           "enum": [
-            "admin",
+            "administrator",
             "moderator",
             "senior",
-            "intermediate",
-            "junior"
+            "junior",
+            "editor",
+            "aspirant"
           ]
         },
         "lang": {

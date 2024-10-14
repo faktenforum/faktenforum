@@ -20,11 +20,12 @@ export type KratosVerifiableAddress = KratosAddress & {
 };
 
 export enum KratosRole {
+  aspirant = "aspirant",
   junior = "junior",
-  intermediate = "intermediate",
   senior = "senior",
   moderator = "moderator",
-  admin = "admin"
+  editor = "editor",
+  administrator = "administrator"
 }
 
 export enum KratosLang {
