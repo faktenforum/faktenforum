@@ -1,0 +1,21 @@
+table:
+  name: page_content
+  schema: public
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - page_name
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - content_de
+        - content_en
+      filter: {}
+      check: null
+    comment: ""
