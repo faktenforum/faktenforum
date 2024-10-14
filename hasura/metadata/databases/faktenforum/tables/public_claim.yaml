@@ -101,19 +101,20 @@ select_permissions:
   - role: moderator
     permission:
       columns:
-        - process_id
-        - rating_label_name
-        - rating_summary
-        - rating_statement
-        - short_id
-        - submitter_notes
-        - synopsis
         - created_at
-        - updated_at
-        - sys_period
-        - status
         - created_by
         - id
+        - internal
+        - process_id
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - short_id
+        - status
+        - submitter_notes
+        - synopsis
+        - sys_period
+        - updated_at
         - updated_by
       filter: {}
       allow_aggregations: true
