@@ -1,0 +1,50 @@
+table:
+  name: handbook_sections
+  schema: public
+insert_permissions:
+  - role: moderator
+    permission:
+      check: {}
+      columns:
+        - content_de
+        - content_en
+        - teaser_image
+        - teaser_text_de
+        - teaser_text_en
+        - title_de
+        - title_en
+    comment: ""
+select_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - id
+        - teaser_image
+        - teaser_text_de
+        - teaser_text_en
+        - title_de
+        - title_en
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - teaser_image
+        - teaser_text_de
+        - teaser_text_en
+        - title_de
+        - title_en
+        - id
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: moderator
+    permission:
+      filter: {}
+    comment: ""

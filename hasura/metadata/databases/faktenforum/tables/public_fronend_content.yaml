@@ -1,0 +1,29 @@
+table:
+  name: fronend_content
+  schema: public
+select_permissions:
+  - role: junior
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - id
+      filter: {}
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: moderator
+    permission:
+      columns:
+        - content_de
+        - content_en
+      filter: {}
+      check: null
+    comment: ""
