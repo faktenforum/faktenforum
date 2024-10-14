@@ -3,7 +3,7 @@ import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
-import { AuthService, HasuraService } from "~/services";
+import { AuthService, HasuraService, KratosRole } from "~/services";
 
 import { InsertUserDocument } from "~/generated/graphql";
 import type { InsertUserMutation, InsertUserMutationVariables } from "~/generated/graphql";
@@ -59,7 +59,7 @@ export class KratosWebHookController {
     return {
       identity: {
         metadata_public: {
-          role: "junior",
+          role: KratosRole.aspirant,
           lang: DEFAULT_LANGUAGE // TODO take from language selector on the page, once it exists
         }
       }
