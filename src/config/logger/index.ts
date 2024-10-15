@@ -18,6 +18,7 @@ if (isProduction) {
       type: "json"
     }
   });
+  $log.level = "debug";
 }
 
 export default <PlatformLoggerSettings>{

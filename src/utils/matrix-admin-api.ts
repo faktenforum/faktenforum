@@ -1,10 +1,11 @@
 // src/utils/synapseRoomApi.ts
 
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import type {
   GetRoomsQueryParams,
   GetRoomsResponse,
   RoomDetails,
+  GetRoomsOptions,
   GetRoomMessagesQueryParams,
   GetRoomMessagesResponse,
   RoomTimestampToEventQueryParams,
@@ -14,9 +15,9 @@ import type {
   DeleteRoomRequest,
   DeleteRoomResponse,
   MakeRoomAdminRequest
-} from "./matrix-api-types";
+} from "./matrix-admin-api-types";
 
-class SynapseRoomApi {
+class MatrixAdminClient {
   private client: AxiosInstance;
 
   constructor(baseURL: string, accessToken: string) {
@@ -30,12 +31,44 @@ class SynapseRoomApi {
   }
 
   // Fetch rooms with optional query parameters
-  async getRooms(queryParams?: GetRoomsQueryParams): Promise<GetRoomsResponse> {
+  async getRooms(
+    queryParams?: GetRoomsQueryParams,
+    options: GetRoomsOptions = {}
+  ): Promise<GetRoomsResponse> {
     try {
-      const response = await this.client.get<GetRoomsResponse>("/_synapse/admin/v1/rooms", {
-        params: queryParams
-      });
-      return response.data;
+      let fetch_all = options.fetch_all ?? false;
+      let allRooms: RoomDetails[] = [];
+      let nextBatch: string | undefined = undefined;
+      let offset: number | undefined = undefined;
+      let total_rooms: number | undefined = undefined;
+      let prev_batch: string | undefined = undefined;
+
+      do {
+        const response: AxiosResponse<GetRoomsResponse> = await this.client.get<GetRoomsResponse>(
+          "/_synapse/admin/v1/rooms",
+          {
+            params: { ...queryParams, next_batch: nextBatch }
+          }
+        );
+
+        allRooms = allRooms.concat(response.data.rooms);
+        nextBatch = response.data.next_batch;
+        offset = response.data.offset;
+        total_rooms = response.data.total_rooms;
+        prev_batch = response.data.prev_batch;
+
+        if (!fetch_all) {
+          return response.data;
+        }
+      } while (fetch_all && nextBatch);
+
+      return {
+        rooms: allRooms,
+        next_batch: undefined,
+        offset: fetch_all ? 0 : offset,
+        total_rooms,
+        prev_batch
+      };
     } catch (error) {
       console.error("Error fetching rooms:", error);
       throw error;
@@ -147,4 +180,4 @@ class SynapseRoomApi {
   // Add more methods as needed for other room-related API calls
 }
 
-export default SynapseRoomApi;
+export default MatrixAdminClient;

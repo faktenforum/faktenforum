@@ -7,7 +7,7 @@ import { $log } from "@tsed/logger";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
 import { QueryChannelsDocument } from "~/generated/graphql";
 import type { QueryChannelsQuery, QueryChannelsQueryVariables } from "~/generated/graphql";
-
+import MatrixAdminClient from "~/utils/matrix-admin-api";
 // rewrite matrix logger
 mxLogger.info = (...msg) => $log.info(msg);
 mxLogger.log = (...msg) => $log.debug(msg);
@@ -17,12 +17,12 @@ mxLogger.trace = (...msg) => $log.trace(msg);
 mxLogger.debug = (...msg) => $log.debug(msg);
 
 export enum SpaceNames {
-  CommunitySubmissions = "community_submissions",
-  CommunityFactchecks = "community_factchecks",
-  Community = "community",
-  InternalSubmissions = "internal_submissions",
-  InternalFactchecks = "internal_factchecks",
-  Internal = "internal"
+  CommunitySubmissions = "ff-space-community_submissions",
+  CommunityFactchecks = "ff-space-community_factchecks",
+  Community = "ff-space-community",
+  InternalSubmissions = "ff-space-internal_submissions",
+  InternalFactchecks = "ff-space-internal_factchecks",
+  Internal = "ff-space-internal"
 }
 const Topics = {
   [SpaceNames.Community]: "A space for community channels",
@@ -39,6 +39,8 @@ export class MatrixService {
   envService: EnvService;
   @Inject()
   hasuraService: HasuraService;
+
+  private adminClient: MatrixAdminClient | null = null;
   private client: MatrixClient | null = null;
   private spaceIdMap: Record<SpaceNames, string> = {
     [SpaceNames.CommunitySubmissions]: "",
@@ -65,24 +67,26 @@ export class MatrixService {
         user: this.envService.matrixAccount,
         password: this.envService.matrixPassword
       });
+
+      this.adminClient = new MatrixAdminClient(this.envService.matrixInternalUrl, loginResponse.access_token);
+
       $log.info("[MatrixService] Matrix client initialized with URL:", loginResponse);
-      this.client!.startClient({ initialSyncLimit: 10 });
+      await this.initSpaces();
+      await this.initChannels();
     } catch (error) {
       $log.error("[MatrixService] Error initializing Matrix client:", error);
       process.exit(1);
     }
-    this.client!.on(sdk.ClientEvent.Sync, async (state) => {
-      if (state === "PREPARED") {
-        $log.info("[MatrixService] Matrix client is ready and synced.");
-        try {
-          await this.initSpaces();
-          await this.initChannels();
-        } catch (error) {
-          $log.error("[MatrixService] Error on init:", error);
-          process.exit(1);
-        }
-      }
-    });
+    // this.client!.on(sdk.ClientEvent.Sync, async (state) => {
+    //   if (state === "PREPARED") {
+    //     $log.info("[MatrixService] Matrix client is ready and synced.");
+    //     try {
+    //     } catch (error) {
+    //       $log.error("[MatrixService] Error on init:", error);
+    //       process.exit(1);
+    //     }
+    //   }
+    // });
   }
 
   private async initSpaces() {
@@ -90,14 +94,14 @@ export class MatrixService {
       throw new Error("Matrix client is not initialized");
     }
     const spaces = Object.values(SpaceNames);
-    const rooms = await this.client.getRooms();
-    console.log(rooms);
+    const response = await this.adminClient!.getRooms({ search_term: "ff-space" }, { fetch_all: true });
 
+    const rooms = response.rooms;
     for (const space of spaces) {
       const room = rooms.find((room) => room.name === space);
 
       if (!room) {
-        $log.warn(`[MatrixService] Space ${space} does not exist.`);
+        $log.info(`[MatrixService] Space ${space} does not exist.`);
         try {
           const response = await this.client.createRoom({
             name: space,
@@ -116,7 +120,7 @@ export class MatrixService {
           $log.error(`[MatrixService] Error creating private space ${space}:`, error);
         }
       } else {
-        this.spaceIdMap[space] = room.roomId;
+        this.spaceIdMap[space] = room.room_id;
         $log.info(`[MatrixService] Space ${space} exists.`);
       }
     }
@@ -136,11 +140,15 @@ export class MatrixService {
       $log.debug(`[MatrixService] Rooms in public space:`, publicSpaceRooms);
       $log.debug(`[MatrixService] Rooms in internal space:`, internalSpaceRooms);
 
-      const channels = await this.hasuraService.adminRequest<QueryChannelsQuery, QueryChannelsQueryVariables>(
-        QueryChannelsDocument,
-        {}
-      );
-      for (const channel of channels.channel) {
+      const { channels } = await this.hasuraService.adminRequest<
+        QueryChannelsQuery,
+        QueryChannelsQueryVariables
+      >(QueryChannelsDocument, {});
+      const prefixedChannels = channels.map((channel) => ({
+        ...channel,
+        name: `ff-channel-${channel.name}`
+      }));
+      for (const channel of prefixedChannels) {
         if (channel.internal && !internalSpaceRooms.some((room) => room.name === channel.name)) {
           $log.info("Creating room in internal space", channel.name);
           await this.createRoom(channel.name, SpaceNames.Internal);

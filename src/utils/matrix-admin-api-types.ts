@@ -32,6 +32,10 @@ export interface GetRoomsResponse {
   prev_batch?: string; // If this field is present, it is possible to paginate backwards. Use prev_batch for the from value in the next request to get the "previous page" of results.
 }
 
+export interface GetRoomsOptions {
+  fetch_all?: boolean;
+}
+
 // Define an interface for the query parameters
 export interface GetRoomsQueryParams {
   from?: number;
