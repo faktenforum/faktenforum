@@ -55,3 +55,78 @@ export interface GetRoomsQueryParams {
   public_rooms?: boolean;
   empty_rooms?: boolean;
 }
+
+// Define an interface for the request body to delete a room
+export interface DeleteRoomRequest {
+  new_room_user_id: string; // The user ID to create the new room.
+  room_name: string; // The name of the new room.
+  message: string; // The message to send to users.
+  block: boolean; // If true, the room will be blocked.
+  purge: boolean; // If true, the room will be purged.
+}
+
+// Define an interface for the response from the delete room API
+export interface DeleteRoomResponse {
+  kicked_users: string[]; // List of users who were kicked.
+  failed_to_kick_users: string[]; // List of users who failed to be kicked.
+  local_aliases: string[]; // List of local aliases of the room.
+  new_room_id: string; // The ID of the new room created.
+}
+
+// Define an interface for the request body to block or unblock a room
+export interface BlockRoomRequest {
+  block: boolean; // If true, the room will be blocked; if false, the room will be unblocked.
+}
+
+// Define an interface for the response from the block/unblock room API
+export interface BlockRoomResponse {
+  block: boolean; // true if the room is blocked, otherwise false.
+}
+
+// Define an interface for the response from the get block status API
+export interface GetBlockStatusResponse {
+  block: boolean; // true if the room is blocked, otherwise false.
+  user_id?: string; // Optional: The user who added the room to the blocking list, if applicable.
+}
+
+// Define an interface for the query parameters for the Room Timestamp to Event API
+export interface RoomTimestampToEventQueryParams {
+  ts: number; // A timestamp in milliseconds to find the closest event.
+  dir?: "f" | "b"; // The direction to search from the timestamp. Defaults to "f".
+}
+
+// Define an interface for the response from the Room Timestamp to Event API
+export interface RoomTimestampToEventResponse {
+  event_id: string; // The event ID closest to the given timestamp.
+  origin_server_ts: number; // The timestamp of the event in milliseconds since the Unix epoch.
+}
+
+// Define an interface for the query parameters for the Room Messages API
+export interface GetRoomMessagesQueryParams {
+  from: string; // Required: The token to start returning events from.
+  to?: string; // Optional: The token to stop returning events at.
+  limit?: number; // Optional: The maximum number of events to return.
+  filter?: object; // Optional: A JSON RoomEventFilter to filter returned events with.
+  dir?: "f" | "b"; // Optional: The direction to return events from. Defaults to "f".
+}
+
+// Define an interface for the response from the Room Messages API
+export interface GetRoomMessagesResponse {
+  chunk: Array<{
+    content: object; // The content of the event.
+    event_id: string; // The unique identifier for the event.
+    origin_server_ts: number; // The timestamp in milliseconds on the originating homeserver when this event was sent.
+    room_id: string; // The ID of the room associated with this event.
+    sender: string; // The user ID of the sender of this event.
+    type: string; // The type of event.
+    unsigned?: object; // Optional: Additional data not signed by the sender.
+  }>;
+  end?: string; // Optional: A token corresponding to the end of chunk.
+  start: string; // A token corresponding to the start of chunk.
+  state?: Array<object>; // Optional: A list of state events relevant to showing the chunk.
+}
+
+// Define an interface for the request body to make a user a room admin
+export interface MakeRoomAdminRequest {
+  user_id: string; // The user ID to be granted the highest power in the room.
+}
