@@ -2,7 +2,42 @@ table:
   name: page_content
   schema: public
 select_permissions:
-  - role: moderator
+  - role: administrator
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - page_name
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - page_name
+      filter:
+        page_name:
+          _eq: aspirant
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - page_name
+      filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - content_de
+        - content_en
+        - page_name
+      filter: {}
+    comment: ""
+  - role: senior
     permission:
       columns:
         - content_de
@@ -11,7 +46,7 @@ select_permissions:
       filter: {}
     comment: ""
 update_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       columns:
         - content_de

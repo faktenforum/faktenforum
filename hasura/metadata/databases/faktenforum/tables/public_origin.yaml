@@ -23,7 +23,7 @@ array_relationships:
           name: origin_history
           schema: public
 insert_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       check: {}
       set:
@@ -39,7 +39,141 @@ insert_permissions:
         - updated_at
         - url
     comment: ""
+  - role: editor
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - remarks
+        - updated_at
+        - url
+    comment: ""
+  - role: junior
+    permission:
+      check:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - remarks
+        - updated_at
+        - url
+    comment: ""
+  - role: moderator
+    permission:
+      check:
+        claim:
+          internal:
+            _eq: false
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - remarks
+        - updated_at
+        - url
+    comment: ""
+  - role: senior
+    permission:
+      check:
+        claim:
+          internal:
+            _eq: false
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - remarks
+        - updated_at
+        - url
+    comment: ""
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - id
+        - index
+        - remarks
+        - sys_period
+        - updated_at
+        - updated_by
+        - url
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - id
+        - index
+        - remarks
+        - sys_period
+        - updated_at
+        - updated_by
+        - url
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - id
+        - index
+        - remarks
+        - sys_period
+        - updated_at
+        - updated_by
+        - url
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -57,10 +191,31 @@ select_permissions:
         - updated_by
         - url
       filter: {}
-      allow_aggregations: true
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - archive_url
+        - claim_id
+        - created_at
+        - created_by
+        - excerpt
+        - file_id
+        - id
+        - index
+        - remarks
+        - sys_period
+        - updated_at
+        - updated_by
+        - url
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
     comment: ""
 update_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       columns:
         - archive_url
@@ -75,8 +230,108 @@ update_permissions:
       set:
         updated_by: x-hasura-User-Id
     comment: ""
-delete_permissions:
+  - role: editor
+    permission:
+      columns:
+        - archive_url
+        - excerpt
+        - file_id
+        - remarks
+        - sys_period
+        - updated_by
+        - url
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - archive_url
+        - excerpt
+        - file_id
+        - remarks
+        - sys_period
+        - updated_by
+        - url
+      filter:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
+      columns:
+        - archive_url
+        - excerpt
+        - file_id
+        - remarks
+        - sys_period
+        - updated_by
+        - url
+      filter:
+        claim:
+          internal:
+            _eq: false
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - archive_url
+        - excerpt
+        - file_id
+        - remarks
+        - sys_period
+        - updated_by
+        - url
+      filter:
+        claim:
+          internal:
+            _eq: false
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: administrator
+    permission:
       filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      filter:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: moderator
+    permission:
+      filter:
+        claim:
+          internal:
+            _eq: false
+    comment: ""
+  - role: senior
+    permission:
+      filter:
+        claim:
+          internal:
+            _eq: false
     comment: ""

@@ -98,25 +98,119 @@ array_relationships:
           name: user_history
           schema: public
 select_permissions:
-  - role: moderator
+  - role: administrator
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - sys_period
+        - id
+        - profile_image
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - sys_period
+        - id
+        - profile_image
+      filter: {}
+    comment: ""
+  - role: junior
     permission:
       columns:
         - bio
         - created_at
+        - id
+        - profile_image
+        - pronouns
+        - sys_period
+        - updated_at
+        - username
+      filter: {}
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - bio
         - email
         - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - sys_period
         - id
+        - profile_image
+      filter: {}
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - bio
+        - created_at
+        - id
+        - profile_image
+        - pronouns
+        - sys_period
+        - updated_at
+        - username
+      filter: {}
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
+    comment: ""
+update_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - bio
+        - created_at
+        - first_name
         - last_name
         - mobile_number
         - profile_image
         - pronouns
         - updated_at
-        - username
       filter: {}
-      allow_aggregations: true
+      check: null
     comment: ""
-update_permissions:
-  - role: moderator
+  - role: editor
+    permission:
+      columns:
+        - bio
+        - created_at
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+        - updated_at
+      filter: {}
+      check: null
+    comment: ""
+  - role: junior
     permission:
       columns:
         - bio
@@ -128,5 +222,37 @@ update_permissions:
       filter:
         id:
           _eq: X-Hasura-User-Id
+      check: {}
+      set:
+        updated_at: ""
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - bio
+        - created_at
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+        - updated_at
+      filter: {}
       check: null
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - bio
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: {}
+      set:
+        updated_at: ""
     comment: ""

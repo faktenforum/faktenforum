@@ -2,6 +2,9 @@ table:
   name: comment
   schema: public
 object_relationships:
+  - name: claim
+    using:
+      foreign_key_constraint_on: claim_id
   - name: createdByUser
     using:
       foreign_key_constraint_on: created_by
@@ -24,6 +27,36 @@ array_relationships:
           name: comment_user_reactions
           schema: public
 insert_permissions:
+  - role: administrator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+        - thread_id
+    comment: ""
+  - role: editor
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+        - thread_id
+    comment: ""
+  - role: junior
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+        - thread_id
+    comment: ""
   - role: moderator
     permission:
       check: {}
@@ -34,7 +67,71 @@ insert_permissions:
         - content
         - thread_id
     comment: ""
+  - role: senior
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - content
+        - thread_id
+    comment: ""
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - created_at
+        - created_by
+        - deleted
+        - displayed_content
+        - id
+        - sys_period
+        - thread_id
+        - updated_at
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - created_at
+        - created_by
+        - deleted
+        - displayed_content
+        - id
+        - sys_period
+        - thread_id
+        - updated_at
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - created_at
+        - created_by
+        - deleted
+        - displayed_content
+        - id
+        - sys_period
+        - thread_id
+        - updated_at
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -53,7 +150,61 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
+  - role: senior
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - created_at
+        - created_by
+        - deleted
+        - displayed_content
+        - id
+        - sys_period
+        - thread_id
+        - updated_at
+        - updated_by
+      filter: {}
+      allow_aggregations: true
+    comment: ""
 update_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - deleted
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - deleted
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - deleted
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -66,8 +217,20 @@ update_permissions:
       set:
         updated_by: x-hasura-User-Id
     comment: ""
+  - role: senior
+    permission:
+      columns:
+        - blocked
+        - claim_id
+        - content
+        - deleted
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
 delete_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       filter: {}
     comment: ""

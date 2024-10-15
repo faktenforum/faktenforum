@@ -2,6 +2,42 @@ table:
   name: user_claim_status
   schema: public
 insert_permissions:
+  - role: administrator
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - claim_id
+        - has_marked
+        - has_read
+    comment: ""
+  - role: editor
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - claim_id
+        - has_marked
+        - has_read
+    comment: ""
+  - role: junior
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - claim_id
+        - has_marked
+        - has_read
+    comment: ""
   - role: moderator
     permission:
       check:
@@ -14,7 +50,58 @@ insert_permissions:
         - has_marked
         - has_read
     comment: ""
+  - role: senior
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - claim_id
+        - has_marked
+        - has_read
+    comment: ""
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - claim_id
+        - created_at
+        - has_marked
+        - has_read
+        - updated_at
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - claim_id
+        - created_at
+        - has_marked
+        - has_read
+        - updated_at
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - claim_id
+        - created_at
+        - has_marked
+        - has_read
+        - updated_at
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -27,10 +114,62 @@ select_permissions:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
-      allow_aggregations: true
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - claim_id
+        - created_at
+        - has_marked
+        - has_read
+        - updated_at
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
     comment: ""
 update_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - has_marked
+        - has_read
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - has_marked
+        - has_read
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - has_marked
+        - has_read
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
   - role: moderator
+    permission:
+      columns:
+        - has_marked
+        - has_read
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+  - role: senior
     permission:
       columns:
         - has_marked

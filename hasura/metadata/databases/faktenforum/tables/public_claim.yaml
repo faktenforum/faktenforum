@@ -62,7 +62,7 @@ array_relationships:
           name: user_claim_status
           schema: public
 insert_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       check: {}
       set:
@@ -75,28 +75,122 @@ insert_permissions:
         - submitter_notes
         - synopsis
     comment: ""
+  - role: editor
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+        status: submitted
+      columns:
+        - rating_label_name
+        - rating_summary
+        - rating_statement
+        - submitter_notes
+        - synopsis
+    comment: ""
+  - role: junior
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+        internal: "false"
+        status: submitted
+      columns:
+        - submitter_notes
+        - synopsis
+    comment: ""
+  - role: moderator
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+        internal: "false"
+        status: submitted
+      columns:
+        - rating_label_name
+        - rating_summary
+        - rating_statement
+        - submitter_notes
+        - synopsis
+    comment: ""
+  - role: senior
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+        internal: "false"
+        status: submitted
+      columns:
+        - rating_label_name
+        - rating_summary
+        - rating_statement
+        - submitter_notes
+        - synopsis
+    comment: ""
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - created_at
+        - created_by
+        - id
+        - internal
+        - process_id
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - short_id
+        - status
+        - submitter_notes
+        - synopsis
+        - sys_period
+        - updated_at
+        - updated_by
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - created_at
+        - created_by
+        - id
+        - internal
+        - process_id
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - short_id
+        - status
+        - submitter_notes
+        - synopsis
+        - sys_period
+        - updated_at
+        - updated_by
+      filter: {}
+      limit: 50
+    comment: ""
   - role: junior
     permission:
       columns:
         - created_at
         - created_by
-        - submitter_notes
         - id
+        - internal
         - process_id
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - short_id
         - status
+        - submitter_notes
+        - synopsis
         - sys_period
         - updated_at
         - updated_by
       filter:
-        status:
-          _in:
-            - accepted
-            - in_progress
-            - stale
-            - checked
-            - published
-      allow_aggregations: true
+        internal:
+          _eq: false
+      limit: 50
     comment: ""
   - role: moderator
     permission:
@@ -116,10 +210,80 @@ select_permissions:
         - sys_period
         - updated_at
         - updated_by
-      filter: {}
-      allow_aggregations: true
+      filter:
+        internal:
+          _eq: false
+      limit: 50
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - created_at
+        - created_by
+        - id
+        - internal
+        - process_id
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - short_id
+        - status
+        - submitter_notes
+        - synopsis
+        - sys_period
+        - updated_at
+        - updated_by
+      filter:
+        internal:
+          _eq: false
+      limit: 50
     comment: ""
 update_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - internal
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - status
+        - submitter_notes
+        - synopsis
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - internal
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - status
+        - submitter_notes
+        - synopsis
+      filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - submitter_notes
+        - synopsis
+      filter:
+        _and:
+          - internal:
+              _eq: false
+          - created_by:
+              _eq: X-Hasura-User-Id
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -129,13 +293,25 @@ update_permissions:
         - status
         - submitter_notes
         - synopsis
-      filter: {}
+      filter:
+        internal:
+          _eq: false
       check: null
       set:
         updated_by: x-hasura-User-Id
     comment: ""
-delete_permissions:
-  - role: moderator
+  - role: senior
     permission:
-      filter: {}
+      columns:
+        - rating_label_name
+        - rating_statement
+        - rating_summary
+        - submitter_notes
+        - synopsis
+      filter:
+        internal:
+          _eq: false
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
     comment: ""
