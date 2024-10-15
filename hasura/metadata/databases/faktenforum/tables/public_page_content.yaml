@@ -37,14 +37,6 @@ select_permissions:
         - page_name
       filter: {}
     comment: ""
-  - role: moderator
-    permission:
-      columns:
-        - content_de
-        - content_en
-        - page_name
-      filter: {}
-    comment: ""
   - role: senior
     permission:
       columns:
