@@ -10,7 +10,7 @@ array_relationships:
           name: claim_category
           schema: public
 insert_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       check: {}
       columns:
@@ -19,6 +19,32 @@ insert_permissions:
         - name
     comment: ""
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+      allow_aggregations: true
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -28,18 +54,26 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
-update_permissions:
-  - role: moderator
+  - role: senior
     permission:
       columns:
         - label_de
         - label_en
         - name
       filter: {}
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - label_de
+        - label_en
+      filter: {}
       check: null
     comment: ""
 delete_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       filter: {}
     comment: ""
