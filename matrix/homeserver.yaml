@@ -12,13 +12,19 @@
 server_name: "chat.localhost:8000"
 public_baseurl: "http://chat.localhost:8000/"
 pid_file: /data/homeserver.pid
+web_client_location: http://app.localhost:8000/
+# Allow Presence tracking allows users to see the state (e.g online/offline)
+allow_public_rooms_without_auth: false
+block_non_admin_invites: true
+presence:
+  enabled: false
 listeners:
   - port: 8008
     tls: false
     type: http
     x_forwarded: true
     resources:
-      - names: [client, federation]
+      - names: [client]
         compress: false
 
 database:
@@ -37,12 +43,34 @@ enable_room_encryption: false
 media_store_path: /data/media_store
 registration_shared_secret: "rgTpw4n-5+#9yXp3#g5*r;;#=k8kCtrvkCYh9tiRgzm+Zlp;.Z"
 report_stats: true
+admin_contact: 'mailto:admin@faktenforum.org'
+
 macaroon_secret_key: "=ipC8-WXz5:poWydyxM81eHW:JpMLl.qCWtV^T7y~u&N5^^LS1"
 form_secret: "qVIy3PXbF~ZJ*ht,kHmKQ=U+~4QALAp^uOZPIJq*mu7z4yq2CS"
 signing_key_path: "/config/chat.localhost.signing.key"
 trusted_key_servers:
   - server_name: "matrix.org"
 federation_domain_whitelist: []
+
+require_membership_for_aliases: false
+default_power_level_content_override:
+   private_chat:
+    events:
+      "com.example.foo": 0
+      "m.room.name": 50
+      "m.room.power_levels": 100
+      "m.room.history_visibility": 100
+      "m.room.canonical_alias": 50
+      "m.room.avatar": 50
+      "m.room.tombstone": 100
+      "m.room.server_acl": 100
+      "m.room.encryption": 100
+   trusted_private_chat: null
+   public_chat: null
+
+room_creation_rules:
+  - action: deny
+    default: true
 
 rc_message:
   per_second: 1000  # Set a high value to effectively disable throttling
@@ -62,4 +90,15 @@ rc_login:
   failed_attempts:
     per_second: 1000  # Set a high value to effectively disable throttling
     burst_count: 1000 # Set a high value to effectively disable throttling
+
+registration_disabled: true             
+encryption_enabled_by_default_for_room_type: off
+user_directory:
+    enabled: false
+enable_room_list_search: false
+alias_creation_rules: 
+  - user_id: "@system:chat.localhost:8000"
+    action: allow
+
+forget_rooms_on_leave: true
 
