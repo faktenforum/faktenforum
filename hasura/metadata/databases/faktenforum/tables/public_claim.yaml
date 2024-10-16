@@ -147,6 +147,7 @@ select_permissions:
         - updated_at
         - updated_by
       filter: {}
+      allow_aggregations: true
     comment: ""
   - role: editor
     permission:

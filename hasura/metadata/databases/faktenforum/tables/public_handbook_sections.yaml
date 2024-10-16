@@ -20,12 +20,12 @@ select_permissions:
       columns:
         - content_de
         - content_en
+        - id
         - teaser_image
         - teaser_text_de
         - teaser_text_en
         - title_de
         - title_en
-        - id
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -96,8 +96,6 @@ select_permissions:
     comment: ""
 update_permissions:
   - role: administrator
-      filter: {}
-    comment: ""
     permission:
       columns:
         - content_de
@@ -107,7 +105,6 @@ update_permissions:
         - teaser_text_en
         - title_de
         - title_en
-        - id
       filter: {}
       check: null
     comment: ""

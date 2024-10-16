@@ -80,6 +80,7 @@ select_permissions:
         - id
         - updated_by
       filter: {}
+      allow_aggregations: true
     comment: ""
   - role: editor
     permission:
