@@ -1,4 +1,3 @@
-version: "3.5"
 services:
   traefik:
     image: traefik:latest
@@ -155,6 +154,7 @@ services:
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
+      - "5555:5555" # Port for hydra token user
     restart: on-failure
     networks:
       - faktenforum
@@ -273,6 +273,19 @@ services:
       - traefik-ingress
     depends_on:
       - matrix-server
+
+  kratos-selfservice-ui-node:
+    image: hydra-kratos-selfservice-ui-node:latest
+    environment:
+      - HYDRA_ADMIN_URL=http://hydra:4445
+      - KRATOS_PUBLIC_URL=http://kratos:4433/
+      - KRATOS_ADMIN_URL=http://kratos:4434/
+      - SECURITY_MODE=standalone
+    ports:
+      - "3000:3000"
+    networks:
+      - faktenforum
+      - traefik-ingress
 
 volumes:
   db_data:
