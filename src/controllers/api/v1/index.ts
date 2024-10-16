@@ -3,6 +3,7 @@
  */
 
 export * from "./files";
+export * from "./oauth";
 export * from "./submission";
 export * from "./urlInfo";
 export * from "./version";

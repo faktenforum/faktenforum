@@ -23,6 +23,7 @@ export class EnvService {
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
       MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY,
       MINIO_SECRET_KEY: process.env.MINIO_SECRET_KEY,
+      HYDRA_ADMIN_URL: process.env.HYDRA_ADMIN_URL,
       KRATOS_PUBLIC_URL: process.env.KRATOS_PUBLIC_URL,
       KRATOS_ADMIN_URL: process.env.KRATOS_ADMIN_URL,
       HASURA_API_URL: process.env.HASURA_API_URL,
@@ -124,6 +125,14 @@ export class EnvService {
     return this.envVars.KRATOS_ADMIN_URL;
   }
 
+  get hydraAdminUrl(): string {
+    if (!this.envVars.HYDRA_ADMIN_URL) {
+      $log.error("HYDRA_ADMIN_URL is not set!");
+      process.exit(1);
+    }
+    return this.envVars.KRATOS_HYDRA_URL;
+  }
+
   get hasuraApiUrl(): string {
     if (!this.envVars.HASURA_API_URL) {
       $log.error("HASURA_API_URL is not set!");
@@ -215,6 +224,7 @@ export class EnvService {
     if (!this.envVars.MINIO_SECRET_KEY) errors.push("MINIO_SECRET_KEY is not set!");
     if (!this.envVars.KRATOS_PUBLIC_URL) errors.push("KRATOS_PUBLIC_URL is not set!");
     if (!this.envVars.KRATOS_ADMIN_URL) errors.push("KRATOS_ADMIN_URL is not set!");
+    if (!this.envVars.HYDRA_ADMIN_URL) errors.push("HYDRA_ADMIN_URL is not set!");
     if (!this.envVars.HASURA_API_URL) errors.push("HASURA_API_URL is not set!");
     if (!this.envVars.HASURA_ADMIN_SECRET) errors.push("HASURA_ADMIN_SECRET is not set!");
     if (!this.envVars.KRATOS_API_KEY) errors.push("KRATOS_API_KEY is not set!");

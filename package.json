@@ -24,6 +24,7 @@
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",
     "@graphql-codegen/typescript-operations": "^4.2.3",
     "@ory/client": "^1.15.0",
+    "@ory/hydra-client": "^2.2.1",
     "@tsed/ajv": "^7.83.1",
     "@tsed/common": "^7.83.1",
     "@tsed/core": "^7.83.1",

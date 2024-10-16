@@ -12,7 +12,7 @@ http:
     hydra:
       loadBalancer:
         servers:
-        - url: http://hydra:4433
+        - url: http://hydra:4444
   middlewares:
     hydra:
       stripPrefix:

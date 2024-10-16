@@ -1,8 +1,10 @@
 import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
-import type { Session } from "@ory/client";
+import type { AcceptOAuth2ConsentRequestSession, Session } from "@ory/client";
+import { Configuration, OAuth2Api, OAuth2ConsentRequest } from "@ory/hydra-client";
 import type { UserRole } from "~/models";
+import { $log } from "@tsed/logger";
 type ValidatedSession = Session & { identity: { metadata_public: { role: UserRole } }; expires_at: string };
 
 export type KratosAddress = {
@@ -61,9 +63,51 @@ export class AuthService {
   envService: EnvService;
 
   kratosSessionUrl: URL;
-
+  oauth2Api: OAuth2Api;
   constructor(envService: EnvService) {
     this.kratosSessionUrl = new URL(`${envService.kratosPublicUrl}/sessions/whoami`);
+    this.oauth2Api = new OAuth2Api(new Configuration({ basePath: "http://localhost:4445" }));
+  }
+
+  async acceptOAuth2Login(loginChallenge: string, subject: string) {
+    try {
+      const response = await this.oauth2Api.acceptOAuth2LoginRequest({
+        loginChallenge: loginChallenge,
+        acceptOAuth2LoginRequest: {
+          subject: "profile"
+        }
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      }
+
+      throw new Exception(response.status, `Hydra Admin API error: ${response.statusText}`);
+    } catch (error) {
+      $log.error(error);
+      throw error;
+    }
+  }
+
+  async getConsent(consentChallenge: string) {
+    return await this.oauth2Api.getOAuth2ConsentRequest({ consentChallenge }).then(({ data: body }) => body);
+  }
+
+  async acceptConsent(
+    consentChallenge: string,
+    challengeResponse: OAuth2ConsentRequest,
+    session: AcceptOAuth2ConsentRequestSession
+  ) {
+    return await this.oauth2Api
+      .acceptOAuth2ConsentRequest({
+        consentChallenge,
+        acceptOAuth2ConsentRequest: {
+          grant_scope: challengeResponse.requested_scope,
+          grant_access_token_audience: challengeResponse.requested_access_token_audience,
+          session
+        }
+      })
+      .then(({ data: body }) => body);
   }
 
   async getKratosSession(sessionCookie: string): Promise<ValidatedSession> {

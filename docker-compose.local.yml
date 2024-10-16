@@ -154,7 +154,6 @@ services:
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
-      - "5555:5555" # Port for hydra token user
     restart: on-failure
     networks:
       - faktenforum
@@ -186,33 +185,21 @@ services:
     restart: on-failure # TODO figure out why we need this (incorporate health check into hydra migrate command?)
     environment:
       - LOG_LEAK_SENSITIVE_VALUES=true
-      - URLS_SELF_ISSUER=http://app.localhost:8000
-      - URLS_SELF_PUBLIC=http://app.localhost:8000
-      - URLS_CONSENT=http://app.localhost:8000/api/v1/hydra-consent
-      - URLS_LOGIN=http://app.localhost:8000/login
-      - URLS_LOGOUT=http://pp.localhost:8000/logout
+      - URLS_SELF_ISSUER=http://app.localhost:8000/api/v1/hydra
+      - URLS_SELF_PUBLIC=http://app.localhost:8000/api/v1/hydra
+      - URLS_CONSENT=http://app.localhost:8000/api/v1/oauth/consent
+      - URLS_LOGIN=http://app.localhost:8000/api/v1/oauth/login
+      - URLS_LOGOUT=http://app.localhost:8000/logout
       - SECRETS_SYSTEM=youReallyNeedToChangeThis
       - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
       - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis
       - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
     networks:
-      - faktenforum
       - traefik-ingress
+      - faktenforum
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  hydra-consent:
-    image: ghcr.io/lus/hydra-consent:latest
-    restart: unless-stopped
-    ports:
-      - 4080:8080
-    environment:
-      #ENVIRONMENT: prod
-      LOG_LEVEL: info
-      LISTEN_ADDRESS: :8080
-      HYDRA_ADMIN_API: http://hydra:4445
-      # This field is optional. Only specify it if you want to enable the native Kratos trait propagation.
-      KRATOS_ADMIN_API: http://kratos:4434
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
@@ -286,6 +273,8 @@ services:
     networks:
       - faktenforum
       - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   db_data:

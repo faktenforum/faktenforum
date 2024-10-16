@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { $log } from "@tsed/logger";
-import { BodyParams } from "@tsed/platform-params";
-import { Delete, Post, Returns } from "@tsed/schema";
+import { BodyParams, Context, Cookies } from "@tsed/platform-params";
+import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { UpdateUserRoleRequest, OnClaimStatusUpdatedRequest, KratosUserSchema } from "~/models";
 
@@ -37,6 +37,21 @@ export class HasuraWebHookController {
 
   @Inject(MatrixService)
   matrixService: MatrixService;
+
+  @Get("/session")
+  @(Returns(200, String).ContentType("application/json")) // prettier-ignore
+  async getSessions(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
+    const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
+
+    const session = await this.authService.getKratosSession(sessionCookie);
+
+    const hasuraSession = {
+      "X-Hasura-User-Id": session.identity.id,
+      "X-Hasura-Role": session.identity.metadata_public.role.toLowerCase(),
+      Expires: new Date(session.expires_at).toUTCString()
+    };
+    return JSON.stringify(hasuraSession);
+  }
 
   @Delete("/delete-file")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
