@@ -160,45 +160,6 @@ services:
       - traefik-ingress
     extra_hosts:
       - "host.docker.internal:host-gateway"
-  hydra-migrate:
-    image: oryd/hydra:v2.2
-    depends_on:
-      - postgres-db
-    environment:
-      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
-    command: migrate sql -e --yes
-    restart: on-failure
-    networks:
-      - faktenforum
-      - traefik-ingress
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-  hydra:
-    image: oryd/hydra:v2.2
-    depends_on:
-      - hydra-migrate
-    ports:
-      - "4444:4444" # Public port
-      - "4445:4445" # Admin port
-      - "5555:5555" # Port for hydra token user
-    command: serve all --dev
-    restart: on-failure # TODO figure out why we need this (incorporate health check into hydra migrate command?)
-    environment:
-      - LOG_LEAK_SENSITIVE_VALUES=true
-      - URLS_SELF_ISSUER=http://app.localhost:8000/api/v1/hydra
-      - URLS_SELF_PUBLIC=http://app.localhost:8000/api/v1/hydra
-      - URLS_CONSENT=http://app.localhost:8000/api/v1/oauth/consent
-      - URLS_LOGIN=http://app.localhost:8000/api/v1/oauth/login
-      - URLS_LOGOUT=http://app.localhost:8000/logout
-      - SECRETS_SYSTEM=youReallyNeedToChangeThis
-      - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
-      - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis
-      - DSN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
-    networks:
-      - traefik-ingress
-      - faktenforum
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   mailslurper:
     image: oryd/mailslurper:latest-smtps

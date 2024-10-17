@@ -101,5 +101,10 @@ alias_creation_rules:
     action: allow
 
 forget_rooms_on_leave: true
+# Disable VoIP by setting the following option to false
+enable_voip: false
 
-
+jwt_config:
+    enabled: true
+    secret: "my-secret-token"
+    algorithm: "HS256"
