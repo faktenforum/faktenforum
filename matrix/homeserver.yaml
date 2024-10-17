@@ -81,6 +81,10 @@ rc_invites:
   per_issuer:
     per_second: 100000
     burst_count: 100000
+rc_joins:
+  local:
+    per_second: 1
+    burst_count: 15
 # rc_message:
 #   per_second: 1000  # Set a high value to effectively disable throttling
 #   burst_count: 1000 # Set a high value to effectively disable throttling

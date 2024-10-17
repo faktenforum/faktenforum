@@ -86,16 +86,7 @@ export class MatrixService {
       });
 
       this.adminClient = new MatrixAdminClient(this.envService.matrixInternalUrl, loginResponse.access_token);
-      this.adminClient.overrideUserRatelimit(this.usernameToMatrixUser(this.envService.matrixAccount), {
-        messages_per_second: 100000,
-        burst_count: 100000,
-        account_registration_per_second: 100000,
-        account_registration_burst_count: 100000,
-        rc_login: {
-          per_second: 100000,
-          burst_count: 100000
-        }
-      });
+
       logger.info("[MatrixService] Matrix client initialized with URL:", loginResponse);
       await this.initSpaces();
       await this.initChannels();
