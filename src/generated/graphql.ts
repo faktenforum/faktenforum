@@ -11667,6 +11667,13 @@ export type UserHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type DeleteUserByPkMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteUserByPkMutation = { __typename?: 'mutation_root', deleteUserByPk?: { __typename?: 'User', id: any } | null };
+
 export type InsertUserMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   email: Scalars['String']['input'];
@@ -11779,6 +11786,13 @@ export type InsertFileAndUpdateUserProfileImageMutationVariables = Exact<{
 export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateUserByPk?: { __typename?: 'User', id: any } | null };
 
 
+export const DeleteUserByPkDocument = gql`
+    mutation deleteUserByPk($id: uuid!) {
+  deleteUserByPk(id: $id) {
+    id
+  }
+}
+    `;
 export const InsertUserDocument = gql`
     mutation insertUser($id: uuid!, $email: String!, $username: String!, $firstName: String!, $lastName: String!) {
   insertUserOne(
@@ -11937,6 +11951,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    deleteUserByPk(variables: DeleteUserByPkMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteUserByPkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteUserByPkMutation>(DeleteUserByPkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteUserByPk', 'mutation', variables);
+    },
     insertUser(variables: InsertUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertUserMutation>(InsertUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertUser', 'mutation', variables);
     },

@@ -134,3 +134,55 @@ export interface GetRoomMessagesResponse {
 export interface MakeRoomAdminRequest {
   user_id: string; // The user ID to be granted the highest power in the room.
 }
+
+export interface UserAccountResponse {
+  name: string;
+  displayname: string | null;
+  threepids: Array<{
+    medium: string;
+    address: string;
+    added_at: number;
+    validated_at: number;
+  }>;
+  avatar_url: string | null;
+  is_guest: number;
+  admin: number;
+  deactivated: number;
+  erased: boolean;
+  shadow_banned: number;
+  creation_ts: number;
+  appservice_id: string | null;
+  consent_server_notice_sent: string | null;
+  consent_version: string | null;
+  consent_ts: number | null;
+  external_ids: Array<{
+    auth_provider: string;
+    external_id: string;
+  }>;
+  user_type: string | null;
+  locked: boolean;
+}
+
+export interface ModifyUserRequest {
+  password?: string;
+  logout_devices?: boolean;
+  displayname?: string;
+  avatar_url?: string;
+  threepids?: Array<{
+    medium: string;
+    address: string;
+  }>;
+  external_ids?: Array<{
+    auth_provider: string;
+    external_id: string;
+  }>;
+  admin?: boolean;
+  deactivated?: boolean;
+  user_type?: string | null;
+  locked?: boolean;
+}
+
+export interface UserRoomMembershipsResponse {
+  joined_rooms: string[];
+  total: number;
+}

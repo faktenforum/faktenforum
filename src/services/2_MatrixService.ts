@@ -163,6 +163,18 @@ export class MatrixService {
     }
   }
 
+  public async createUser(username: string, email: string): Promise<void> {
+    await this.adminClient?.createOrModifyUserAccount(`@${username}:${this.envService.matrixDomain}`, {
+      id: username,
+      password: "password12345!Däsdfsd",
+      threepids: [{ medium: "email", address: email }]
+    });
+  }
+
+  public async deleteUser(username: string): Promise<void> {
+    await this.adminClient?.deactivateUserAccount(`@${username}:${this.envService.matrixDomain}`, true);
+  }
+
   public async createRoom(roomName: string, spaceName: SpaceNames, topic?: string): Promise<void> {
     try {
       const response = await this.client!.createRoom({

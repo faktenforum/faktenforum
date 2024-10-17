@@ -14,7 +14,10 @@ import type {
   GetBlockStatusResponse,
   DeleteRoomRequest,
   DeleteRoomResponse,
-  MakeRoomAdminRequest
+  MakeRoomAdminRequest,
+  UserAccountResponse,
+  ModifyUserRequest,
+  UserRoomMembershipsResponse
 } from "./matrix-admin-api-types";
 
 class MatrixAdminClient {
@@ -177,7 +180,56 @@ class MatrixAdminClient {
     }
   }
 
-  // Add more methods as needed for other room-related API calls
+  // Fetch information about a specific user account
+  async getUserAccount(userId: string): Promise<UserAccountResponse> {
+    try {
+      const response = await this.client.get<UserAccountResponse>(`/_synapse/admin/v2/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching user account for ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  // Create or modify a user account
+  async createOrModifyUserAccount(userId: string, requestBody: ModifyUserRequest): Promise<void> {
+    try {
+      const response = await this.client.put(`/_synapse/admin/v2/users/${userId}`, requestBody);
+      if (response.status === 201) {
+        console.log(`User ${userId} created successfully.`);
+      } else if (response.status === 200) {
+        console.log(`User ${userId} modified successfully.`);
+      }
+    } catch (error) {
+      console.error(`Error creating or modifying user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  async getUserRoomMemberships(userId: string): Promise<UserRoomMembershipsResponse> {
+    try {
+      const response = await this.client.get<UserRoomMembershipsResponse>(
+        `/_synapse/admin/v1/users/${userId}/joined_rooms`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching room memberships for user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  // Deactivate a user account
+  async deactivateUserAccount(userId: string, erase: boolean = false): Promise<void> {
+    try {
+      await this.client.post(`/_synapse/admin/v1/deactivate/${userId}`, {
+        erase
+      });
+      console.log(`User ${userId} deactivated successfully.`);
+    } catch (error) {
+      console.error(`Error deactivating user ${userId}:`, error);
+      throw error;
+    }
+  }
 }
 
 export default MatrixAdminClient;

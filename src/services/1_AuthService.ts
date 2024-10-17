@@ -1,11 +1,10 @@
 import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
-import type { AcceptOAuth2ConsentRequestSession, Session } from "@ory/client";
-import { Configuration, OAuth2Api, OAuth2ConsentRequest } from "@ory/hydra-client";
+import type { Session } from "@ory/kratos-client";
+import { Configuration, IdentityApi } from "@ory/kratos-client";
 import type { UserRole } from "~/models";
 import { $log } from "@tsed/logger";
-type ValidatedSession = Session & { identity: { metadata_public: { role: UserRole } }; expires_at: string };
 
 export type KratosAddress = {
   id: string;
@@ -63,54 +62,13 @@ export class AuthService {
   envService: EnvService;
 
   kratosSessionUrl: URL;
-  oauth2Api: OAuth2Api;
+  kratosIdentityApi: IdentityApi;
   constructor(envService: EnvService) {
     this.kratosSessionUrl = new URL(`${envService.kratosPublicUrl}/sessions/whoami`);
-    this.oauth2Api = new OAuth2Api(new Configuration({ basePath: "http://localhost:4445" }));
+    this.kratosIdentityApi = new IdentityApi(new Configuration({ basePath: envService.kratosAdminUrl }));
   }
 
-  async acceptOAuth2Login(loginChallenge: string, subject: string) {
-    try {
-      const response = await this.oauth2Api.acceptOAuth2LoginRequest({
-        loginChallenge: loginChallenge,
-        acceptOAuth2LoginRequest: {
-          subject: "profile"
-        }
-      });
-
-      if (response.status === 200) {
-        return response.data;
-      }
-
-      throw new Exception(response.status, `Hydra Admin API error: ${response.statusText}`);
-    } catch (error) {
-      $log.error(error);
-      throw error;
-    }
-  }
-
-  async getConsent(consentChallenge: string) {
-    return await this.oauth2Api.getOAuth2ConsentRequest({ consentChallenge }).then(({ data: body }) => body);
-  }
-
-  async acceptConsent(
-    consentChallenge: string,
-    challengeResponse: OAuth2ConsentRequest,
-    session: AcceptOAuth2ConsentRequestSession
-  ) {
-    return await this.oauth2Api
-      .acceptOAuth2ConsentRequest({
-        consentChallenge,
-        acceptOAuth2ConsentRequest: {
-          grant_scope: challengeResponse.requested_scope,
-          grant_access_token_audience: challengeResponse.requested_access_token_audience,
-          session
-        }
-      })
-      .then(({ data: body }) => body);
-  }
-
-  async getKratosSession(sessionCookie: string): Promise<ValidatedSession> {
+  async getUserSession(sessionCookie: string): Promise<Session> {
     const response = await fetch(this.kratosSessionUrl, {
       method: "GET",
       headers: { cookie: `ory_kratos_session=${sessionCookie};` }
@@ -124,7 +82,7 @@ export class AuthService {
       if (session.expires_at === undefined) {
         throw new Exception(500, "Kratos response error: Expires_at not found in session");
       }
-      return session as ValidatedSession;
+      return session;
     }
     if (response.status === 401) {
       throw new Unauthorized("Unauthorized");
@@ -134,6 +92,10 @@ export class AuthService {
     } else {
       throw new Exception(response.status, `Kratos error: ${response.statusText}`);
     }
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.kratosIdentityApi.deleteIdentity({ id: userId });
   }
 
   async getAllUsers(): Promise<KratosUser[]> {

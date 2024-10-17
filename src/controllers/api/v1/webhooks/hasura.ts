@@ -43,12 +43,12 @@ export class HasuraWebHookController {
   async getSessions(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
 
-    const session = await this.authService.getKratosSession(sessionCookie);
+    const session = await this.authService.getUserSession(sessionCookie);
 
     const hasuraSession = {
-      "X-Hasura-User-Id": session.identity.id,
-      "X-Hasura-Role": session.identity.metadata_public.role.toLowerCase(),
-      Expires: new Date(session.expires_at).toUTCString()
+      "X-Hasura-User-Id": session.identity!.id,
+      "X-Hasura-Role": session.identity!.metadata_public.role.toLowerCase(),
+      Expires: session.expires_at
     };
     return JSON.stringify(hasuraSession);
   }

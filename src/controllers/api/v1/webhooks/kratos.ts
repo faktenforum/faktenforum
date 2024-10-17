@@ -3,10 +3,17 @@ import { BodyParams } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
-import { AuthService, HasuraService, KratosRole } from "~/services";
+import { AuthService, HasuraService, KratosRole, MatrixService } from "~/services";
 
-import { InsertUserDocument } from "~/generated/graphql";
-import type { InsertUserMutation, InsertUserMutationVariables } from "~/generated/graphql";
+import { InsertUserDocument, DeleteUserByPkDocument } from "~/generated/graphql";
+import type {
+  InsertUserMutation,
+  InsertUserMutationVariables,
+  DeleteUserByPkMutation,
+  DeleteUserByPkMutationVariables
+} from "~/generated/graphql";
+
+import { $log } from "@tsed/logger";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -18,21 +25,47 @@ export class KratosWebHookController {
   @Inject(AuthService)
   authService: AuthService;
 
+  @Inject(MatrixService)
+  matrixService: MatrixService;
+
   @Post("/registration-creation")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
-    await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
-      InsertUserDocument,
-      {
-        id: body.id,
-        email: body.traits.email,
-        username: body.traits.username,
-        firstName: body.transientPayload.firstName ?? "",
-        lastName: body.transientPayload.lastName ?? ""
+    let id = null;
+    let chatUsername = null;
+    try {
+      const response = await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
+        InsertUserDocument,
+        {
+          id: body.id,
+          email: body.traits.email,
+          username: body.traits.username,
+          firstName: body.transientPayload.firstName ?? "",
+          lastName: body.transientPayload.lastName ?? ""
+        }
+      );
+      id = response.insertUserOne?.id;
+      await this.matrixService.createUser(body.traits.username, body.traits.email);
+      chatUsername = body.traits.username;
+      return {};
+    } catch (error) {
+      $log.error(error);
+
+      this.authService.deleteUser(body.id);
+      if (id) {
+        await this.hasuraService.adminRequest<DeleteUserByPkMutation, DeleteUserByPkMutationVariables>(
+          DeleteUserByPkDocument,
+          {
+            id
+          }
+        );
       }
-    );
-    return {};
+      if (chatUsername) {
+        this.matrixService.deleteUser(chatUsername);
+      }
+      return {};
+    }
   }
 
   @Post("/registration-metadata")

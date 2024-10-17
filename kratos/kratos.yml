@@ -15,7 +15,6 @@ selfservice:
     - http://app.localhost:8000/
     - http://chat.localhost:8000/
     - http://localhost:3000/
-    - http://localhost:3000/auth/hydra/login
 
 
   methods:

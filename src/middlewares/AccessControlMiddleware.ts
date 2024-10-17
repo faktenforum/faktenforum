@@ -18,12 +18,12 @@ export class AccessControlMiddleware implements MiddlewareMethods {
     // retrieve options given to the @UseAuth decorator
     const options = (ctx.endpoint.get(AccessControlMiddleware) || {}) as AccessControlOptions;
 
-    const session = await this.authService.getKratosSession(request.cookies["ory_kratos_session"]);
+    const session = await this.authService.getUserSession(request.cookies["ory_kratos_session"]);
 
     const user: Session = {
-      userId: session.identity.id,
-      role: session.identity.metadata_public.role,
-      username: session.identity.traits.username
+      userId: session.identity!.id,
+      role: session.identity!.metadata_public.role,
+      username: session.identity!.traits.username
     };
     request.user = user;
     if (!options.role || options.role === "ALL") {
