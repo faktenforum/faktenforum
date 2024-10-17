@@ -8,11 +8,10 @@ type ClaimStatusUpdate = {
   [key: string]: unknown; // Allow other fields
 };
 
-@Enum(Object.keys(HasuraOperations))
 export class OnClaimStatusUpdatedRequest {
   @Required()
   @Property()
-  @Enum(Object.keys(HasuraOperations))
+  @Enum(HasuraOperations)
   op: HasuraOperations;
 
   @Optional()

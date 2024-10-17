@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { $log } from "@tsed/logger";
+import { Logger } from "@tsed/common";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
@@ -37,6 +37,9 @@ export class HasuraWebHookController {
 
   @Inject(MatrixService)
   matrixService: MatrixService;
+
+  @Inject(Logger)
+  logger: Logger;
 
   @Get("/session")
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
@@ -86,6 +89,7 @@ export class HasuraWebHookController {
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
+    this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
     return this.transformKratosUser(kratosUser);
   }
@@ -96,7 +100,7 @@ export class HasuraWebHookController {
   async onClaimStatusChanged(@BodyParams() body: object) {
     // Changed type to 'any' for logging
     try {
-      $log.debug(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
+      this.logger.debug(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
 
       // Cast body to expected type after logging
       const typedBody = body as OnClaimStatusUpdatedRequest;
@@ -109,7 +113,7 @@ export class HasuraWebHookController {
             typedBody.new?.internal ? SpaceNames.InternalSubmissions : SpaceNames.CommunitySubmissions,
             `${this.envService.baseUrl}/claim/${roomName}`
           );
-          $log.info(`[HasuraWebHookController] Created room for claim ${roomName}`);
+          this.logger.info(`[HasuraWebHookController] Created room for claim ${roomName}`);
           break;
         }
         case HasuraOperations.UPDATE: {
@@ -117,11 +121,13 @@ export class HasuraWebHookController {
           const newSpace = this.getSpaceName(typedBody.new!.status, typedBody.new!.internal);
           const roomName = typedBody.new!.short_id.replace(/\//g, "-");
           if (oldSpace != newSpace) {
-            $log.info(
+            this.logger.info(
               `[HasuraWebHookController] TRy Moving room ${roomName} from ${oldSpace} to ${newSpace}`
             );
             await this.matrixService.moveRoomToSpace(roomName, oldSpace, newSpace);
-            $log.info(`[HasuraWebHookController] Moving room ${roomName} from ${oldSpace} to ${newSpace}`);
+            this.logger.info(
+              `[HasuraWebHookController] Moving room ${roomName} from ${oldSpace} to ${newSpace}`
+            );
           }
           break;
         }
@@ -134,7 +140,7 @@ export class HasuraWebHookController {
       }
       return { alteredRoom: true };
     } catch (error) {
-      $log.error(`[HasuraWebHookController] Error processing onClaimStatusChanged: ${error.message}`);
+      this.logger.error(`[HasuraWebHookController] Error processing onClaimStatusChanged: ${error.message}`);
     }
     return { alteredRoom: false }; // Returning an empty object with a 200 status code
   }

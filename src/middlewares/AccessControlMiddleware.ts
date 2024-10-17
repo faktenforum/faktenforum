@@ -3,8 +3,9 @@ import { Forbidden } from "@tsed/exceptions";
 import { Middleware, MiddlewareMethods } from "@tsed/platform-middlewares";
 import { Context } from "@tsed/platform-params";
 import type { Session } from "~/models";
-import { UserRole, POWER_LEVELS } from "~/models";
+import { UserRole } from "~/models";
 import { AuthService } from "~/services";
+import { POWER_LEVELS } from "~/utils/consts";
 
 interface AccessControlOptions {
   role: UserRole & "ALL";

@@ -1,5 +1,5 @@
-import { Service } from "@tsed/di";
-import { $log } from "@tsed/logger";
+import { Inject, Service } from "@tsed/di";
+import { Logger } from "@tsed/common";
 
 type Environment = "production" | "development" | "testing";
 
@@ -7,6 +7,9 @@ type Environment = "production" | "development" | "testing";
 export class EnvService {
   private readonly validEnvs = ["development", "production"];
   private envVars: { [key: string]: string | undefined } = {};
+
+  @Inject()
+  logger: Logger;
 
   constructor() {
     this.loadEnvVars();
@@ -45,7 +48,7 @@ export class EnvService {
 
   get baseUrl(): string {
     if (!this.envVars.API_BASE_URL) {
-      $log.error("API_BASE_URL is not set!");
+      this.logger.error("API_BASE_URL is not set!");
       process.exit(1);
     }
     return this.envVars.API_BASE_URL;
@@ -53,7 +56,7 @@ export class EnvService {
 
   get claimSubmissionTokenLifeTime(): string {
     if (!this.envVars.CLAIM_SUBMISSION_TOKEN_LIFETIME) {
-      $log.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
+      this.logger.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
       process.exit(1);
     }
     return this.envVars.CLAIM_SUBMISSION_TOKEN_LIFETIME;
@@ -61,21 +64,21 @@ export class EnvService {
 
   get minioHost(): string {
     if (!this.envVars.MINIO_HOST) {
-      $log.error("MINIO_HOST is not set!");
+      this.logger.error("MINIO_HOST is not set!");
       process.exit(1);
     }
     return this.envVars.MINIO_HOST;
   }
   get minioApiPort(): number {
     if (!this.envVars.MINIO_API_PORT) {
-      $log.error("MINIO_API_PORT is not set!");
+      this.logger.error("MINIO_API_PORT is not set!");
       process.exit(1);
     }
     return parseInt(this.envVars.MINIO_API_PORT);
   }
   get minioRegion(): string {
     if (!this.envVars.MINIO_REGION) {
-      $log.error("MINIO_REGION is not set!");
+      this.logger.error("MINIO_REGION is not set!");
       process.exit(1);
     }
     return this.envVars.MINIO_REGION;
@@ -87,7 +90,7 @@ export class EnvService {
 
   get minioBucketName(): string {
     if (!this.envVars.MINIO_BUCKET_NAME) {
-      $log.error("MINIO_BUCKET_NAME is not set!");
+      this.logger.error("MINIO_BUCKET_NAME is not set!");
       process.exit(1);
     }
     return this.envVars.MINIO_BUCKET_NAME;
@@ -95,7 +98,7 @@ export class EnvService {
 
   get minioAccessKey(): string {
     if (!this.envVars.MINIO_ACCESS_KEY) {
-      $log.error("MINIO_ACCESS_KEY is not set!");
+      this.logger.error("MINIO_ACCESS_KEY is not set!");
       process.exit(1);
     }
     return this.envVars.MINIO_ACCESS_KEY;
@@ -103,7 +106,7 @@ export class EnvService {
 
   get minioSecretKey(): string {
     if (!this.envVars.MINIO_SECRET_KEY) {
-      $log.error("MINIO_SECRET_KEY is not set!");
+      this.logger.error("MINIO_SECRET_KEY is not set!");
       process.exit(1);
     }
     return this.envVars.MINIO_SECRET_KEY;
@@ -111,14 +114,14 @@ export class EnvService {
 
   get kratosPublicUrl(): string {
     if (!this.envVars.KRATOS_PUBLIC_URL) {
-      $log.error("KRATOS_PUBLIC_URL is not set!");
+      this.logger.error("KRATOS_PUBLIC_URL is not set!");
       process.exit(1);
     }
     return this.envVars.KRATOS_PUBLIC_URL;
   }
   get kratosAdminUrl(): string {
     if (!this.envVars.KRATOS_ADMIN_URL) {
-      $log.error("KRATOS_ADMIN_URL is not set!");
+      this.logger.error("KRATOS_ADMIN_URL is not set!");
       process.exit(1);
     }
     return this.envVars.KRATOS_ADMIN_URL;
@@ -126,7 +129,7 @@ export class EnvService {
 
   get hasuraApiUrl(): string {
     if (!this.envVars.HASURA_API_URL) {
-      $log.error("HASURA_API_URL is not set!");
+      this.logger.error("HASURA_API_URL is not set!");
       process.exit(1);
     }
     return this.envVars.HASURA_API_URL;
@@ -134,7 +137,7 @@ export class EnvService {
 
   get hasuraAdminSecret(): string {
     if (!this.envVars.HASURA_ADMIN_SECRET) {
-      $log.error("HASURA_ADMIN_SECRET is not set!");
+      this.logger.error("HASURA_ADMIN_SECRET is not set!");
       process.exit(1);
     }
     return this.envVars.HASURA_ADMIN_SECRET;
@@ -142,7 +145,7 @@ export class EnvService {
 
   get matrixAccount(): string {
     if (!this.envVars.MATRIX_ACCOUNT) {
-      $log.error("MATRIX_ACCOUNT is not set!");
+      this.logger.error("MATRIX_ACCOUNT is not set!");
       process.exit(1);
     }
     return this.envVars.MATRIX_ACCOUNT;
@@ -150,7 +153,7 @@ export class EnvService {
 
   get matrixPassword(): string {
     if (!this.envVars.MATRIX_PASSWORD) {
-      $log.error("MATRIX_PASSWORD is not set!");
+      this.logger.error("MATRIX_PASSWORD is not set!");
       process.exit(1);
     }
     return this.envVars.MATRIX_PASSWORD;
@@ -158,7 +161,7 @@ export class EnvService {
 
   get matrixUrl(): string {
     if (!this.envVars.MATRIX_URL) {
-      $log.error("MATRIX_URL is not set!");
+      this.logger.error("MATRIX_URL is not set!");
       process.exit(1);
     }
     return this.envVars.MATRIX_URL;
@@ -166,7 +169,7 @@ export class EnvService {
 
   get matrixDomain(): string {
     if (!this.envVars.MATRIX_DOMAIN) {
-      $log.error("MATRIX_DOMAIN is not set!");
+      this.logger.error("MATRIX_DOMAIN is not set!");
       process.exit(1);
     }
     return this.envVars.MATRIX_DOMAIN;
@@ -174,7 +177,7 @@ export class EnvService {
 
   get matrixInternalUrl(): string {
     if (!this.envVars.MATRIX_INTERNAL_URL) {
-      $log.error("MATRIX_INTERNAL_URL is not set!");
+      this.logger.error("MATRIX_INTERNAL_URL is not set!");
       process.exit(1);
     }
     return this.envVars.MATRIX_INTERNAL_URL;
@@ -186,12 +189,12 @@ export class EnvService {
 
   get apiKeys(): { kratos: string; hasura: string } {
     if (!this.envVars.KRATOS_API_KEY) {
-      $log.error("KRATOS_API_KEY is not set!");
+      this.logger.error("KRATOS_API_KEY is not set!");
       process.exit(1);
     }
 
     if (!this.envVars.HASURA_API_KEY) {
-      $log.error("HASURA_API_KEY is not set!");
+      this.logger.error("HASURA_API_KEY is not set!");
       process.exit(1);
     }
 
@@ -229,7 +232,7 @@ export class EnvService {
     }
 
     if (errors.length > 0) {
-      errors.forEach((error) => $log.error(error));
+      errors.forEach((error) => this.logger.error(error));
       process.exit(1);
     }
   }

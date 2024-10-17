@@ -1,4 +1,3 @@
-// Define interfaces for the API responses
 export interface Room {
   room_id: string; // The ID of the room.
   name?: string; // The name of the room.
@@ -185,4 +184,25 @@ export interface ModifyUserRequest {
 export interface UserRoomMembershipsResponse {
   joined_rooms: string[];
   total: number;
+}
+
+// Define an interface for the response from the Room State API
+export interface RoomStateEvent {
+  type: string; // The type of the state event.
+  state_key: string; // The state key for the event.
+  etc?: boolean; // Additional data, if any.
+}
+
+export interface GetRoomStateResponse {
+  state: RoomStateEvent[]; // An array of state events in the room.
+}
+
+export interface OverrideRatelimitRequest {
+  messages_per_second?: number; // Optional: The number of actions that can be performed in a second.
+  burst_count?: number; // Optional: How many actions that can be performed before being limited.
+}
+
+export interface OverrideRatelimitResponse {
+  messages_per_second: number; // The number of actions that can be performed in a second.
+  burst_count: number; // How many actions that can be performed before being limited.
 }

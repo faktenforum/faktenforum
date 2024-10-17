@@ -8405,7 +8405,8 @@ export type UserPkColumnsInput = {
 
 export enum UserRole {
   Admin = 'admin',
-  Intermediate = 'intermediate',
+  Aspirant = 'aspirant',
+  Editor = 'editor',
   Junior = 'junior',
   Moderator = 'moderator',
   Senior = 'senior'

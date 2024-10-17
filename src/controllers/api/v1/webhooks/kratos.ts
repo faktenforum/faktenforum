@@ -3,7 +3,8 @@ import { BodyParams } from "@tsed/platform-params";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
-import { AuthService, HasuraService, KratosRole, MatrixService } from "~/services";
+import { AuthService, HasuraService, MatrixService } from "~/services";
+import { UserRole } from "~/models";
 
 import { InsertUserDocument, DeleteUserByPkDocument } from "~/generated/graphql";
 import type {
@@ -13,7 +14,7 @@ import type {
   DeleteUserByPkMutationVariables
 } from "~/generated/graphql";
 
-import { $log } from "@tsed/logger";
+import { Logger } from "@tsed/common";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -27,6 +28,9 @@ export class KratosWebHookController {
 
   @Inject(MatrixService)
   matrixService: MatrixService;
+
+  @Inject(Logger)
+  logger: Logger;
 
   @Post("/registration-creation")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
@@ -50,7 +54,7 @@ export class KratosWebHookController {
       chatUsername = body.traits.username;
       return {};
     } catch (error) {
-      $log.error(error);
+      this.logger.error(error);
 
       this.authService.deleteUser(body.id);
       if (id) {
@@ -76,7 +80,7 @@ export class KratosWebHookController {
     return {
       identity: {
         metadata_public: {
-          role: KratosRole.aspirant,
+          role: UserRole.Aspirant,
           lang: DEFAULT_LANGUAGE // TODO take from language selector on the page, once it exists
         }
       }

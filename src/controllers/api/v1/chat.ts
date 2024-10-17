@@ -1,6 +1,6 @@
 // src/controllers/AuthController.ts
 
-import { Controller, Get, Res, Inject, $log, Req } from "@tsed/common";
+import { Controller, Get, Res, Inject, Req } from "@tsed/common";
 import { Cookies } from "@tsed/platform-params";
 import { AuthService, EnvService } from "~/services";
 import jwt from "jsonwebtoken"; // Import the jsonwebtoken library

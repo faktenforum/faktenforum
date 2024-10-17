@@ -71,25 +71,34 @@ default_power_level_content_override:
 room_creation_rules:
   - action: deny
     default: true
+rc_invites:
+  per_room:
+    per_second: 100000  
+    burst_count: 100000
+  per_user:
+    per_second: 100000
+    burst_count: 100000
+  per_issuer:
+    per_second: 100000
+    burst_count: 100000
+# rc_message:
+#   per_second: 1000  # Set a high value to effectively disable throttling
+#   burst_count: 1000 # Set a high value to effectively disable throttling
 
-rc_message:
-  per_second: 1000  # Set a high value to effectively disable throttling
-  burst_count: 1000 # Set a high value to effectively disable throttling
+# rc_registration:
+#   per_second: 1000  # Set a high value to effectively disable throttling
+#   burst_count: 1000 # Set a high value to effectively disable throttling
 
-rc_registration:
-  per_second: 1000  # Set a high value to effectively disable throttling
-  burst_count: 1000 # Set a high value to effectively disable throttling
-
-rc_login:
-  address:
-    per_second: 1000  # Set a high value to effectively disable throttling
-    burst_count: 1000 # Set a high value to effectively disable throttling
-  account:
-    per_second: 1000  # Set a high value to effectively disable throttling
-    burst_count: 1000 # Set a high value to effectively disable throttling
-  failed_attempts:
-    per_second: 1000  # Set a high value to effectively disable throttling
-    burst_count: 1000 # Set a high value to effectively disable throttling
+# rc_login:
+#   address:
+#     per_second: 1000  # Set a high value to effectively disable throttling
+#     burst_count: 1000 # Set a high value to effectively disable throttling
+#   account:
+#     per_second: 1000  # Set a high value to effectively disable throttling
+#     burst_count: 1000 # Set a high value to effectively disable throttling
+#   failed_attempts:
+#     per_second: 1000  # Set a high value to effectively disable throttling
+#     burst_count: 1000 # Set a high value to effectively disable throttling
 
 registration_disabled: true             
 encryption_enabled_by_default_for_room_type: off
@@ -101,7 +110,7 @@ alias_creation_rules:
     action: allow
 
 forget_rooms_on_leave: true
-# Disable VoIP by setting the following option to false
+ # Disable VoIP by setting the following option to false
 enable_voip: false
 
 jwt_config:

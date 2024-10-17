@@ -17,7 +17,10 @@ import type {
   MakeRoomAdminRequest,
   UserAccountResponse,
   ModifyUserRequest,
-  UserRoomMembershipsResponse
+  UserRoomMembershipsResponse,
+  GetRoomStateResponse,
+  OverrideRatelimitRequest,
+  OverrideRatelimitResponse
 } from "./matrix-admin-api-types";
 
 class MatrixAdminClient {
@@ -227,6 +230,47 @@ class MatrixAdminClient {
       console.log(`User ${userId} deactivated successfully.`);
     } catch (error) {
       console.error(`Error deactivating user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  // Fetch the state of a specific room
+  async getRoomState(roomId: string): Promise<GetRoomStateResponse> {
+    try {
+      const response = await this.client.get<GetRoomStateResponse>(
+        `/_synapse/admin/v1/rooms/${roomId}/state`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching state for room ${roomId}:`, error);
+      throw error;
+    }
+  }
+
+  // Override the ratelimit for a user
+  async overrideUserRatelimit(
+    username: string,
+    requestBody: OverrideRatelimitRequest
+  ): Promise<OverrideRatelimitResponse> {
+    try {
+      const response = await this.client.post<OverrideRatelimitResponse>(
+        `/_synapse/admin/v1/users/${username}/override_ratelimit`,
+        requestBody
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error overriding ratelimit for user ${username}:`, error);
+      throw error;
+    }
+  }
+
+  // Delete the ratelimit override for a user
+  async deleteUserRatelimit(username: string): Promise<void> {
+    try {
+      await this.client.delete(`/_synapse/admin/v1/users/${username}/override_ratelimit`);
+      console.log(`Ratelimit override deleted for user ${username}.`);
+    } catch (error) {
+      console.error(`Error deleting ratelimit override for user ${username}:`, error);
       throw error;
     }
   }

@@ -2,19 +2,16 @@
 import { Inject, Injectable } from "@tsed/di";
 import type { MatrixClient, Preset } from "matrix-js-sdk";
 import sdk, { EventType, RoomType, Room, Visibility, JoinRule, RestrictedAllowType } from "matrix-js-sdk";
-import { EnvService, HasuraService } from "~/services"; // Import the EnvService
-import { $log } from "@tsed/logger";
+import { AuthService, EnvService, HasuraService } from "~/services"; // Import the EnvService
+import { Logger } from "@tsed/common";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
 import { QueryChannelsDocument } from "~/generated/graphql";
 import type { QueryChannelsQuery, QueryChannelsQueryVariables } from "~/generated/graphql";
+import { POWER_LEVELS } from "~/utils/consts";
 import MatrixAdminClient from "~/utils/matrix-admin-api";
-// rewrite matrix logger
-mxLogger.info = (...msg) => $log.info(msg);
-mxLogger.log = (...msg) => $log.debug(msg);
-mxLogger.warn = (...msg) => $log.warn(msg);
-mxLogger.error = (...msg) => $log.error(msg);
-mxLogger.trace = (...msg) => $log.trace(msg);
-mxLogger.debug = (...msg) => $log.debug(msg);
+import { randomBytes } from "crypto";
+import { UserRole, PowerLevel } from "~/models";
+import pMap from "p-map";
 
 export enum SpaceNames {
   CommunitySubmissions = "ff-space-community_submissions",
@@ -33,12 +30,23 @@ const Topics = {
   [SpaceNames.InternalFactchecks]: "A space for internal factchecks"
 };
 
+const InternalSpaces = [SpaceNames.Internal, SpaceNames.InternalSubmissions, SpaceNames.InternalFactchecks];
+const CommunitySpaces = [
+  SpaceNames.Community,
+  SpaceNames.CommunitySubmissions,
+  SpaceNames.CommunityFactchecks
+];
+
 @Injectable()
 export class MatrixService {
   @Inject()
   envService: EnvService;
   @Inject()
   hasuraService: HasuraService;
+  @Inject()
+  authService: AuthService;
+  @Inject()
+  logger: Logger;
 
   private adminClient: MatrixAdminClient | null = null;
   private client: MatrixClient | null = null;
@@ -51,17 +59,26 @@ export class MatrixService {
     [SpaceNames.Internal]: ""
   };
 
-  constructor(envService: EnvService) {
+  constructor(envService: EnvService, logger: Logger) {
+    // rewrite matrix logger
+
     this.envService = envService;
+    mxLogger.info = (...msg) => logger.info(msg);
+    mxLogger.log = (...msg) => logger.debug(msg);
+    mxLogger.warn = (...msg) => logger.warn(msg);
+    mxLogger.error = (...msg) => logger.error(msg);
+    mxLogger.trace = (...msg) => logger.trace(msg);
+    mxLogger.debug = (...msg) => logger.debug(msg);
+
     mxLogger.setLevel(envService.env === "development" ? mxLogger.levels.DEBUG : mxLogger.levels.INFO);
     this.client = sdk.createClient({
       baseUrl: envService.matrixUrl,
       logger: mxLogger
     });
 
-    this.initialize();
+    this.initialize(logger);
   }
-  private async initialize() {
+  private async initialize(logger: Logger) {
     try {
       const loginResponse = await this.client!.login("m.login.password", {
         user: this.envService.matrixAccount,
@@ -69,20 +86,29 @@ export class MatrixService {
       });
 
       this.adminClient = new MatrixAdminClient(this.envService.matrixInternalUrl, loginResponse.access_token);
-
-      $log.info("[MatrixService] Matrix client initialized with URL:", loginResponse);
+      this.adminClient.overrideUserRatelimit(this.usernameToMatrixUser(this.envService.matrixAccount), {
+        messages_per_second: 100000,
+        burst_count: 100000,
+        account_registration_per_second: 100000,
+        account_registration_burst_count: 100000,
+        rc_login: {
+          per_second: 100000,
+          burst_count: 100000
+        }
+      });
+      logger.info("[MatrixService] Matrix client initialized with URL:", loginResponse);
       await this.initSpaces();
       await this.initChannels();
     } catch (error) {
-      $log.error("[MatrixService] Error initializing Matrix client:", error);
+      logger.error("[MatrixService] Error initializing Matrix client:", error);
       process.exit(1);
     }
     // this.client!.on(sdk.ClientEvent.Sync, async (state) => {
     //   if (state === "PREPARED") {
-    //     $log.info("[MatrixService] Matrix client is ready and synced.");
+    //     this.logger.info("[MatrixService] Matrix client is ready and synced.");
     //     try {
     //     } catch (error) {
-    //       $log.error("[MatrixService] Error on init:", error);
+    //       this.logger.error("[MatrixService] Error on init:", error);
     //       process.exit(1);
     //     }
     //   }
@@ -101,7 +127,7 @@ export class MatrixService {
       const room = rooms.find((room) => room.name === space);
 
       if (!room) {
-        $log.info(`[MatrixService] Space ${space} does not exist.`);
+        this.logger.info(`[MatrixService] Space ${space} does not exist.`);
         try {
           const response = await this.client.createRoom({
             name: space,
@@ -113,21 +139,21 @@ export class MatrixService {
             }
           });
           this.spaceIdMap[space] = response.room_id;
-          $log.info(
+          this.logger.info(
             `[MatrixService] Private space ${response}:${space}  created with room ID: ${response.room_id} and alias: ${space}`
           );
         } catch (error) {
-          $log.error(`[MatrixService] Error creating private space ${space}:`, error);
+          this.logger.error(`[MatrixService] Error creating private space ${space}:`, error);
         }
       } else {
         this.spaceIdMap[space] = room.room_id;
-        $log.info(`[MatrixService] Space ${space} exists.`);
+        this.logger.info(`[MatrixService] Space ${space} exists.`);
       }
     }
   }
 
   public async initChannels() {
-    $log.info("[MatrixService] Initializing channels");
+    this.logger.info("[MatrixService] Initializing channels");
     if (!this.client) {
       throw new Error("Matrix client is not initialized");
     }
@@ -137,8 +163,8 @@ export class MatrixService {
       const internalSpaceRooms = (await this.client.getRoomHierarchy(this.spaceIdMap[SpaceNames.Internal]))
         .rooms;
 
-      $log.debug(`[MatrixService] Rooms in public space:`, publicSpaceRooms);
-      $log.debug(`[MatrixService] Rooms in internal space:`, internalSpaceRooms);
+      this.logger.debug(`[MatrixService] Rooms in public space:`, publicSpaceRooms);
+      this.logger.debug(`[MatrixService] Rooms in internal space:`, internalSpaceRooms);
 
       const { channels } = await this.hasuraService.adminRequest<
         QueryChannelsQuery,
@@ -150,29 +176,91 @@ export class MatrixService {
       }));
       for (const channel of prefixedChannels) {
         if (channel.internal && !internalSpaceRooms.some((room) => room.name === channel.name)) {
-          $log.info("Creating room in internal space", channel.name);
+          this.logger.info("Creating room in internal space", channel.name);
           await this.createRoom(channel.name, SpaceNames.Internal);
         } else if (!channel.internal && !publicSpaceRooms.some((room) => room.name === channel.name)) {
-          $log.info("Creating room in public space", channel.name);
+          this.logger.info("Creating room in public space", channel.name);
           await this.createRoom(channel.name, SpaceNames.Community, channel.descriptionEn);
         }
       }
     } catch (error) {
-      $log.error(`[MatrixService] Error during initChannels ${error}`);
+      this.logger.error(`[MatrixService] Error during initChannels ${error}`);
       throw error;
     }
   }
 
   public async createUser(username: string, email: string): Promise<void> {
-    await this.adminClient?.createOrModifyUserAccount(`@${username}:${this.envService.matrixDomain}`, {
-      id: username,
-      password: "password12345!Däsdfsd",
+    await this.adminClient?.createOrModifyUserAccount(this.usernameToMatrixUser(username), {
+      // id: username,
+      password:
+        this.envService.env === "development"
+          ? "abcd1234!D"
+          : randomBytes(24).toString("base64").slice(0, 24),
       threepids: [{ medium: "email", address: email }]
     });
   }
 
   public async deleteUser(username: string): Promise<void> {
-    await this.adminClient?.deactivateUserAccount(`@${username}:${this.envService.matrixDomain}`, true);
+    await this.adminClient?.deactivateUserAccount(this.usernameToMatrixUser(username), true);
+  }
+
+  public async alterSpaceMembershipsByRole(userId: string, role: UserRole) {
+    this.logger.info(`Change user ${userId} membership to new role ${role}`);
+    const identity = await this.authService.getUserIdentity(userId);
+    const username = identity.traits.username;
+    const oldRole = identity.metadata_public.role as UserRole;
+    const oldPowerLevel = POWER_LEVELS[oldRole];
+    const newPowerLevel = POWER_LEVELS[role];
+    this.logger.info(
+      `[MatrixService] User ${username} has old power level ${oldPowerLevel} and new power level ${newPowerLevel}`
+    );
+    if (oldPowerLevel === PowerLevel.Aspirant && newPowerLevel > PowerLevel.Aspirant) {
+      this.logger.info(`User ${username} gets access to community spaces`);
+      await this.addUserToRoom(username, this.spaceIdMap[SpaceNames.Community]);
+      await this.addUserToRoom(username, this.spaceIdMap[SpaceNames.CommunitySubmissions]);
+      await this.addUserToRoom(username, this.spaceIdMap[SpaceNames.CommunityFactchecks]);
+    } else if (newPowerLevel === PowerLevel.Aspirant) {
+      this.logger.info(`User ${username} loses access to community spaces`);
+      await this.removeUserFromRoom(username, this.spaceIdMap[SpaceNames.Community]);
+      await this.removeUserFromRoom(username, this.spaceIdMap[SpaceNames.CommunitySubmissions]);
+      await this.removeUserFromRoom(username, this.spaceIdMap[SpaceNames.CommunityFactchecks]);
+      // get all rooms where the user is a member and remove him from  them
+      const response = await this.adminClient?.getUserRoomMemberships(username);
+      const joinedRooms = response?.joined_rooms ?? [];
+      await pMap(joinedRooms, (room) => this.removeUserFromRoom(username, room), { concurrency: 5 });
+    }
+    if (oldPowerLevel < PowerLevel.Editor && newPowerLevel >= PowerLevel.Editor) {
+      this.logger.info(`User ${username} gets access to internal space`);
+      await this.addUserToRoom(username, this.spaceIdMap[SpaceNames.Internal]);
+      await this.addUserToRoom(username, this.spaceIdMap[SpaceNames.InternalSubmissions]);
+      await this.addUserToRoom(username, this.spaceIdMap[SpaceNames.InternalFactchecks]);
+    } else if (oldPowerLevel >= PowerLevel.Editor && newPowerLevel < PowerLevel.Editor) {
+      this.logger.info(`User ${username} loses access to internal space`);
+      await this.removeUserFromRoom(username, this.spaceIdMap[SpaceNames.Internal]);
+      await this.removeUserFromRoom(username, this.spaceIdMap[SpaceNames.InternalSubmissions]);
+      await this.removeUserFromRoom(username, this.spaceIdMap[SpaceNames.InternalFactchecks]);
+      // get all rooms where the user is a member and remove him from  them
+      const response = await this.adminClient?.getUserRoomMemberships(username);
+      const joinedRooms = response?.joined_rooms ?? [];
+
+      await pMap(
+        joinedRooms,
+        async (room) => {
+          const iInSpace = await this.isRoomInSpace(room, SpaceNames.Internal);
+          if (iInSpace) {
+            await this.removeUserFromRoom(username, room);
+          }
+        },
+        { concurrency: 5 }
+      );
+    } else {
+      this.logger.info(`User ${username} has no changes in community or internal spaces access`);
+    }
+  }
+  public async isRoomInSpace(roomId: string, spaceName: SpaceNames): Promise<boolean> {
+    const roomEvents = await this.adminClient?.getRoomState(this.spaceIdMap[spaceName]);
+    this.logger.debug(`[MatrixService] Room events in space ${spaceName}:`, roomEvents);
+    return false;
   }
 
   public async createRoom(roomName: string, spaceName: SpaceNames, topic?: string): Promise<void> {
@@ -217,17 +305,25 @@ export class MatrixService {
         response.room_id
       );
 
-      $log.info(`[MatrixService] Room ${roomName} created with room ID: ${response.room_id}`);
+      this.logger.info(`[MatrixService] Room ${roomName} created with room ID: ${response.room_id}`);
     } catch (error) {
-      $log.error(`[MatrixService] Error creating room ${roomName}:`, error);
+      this.logger.error(`[MatrixService] Error creating room ${roomName}:`, error);
     }
   }
 
-  async addUserToRoom(userId: string, roomId: string): Promise<void> {
+  async addUserToRoom(username: string, roomId: string): Promise<void> {
+    this.logger.info(`[MatrixService] Adding user ${username} to room ${roomId}`);
     if (!this.client) {
       throw new Error("Matrix client is not initialized");
     }
-    await this.client.invite(roomId, userId);
+    await this.client.invite(roomId, this.usernameToMatrixUser(username));
+  }
+
+  async removeUserFromRoom(username: string, roomId: string): Promise<void> {
+    if (!this.client) {
+      throw new Error("Matrix client is not initialized");
+    }
+    await this.client.kick(roomId, this.usernameToMatrixUser(username));
   }
 
   // Add more methods as needed for other admin tasks
@@ -239,13 +335,13 @@ export class MatrixService {
 
     try {
       // Get the room ID from the alias
-      $log.info(
+      this.logger.info(
         `[MatrixService] Getting room ID for alias #${roomAlias}:${this.envService.matrixDomain}:8000`
       );
       const response = await this.client.getRoomIdForAlias(
         `#${roomAlias}:${this.envService.matrixDomain}:8000`
       );
-      $log.error(response);
+      this.logger.error(response);
       const { room_id } = response;
       if (!room_id) {
         throw new Error(`[MatrixService] Room ${roomAlias} not found`);
@@ -253,7 +349,7 @@ export class MatrixService {
       // Remove the room from the current space
       await this.client.sendStateEvent(this.spaceIdMap[fromSpace], EventType.SpaceChild, {}, room_id);
 
-      $log.info(`[MatrixService] Room ${room_id} removed from space ${fromSpace}`);
+      this.logger.info(`[MatrixService] Room ${room_id} removed from space ${fromSpace}`);
 
       // Add the room to the new space
       await this.client.sendStateEvent(
@@ -284,15 +380,22 @@ export class MatrixService {
       const room = await this.client.getRoom(room_id);
       const members = await room?.getMembers();
       for (const member of members ?? []) {
-        if (!(await this.isUserInSpace(member.userId, toSpace))) {
-          await this.client.kick(room_id, member.userId, "User is not a member of the new space");
-          $log.info(`[MatrixService] User ${member.userId} removed from room ${room_id}`);
-        }
+        // if (!(await this.isUserInSpace(member.userId, toSpace))) {
+        //   await this.client.kick(room_id, member.userId, "User is not a member of the new space");
+        //   this.logger.info(`[MatrixService] User ${member.userId} removed from room ${room_id}`);
+        // }
       }
 
-      $log.info(`[MatrixService] Room ${room_id} added to space ${toSpace}`);
+      this.logger.info(`[MatrixService] Room ${room_id} added to space ${toSpace}`);
     } catch (error) {
-      $log.error(`[MatrixService] Error moving room ${roomAlias} from ${fromSpace} to ${toSpace}:`, error);
+      this.logger.error(
+        `[MatrixService] Error moving room ${roomAlias} from ${fromSpace} to ${toSpace}:`,
+        error
+      );
     }
+  }
+
+  private usernameToMatrixUser(username: string): string {
+    return `@${username}:${this.envService.matrixDomain}`;
   }
 }

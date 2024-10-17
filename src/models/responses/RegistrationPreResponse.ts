@@ -1,5 +1,5 @@
 import { Property, Required } from "@tsed/schema";
-import { UserRole } from "../Session";
+import { UserRole } from "~/models";
 
 class MetaDataPublic {
   @Required()
