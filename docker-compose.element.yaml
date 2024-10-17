@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  element:
+    image: vectorim/element-web:latest
+    container_name: element
+    ports:
+      - "7777:80"
+
+    restart: unless-stopped
+
+volumes:
+  element_data:
