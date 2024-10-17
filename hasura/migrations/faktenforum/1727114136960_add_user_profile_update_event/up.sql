@@ -89,7 +89,6 @@ BEGIN
             v_user_id := NEW.updated_by;
             v_entry_id := NEW.id;
         ELSIF TG_TABLE_NAME = 'user' THEN
-            v_claim_id := null;
             v_user_id := OLD.id;
             v_entry_id := OLD.id;
         ELSE

@@ -41,7 +41,18 @@ insert_permissions:
   - role: administrator
     permission:
       check: {}
-      columns: []
+      columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
     comment: ""
   - role: editor
     permission:
@@ -218,24 +229,6 @@ select_permissions:
       query_root_fields:
         - select_by_pk
       subscription_root_fields: []
-    comment: ""
-update_permissions:
-  - role: administrator
-    permission:
-      columns:
-        - size
-        - e_tag
-        - mime_type
-        - name
-        - transcription
-        - created_at
-        - updated_at
-        - sys_period
-        - created_by
-        - id
-        - updated_by
-      filter: {}
-      check: null
     comment: ""
 event_triggers:
   - name: delete_file_from_s3
