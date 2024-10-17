@@ -47,5 +47,5 @@ export class FileUploadFormData {
 
   @Property()
   @Required()
-  type: MimeType;
+  type: string;
 }
