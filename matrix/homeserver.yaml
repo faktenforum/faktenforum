@@ -85,24 +85,19 @@ rc_joins:
   local:
     per_second: 1
     burst_count: 15
-# rc_message:
-#   per_second: 1000  # Set a high value to effectively disable throttling
-#   burst_count: 1000 # Set a high value to effectively disable throttling
+rc_message:
+  per_second: 10000  # Set a high value to effectively disable throttling
+  burst_count: 10000 # Set a high value to effectively disable throttling
 
-# rc_registration:
-#   per_second: 1000  # Set a high value to effectively disable throttling
-#   burst_count: 1000 # Set a high value to effectively disable throttling
+rc_registration:
+  per_second: 10000  # Set a high value to effectively disable throttling
+  burst_count: 10000 # Set a high value to effectively disable throttling
 
-# rc_login:
-#   address:
-#     per_second: 1000  # Set a high value to effectively disable throttling
-#     burst_count: 1000 # Set a high value to effectively disable throttling
-#   account:
-#     per_second: 1000  # Set a high value to effectively disable throttling
-#     burst_count: 1000 # Set a high value to effectively disable throttling
-#   failed_attempts:
-#     per_second: 1000  # Set a high value to effectively disable throttling
-#     burst_count: 1000 # Set a high value to effectively disable throttling
+rc_login:
+  account:
+    per_second: 10000  # Set a high value to effectively disable throttling
+    burst_count: 10000 # Set a high value to effectively disable throttling
+
 
 registration_disabled: true             
 encryption_enabled_by_default_for_room_type: off
