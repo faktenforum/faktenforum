@@ -87,7 +87,7 @@ export class MatrixService {
 
       this.adminClient = new MatrixAdminClient(this.envService.matrixInternalUrl, loginResponse.access_token);
 
-      logger.info("[MatrixService] Matrix client initialized with URL:", loginResponse);
+      logger.info("[MatrixService] Matrix client initialized with URL: ", this.envService.matrixInternalUrl);
       await this.initSpaces();
       await this.initChannels();
     } catch (error) {
