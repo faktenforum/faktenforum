@@ -9,13 +9,15 @@
 # For more information on how to configure Synapse, including a complete accounting of
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
-server_name: "chat.localhost:8000"
-public_baseurl: "http://chat.localhost:8000/"
+
+server_name: ${SERVER_NAME}
+public_baseurl: ${PUBLIC_BASEURL}
 pid_file: /data/homeserver.pid
-web_client_location: http://app.localhost:8000/
+web_client_location: ${WEB_CLIENT_LOCATION}
 # Allow Presence tracking allows users to see the state (e.g online/offline)
 allow_public_rooms_without_auth: false
 block_non_admin_invites: true
+suppress_key_server_warning: true
 presence:
   enabled: false
 listeners:
@@ -31,23 +33,23 @@ database:
   name: psycopg2
   txn_limit: 10000
   args:
-    user: synapse_user
-    password: synapse_password
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     database: synapse
-    host: matrix-db
-    port: 5432
+    host: ${POSTGRES_HOST}
+    port: ${SYNAPSE_DB_PORT}
     cp_min: 5
     cp_max: 10
-log_config: "/config/chat.localhost.log.config"
+log_config: "/data/chat.faktenforum.log.config"
 enable_room_encryption: false
 media_store_path: /data/media_store
-registration_shared_secret: "rgTpw4n-5+#9yXp3#g5*r;;#=k8kCtrvkCYh9tiRgzm+Zlp;.Z"
+registration_shared_secret: ${REGISTRATION_SHARED_SECRET}
 report_stats: true
 admin_contact: 'mailto:admin@faktenforum.org'
 
-macaroon_secret_key: "=ipC8-WXz5:poWydyxM81eHW:JpMLl.qCWtV^T7y~u&N5^^LS1"
-form_secret: "qVIy3PXbF~ZJ*ht,kHmKQ=U+~4QALAp^uOZPIJq*mu7z4yq2CS"
-signing_key_path: "/config/chat.localhost.signing.key"
+macaroon_secret_key: ${MACAROON_SECRET_KEY}
+form_secret: ${FORM_SECRET}
+signing_key_path: /data/chat.faktenforum.org.signing.key
 trusted_key_servers:
   - server_name: "matrix.org"
 federation_domain_whitelist: []
@@ -123,5 +125,5 @@ enable_voip: false
 
 jwt_config:
     enabled: true
-    secret: "my-secret-token"
+    secret: ${JWT_SECRET}
     algorithm: "HS256"
