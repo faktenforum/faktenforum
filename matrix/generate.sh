@@ -23,6 +23,7 @@ yq -i '(.. | select(tag == "!!str")) |= envsubst' /data/homeserver.yaml.tmpl
 
 mv /data/homeserver.yaml.tmpl /data/homeserver.yaml
 
+
 # Create sigingkey from env variable
 rm /data/chat.faktenforum.org.signing.key
 echo ${SIGNING_KEY} > /data/chat.faktenforum.org.signing.key
