@@ -16,9 +16,9 @@ export class OnClaimStatusUpdatedRequest {
 
   @Optional()
   @Property()
-  old: ClaimStatusUpdate | null; // Ensure null is explicitly allowed
+  old?: ClaimStatusUpdate | null; // Ensure null is explicitly allowed
 
   @Optional()
   @Required()
-  new: ClaimStatusUpdate | null; // Use the new type here
+  new?: ClaimStatusUpdate | null; // Use the new type here
 }

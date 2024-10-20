@@ -320,11 +320,9 @@ export class MatrixService {
     try {
       // Get the room ID from the alias
       this.logger.info(
-        `[MatrixService] Getting room ID for alias #${roomAlias}:${this.envService.matrixDomain}:8000`
+        `[MatrixService] Getting room ID for alias #${roomAlias}:${this.envService.matrixDomain}`
       );
-      const response = await this.client.getRoomIdForAlias(
-        `#${roomAlias}:${this.envService.matrixDomain}:8000`
-      );
+      const response = await this.client.getRoomIdForAlias(`#${roomAlias}:${this.envService.matrixDomain}`);
       this.logger.error(response);
       const { room_id } = response;
       if (!room_id) {

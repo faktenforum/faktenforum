@@ -100,7 +100,7 @@ export class HasuraWebHookController {
   async onClaimStatusChanged(@BodyParams() body: object) {
     // Changed type to 'any' for logging
     try {
-      this.logger.debug(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
+      this.logger.info(`[HasuraWebHookController] onClaimStatusChanged: ${JSON.stringify(body)}`);
 
       // Cast body to expected type after logging
       const typedBody = body as OnClaimStatusUpdatedRequest;
@@ -149,7 +149,7 @@ export class HasuraWebHookController {
     if (isSubmission) {
       return internal ? SpaceNames.InternalSubmissions : SpaceNames.CommunitySubmissions;
     } else {
-      return internal ? SpaceNames.InternalFactchecks : SpaceNames.InternalSubmissions;
+      return internal ? SpaceNames.InternalFactchecks : SpaceNames.CommunityFactchecks;
     }
   }
 }
