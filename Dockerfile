@@ -14,49 +14,24 @@
 ##                                                                           ##
 ###############################################################################
 ###############################################################################
-ARG NODE_VERSION=20.17
-
-# Build stage
-FROM node:${NODE_VERSION}-alpine as builder
+FROM oven/bun:1 
 WORKDIR /app
 
-# Copy package.json and lock file
-COPY package.json package-lock.json tsconfig.json tsconfig.compile.json .barrelsby.json ./
+# Copy package.json and related files
+COPY package.json bun.lockb tsconfig.json tsconfig.compile.json .barrelsby.json ./
 
-# Install dependencies
-RUN npm install --pure-lockfile
-
+# Install production dependencies
+RUN bun install
 
 # Copy application source
 COPY ./src ./src
-
-# Build the application
-RUN npm run build
-
-# Runtime stage
-FROM node:${NODE_VERSION}-alpine as runtime
-ENV WORKDIR /app
-WORKDIR $WORKDIR
-
-# Install system dependencies
-# RUN apk update && apk add build-base git curl
-# RUN npm install -g pm2
-
-# Copy built assets from the build stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
 COPY ./views ./views
-
-
-# Install production node modules
-RUN npm i --pure-lockfile --production
 
 
 
 EXPOSE 8083
-ENV PORT 8083
-ENV NODE_ENV production
+ENV PORT=8083
+ENV NODE_ENV=production
 
 # Start the application
-CMD [  "npm", "run", "start:prod" ]
+CMD ["bun", "/app/src/index.ts"]
