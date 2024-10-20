@@ -1,6 +1,5 @@
 import { Property, Required, Enum, Optional } from "@tsed/schema";
 import { IsUUID, ValidateIf, IsDefined } from "class-validator";
-import { type MimeType, allowedMimeTypes } from "~/utils/consts";
 
 enum Tables {
   User = "user",

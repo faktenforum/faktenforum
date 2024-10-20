@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams } from "@tsed/platform-params";
-import { Get, Post, Returns } from "@tsed/schema";
+import { Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, HasuraService, MatrixService } from "~/services";

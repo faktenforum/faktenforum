@@ -1,4 +1,4 @@
-import { Property, Required, Enum, Optional, Nullable } from "@tsed/schema";
+import { Property, Required, Enum, Optional } from "@tsed/schema";
 import { ClaimStatus, HasuraOperations } from "~/utils/consts";
 
 type ClaimStatusUpdate = {

@@ -1,7 +1,7 @@
 // src/services/MatrixService.ts
 import { Inject, Injectable } from "@tsed/di";
 import type { MatrixClient, Preset } from "matrix-js-sdk";
-import sdk, { EventType, RoomType, Room, Visibility, JoinRule, RestrictedAllowType } from "matrix-js-sdk";
+import sdk, { EventType, Visibility, JoinRule, RestrictedAllowType } from "matrix-js-sdk";
 import { AuthService, EnvService, HasuraService } from "~/services"; // Import the EnvService
 import { Logger } from "@tsed/common";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
@@ -29,13 +29,6 @@ const Topics = {
   [SpaceNames.InternalSubmissions]: "A space for internal submissions",
   [SpaceNames.InternalFactchecks]: "A space for internal factchecks"
 };
-
-const InternalSpaces = [SpaceNames.Internal, SpaceNames.InternalSubmissions, SpaceNames.InternalFactchecks];
-const CommunitySpaces = [
-  SpaceNames.Community,
-  SpaceNames.CommunitySubmissions,
-  SpaceNames.CommunityFactchecks
-];
 
 @Injectable()
 export class MatrixService {
@@ -368,14 +361,14 @@ export class MatrixService {
       );
 
       // Remove users who are not members of the new space
-      const room = await this.client.getRoom(room_id);
-      const members = await room?.getMembers();
-      for (const member of members ?? []) {
-        // if (!(await this.isUserInSpace(member.userId, toSpace))) {
-        //   await this.client.kick(room_id, member.userId, "User is not a member of the new space");
-        //   this.logger.info(`[MatrixService] User ${member.userId} removed from room ${room_id}`);
-        // }
-      }
+      // const room = await this.client.getRoom(room_id);
+      // // const members = await room?.getMembers();
+      // // // for (const member of members ?? []) {
+      // // //   // if (!(await this.isUserInSpace(member.userId, toSpace))) {
+      // // //   //   await this.client.kick(room_id, member.userId, "User is not a member of the new space");
+      // // //   //   this.logger.info(`[MatrixService] User ${member.userId} removed from room ${room_id}`);
+      // // //   // }
+      // // // }
 
       this.logger.info(`[MatrixService] Room ${room_id} added to space ${toSpace}`);
     } catch (error) {
