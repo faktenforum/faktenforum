@@ -172,7 +172,7 @@ services:
   matrix-migrate:
     build:
       context: ./matrix
-      dockerfile: Dockerfile.migrate
+      dockerfile: Dockerfile.migrate-matrix
     volumes:
       - ./matrix:/config/
       - matrix_data:/data
