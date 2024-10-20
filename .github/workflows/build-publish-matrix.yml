@@ -1,7 +1,7 @@
 name: "FF-MATRIX | Build & Push Docker Images"
 on:
   push:
-    branches: [main, production]
+    branches: [main, production, evaluate-matrix]
     paths:
       - "matrix/**"
   workflow_dispatch:
