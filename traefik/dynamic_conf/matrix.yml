@@ -18,6 +18,8 @@ http:
     cors-headers:
       headers:
         accessControlAllowCredentials: true
-        accessControlAllowMethods: "*"
-        accessControlAllowHeaders: "*"
         accessControlAllowOriginList: "*"
+        accessControlAllowHeaders: "Authorization, Content-Type, Accept, Origin, X-Requested-With"
+        accessControlAllowMethods: "GET, POST, OPTIONS, PUT, DELETE"
+
+
