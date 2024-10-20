@@ -73,6 +73,8 @@ export class MatrixService {
   }
   private async initialize(logger: Logger) {
     try {
+      logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixUrl);
+      logger.info("[MatrixService] Logging in to Matrix with account: ", this.envService.matrixAccount);
       const loginResponse = await this.client!.login("m.login.password", {
         user: this.envService.matrixAccount,
         password: this.envService.matrixPassword
@@ -146,9 +148,6 @@ export class MatrixService {
         .rooms;
       const internalSpaceRooms = (await this.client.getRoomHierarchy(this.spaceIdMap[SpaceNames.Internal]))
         .rooms;
-
-      this.logger.debug(`[MatrixService] Rooms in public space:`, publicSpaceRooms);
-      this.logger.debug(`[MatrixService] Rooms in internal space:`, internalSpaceRooms);
 
       const { channels } = await this.hasuraService.adminRequest<
         QueryChannelsQuery,
