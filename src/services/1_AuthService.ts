@@ -1,9 +1,10 @@
 import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
-import type { Session } from "@ory/client";
+import type { Session } from "@ory/kratos-client";
+import { Configuration, IdentityApi } from "@ory/kratos-client";
 import type { UserRole } from "~/models";
-type ValidatedSession = Session & { identity: { metadata_public: { role: UserRole } }; expires_at: string };
+import { Logger } from "@tsed/common";
 
 export type KratosAddress = {
   id: string;
@@ -18,15 +19,6 @@ export type KratosVerifiableAddress = KratosAddress & {
   status: "completed";
   verified_at: "2024-07-25T10:55:01.966571Z";
 };
-
-export enum KratosRole {
-  aspirant = "aspirant",
-  junior = "junior",
-  senior = "senior",
-  moderator = "moderator",
-  editor = "editor",
-  administrator = "administrator"
-}
 
 export enum KratosLang {
   de = "de",
@@ -46,7 +38,7 @@ export type KratosUser = {
   verifiable_addresses: KratosVerifiableAddress[];
   recovery_addresses: KratosAddress[];
   metadata_public: {
-    role: KratosRole;
+    role: UserRole;
     lang?: KratosLang;
   };
   metadata_admin: null | unknown;
@@ -59,14 +51,16 @@ export type KratosUser = {
 export class AuthService {
   @Inject()
   envService: EnvService;
-
+  @Inject()
+  logger: Logger;
   kratosSessionUrl: URL;
-
+  kratosIdentityApi: IdentityApi;
   constructor(envService: EnvService) {
     this.kratosSessionUrl = new URL(`${envService.kratosPublicUrl}/sessions/whoami`);
+    this.kratosIdentityApi = new IdentityApi(new Configuration({ basePath: envService.kratosAdminUrl }));
   }
 
-  async getKratosSession(sessionCookie: string): Promise<ValidatedSession> {
+  async getUserSession(sessionCookie: string): Promise<Session> {
     const response = await fetch(this.kratosSessionUrl, {
       method: "GET",
       headers: { cookie: `ory_kratos_session=${sessionCookie};` }
@@ -80,7 +74,7 @@ export class AuthService {
       if (session.expires_at === undefined) {
         throw new Exception(500, "Kratos response error: Expires_at not found in session");
       }
-      return session as ValidatedSession;
+      return session;
     }
     if (response.status === 401) {
       throw new Unauthorized("Unauthorized");
@@ -92,6 +86,18 @@ export class AuthService {
     }
   }
 
+  async getUserIdentity(userId: string) {
+    const response = await this.kratosIdentityApi.getIdentity({ id: userId });
+    if (!response.data) {
+      throw new Exception(response.status, response.statusText);
+    }
+    return response.data;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.kratosIdentityApi.deleteIdentity({ id: userId });
+  }
+
   async getAllUsers(): Promise<KratosUser[]> {
     const response = await fetch(`${this.envService.kratosAdminUrl}/admin/identities`);
     if (!response.ok) {
@@ -100,7 +106,7 @@ export class AuthService {
     return await response.json();
   }
 
-  async updateUserRole(userId: string, role: KratosRole): Promise<KratosUser> {
+  async updateUserRole(userId: string, role: UserRole): Promise<KratosUser> {
     const updates = [
       {
         op: "replace",

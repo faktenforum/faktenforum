@@ -1,12 +1,20 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams, Context, Cookies } from "@tsed/platform-params";
-import { Get, Post, Returns } from "@tsed/schema";
+import { BodyParams } from "@tsed/platform-params";
+import { Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
-import { AuthService, HasuraService, KratosRole } from "~/services";
+import { AuthService, HasuraService, MatrixService } from "~/services";
+import { UserRole } from "~/models";
 
-import { InsertUserDocument } from "~/generated/graphql";
-import type { InsertUserMutation, InsertUserMutationVariables } from "~/generated/graphql";
+import { InsertUserDocument, DeleteUserByPkDocument } from "~/generated/graphql";
+import type {
+  InsertUserMutation,
+  InsertUserMutationVariables,
+  DeleteUserByPkMutation,
+  DeleteUserByPkMutationVariables
+} from "~/generated/graphql";
+
+import { Logger } from "@tsed/common";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -18,37 +26,50 @@ export class KratosWebHookController {
   @Inject(AuthService)
   authService: AuthService;
 
-  @Get("/session")
-  @(Returns(200, String).ContentType("application/json")) // prettier-ignore
-  async getSessions(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
-    const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
+  @Inject(MatrixService)
+  matrixService: MatrixService;
 
-    const session = await this.authService.getKratosSession(sessionCookie);
-
-    const hasuraSession = {
-      "X-Hasura-User-Id": session.identity.id,
-      "X-Hasura-Role": session.identity.metadata_public.role.toLowerCase(),
-      Expires: new Date(session.expires_at).toUTCString()
-    };
-    return JSON.stringify(hasuraSession);
-  }
+  @Inject(Logger)
+  logger: Logger;
 
   @Post("/registration-creation")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
-    console.log("body", body);
-    await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
-      InsertUserDocument,
-      {
-        id: body.id,
-        email: body.traits.email,
-        username: body.traits.username,
-        firstName: body.transientPayload.firstName,
-        lastName: body.transientPayload.lastName
+    let id = null;
+    let chatUsername = null;
+    try {
+      const response = await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
+        InsertUserDocument,
+        {
+          id: body.id,
+          email: body.traits.email,
+          username: body.traits.username,
+          firstName: body.transientPayload.firstName ?? "",
+          lastName: body.transientPayload.lastName ?? ""
+        }
+      );
+      id = response.insertUserOne?.id;
+      await this.matrixService.createUser(body.traits.username, body.traits.email);
+      chatUsername = body.traits.username;
+      return {};
+    } catch (error) {
+      this.logger.error(error);
+
+      this.authService.deleteUser(body.id);
+      if (id) {
+        await this.hasuraService.adminRequest<DeleteUserByPkMutation, DeleteUserByPkMutationVariables>(
+          DeleteUserByPkDocument,
+          {
+            id
+          }
+        );
       }
-    );
-    return {};
+      if (chatUsername) {
+        this.matrixService.deleteUser(chatUsername);
+      }
+      return {};
+    }
   }
 
   @Post("/registration-metadata")
@@ -59,7 +80,7 @@ export class KratosWebHookController {
     return {
       identity: {
         metadata_public: {
-          role: KratosRole.aspirant,
+          role: UserRole.Aspirant,
           lang: DEFAULT_LANGUAGE // TODO take from language selector on the page, once it exists
         }
       }

@@ -3,4 +3,6 @@
  */
 
 export * from "./consts";
+export * from "./matrix-admin-api-types";
+export * from "./matrix-admin-api";
 export * from "./time";

@@ -19,8 +19,6 @@ import type { Session } from "~/models";
 import type {
   GetFileByIdQuery,
   GetFileByIdQueryVariables,
-  InsertFileMutation,
-  InsertFileMutationVariables,
   InsertFileAndUpdateOriginFileMutation,
   InsertFileAndUpdateOriginFileMutationVariables,
   InsertFileAndUpdateSourceFileMutation,
@@ -28,9 +26,11 @@ import type {
   InsertFileAndInsertSourceMutation,
   InsertFileAndInsertSourceMutationVariables,
   InsertFileAndInsertOriginMutation,
-  InsertFileAndInsertOriginMutationVariables
+  InsertFileAndInsertOriginMutationVariables,
+  InsertFileAndUpdateUserProfileImageMutation,
+  InsertFileAndUpdateUserProfileImageMutationVariables
 } from "~/generated/graphql";
-import { S3MulterFile } from "~/config/minio";
+import type { S3MulterFile } from "~/config/minio";
 import { FileUploadResponse, FileUploadFormData, OrginSourceData } from "~/models";
 import { AccessControlDecorator } from "~/decorators";
 import { BadRequest } from "@tsed/exceptions";
@@ -173,8 +173,8 @@ export class ClaimsController {
       switch (body.table) {
         case "user": {
           const { insertFileOne } = await this.hasuraService.clientRequest<
-            InsertFileMutation,
-            InsertFileMutationVariables
+            InsertFileAndUpdateUserProfileImageMutation,
+            InsertFileAndUpdateUserProfileImageMutationVariables
           >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
 
           response = { fileId: insertFileOne?.id, entryId: vars.entryId };

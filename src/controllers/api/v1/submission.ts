@@ -4,7 +4,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { Consumes, Post, Returns, getJsonSchema } from "@tsed/schema";
 import Ajv from "ajv";
-import { S3MulterFile } from "~/config/minio";
+import type { S3MulterFile } from "~/config/minio";
 import { SubmissionRequest } from "~/models";
 import { SubmissionCreateResponse } from "~/models";
 import { EnvService, FileService, HasuraService, ImageService } from "~/services";
@@ -60,7 +60,6 @@ export class SubmissionController {
           : undefined;
       if (files && files[fileIndex] && files[fileIndex].mimetype.startsWith("image/")) {
         // Resize and upload the image
-        console.log("--------------------------------------resizing and uploading image");
         this.imageService.resizeAndUpload(files[fileIndex].key);
       }
 

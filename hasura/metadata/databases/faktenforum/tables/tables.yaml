@@ -1,4 +1,5 @@
 - "!include public_category.yaml"
+- "!include public_channel.yaml"
 - "!include public_claim.yaml"
 - "!include public_claim_category.yaml"
 - "!include public_claim_history.yaml"

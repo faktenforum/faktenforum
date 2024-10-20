@@ -316,3 +316,32 @@ update_permissions:
       set:
         updated_by: x-hasura-User-Id
     comment: ""
+event_triggers:
+  - name: on_claim_insert_and_internal_status_update
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+      update:
+        columns:
+          - status
+          - internal
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/on-claim-status-changed'
+    headers:
+      - name: x-api-key
+        value_from_env: HASURA_WEBHOOKS_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "op": {{$body.event.op}},
+            "old": {{ $body.event.data.old }},
+            "new": {{ $body.event.data.new }}
+          }
+      template_engine: Kriti
+      version: 2

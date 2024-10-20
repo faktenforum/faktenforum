@@ -4,8 +4,10 @@
 
 export * from "./Claim";
 export * from "./Session";
+export * from "./User";
 export * from "./requests/DeleteFileRequest";
 export * from "./requests/FileUploadFormData";
+export * from "./requests/OnClaimStatusUpdatedRequest";
 export * from "./requests/RegistrationRequest";
 export * from "./requests/SubmissionRequest";
 export * from "./requests/UpdateUserRoleRequest";

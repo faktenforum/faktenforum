@@ -1,6 +1,13 @@
 import { Property, Required, Enum, Optional } from "@tsed/schema";
 import { IsUUID, ValidateIf, IsDefined } from "class-validator";
-import { type TableType, allowedTableTypes, type MimeType, allowedMimeTypes } from "~/utils/consts";
+
+enum Tables {
+  User = "user",
+  Source = "source",
+  Origin = "origin",
+  Comment = "comment",
+  Message = "message"
+}
 
 export class OrginSourceData {
   @Optional()
@@ -21,8 +28,8 @@ export class FileUploadFormData {
 
   @Property()
   @Required()
-  @Enum(...allowedTableTypes)
-  table: TableType;
+  @Enum(Tables)
+  table: Tables;
 
   @Property()
   @ValidateIf((o) => !o.id)
@@ -39,6 +46,5 @@ export class FileUploadFormData {
 
   @Property()
   @Required()
-  @Enum(...allowedMimeTypes)
-  type: MimeType;
+  type: string;
 }

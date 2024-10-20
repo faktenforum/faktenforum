@@ -1,5 +1,5 @@
 import { Inject, Service } from "@tsed/di";
-import { $log } from "@tsed/logger";
+import { Logger } from "@tsed/common";
 import * as Minio from "minio";
 import type {} from "minio";
 import { Readable } from "stream";
@@ -9,6 +9,9 @@ import { EnvService } from "~/services";
 export class FileService {
   @Inject()
   envService: EnvService;
+
+  @Inject()
+  logger: Logger;
 
   private minioClient: Minio.Client;
 
@@ -28,12 +31,12 @@ export class FileService {
       const bucketExists = await this.minioClient.bucketExists(bucketName);
       if (!bucketExists) {
         await this.minioClient.makeBucket(bucketName, "eu-de-1"); // Replace 'us-east-1' with your preferred region if different.
-        $log.info(`S3 Bucket '${bucketName}' created successfully.`);
+        this.logger.info(`S3 Bucket '${bucketName}' created successfully.`);
       } else {
-        $log.info(`S3 Bucket '${bucketName}' already exists.`);
+        this.logger.info(`S3 Bucket '${bucketName}' already exists.`);
       }
     } catch (error) {
-      $log.error("Error ensuring bucket existence:", error);
+      this.logger.error("Error ensuring bucket existence:", error);
       throw error;
     }
   }

@@ -15,10 +15,11 @@ enum Language {
 }
 
 enum UserRole {
+  aspirant
   junior
-  intermediate
   senior
   moderator
+  editor
   admin
 }
 
