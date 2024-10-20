@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+
+volumes:
+  db_data:
+  minio_data:
+  mailhog-data:
+  mongodb_data:
+  matrix_db_data:
+  matrix_data:
+  kratos_home:
+  kratos_sqlite:
+
+networks:
+  faktenforum:
+    driver: bridge
+  traefik-ingress:
+    driver: bridge
