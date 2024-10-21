@@ -20,10 +20,8 @@ export class EnvService {
   private loadEnvVars() {
     this.envVars = {
       API_BASE_URL: process.env.API_BASE_URL,
-      CLAIM_SUBMISSION_TOKEN_LIFETIME: process.env.CLAIM_SUBMISSION_TOKEN_LIFETIME,
       MINIO_HOST: process.env.MINIO_HOST,
       MINIO_API_PORT: process.env.MINIO_API_PORT,
-      MINIO_REGION: process.env.MINIO_REGION,
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
       MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY,
       MINIO_SECRET_KEY: process.env.MINIO_SECRET_KEY,
@@ -33,6 +31,7 @@ export class EnvService {
       HASURA_ADMIN_SECRET: process.env.HASURA_ADMIN_SECRET,
       KRATOS_API_KEY: process.env.KRATOS_API_KEY,
       HASURA_API_KEY: process.env.HASURA_API_KEY,
+      HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
       NODE_ENV: process.env.NODE_ENV,
       MATRIX_URL: process.env.MATRIX_URL,
       MATRIX_PASSWORD: process.env.MATRIX_PASSWORD,
@@ -55,14 +54,6 @@ export class EnvService {
     return this.envVars.API_BASE_URL;
   }
 
-  get claimSubmissionTokenLifeTime(): string {
-    if (!this.envVars.CLAIM_SUBMISSION_TOKEN_LIFETIME) {
-      this.logger.error("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
-      process.exit(1);
-    }
-    return this.envVars.CLAIM_SUBMISSION_TOKEN_LIFETIME;
-  }
-
   get minioHost(): string {
     if (!this.envVars.MINIO_HOST) {
       this.logger.error("MINIO_HOST is not set!");
@@ -76,17 +67,6 @@ export class EnvService {
       process.exit(1);
     }
     return parseInt(this.envVars.MINIO_API_PORT);
-  }
-  get minioRegion(): string {
-    if (!this.envVars.MINIO_REGION) {
-      this.logger.error("MINIO_REGION is not set!");
-      process.exit(1);
-    }
-    return this.envVars.MINIO_REGION;
-  }
-
-  get minioEndpoint(): string {
-    return `http://${this.minioHost}:${this.minioApiPort}`;
   }
 
   get minioBucketName(): string {
@@ -134,6 +114,13 @@ export class EnvService {
       process.exit(1);
     }
     return this.envVars.HASURA_API_URL;
+  }
+  get hasuraEndpoint(): string {
+    if (!this.envVars.HASURA_ENDPOINT) {
+      this.logger.error("HASURA_ENDPOINT is not set!");
+      process.exit(1);
+    }
+    return this.envVars.HASURA_ENDPOINT;
   }
 
   get hasuraAdminSecret(): string {
@@ -207,13 +194,9 @@ export class EnvService {
 
   private validate() {
     const errors: string[] = [];
-
     if (!this.envVars.API_BASE_URL) errors.push("API_BASE_URL is not set!");
-    if (!this.envVars.CLAIM_SUBMISSION_TOKEN_LIFETIME)
-      errors.push("CLAIM_SUBMISSION_TOKEN_LIFETIME is not set!");
     if (!this.envVars.MINIO_HOST) errors.push("MINIO_HOST is not set!");
     if (!this.envVars.MINIO_API_PORT) errors.push("MINIO_API_PORT is not set!");
-    if (!this.envVars.MINIO_REGION) errors.push("MINIO_REGION is not set!");
     if (!this.envVars.MINIO_BUCKET_NAME) errors.push("MINIO_BUCKET_NAME is not set!");
     if (!this.envVars.MINIO_ACCESS_KEY) errors.push("MINIO_ACCESS_KEY is not set!");
     if (!this.envVars.MINIO_SECRET_KEY) errors.push("MINIO_SECRET_KEY is not set!");
@@ -221,6 +204,7 @@ export class EnvService {
     if (!this.envVars.KRATOS_ADMIN_URL) errors.push("KRATOS_ADMIN_URL is not set!");
     if (!this.envVars.HASURA_API_URL) errors.push("HASURA_API_URL is not set!");
     if (!this.envVars.HASURA_ADMIN_SECRET) errors.push("HASURA_ADMIN_SECRET is not set!");
+    if (!this.envVars.HASURA_ENDPOINT) errors.push("HASURA_ENDPOINT is not set!");
     if (!this.envVars.KRATOS_API_KEY) errors.push("KRATOS_API_KEY is not set!");
     if (!this.envVars.HASURA_API_KEY) errors.push("HASURA_API_KEY is not set!");
     if (!this.envVars.MATRIX_ACCOUNT) errors.push("MATRIX_ACCOUNT is not set!");

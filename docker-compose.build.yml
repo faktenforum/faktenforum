@@ -226,18 +226,18 @@ services:
       dockerfile: Dockerfile
     environment:
       API_BASE_URL: ${API_BASE_URL}
-      HASURA_API_URL: http://graphql-engine:8080/api/v1/graphql
+      HASURA_API_URL: http://graphql-engine:8080/v1/graphql
+      MINIO_HOST: minio
+      MINIO_API_PORT: ${MINIO_API_PORT}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       KRATOS_PUBLIC_URL: ${KRATOS_PUBLIC_URL}
       KRATOS_ADMIN_URL: http://kratos:4434
       KRATOS_API_KEY: ${KRATOS_API_KEY}
+      HASURA_API_KEY: ${HASURA_API_KEY}
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
-      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
-      MINIO_HOST: minio
-      MINIO_API_PORT: ${MINIO_API_PORT}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_REGION: ${MINIO_REGION}
-      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      HASURA_ENDPOINT: http://graphql-engine:8080
       hive_stack: ff-dev
       hive_service: api
       MATRIX_ACCOUNT: ${MATRIX_ACCOUNT}
@@ -245,13 +245,13 @@ services:
       MATRIX_URL: ${MATRIX_URL}
       MATRIX_DOMAIN: ${MATRIX_DOMAIN}
       MATRIX_INTERNAL_URL: http://matrix-server:8008
-      HASURA_API_KEY: ${HASURA_API_KEY}
       NODE_ENV: development
     networks:
       - traefik-ingress
       - faktenforum
     depends_on:
       - matrix-server
+      - db-migrate
 
 volumes:
   db_data:
