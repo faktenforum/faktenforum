@@ -1,37 +1,4 @@
 services:
-  api:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    environment:
-      API_BASE_URL: ${API_BASE_URL}
-      HASURA_API_URL: ${HASURA_PRIVATE_URL}
-      KRATOS_PUBLIC_URL: ${KRATOS_PUBLIC_URL}
-      KRATOS_ADMIN_URL: http://kratos:4434
-      KRATOS_API_KEY: ${KRATOS_API_KEY}
-      HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
-      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
-      MINIO_HOST: ${MINIO_HOST}
-      MINIO_API_PORT: ${MINIO_API_PORT}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_REGION: ${MINIO_REGION}
-      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
-      DATABASE_URL: ${DATABASE_URL}
-      PRISMA_DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      hive_stack: ff-dev
-      hive_service: api
-      MATRIX_ACCOUNT: ${MATRIX_ACCOUNT}
-      MATRIX_PASSWORD: ${MATRIX_PASSWORD}
-      MATRIX_URL: ${MATRIX_ADMIN_URL}
-      MATRIX_DOMAIN: ${MATRIX_DOMAIN}
-      MATRIX_INTERNAL_URL: ${MATRIX_INTERNAL_URL}
-      HASURA_API_KEY: ${HASURA_API_KEY}
-    networks:
-      - traefik-ingress
-      - faktenforum
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
   traefik:
     image: traefik:latest
     command:
@@ -247,10 +214,42 @@ services:
     ports:
       - "8082:80"
     environment:
-      SYNAPSE_ADMIN_URL: "http://matrix-server:8008"
+      SYNAPSE_ADMIN_URL: ${MATRIX_INTERNAL_URL}
     networks:
       - faktenforum
       - traefik-ingress
+    depends_on:
+      - matrix-server
+  ff-api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      API_BASE_URL: ${API_BASE_URL}
+      HASURA_API_URL: http://graphql-engine:8080/api/v1/graphql
+      KRATOS_PUBLIC_URL: ${KRATOS_PUBLIC_URL}
+      KRATOS_ADMIN_URL: http://kratos:4434
+      KRATOS_API_KEY: ${KRATOS_API_KEY}
+      HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
+      CLAIM_SUBMISSION_TOKEN_LIFETIME: ${CLAIM_SUBMISSION_TOKEN_LIFETIME}
+      MINIO_HOST: minio
+      MINIO_API_PORT: ${MINIO_API_PORT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      hive_stack: ff-dev
+      hive_service: api
+      MATRIX_ACCOUNT: ${MATRIX_ACCOUNT}
+      MATRIX_PASSWORD: ${MATRIX_PASSWORD}
+      MATRIX_URL: ${MATRIX_URL}
+      MATRIX_DOMAIN: ${MATRIX_DOMAIN}
+      MATRIX_INTERNAL_URL: http://matrix-server:8008
+      HASURA_API_KEY: ${HASURA_API_KEY}
+      NODE_ENV: development
+    networks:
+      - traefik-ingress
+      - faktenforum
     depends_on:
       - matrix-server
 

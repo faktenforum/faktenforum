@@ -64,8 +64,11 @@ export class MatrixService {
     mxLogger.debug = (...msg) => logger.debug(msg);
 
     mxLogger.setLevel(envService.env === "development" ? mxLogger.levels.DEBUG : mxLogger.levels.INFO);
+    logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixInternalUrl);
+    // get /.well-known/matrix/client an print it
+
     this.client = sdk.createClient({
-      baseUrl: envService.matrixUrl,
+      baseUrl: envService.matrixInternalUrl,
       logger: mxLogger
     });
 
@@ -73,8 +76,9 @@ export class MatrixService {
   }
   private async initialize(logger: Logger) {
     try {
-      logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixUrl);
+      logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixInternalUrl);
       logger.info("[MatrixService] Logging in to Matrix with account: ", this.envService.matrixAccount);
+      logger.info("[MatrixService] Logging in to Matrix with password: ", this.envService.matrixPassword);
       const loginResponse = await this.client!.login("m.login.password", {
         user: this.envService.matrixAccount,
         password: this.envService.matrixPassword
@@ -119,7 +123,7 @@ export class MatrixService {
             name: space,
             topic: Topics[space],
             preset: sdk.Preset.PrivateChat as Preset,
-            room_alias_name: "ff-" + space, // This is the local part of the alias
+            room_alias_name: `${space}`, // This is the local part of the alias
             creation_content: {
               type: "m.space"
             }
@@ -137,7 +141,6 @@ export class MatrixService {
       }
     }
   }
-
   public async initChannels() {
     this.logger.info("[MatrixService] Initializing channels");
     if (!this.client) {
@@ -251,7 +254,7 @@ export class MatrixService {
       const response = await this.client!.createRoom({
         name: roomName,
         preset: sdk.Preset.PublicChat, // Use a preset that allows trusted access
-        room_alias_name: roomName,
+        room_alias_name: `${roomName}`,
         topic: topic,
         initial_state: [
           {

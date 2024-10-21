@@ -33,10 +33,10 @@ export class EnvService {
       HASURA_ADMIN_SECRET: process.env.HASURA_ADMIN_SECRET,
       KRATOS_API_KEY: process.env.KRATOS_API_KEY,
       HASURA_API_KEY: process.env.HASURA_API_KEY,
-      MATRIX_ACCOUNT: process.env.MATRIX_ACCOUNT,
-      MATRIX_PASSWORD: process.env.MATRIX_PASSWORD,
       NODE_ENV: process.env.NODE_ENV,
       MATRIX_URL: process.env.MATRIX_URL,
+      MATRIX_PASSWORD: process.env.MATRIX_PASSWORD,
+      MATRIX_ACCOUNT: process.env.MATRIX_ACCOUNT,
       MATRIX_DOMAIN: process.env.MATRIX_DOMAIN,
       MATRIX_INTERNAL_URL: process.env.MATRIX_INTERNAL_URL
     };

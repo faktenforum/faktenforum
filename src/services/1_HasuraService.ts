@@ -4,11 +4,15 @@ import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { ClientError, GraphQLClient } from "graphql-request";
 import { EnvService } from "~/services";
 import { BadRequest, Forbidden, InternalServerError, NotFound, Unauthorized } from "@tsed/exceptions";
+import { Logger } from "@tsed/common";
 
 @Service()
 export class HasuraService {
   @Inject()
   envService: EnvService;
+
+  @Inject()
+  logger: Logger;
 
   graphQLClient: GraphQLClient;
 
@@ -62,6 +66,7 @@ export class HasuraService {
     }
 
     // For non-ClientError types or other unexpected errors
+    this.logger.error(error);
     throw new InternalServerError(error as string);
   }
 }
