@@ -54,7 +54,7 @@ custom_types:
           value: editor
         - description: null
           is_deprecated: null
-          value: admin
+          value: administrator
   input_objects: []
   objects:
     - name: UserWithRole

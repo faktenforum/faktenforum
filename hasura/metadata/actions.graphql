@@ -20,7 +20,7 @@ enum UserRole {
   senior
   moderator
   editor
-  admin
+  administrator
 }
 
 type UserWithRole {
