@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@tsed/di";
 import type { MatrixClient, Preset } from "matrix-js-sdk";
 import sdk, { EventType, Visibility, JoinRule, RestrictedAllowType } from "matrix-js-sdk";
 import { AuthService, EnvService, HasuraService } from "~/services"; // Import the EnvService
-import { Logger } from "@tsed/common";
+import { $log, Logger } from "@tsed/common";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
 import { QueryChannelsDocument } from "~/generated/graphql";
 import type { QueryChannelsQuery, QueryChannelsQueryVariables } from "~/generated/graphql";
@@ -64,17 +64,34 @@ export class MatrixService {
     mxLogger.debug = (...msg) => logger.debug(msg);
 
     mxLogger.setLevel(envService.env === "development" ? mxLogger.levels.DEBUG : mxLogger.levels.INFO);
+
+    $log.info(`Waiting for Hasura endpoint ${envService.env} to be available...`);
+    this.waitUntilHasuraIsUp(logger);
+  }
+  private async waitUntilHasuraIsUp(logger: Logger) {
+    while (true) {
+      try {
+        const response = await fetch(`${this.envService.hasuraEndpoint}/v1/version`);
+        if (response.ok) {
+          logger.info(`Hasura endpoint ${this.envService.env} is now available.`);
+          break;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        logger.warn(`Endpoint ${this.envService.env} not available, waiting...`);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+
+    // get /.well-known/matrix/client an print it
     this.client = sdk.createClient({
-      baseUrl: envService.matrixUrl,
+      baseUrl: this.envService.matrixInternalUrl,
       logger: mxLogger
     });
-
     this.initialize(logger);
   }
   private async initialize(logger: Logger) {
     try {
-      logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixUrl);
-      logger.info("[MatrixService] Logging in to Matrix with account: ", this.envService.matrixAccount);
       const loginResponse = await this.client!.login("m.login.password", {
         user: this.envService.matrixAccount,
         password: this.envService.matrixPassword
@@ -119,7 +136,7 @@ export class MatrixService {
             name: space,
             topic: Topics[space],
             preset: sdk.Preset.PrivateChat as Preset,
-            room_alias_name: "ff-" + space, // This is the local part of the alias
+            room_alias_name: `${space}`, // This is the local part of the alias
             creation_content: {
               type: "m.space"
             }
@@ -137,7 +154,6 @@ export class MatrixService {
       }
     }
   }
-
   public async initChannels() {
     this.logger.info("[MatrixService] Initializing channels");
     if (!this.client) {
@@ -148,7 +164,7 @@ export class MatrixService {
         .rooms;
       const internalSpaceRooms = (await this.client.getRoomHierarchy(this.spaceIdMap[SpaceNames.Internal]))
         .rooms;
-
+      this.logger.info(`[MatrixService] Get Rooms from hasura:`);
       const { channels } = await this.hasuraService.adminRequest<
         QueryChannelsQuery,
         QueryChannelsQueryVariables
@@ -251,7 +267,7 @@ export class MatrixService {
       const response = await this.client!.createRoom({
         name: roomName,
         preset: sdk.Preset.PublicChat, // Use a preset that allows trusted access
-        room_alias_name: roomName,
+        room_alias_name: `${roomName}`,
         topic: topic,
         initial_state: [
           {
