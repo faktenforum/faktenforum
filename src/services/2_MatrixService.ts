@@ -73,7 +73,7 @@ export class MatrixService {
       try {
         const response = await fetch(`${this.envService.hasuraEndpoint}/v1/version`);
         if (response.ok) {
-          logger.info(`Endpoint ${this.envService.env} is now available.`);
+          logger.info(`Hasura endpoint ${this.envService.env} is now available.`);
           break;
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,7 +82,6 @@ export class MatrixService {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
-    logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixInternalUrl);
 
     // get /.well-known/matrix/client an print it
     this.client = sdk.createClient({
@@ -93,9 +92,6 @@ export class MatrixService {
   }
   private async initialize(logger: Logger) {
     try {
-      logger.info("[MatrixService] Logging in to Matrix URL: ", this.envService.matrixInternalUrl);
-      logger.info("[MatrixService] Logging in to Matrix with account: ", this.envService.matrixAccount);
-      logger.info("[MatrixService] Logging in to Matrix with password: ", this.envService.matrixPassword);
       const loginResponse = await this.client!.login("m.login.password", {
         user: this.envService.matrixAccount,
         password: this.envService.matrixPassword
