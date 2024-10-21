@@ -7,11 +7,11 @@ import { $log } from "@tsed/logger";
 import "@tsed/passport";
 import "@tsed/platform-express";
 import "@tsed/swagger";
-
 import { config } from "./config/index";
 import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
-import { FileService, UsersService } from "./services";
+import { FileService } from "./services";
+import { SetSecurityResponseHeaders } from "~/middlewares";
 
 @Configuration({
   ...config,
@@ -24,6 +24,7 @@ import { FileService, UsersService } from "./services";
     "/api/": [...Object.values(pages)]
   },
   middlewares: [
+    SetSecurityResponseHeaders,
     "cors",
     "cookie-parser",
     "compression",
@@ -44,9 +45,6 @@ export class Server {
 
   @Inject()
   protected fileService: FileService;
-
-  @Inject()
-  protected userService: UsersService;
 
   async $onReady() {
     try {

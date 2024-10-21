@@ -4,3 +4,4 @@
 
 export * from "./AccessControlMiddleware";
 export * from "./ApiKeyAccessControlMiddleware";
+export * from "./SetSecurityResponseHeaders";

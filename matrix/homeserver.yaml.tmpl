@@ -1,0 +1,129 @@
+# Configuration file for Synapse.
+#
+# This is a YAML file: see [1] for a quick introduction. Note in particular
+# that *indentation is important*: all the elements of a list or dictionary
+# should have the same indentation.
+#
+# [1] https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+#
+# For more information on how to configure Synapse, including a complete accounting of
+# each option, go to docs/usage/configuration/config_documentation.md or
+# https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
+
+server_name: ${SERVER_NAME}
+public_baseurl: ${PUBLIC_BASEURL}
+pid_file: /data/homeserver.pid
+web_client_location: ${WEB_CLIENT_LOCATION}
+# Allow Presence tracking allows users to see the state (e.g online/offline)
+allow_public_rooms_without_auth: false
+block_non_admin_invites: true
+suppress_key_server_warning: true
+presence:
+  enabled: false
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client]
+        compress: false
+
+database:
+  name: psycopg2
+  txn_limit: 10000
+  args:
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    database: synapse
+    host: ${POSTGRES_HOST}
+    port: ${SYNAPSE_DB_PORT}
+    cp_min: 5
+    cp_max: 10
+log_config: "/data/chat.faktenforum.log.config"
+enable_room_encryption: false
+media_store_path: /data/media_store
+registration_shared_secret: ${REGISTRATION_SHARED_SECRET}
+report_stats: true
+admin_contact: 'mailto:admin@faktenforum.org'
+
+macaroon_secret_key: ${MACAROON_SECRET_KEY}
+form_secret: ${FORM_SECRET}
+signing_key_path: /data/chat.faktenforum.org.signing.key
+trusted_key_servers:
+  - server_name: "matrix.org"
+federation_domain_whitelist: []
+
+require_membership_for_aliases: false
+default_power_level_content_override:
+   private_chat:
+    events:
+      "com.example.foo": 0
+      "m.room.name": 50
+      "m.room.power_levels": 100
+      "m.room.history_visibility": 100
+      "m.room.canonical_alias": 50
+      "m.room.avatar": 50
+      "m.room.tombstone": 100
+      "m.room.server_acl": 100
+      "m.room.encryption": 100
+   trusted_private_chat: null
+   public_chat: null
+
+room_creation_rules:
+  - action: deny
+    default: true
+
+rc_invites:
+  per_room:
+    per_second: 100000  
+    burst_count: 100000
+  per_user:
+    per_second: 100000
+    burst_count: 100000
+  per_issuer:
+    per_second: 100000
+    burst_count: 100000
+rc_message:
+  per_second: 10000
+  burst_count: 10000    
+rc_joins:
+    per_second: 10000
+    burst_count: 15000
+
+rc_registration:
+  per_second: 10000  # Set a high value to effectively disable throttling
+  burst_count: 10000 # Set a high value to effectively disable throttling
+rc_joins_per_room:
+  per_second: 10000
+  burst_count: 10000
+rc_login:
+  address:
+    per_second: 10000 # Set a high value to effectively disable throttling
+    burst_count: 10000 # Set a high value to effectively disable throttling
+  account:
+    per_second: 10000
+    burst_count: 10000
+  failed_attempts:
+    per_second: 10000
+    burst_count: 10000
+
+
+
+registration_disabled: true             
+encryption_enabled_by_default_for_room_type: off
+user_directory:
+    enabled: false
+enable_room_list_search: false
+alias_creation_rules: 
+  - user_id: "@system:${MATRIX_DOMAIN}"
+    action: allow
+
+forget_rooms_on_leave: true
+ # Disable VoIP by setting the following option to false
+enable_voip: false
+
+jwt_config:
+    enabled: true
+    secret: ${JWT_SECRET}
+    algorithm: "HS256"

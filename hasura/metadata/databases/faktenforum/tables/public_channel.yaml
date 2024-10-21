@@ -1,0 +1,105 @@
+table:
+  name: channel
+  schema: public
+insert_permissions:
+  - role: administrator
+    permission:
+      check: {}
+      columns:
+        - archived
+        - internal
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+        - name
+        - file_id
+    comment: ""
+select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - archived
+        - internal
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+        - name
+        - file_id
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - archived
+        - internal
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+        - name
+        - file_id
+      filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - archived
+        - internal
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+        - name
+        - file_id
+      filter:
+        internal:
+          _eq: false
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - archived
+        - internal
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+        - name
+        - file_id
+      filter:
+        internal:
+          _eq: false
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - archived
+        - internal
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+        - name
+        - file_id
+      filter:
+        internal:
+          _eq: false
+    comment: ""
+update_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - description_de
+        - description_en
+        - label_de
+        - label_en
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: administrator
+    permission:
+      filter: {}
+    comment: ""

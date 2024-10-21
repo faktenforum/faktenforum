@@ -8,7 +8,7 @@ export interface AccessControlDecoratorOptions extends Record<string, unknown> {
   role?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line
 export function AccessControlDecorator(options: AccessControlDecoratorOptions = {}): Function {
   return useDecorators(
     // Order of Decorators is essential  Authenticate -> Secu

@@ -13,8 +13,9 @@ selfservice:
   default_browser_return_url: http://app.localhost:8000/
   allowed_return_urls:
     - http://app.localhost:8000/
-    # - http://localhost:19006/Callback
-    # - exp://localhost:8081/--/Callback
+    - http://chat.localhost:8000/
+    - http://localhost:3000/
+
 
   methods:
     password:
@@ -35,7 +36,7 @@ selfservice:
       ui_url: http://app.localhost:8000/error
 
     settings:
-      ui_url: http://app.localhost:8000/settings
+      ui_url: http://app.localhost:8000/authentication-settings
       privileged_session_max_age: 15m
       required_aal: highest_available
 
@@ -71,7 +72,7 @@ selfservice:
                 url: http://host.docker.internal:8083/api/v1/webhooks/registration-metadata
                 method: POST
                 can_interrupt: true
-                body: /etc/config/kratos/jsonnet/register.jsonnet
+                body: file:///etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: true
                 auth:
@@ -85,7 +86,7 @@ selfservice:
                 url: http://host.docker.internal:8083/api/v1/webhooks/registration-creation
                 method: POST
                 can_interrupt: false
-                body: /etc/config/kratos/jsonnet/register.jsonnet
+                body: file:///etc/config/kratos/jsonnet/register.jsonnet
                 response:
                   parse: false
                 auth:
@@ -124,6 +125,14 @@ identity:
 courier:
   smtp:
     connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true
+  templates:
+    verification_code:
+      valid:
+        email:
+          body:
+            html: file:///etc/config/kratos/templates/verification_code_valid_email_body.html.gotmpl
+            plaintext: file:///etc/config/kratos/templates/verification_code_valid_email_body.plaintext.gotmpl
+          subject: file:///etc/config/kratos/templates/verification_code_valid_email_subject.gotmpl
 
 feature_flags:
   use_continue_with_transitions: true
@@ -131,3 +140,4 @@ feature_flags:
 cookies:
   path: /
   same_site: Lax
+

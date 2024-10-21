@@ -73,7 +73,7 @@ const generateDummyData = () => {
 };
 
 // Upload dummy data
-const uploadDummyData = async (environment: string) => {
+const uploadDummyData = async (environment: string, numberOfClaims: number) => {
   let url;
   if (environment === "local") {
     url = "http://app.localhost:8000/api/v1/submission";
@@ -84,7 +84,7 @@ const uploadDummyData = async (environment: string) => {
     return;
   }
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < numberOfClaims; i++) {
     const dummyData = generateDummyData();
     const form = new FormData();
     form.append("payload", dummyData.payload);
@@ -108,5 +108,6 @@ const uploadDummyData = async (environment: string) => {
 
 // Command line argument processing
 const environment = process.argv[2];
+const numberOfClaims = parseInt(process.argv[3], 10) || 50; // Default to 50 if not provided
 
-uploadDummyData(environment);
+uploadDummyData(environment, numberOfClaims);

@@ -1,0 +1,1 @@
+INSERT INTO content (id, content_de, content_en) VALUES ('aspriant', '', '');

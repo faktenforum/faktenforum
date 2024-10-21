@@ -1,0 +1,12 @@
+query queryChannels {
+  channels: channel {
+    archived
+    descriptionDe
+    descriptionEn
+    fileId
+    internal
+    labelDe
+    labelEn
+    name
+  }
+}

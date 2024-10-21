@@ -1,0 +1,15 @@
+mutation insertFileAndUpdateOriginFile(
+  $fileId: uuid!
+  $eTag: String!
+  $mimeType: String!
+  $name: String!
+  $size: Int!
+  $entryId: uuid!
+) {
+  insertFileOne(object: { id: $fileId, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size }) {
+    id
+  }
+  updateOriginByPk(pkColumns: { id: $entryId }, _set: { fileId: $fileId }) {
+    id
+  }
+}

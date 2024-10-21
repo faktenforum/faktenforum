@@ -6,7 +6,59 @@ object_relationships:
     using:
       foreign_key_constraint_on: user_id
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - id
+        - action
+        - table_name
+        - created_at
+        - claim_status
+        - claim_id
+        - entry_id
+        - user_id
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - id
+        - action
+        - table_name
+        - created_at
+        - claim_status
+        - claim_id
+        - entry_id
+        - user_id
+      filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - id
+        - action
+        - table_name
+        - created_at
+        - claim_status
+        - claim_id
+        - entry_id
+        - user_id
+      filter: {}
+    comment: ""
   - role: moderator
+    permission:
+      columns:
+        - id
+        - action
+        - table_name
+        - created_at
+        - claim_status
+        - claim_id
+        - entry_id
+        - user_id
+      filter: {}
+    comment: ""
+  - role: senior
     permission:
       columns:
         - id

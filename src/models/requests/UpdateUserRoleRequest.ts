@@ -1,6 +1,6 @@
 import { Property, Required, Enum } from "@tsed/schema";
 import { IsUUID } from "class-validator";
-import { KratosRole } from "~/services";
+import { UserRole } from "~/models";
 
 export class UpdateUserRoleRequest {
   @Required()
@@ -10,6 +10,6 @@ export class UpdateUserRoleRequest {
 
   @Required()
   @Property()
-  @Enum(Object.keys(KratosRole))
-  role: KratosRole;
+  @Enum(UserRole)
+  role: UserRole;
 }

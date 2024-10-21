@@ -4,5 +4,9 @@ export class FileUploadResponse {
   @Property()
   @Required()
   @IsUUID()
-  id: string;
+  fileId: string;
+  @Property()
+  @Required()
+  @Property()
+  entryId: string;
 }

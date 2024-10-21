@@ -4,10 +4,10 @@ import { BadRequest } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { Consumes, Post, Returns, getJsonSchema } from "@tsed/schema";
 import Ajv from "ajv";
-import { S3MulterFile } from "~/config/minio";
+import type { S3MulterFile } from "~/config/minio";
 import { SubmissionRequest } from "~/models";
 import { SubmissionCreateResponse } from "~/models";
-import { EnvService, FileService, HasuraService } from "~/services";
+import { EnvService, FileService, HasuraService, ImageService } from "~/services";
 
 import { InsertClaimDocument } from "~/generated/graphql";
 import type {
@@ -25,6 +25,9 @@ export class SubmissionController {
   @Inject()
   fileService: FileService;
 
+  @Inject()
+  imageService: ImageService;
+
   @Inject(HasuraService)
   hasuraService: HasuraService;
 
@@ -36,8 +39,6 @@ export class SubmissionController {
     @MultipartFile("files", 10) files: S3MulterFile[]
   ) {
     const claim: SubmissionRequest = JSON.parse(body.payload);
-    console.log(body.payload);
-    console.log(files);
     const isValid = ajv.validate(SubmissionDtoJsonSchema, claim);
 
     if (!isValid) {
@@ -57,6 +58,11 @@ export class SubmissionController {
               }
             }
           : undefined;
+      if (files && files[fileIndex] && files[fileIndex].mimetype.startsWith("image/")) {
+        // Resize and upload the image
+        this.imageService.resizeAndUpload(files[fileIndex].key);
+      }
+
       return {
         url: origin.url,
         file

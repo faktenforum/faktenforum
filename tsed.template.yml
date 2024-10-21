@@ -8,7 +8,6 @@ features:
   - swagger
   - passportjs
   - db
-  - prisma
   - testing
   - jest
   - linter

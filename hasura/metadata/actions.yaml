@@ -7,7 +7,7 @@ actions:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
     permissions:
-      - role: moderator
+      - role: administrator
     comment: Get all users with their assigned role
   - name: updateUserRole
     definition:
@@ -23,18 +23,26 @@ actions:
         template_engine: Kriti
         version: 2
     permissions:
-      - role: moderator
+      - role: administrator
     comment: Update user role
 custom_types:
   enums:
+    - name: Language
+      values:
+        - description: null
+          is_deprecated: null
+          value: en
+        - description: null
+          is_deprecated: null
+          value: de
     - name: UserRole
       values:
         - description: null
           is_deprecated: null
-          value: junior
+          value: aspirant
         - description: null
           is_deprecated: null
-          value: intermediate
+          value: junior
         - description: null
           is_deprecated: null
           value: senior
@@ -43,7 +51,10 @@ custom_types:
           value: moderator
         - description: null
           is_deprecated: null
-          value: admin
+          value: editor
+        - description: null
+          is_deprecated: null
+          value: administrator
   input_objects: []
   objects:
     - name: UserWithRole

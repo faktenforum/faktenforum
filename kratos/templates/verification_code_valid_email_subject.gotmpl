@@ -1,0 +1,13 @@
+{{define "en"}}
+    Welcome to Faktenforum
+{{end}}
+
+{{define "de"}}
+    Willkommen beim Faktenforum
+{{end}}
+
+{{- if eq .Identity.metadata_public.lang "en" -}}
+    {{ template "en" . }}
+{{- else -}}
+    {{ template "de" . }}
+{{- end -}}

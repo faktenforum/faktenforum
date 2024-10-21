@@ -2,7 +2,7 @@ import { Constant, Controller } from "@tsed/di";
 import { HeaderParams } from "@tsed/platform-params";
 import { View } from "@tsed/platform-views";
 import { Get, Hidden, Returns } from "@tsed/schema";
-import { SwaggerSettings } from "@tsed/swagger";
+import type { SwaggerSettings } from "@tsed/swagger";
 
 @Hidden()
 @Controller("/")
@@ -12,7 +12,7 @@ export class IndexController {
 
   @Get("/")
   @View("swagger.ejs")
-  @Returns(200, String).ContentType("text/html")
+  @(Returns(200, String).ContentType("text/html")) // prettier-ignore
   get(@HeaderParams("x-forwarded-proto") protocol: string, @HeaderParams("host") host: string) {
     const baseUrl = `${protocol || "http"}://${host}`;
 

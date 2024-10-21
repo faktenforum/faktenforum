@@ -1,8 +1,16 @@
 table:
   name: rating_label
   schema: public
+array_relationships:
+  - name: claims
+    using:
+      foreign_key_constraint_on:
+        column: rating_label_name
+        table:
+          name: claim
+          schema: public
 insert_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       check: {}
       columns:
@@ -11,7 +19,40 @@ insert_permissions:
         - name
     comment: ""
 select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+    comment: ""
   - role: moderator
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+    comment: ""
+  - role: senior
     permission:
       columns:
         - label_de
@@ -20,17 +61,16 @@ select_permissions:
       filter: {}
     comment: ""
 update_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       columns:
         - label_de
         - label_en
-        - name
       filter: {}
       check: null
     comment: ""
 delete_permissions:
-  - role: moderator
+  - role: administrator
     permission:
       filter: {}
     comment: ""

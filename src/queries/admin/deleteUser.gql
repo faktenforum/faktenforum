@@ -1,0 +1,5 @@
+mutation deleteUserByPk($id: uuid!) {
+  deleteUserByPk(id: $id) {
+    id
+  }
+}

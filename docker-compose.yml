@@ -1,7 +1,33 @@
-version: "3.5"
 services:
-  db:
-    image: postgres:15.2
+  traefik:
+    image: traefik:latest
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=false"
+      - "--providers.file.directory=/etc/traefik/dynamic_conf"
+      - "--accesslog=true"
+      - "--accesslog.fields.headers.defaultmode=keep"
+      - "--accesslog.fields.headers.names.User-Agent=drop"
+      - "--accesslog.fields.headers.names.Content-Type=drop"
+      - "--entryPoints.web.address=:80"
+
+    ports:
+      - "8000:80"
+      - "8181:8080" # The Traefik dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/dynamic_conf:/etc/traefik/dynamic_conf"
+      - "./traefik/logs:/logs"
+    networks:
+      - traefik-ingress
+      - faktenforum
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres-db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile.db-postgres
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
@@ -9,30 +35,204 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-  server:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
-    image: faktenforum/server:latest
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    networks:
+      - faktenforum
+
+  graphql-engine:
+    image: hasura/graphql-engine:v2.40.0-ce
     ports:
-      - "8081:8081"
+      - "8080:8080"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hasura
+      PGDATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/faktenforum
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_READ_ONLY_MODE: "false"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
+      HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
+      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_WEBHOOKS_BASE_URL}/session
+      HASURA_WEBHOOKS_BASE_URL: ${HASURA_WEBHOOKS_BASE_URL}
+      HASURA_WEBHOOKS_API_KEY: ${HASURA_API_KEY}
+      HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
+      HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: "naming_convention"
+      HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION: "graphql-default"
+    # depends_on:
+    #   data-connector-agent:
+    #     condition: service_healthy
+    networks:
+      - faktenforum
+      - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db-migrate:
+    build:
+      context: ./hasura
+      dockerfile: Dockerfile.hasura-migrate
+    depends_on:
+      - postgres-db
+      - graphql-engine
+    environment:
+      HASURA_ENDPOINT: "http://graphql-engine:8080"
+      HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
+      APPLY_METADATA: "true"
+      APPLY_MIGRATIONS: "true"
+      APPLY_SEEDS: "true"
+    # import current files as volume so a rebuild is no required on database/metada changes
+    volumes:
+      - ./hasura:/app
+    networks:
+      - faktenforum
+
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     ports:
       - "${MINIO_API_PORT}:${MINIO_API_PORT}"
       - "${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}"
     environment:
+      MINIO_SERVER_PORT: ${MINIO_API_PORT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+    networks:
+      - faktenforum
+  # minio-client inits minio with a service account and a bucket
+  minio-client:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MinIO to be ready...' &&
+      sleep 5 &&
+      mc alias set myminio http://minio:${MINIO_API_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc admin user svcacct add  myminio ${MINIO_ROOT_USER} --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} &&
+      mc mb myminio/${MINIO_BUCKET_NAME} &&
+      echo 'Service account and bucket created in MinIO'"
+    networks:
+      - faktenforum
+
+  kratos-migrate:
+    image: oryd/kratos:v1.3
+    depends_on:
+      - postgres-db
+    environment:
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+
+    volumes:
+      - ./kratos/:/etc/config/kratos
+      - kratos_home:/home/ory
+      - kratos_sqlite:/var/lib/sqlite
+
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+  kratos:
+    image: oryd/kratos:v1.3
+    depends_on:
+      - kratos-migrate
+    environment:
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_0_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_1_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SECRETS_COOKIE: ${KRATOS_SECRETS_COOKIE}
+      SECRETS_CIPHER: ${KRATOS_SECRETS_CIPHER}
+
+    volumes:
+      - ./kratos/:/etc/config/kratos
+      - kratos_home:/home/ory
+      - kratos_sqlite:/var/lib/sqlite
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    ports:
+      - "4433:4433" # public
+      - "4434:4434" # admin
+    restart: on-failure
+    networks:
+      - faktenforum
+      - traefik-ingress
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - "4436:4436"
+      - "4437:4437"
+    networks:
+      - faktenforum
+      - traefik-ingress
+
+  matrix-migrate:
+    build:
+      context: ./matrix
+      dockerfile: Dockerfile.migrate-matrix
+    volumes:
+      - ./matrix:/config/
+      - matrix_data:/data
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: synapse
+      REGISTRATION_SHARED_SECRET: ${REGISTRATION_SHARED_SECRET}
+      MACAROON_SECRET_KEY: ${MACAROON_SECRET_KEY}
+      FORM_SECRET: ${FORM_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      SERVER_NAME: ${SERVER_NAME}
+      SIGNING_KEY: ${SIGNING_KEY}
+      PUBLIC_BASEURL: ${PUBLIC_BASEURL}
+      WEB_CLIENT_LOCATION: ${WEB_CLIENT_LOCATION}
+
+  matrix-server:
+    image: docker.io/matrixdotorg/synapse:v1.117.0
+    ports:
+      - "8008:8008" # HTTP
+      - "8448:8448" # Federation
+    environment:
+      UID: 0
+      GID: 0
+    restart: unless-stopped
+    user: "0:0"
+    volumes:
+      - matrix_data:/data
+    networks:
+      - faktenforum
+      - traefik-ingress
+    depends_on:
+      - postgres-db
+      - matrix-migrate
+  synapse-admin:
+    image: awesometechnologies/synapse-admin:latest
+    ports:
+      - "8082:80"
+    environment:
+      SYNAPSE_ADMIN_URL: "http://matrix-server:8008"
+    networks:
+      - faktenforum
+      - traefik-ingress
+    depends_on:
+      - matrix-server
 
 volumes:
   db_data:
   minio_data:
+  mailhog-data:
+  mongodb_data:
+  matrix_db_data:
+  matrix_data:
+  kratos_home:
+  kratos_sqlite:
+
+networks:
+  faktenforum:
+    driver: bridge
+  traefik-ingress:
+    driver: bridge

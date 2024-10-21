@@ -30,8 +30,114 @@ array_relationships:
         table:
           name: source
           schema: public
-select_permissions:
+  - name: users
+    using:
+      foreign_key_constraint_on:
+        column: profile_image
+        table:
+          name: user
+          schema: public
+insert_permissions:
+  - role: administrator
+    permission:
+      check: {}
+      columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+    comment: ""
+  - role: editor
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - created_by
+        - e_tag
+        - id
+        - mime_type
+        - name
+        - size
+        - transcription
+    comment: ""
+  - role: junior
+    permission:
+      check: {}
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - created_by
+        - e_tag
+        - id
+        - mime_type
+        - name
+        - size
+        - transcription
+    comment: ""
   - role: moderator
+    permission:
+      check:
+        _or:
+          - origins:
+              claim:
+                internal:
+                  _eq: false
+          - sources:
+              fact:
+                claim:
+                  internal:
+                    _eq: false
+          - users:
+              id:
+                _eq: X-Hasura-User-Id
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - created_by
+        - e_tag
+        - id
+        - mime_type
+        - name
+        - size
+        - transcription
+    comment: ""
+  - role: senior
+    permission:
+      check:
+        _or:
+          - origins:
+              claim:
+                internal:
+                  _eq: false
+          - sources:
+              fact:
+                claim:
+                  internal:
+                    _eq: false
+          - users:
+              id:
+                _eq: X-Hasura-User-Id
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - created_by
+        - e_tag
+        - id
+        - mime_type
+        - name
+        - size
+        - transcription
+    comment: ""
+select_permissions:
+  - role: administrator
     permission:
       columns:
         - created_at
@@ -48,20 +154,81 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
-update_permissions:
+  - role: editor
+    permission:
+      columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
+    comment: ""
   - role: moderator
     permission:
       columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
         - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
       filter: {}
-      check: null
-      set:
-        updated_by: x-hasura-User-Id
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
     comment: ""
-delete_permissions:
-  - role: moderator
+  - role: senior
     permission:
+      columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
       filter: {}
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
     comment: ""
 event_triggers:
   - name: delete_file_from_s3
