@@ -147,14 +147,6 @@ export class EnvService {
     return this.envVars.MATRIX_PASSWORD;
   }
 
-  get matrixUrl(): string {
-    if (!this.envVars.MATRIX_URL) {
-      this.logger.error("MATRIX_URL is not set!");
-      process.exit(1);
-    }
-    return this.envVars.MATRIX_URL;
-  }
-
   get matrixDomain(): string {
     if (!this.envVars.MATRIX_DOMAIN) {
       this.logger.error("MATRIX_DOMAIN is not set!");
