@@ -55,7 +55,6 @@ export class KratosWebHookController {
       return {};
     } catch (error) {
       this.logger.error(error);
-
       this.authService.deleteUser(body.id);
       if (id) {
         await this.hasuraService.adminRequest<DeleteUserByPkMutation, DeleteUserByPkMutationVariables>(
@@ -66,9 +65,9 @@ export class KratosWebHookController {
         );
       }
       if (chatUsername) {
-        this.matrixService.deleteUser(chatUsername);
+        await this.matrixService.deleteUser(chatUsername);
       }
-      return {};
+      throw new Error(error);
     }
   }
 
