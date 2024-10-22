@@ -154,6 +154,25 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - size
+        - e_tag
+        - mime_type
+        - name
+        - transcription
+        - created_at
+        - updated_at
+        - sys_period
+        - created_by
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
+    comment: ""
   - role: editor
     permission:
       columns:

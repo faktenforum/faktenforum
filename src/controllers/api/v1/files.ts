@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams, BodyParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns, getJsonSchema } from "@tsed/schema";
-import { NotFound } from "@tsed/exceptions";
+import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
 import Ajv from "ajv";
@@ -172,10 +172,13 @@ export class ClaimsController {
       }
       switch (body.table) {
         case "user": {
-          const { insertFileOne } = await this.hasuraService.clientRequest<
+          if (request.user.userId !== vars.entryId) {
+            throw new Unauthorized("Unauthorized");
+          }
+          const { insertFileOne } = await this.hasuraService.adminRequest<
             InsertFileAndUpdateUserProfileImageMutation,
             InsertFileAndUpdateUserProfileImageMutationVariables
-          >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
+          >(InsertFileAndUpdateUserProfileImageDocument, vars);
 
           response = { fileId: insertFileOne?.id, entryId: vars.entryId };
           break;

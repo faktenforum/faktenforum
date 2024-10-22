@@ -1,0 +1,136 @@
+table:
+  name: user_account_view
+  schema: public
+select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - id
+        - profile_image
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1
+      query_root_fields:
+        - select
+      subscription_root_fields: []
+    comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - id
+        - profile_image
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1
+      query_root_fields:
+        - select
+      subscription_root_fields: []
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - id
+        - profile_image
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1
+      query_root_fields:
+        - select
+      subscription_root_fields: []
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - id
+        - profile_image
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1
+      query_root_fields:
+        - select
+      subscription_root_fields: []
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - id
+        - profile_image
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1
+      query_root_fields:
+        - select
+      subscription_root_fields: []
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - bio
+        - email
+        - first_name
+        - last_name
+        - mobile_number
+        - pronouns
+        - username
+        - created_at
+        - updated_at
+        - id
+        - profile_image
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1
+      query_root_fields:
+        - select
+      subscription_root_fields: []
+    comment: ""
