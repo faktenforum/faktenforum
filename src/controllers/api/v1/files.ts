@@ -124,7 +124,8 @@ export class ClaimsController {
       if (!fileMetaData) {
         throw new NotFound("File not found");
       }
-      const fileSized = `${fileId}-${size}`;
+
+      const fileSized = fileMetaData.mimeType === "image/svg+xml" ? fileId : `${fileId}-${size}`;
       const metaData = await this.fileService.getFileMetaData(fileSized);
       const stream = await this.fileService.getFileStream(fileSized);
       response.set({

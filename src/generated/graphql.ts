@@ -7607,6 +7607,204 @@ export type UserUserHistoriesAggregateArgs = {
   where?: InputMaybe<UserHistoryBoolExp>;
 };
 
+/** View of user table to set Hasura Permissions for User to real all */
+export type UserAccountView = {
+  __typename?: 'UserAccountView';
+  bio?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  mobileNumber?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
+  pronouns?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "user_account_view" */
+export type UserAccountViewAggregate = {
+  __typename?: 'UserAccountViewAggregate';
+  aggregate?: Maybe<UserAccountViewAggregateFields>;
+  nodes: Array<UserAccountView>;
+};
+
+/** aggregate fields of "user_account_view" */
+export type UserAccountViewAggregateFields = {
+  __typename?: 'UserAccountViewAggregateFields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<UserAccountViewMaxFields>;
+  min?: Maybe<UserAccountViewMinFields>;
+};
+
+
+/** aggregate fields of "user_account_view" */
+export type UserAccountViewAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<UserAccountViewSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "user_account_view". All fields are combined with a logical 'AND'. */
+export type UserAccountViewBoolExp = {
+  _and?: InputMaybe<Array<UserAccountViewBoolExp>>;
+  _not?: InputMaybe<UserAccountViewBoolExp>;
+  _or?: InputMaybe<Array<UserAccountViewBoolExp>>;
+  bio?: InputMaybe<StringComparisonExp>;
+  createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  email?: InputMaybe<StringComparisonExp>;
+  firstName?: InputMaybe<StringComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  lastName?: InputMaybe<StringComparisonExp>;
+  mobileNumber?: InputMaybe<StringComparisonExp>;
+  profileImage?: InputMaybe<UuidComparisonExp>;
+  pronouns?: InputMaybe<StringComparisonExp>;
+  updatedAt?: InputMaybe<TimestamptzComparisonExp>;
+  username?: InputMaybe<StringComparisonExp>;
+};
+
+/** input type for inserting data into table "user_account_view" */
+export type UserAccountViewInsertInput = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
+  pronouns?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type UserAccountViewMaxFields = {
+  __typename?: 'UserAccountViewMaxFields';
+  bio?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  mobileNumber?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
+  pronouns?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type UserAccountViewMinFields = {
+  __typename?: 'UserAccountViewMinFields';
+  bio?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  mobileNumber?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Scalars['uuid']['output']>;
+  pronouns?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['timestamptz']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "user_account_view" */
+export type UserAccountViewMutationResponse = {
+  __typename?: 'UserAccountViewMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<UserAccountView>;
+};
+
+/** Ordering options when selecting data from "user_account_view". */
+export type UserAccountViewOrderBy = {
+  bio?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  email?: InputMaybe<OrderBy>;
+  firstName?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  lastName?: InputMaybe<OrderBy>;
+  mobileNumber?: InputMaybe<OrderBy>;
+  profileImage?: InputMaybe<OrderBy>;
+  pronouns?: InputMaybe<OrderBy>;
+  updatedAt?: InputMaybe<OrderBy>;
+  username?: InputMaybe<OrderBy>;
+};
+
+/** select columns of table "user_account_view" */
+export enum UserAccountViewSelectColumn {
+  /** column name */
+  Bio = 'bio',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  FirstName = 'firstName',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LastName = 'lastName',
+  /** column name */
+  MobileNumber = 'mobileNumber',
+  /** column name */
+  ProfileImage = 'profileImage',
+  /** column name */
+  Pronouns = 'pronouns',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Username = 'username'
+}
+
+/** input type for updating data in table "user_account_view" */
+export type UserAccountViewSetInput = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
+  pronouns?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "user_account_view" */
+export type UserAccountViewStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: UserAccountViewStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type UserAccountViewStreamCursorValueInput = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  profileImage?: InputMaybe<Scalars['uuid']['input']>;
+  pronouns?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserAccountViewUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<UserAccountViewSetInput>;
+  /** filter the rows which have to be updated */
+  where: UserAccountViewBoolExp;
+};
+
 /** aggregated selection of "user" */
 export type UserAggregate = {
   __typename?: 'UserAggregate';
@@ -8404,7 +8602,7 @@ export type UserPkColumnsInput = {
 };
 
 export enum UserRole {
-  Admin = 'admin',
+  Administrator = 'administrator',
   Aspirant = 'aspirant',
   Editor = 'editor',
   Junior = 'junior',
@@ -8720,6 +8918,8 @@ export type Mutation_Root = {
   deleteSourceHistoryByPk?: Maybe<SourceHistory>;
   /** delete data from the table: "user" */
   deleteUser?: Maybe<UserMutationResponse>;
+  /** delete data from the table: "user_account_view" */
+  deleteUserAccountView?: Maybe<UserAccountViewMutationResponse>;
   /** delete single row from the table: "user" */
   deleteUserByPk?: Maybe<User>;
   /** delete data from the table: "user_claim_status" */
@@ -8812,6 +9012,10 @@ export type Mutation_Root = {
   insertSourceOne?: Maybe<Source>;
   /** insert data into the table: "user" */
   insertUser?: Maybe<UserMutationResponse>;
+  /** insert data into the table: "user_account_view" */
+  insertUserAccountView?: Maybe<UserAccountViewMutationResponse>;
+  /** insert a single row into the table: "user_account_view" */
+  insertUserAccountViewOne?: Maybe<UserAccountView>;
   /** insert data into the table: "user_claim_status" */
   insertUserClaimStatus?: Maybe<UserClaimStatusMutationResponse>;
   /** insert a single row into the table: "user_claim_status" */
@@ -8944,6 +9148,10 @@ export type Mutation_Root = {
   updateSourceMany?: Maybe<Array<Maybe<SourceMutationResponse>>>;
   /** update data of the table: "user" */
   updateUser?: Maybe<UserMutationResponse>;
+  /** update data of the table: "user_account_view" */
+  updateUserAccountView?: Maybe<UserAccountViewMutationResponse>;
+  /** update multiples rows of table: "user_account_view" */
+  updateUserAccountViewMany?: Maybe<Array<Maybe<UserAccountViewMutationResponse>>>;
   /** update single row of the table: "user" */
   updateUserByPk?: Maybe<User>;
   /** update data of the table: "user_claim_status" */
@@ -9208,6 +9416,12 @@ export type Mutation_RootDeleteSourceHistoryByPkArgs = {
 /** mutation root */
 export type Mutation_RootDeleteUserArgs = {
   where: UserBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteUserAccountViewArgs = {
+  where: UserAccountViewBoolExp;
 };
 
 
@@ -9526,6 +9740,18 @@ export type Mutation_RootInsertSourceOneArgs = {
 export type Mutation_RootInsertUserArgs = {
   objects: Array<UserInsertInput>;
   onConflict?: InputMaybe<UserOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertUserAccountViewArgs = {
+  objects: Array<UserAccountViewInsertInput>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertUserAccountViewOneArgs = {
+  object: UserAccountViewInsertInput;
 };
 
 
@@ -9994,6 +10220,19 @@ export type Mutation_RootUpdateUserArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdateUserAccountViewArgs = {
+  _set?: InputMaybe<UserAccountViewSetInput>;
+  where: UserAccountViewBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateUserAccountViewManyArgs = {
+  updates: Array<UserAccountViewUpdates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdateUserByPkArgs = {
   _set?: InputMaybe<UserSetInput>;
   pkColumns: UserPkColumnsInput;
@@ -10192,6 +10431,10 @@ export type Query_Root = {
   sourceHistoryByPk?: Maybe<SourceHistory>;
   /** fetch data from the table: "user" */
   user: Array<User>;
+  /** fetch data from the table: "user_account_view" */
+  userAccountView: Array<UserAccountView>;
+  /** fetch aggregated fields from the table: "user_account_view" */
+  userAccountViewAggregate: UserAccountViewAggregate;
   /** fetch aggregated fields from the table: "user" */
   userAggregate: UserAggregate;
   /** fetch data from the table: "user" using primary key columns */
@@ -10680,6 +10923,24 @@ export type Query_RootUserArgs = {
 };
 
 
+export type Query_RootUserAccountViewArgs = {
+  distinctOn?: InputMaybe<Array<UserAccountViewSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserAccountViewOrderBy>>;
+  where?: InputMaybe<UserAccountViewBoolExp>;
+};
+
+
+export type Query_RootUserAccountViewAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserAccountViewSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserAccountViewOrderBy>>;
+  where?: InputMaybe<UserAccountViewBoolExp>;
+};
+
+
 export type Query_RootUserAggregateArgs = {
   distinctOn?: InputMaybe<Array<UserSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -10918,6 +11179,12 @@ export type Subscription_Root = {
   sourceStream: Array<Source>;
   /** fetch data from the table: "user" */
   user: Array<User>;
+  /** fetch data from the table: "user_account_view" */
+  userAccountView: Array<UserAccountView>;
+  /** fetch aggregated fields from the table: "user_account_view" */
+  userAccountViewAggregate: UserAccountViewAggregate;
+  /** fetch data from the table in a streaming manner: "user_account_view" */
+  userAccountViewStream: Array<UserAccountView>;
   /** fetch aggregated fields from the table: "user" */
   userAggregate: UserAggregate;
   /** fetch data from the table: "user" using primary key columns */
@@ -11552,6 +11819,31 @@ export type Subscription_RootUserArgs = {
 };
 
 
+export type Subscription_RootUserAccountViewArgs = {
+  distinctOn?: InputMaybe<Array<UserAccountViewSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserAccountViewOrderBy>>;
+  where?: InputMaybe<UserAccountViewBoolExp>;
+};
+
+
+export type Subscription_RootUserAccountViewAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserAccountViewSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserAccountViewOrderBy>>;
+  where?: InputMaybe<UserAccountViewBoolExp>;
+};
+
+
+export type Subscription_RootUserAccountViewStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<UserAccountViewStreamCursorInput>>;
+  where?: InputMaybe<UserAccountViewBoolExp>;
+};
+
+
 export type Subscription_RootUserAggregateArgs = {
   distinctOn?: InputMaybe<Array<UserSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -11681,6 +11973,7 @@ export type InsertUserMutationVariables = Exact<{
   username: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
+  profileImage: Scalars['uuid']['input'];
 }>;
 
 
@@ -11795,9 +12088,9 @@ export const DeleteUserByPkDocument = gql`
 }
     `;
 export const InsertUserDocument = gql`
-    mutation insertUser($id: uuid!, $email: String!, $username: String!, $firstName: String!, $lastName: String!) {
+    mutation insertUser($id: uuid!, $email: String!, $username: String!, $firstName: String!, $lastName: String!, $profileImage: uuid!) {
   insertUserOne(
-    object: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName}
+    object: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName, profileImage: $profileImage}
   ) {
     id
   }

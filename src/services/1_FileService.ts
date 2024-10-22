@@ -4,7 +4,7 @@ import * as Minio from "minio";
 import type {} from "minio";
 import { Readable } from "stream";
 import { EnvService } from "~/services";
-
+import { v4 as uuidv4 } from "uuid";
 @Service()
 export class FileService {
   @Inject()
@@ -49,11 +49,31 @@ export class FileService {
     return this.minioClient.statObject(this.envService.minioBucketName, key);
   }
 
-  async saveFile(key: string, stream: Readable, metaData: Minio.ItemBucketMetadata): Promise<void> {
+  async saveFile(
+    key: string | undefined = uuidv4(),
+    content: Readable | string,
+    metaData: Minio.ItemBucketMetadata
+  ): Promise<string> {
     try {
-      await this.minioClient.putObject(this.envService.minioBucketName, key, stream, undefined, metaData);
+      let stream: Readable;
+      if (typeof content === "string") {
+        stream = Readable.from(content);
+      } else {
+        stream = content;
+      }
+
+      await this.minioClient.putObject(
+        this.envService.minioBucketName,
+        key,
+        stream,
+        undefined, // Let Minio handle the content length
+        metaData
+      );
+      this.logger.info(`File '${key}' saved successfully.`);
+      return key;
     } catch (error) {
-      console.error("Error saving file:", error);
+      this.logger.error("Error saving file:", error);
+      throw error; // Re-throw the error to allow the caller to handle it
     }
   }
 
