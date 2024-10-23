@@ -50,30 +50,22 @@ export class FileService {
   }
 
   async saveFile(
-    key: string | undefined = uuidv4(),
-    content: Readable | string,
+    objectName: string,
+    stream: string | Buffer | Readable,
+    size: number | undefined,
     metaData: Minio.ItemBucketMetadata
-  ): Promise<string> {
+  ) {
     try {
-      let stream: Readable;
-      if (typeof content === "string") {
-        stream = Readable.from(content);
-      } else {
-        stream = content;
-      }
-
-      await this.minioClient.putObject(
+      return await this.minioClient.putObject(
         this.envService.minioBucketName,
-        key,
+        objectName,
         stream,
-        undefined, // Let Minio handle the content length
+        size,
         metaData
       );
-      this.logger.info(`File '${key}' saved successfully.`);
-      return key;
     } catch (error) {
       this.logger.error("Error saving file:", error);
-      throw error; // Re-throw the error to allow the caller to handle it
+      throw error;
     }
   }
 

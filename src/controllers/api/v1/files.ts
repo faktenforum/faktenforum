@@ -126,10 +126,12 @@ export class ClaimsController {
       }
 
       const fileSized = fileMetaData.mimeType === "image/svg+xml" ? fileId : `${fileId}-${size}`;
+
       const metaData = await this.fileService.getFileMetaData(fileSized);
       const stream = await this.fileService.getFileStream(fileSized);
+      console.log(metaData.metaData["content-type"]);
       response.set({
-        "Content-Type": metaData?.metaData.contentType,
+        "Content-Type": metaData.metaData["content-type"],
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,

@@ -12005,7 +12005,7 @@ export type InsertFileMutationVariables = Exact<{
   mimeType: Scalars['String']['input'];
   name: Scalars['String']['input'];
   size: Scalars['Int']['input'];
-  createdBy: Scalars['uuid']['input'];
+  createdBy?: InputMaybe<Scalars['uuid']['input']>;
 }>;
 
 
@@ -12136,7 +12136,7 @@ export const GetFileByIdDocument = gql`
 }
     `;
 export const InsertFileDocument = gql`
-    mutation insertFile($id: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $createdBy: uuid!) {
+    mutation insertFile($id: uuid!, $eTag: String!, $mimeType: String!, $name: String!, $size: Int!, $createdBy: uuid) {
   insertFileOne(
     object: {id: $id, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size, createdBy: $createdBy}
   ) {
