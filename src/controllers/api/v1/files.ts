@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams, BodyParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns, getJsonSchema } from "@tsed/schema";
-import { NotFound } from "@tsed/exceptions";
+import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
 import Ajv from "ajv";
@@ -124,11 +124,14 @@ export class ClaimsController {
       if (!fileMetaData) {
         throw new NotFound("File not found");
       }
-      const fileSized = `${fileId}-${size}`;
+
+      const fileSized = fileMetaData.mimeType === "image/svg+xml" ? fileId : `${fileId}-${size}`;
+
       const metaData = await this.fileService.getFileMetaData(fileSized);
       const stream = await this.fileService.getFileStream(fileSized);
+      console.log(metaData.metaData["content-type"]);
       response.set({
-        "Content-Type": metaData?.metaData.contentType,
+        "Content-Type": metaData.metaData["content-type"],
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
@@ -172,10 +175,13 @@ export class ClaimsController {
       }
       switch (body.table) {
         case "user": {
-          const { insertFileOne } = await this.hasuraService.clientRequest<
+          if (request.user.userId !== vars.entryId) {
+            throw new Unauthorized("Unauthorized");
+          }
+          const { insertFileOne } = await this.hasuraService.adminRequest<
             InsertFileAndUpdateUserProfileImageMutation,
             InsertFileAndUpdateUserProfileImageMutationVariables
-          >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
+          >(InsertFileAndUpdateUserProfileImageDocument, vars);
 
           response = { fileId: insertFileOne?.id, entryId: vars.entryId };
           break;

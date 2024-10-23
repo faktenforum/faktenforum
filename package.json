@@ -20,6 +20,9 @@
     "graphql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@dicebear/collection": "^9.2.2",
+    "@dicebear/core": "^9.2.2",
+    "@dicebear/glass": "^9.2.2",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typescript": "^4.0.9",
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",

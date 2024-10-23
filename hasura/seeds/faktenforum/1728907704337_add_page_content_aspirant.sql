@@ -1,1 +1,1 @@
-INSERT INTO content (id, content_de, content_en) VALUES ('aspriant', '', '');
+INSERT INTO page_content (id, content_de, content_en) VALUES ('aspriant', '', '');
