@@ -1,0 +1,6 @@
+query getUserByUsername($username: String!) {
+  user(where: { username: { _eq: $username } }) {
+    profileImage
+    id
+  }
+}

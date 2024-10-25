@@ -11967,6 +11967,13 @@ export type DeleteUserByPkMutationVariables = Exact<{
 
 export type DeleteUserByPkMutation = { __typename?: 'mutation_root', deleteUserByPk?: { __typename?: 'User', id: any } | null };
 
+export type GetUserByUsernameQueryVariables = Exact<{
+  username: Scalars['String']['input'];
+}>;
+
+
+export type GetUserByUsernameQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', profileImage?: any | null, id: any }> };
+
 export type InsertUserMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   email: Scalars['String']['input'];
@@ -12083,6 +12090,14 @@ export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutati
 export const DeleteUserByPkDocument = gql`
     mutation deleteUserByPk($id: uuid!) {
   deleteUserByPk(id: $id) {
+    id
+  }
+}
+    `;
+export const GetUserByUsernameDocument = gql`
+    query getUserByUsername($username: String!) {
+  user(where: {username: {_eq: $username}}) {
+    profileImage
     id
   }
 }
@@ -12247,6 +12262,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     deleteUserByPk(variables: DeleteUserByPkMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteUserByPkMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteUserByPkMutation>(DeleteUserByPkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteUserByPk', 'mutation', variables);
+    },
+    getUserByUsername(variables: GetUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserByUsernameQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserByUsernameQuery>(GetUserByUsernameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserByUsername', 'query', variables);
     },
     insertUser(variables: InsertUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertUserMutation>(InsertUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertUser', 'mutation', variables);
