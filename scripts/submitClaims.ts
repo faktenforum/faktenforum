@@ -60,7 +60,6 @@ const generateDummyData = () => {
     } else {
       origin.fileIndex = genDummyFile() as never;
     }
-    console.log("Origin:", JSON.stringify(origin, null, 2));
     return origin;
   };
   return {
@@ -98,8 +97,6 @@ const uploadDummyData = async (environment: string, numberOfClaims: number) => {
       const result = await axios.post(url, form, {
         headers: form.getHeaders()
       });
-
-      console.log(`Result status ${result.status} data:`, result.data);
     } catch (error) {
       console.error("Error uploading dummy data:", error.message);
     }

@@ -1,13 +1,17 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams } from "@tsed/platform-params";
 import { Post, Returns } from "@tsed/schema";
+import { createAvatar } from "@dicebear/core";
+import { glass } from "@dicebear/collection";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
-import { AuthService, HasuraService, MatrixService } from "~/services";
+import { AuthService, FileService, HasuraService, MatrixService } from "~/services";
 import { UserRole } from "~/models";
 
-import { InsertUserDocument, DeleteUserByPkDocument } from "~/generated/graphql";
+import { InsertUserDocument, DeleteUserByPkDocument, InsertFileDocument } from "~/generated/graphql";
 import type {
+  InsertFileMutation,
+  InsertFileMutationVariables,
   InsertUserMutation,
   InsertUserMutationVariables,
   DeleteUserByPkMutation,
@@ -29,6 +33,9 @@ export class KratosWebHookController {
   @Inject(MatrixService)
   matrixService: MatrixService;
 
+  @Inject(FileService)
+  fileService: FileService;
+
   @Inject(Logger)
   logger: Logger;
 
@@ -38,7 +45,26 @@ export class KratosWebHookController {
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
     let id = null;
     let chatUsername = null;
+
     try {
+      //Generate Avatar
+      const avatar = createAvatar(glass, {
+        seed: body.traits.username
+      });
+      const result = await this.fileService.saveFile(body.id, avatar.toString(), undefined, {
+        name: `avatar-${body.traits.username}.svg`,
+        "Content-Type": "image/svg+xml"
+      });
+      await this.hasuraService.adminRequest<InsertFileMutation, InsertFileMutationVariables>(
+        InsertFileDocument,
+        {
+          id: body.id,
+          mimeType: "image/svg+xml",
+          eTag: result.etag,
+          name: `avatar-${body.traits.username}.svg`,
+          size: avatar.toString().length * 8
+        }
+      );
       const response = await this.hasuraService.adminRequest<InsertUserMutation, InsertUserMutationVariables>(
         InsertUserDocument,
         {
@@ -46,7 +72,8 @@ export class KratosWebHookController {
           email: body.traits.email,
           username: body.traits.username,
           firstName: body.transientPayload.firstName ?? "",
-          lastName: body.transientPayload.lastName ?? ""
+          lastName: body.transientPayload.lastName ?? "",
+          profileImage: body.id
         }
       );
       id = response.insertUserOne?.id;
@@ -55,6 +82,7 @@ export class KratosWebHookController {
       return {};
     } catch (error) {
       this.logger.error(error);
+      this.fileService.deleteFile(body.id);
       this.authService.deleteUser(body.id);
       if (id) {
         await this.hasuraService.adminRequest<DeleteUserByPkMutation, DeleteUserByPkMutationVariables>(

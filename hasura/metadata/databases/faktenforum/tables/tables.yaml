@@ -19,5 +19,6 @@
 - "!include public_source.yaml"
 - "!include public_source_history.yaml"
 - "!include public_user.yaml"
+- "!include public_user_account_view.yaml"
 - "!include public_user_claim_status.yaml"
 - "!include public_user_history.yaml"

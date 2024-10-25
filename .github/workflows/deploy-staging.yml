@@ -15,6 +15,6 @@ jobs:
         with:
           endpoint: ${{ vars.DEV_PORTAINER_URL }}
           access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
-          stack_name: "${{ vars.DEV_PORTAINER_STACK_NAME }}"
+          stack_name: "${{ vars.DEV_BACKEND_STACK_NAME }}"
           prune: true
           pull: true

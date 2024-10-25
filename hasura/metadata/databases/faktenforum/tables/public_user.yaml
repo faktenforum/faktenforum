@@ -115,6 +115,12 @@ select_permissions:
         - profile_image
       filter: {}
     comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - id
+      filter: {}
+    comment: ""
   - role: editor
     permission:
       columns:
@@ -138,15 +144,13 @@ select_permissions:
         - bio
         - created_at
         - id
+        - mobile_number
         - profile_image
         - pronouns
         - sys_period
         - updated_at
         - username
       filter: {}
-      query_root_fields:
-        - select_by_pk
-      subscription_root_fields: []
     comment: ""
   - role: moderator
     permission:
@@ -196,6 +200,20 @@ update_permissions:
       filter: {}
       check: null
     comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - bio
+        - first_name
+        - last_name
+        - mobile_number
+        - profile_image
+        - pronouns
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: {}
+    comment: ""
   - role: editor
     permission:
       columns:
@@ -223,8 +241,6 @@ update_permissions:
         id:
           _eq: X-Hasura-User-Id
       check: {}
-      set:
-        updated_at: ""
     comment: ""
   - role: moderator
     permission:
@@ -253,6 +269,4 @@ update_permissions:
         id:
           _eq: X-Hasura-User-Id
       check: {}
-      set:
-        updated_at: ""
     comment: ""

@@ -1,13 +1,14 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams, BodyParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns, getJsonSchema } from "@tsed/schema";
-import { NotFound } from "@tsed/exceptions";
+import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
 import Ajv from "ajv";
 
 import {
   GetFileByIdDocument,
+  GetUserByUsernameDocument,
   InsertFileAndUpdateUserProfileImageDocument,
   InsertFileAndUpdateOriginFileDocument,
   InsertFileAndUpdateSourceFileDocument,
@@ -19,6 +20,8 @@ import type { Session } from "~/models";
 import type {
   GetFileByIdQuery,
   GetFileByIdQueryVariables,
+  GetUserByUsernameQuery,
+  GetUserByUsernameQueryVariables,
   InsertFileAndUpdateOriginFileMutation,
   InsertFileAndUpdateOriginFileMutationVariables,
   InsertFileAndUpdateSourceFileMutation,
@@ -47,6 +50,61 @@ export class ClaimsController {
 
   @Inject()
   imageService: ImageService;
+
+  @Get("/avatar/:username")
+  @AccessControlDecorator({})
+  @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(404, String).Description("File not found. The requested file does not exist.") // prettier-ignore
+    ) // prettier-ignore
+  @(Returns(500, String).Description("Internal server error. An unexpected error occurred.") // prettier-ignore
+    ) // prettier-ignore
+  async getAvatar(
+    @PathParams("username") username: string,
+    @Req() request: Request,
+    @Res() response: Response & { set: (object: unknown) => void },
+    @Next() next: (error: unknown) => void
+  ) {
+    try {
+      // This is also checks if user has access to this file
+      const queryResponse = await this.hasuraService.adminRequest<
+        GetUserByUsernameQuery,
+        GetUserByUsernameQueryVariables
+      >(GetUserByUsernameDocument, { username });
+      const user = queryResponse.user[0];
+      if (!user) {
+        throw new NotFound("Avatar not found");
+      }
+      const { profileImage, id: userId } = user;
+      const { file: fileMetaData } = await this.hasuraService.adminRequest<
+        GetFileByIdQuery,
+        GetFileByIdQueryVariables
+      >(GetFileByIdDocument, { id: profileImage ?? userId });
+      if (!fileMetaData) {
+        throw new NotFound("File not found");
+      }
+
+      console.log(fileMetaData);
+
+      const metaData = await this.fileService.getFileMetaData(fileMetaData.id);
+      const stream = await this.fileService.getFileStream(fileMetaData?.id || "");
+      response.set({
+        "Content-Type": fileMetaData.mimeType,
+        "Content-Disposition": `filename=${fileMetaData.name}`,
+        "Content-Length": metaData?.size,
+        "Last-Modified": fileMetaData?.updatedAt,
+        ETag: metaData?.etag
+      });
+
+      stream.pipe(response as never);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   @Get("/:fileId")
   @AccessControlDecorator({})
@@ -124,11 +182,14 @@ export class ClaimsController {
       if (!fileMetaData) {
         throw new NotFound("File not found");
       }
-      const fileSized = `${fileId}-${size}`;
+
+      const fileSized = fileMetaData.mimeType === "image/svg+xml" ? fileId : `${fileId}-${size}`;
+
       const metaData = await this.fileService.getFileMetaData(fileSized);
       const stream = await this.fileService.getFileStream(fileSized);
+      console.log(metaData.metaData["content-type"]);
       response.set({
-        "Content-Type": metaData?.metaData.contentType,
+        "Content-Type": metaData.metaData["content-type"],
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
@@ -172,10 +233,13 @@ export class ClaimsController {
       }
       switch (body.table) {
         case "user": {
-          const { insertFileOne } = await this.hasuraService.clientRequest<
+          if (request.user.userId !== vars.entryId) {
+            throw new Unauthorized("Unauthorized");
+          }
+          const { insertFileOne } = await this.hasuraService.adminRequest<
             InsertFileAndUpdateUserProfileImageMutation,
             InsertFileAndUpdateUserProfileImageMutationVariables
-          >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
+          >(InsertFileAndUpdateUserProfileImageDocument, vars);
 
           response = { fileId: insertFileOne?.id, entryId: vars.entryId };
           break;

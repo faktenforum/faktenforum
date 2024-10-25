@@ -190,6 +190,7 @@ services:
       SIGNING_KEY: ${SIGNING_KEY}
       PUBLIC_BASEURL: ${PUBLIC_BASEURL}
       WEB_CLIENT_LOCATION: ${WEB_CLIENT_LOCATION}
+      MATRIX_DOMAIN: ${MATRIX_DOMAIN}
 
   matrix-server:
     image: docker.io/matrixdotorg/synapse:v1.117.0

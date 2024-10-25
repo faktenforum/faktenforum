@@ -31,7 +31,6 @@ const storage = multerS3({
   bucket,
   contentType: multerS3.AUTO_CONTENT_TYPE,
   metadata: (req, file, cb) => {
-    console.log("File", file);
     const user = req.user as User;
     cb(null, {
       fieldName: file.fieldname,

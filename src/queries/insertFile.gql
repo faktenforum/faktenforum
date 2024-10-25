@@ -4,7 +4,7 @@ mutation insertFile(
   $mimeType: String!
   $name: String!
   $size: Int!
-  $createdBy: uuid!
+  $createdBy: uuid
 ) {
   insertFileOne(
     object: { id: $id, eTag: $eTag, mimeType: $mimeType, name: $name, size: $size, createdBy: $createdBy }
