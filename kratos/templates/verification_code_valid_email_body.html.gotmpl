@@ -1,17 +1,23 @@
 {{define "en"}}
-    <h4>Welcome to Faktenforum, a way to debunk fake news - as a community.</h4>
-    <p>
-        To finish your registration, please enter the code "{{ .VerificationCode }}" or open the
-        following link: <a href="{{ .VerificationURL }}">{{ .VerificationURL }}</a>
-    </p>
+    <p>Hallo,<p>
+    <p>herzlich willkommen im CORRECTIV.Faktenforum! Du bist nun Teil einer engagierten Community, die gemeinsam Desinformationen aufdeckt und faktenbasierten Austausch fördert.</p>
+    <p>Um deine Registrierung abzuschließen, folge einfach diesem Link:<br><a href="{{ .VerificationURL }}">{{ .VerificationURL }}</a></p>
+    <p>Oder gib diesen Code ein: <b>{{ .VerificationCode }}</b></p>
+    <p>Du möchtest immer auf dem Laufenden bleiben? Dann melde dich für unseren <a href="https://www.faktenforum.org/">Newsletter</a> an. Falls du Fragen hast oder Unterstützung benötigst, erreichst du uns jederzeit unter <a href="mailto:faktenforum@correctiv.org">faktenforum@correctiv.org</a>.</p>
+    <p>Danke, dass du Teil unserer Community wirst!</p>
+    <p>Herzliche Grüße<br>
+    dein CORRECTIV.Faktenforum-Team</p>
 {{end}}
 
 {{define "de"}}
-    <h4>Willkommen beim Faktenforum, der Weg um Faktenews aufzudecken - als eine Community.</h4>
-    <p>
-        Um deine Registrierung abzuschließen, gib bitten diesen Code ein "{{ .VerificationCode }}"
-        oder fole diesem Link: <a href="{{ .VerificationURL }}">{{ .VerificationURL }}</a>
-    </p>
+    <p>Hallo,<p>
+    <p>herzlich willkommen im CORRECTIV.Faktenforum! Du bist nun Teil einer engagierten Community, die gemeinsam Desinformationen aufdeckt und faktenbasierten Austausch fördert.</p>
+    <p>Um deine Registrierung abzuschließen, folge einfach diesem Link:<br><a href="{{ .VerificationURL }}">{{ .VerificationURL }}</a></p>
+    <p>Oder gib diesen Code ein: <b>{{ .VerificationCode }}</b></p>
+    <p>Du möchtest immer auf dem Laufenden bleiben? Dann melde dich für unseren <a href="https://www.faktenforum.org/">Newsletter</a> an. Falls du Fragen hast oder Unterstützung benötigst, erreichst du uns jederzeit unter <a href="mailto:faktenforum@correctiv.org">faktenforum@correctiv.org</a>.</p>
+    <p>Danke, dass du Teil unserer Community wirst!</p>
+    <p>Herzliche Grüße<br>
+    dein CORRECTIV.Faktenforum-Team</p>
 {{end}}
 
 {{- if eq .Identity.metadata_public.lang "en" -}}

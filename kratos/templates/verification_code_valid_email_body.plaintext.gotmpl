@@ -1,13 +1,41 @@
 {{define "en"}}
-    Welcome to Faktenforum, a way to debunk fake news - as a community.
+    Hallo,
 
-    To finish your registration, please enter the code "{{ .VerificationCode }}" or visiting: {{ .VerificationURL }}
+    herzlich willkommen im CORRECTIV.Faktenforum! Du bist nun Teil einer engagierten Community, die gemeinsam Desinformationen aufdeckt und faktenbasierten Austausch fördert.
+
+    Um deine Registrierung abzuschließen, folge einfach diesem Link:
+    {{ .VerificationURL }}
+
+    Oder gib diesen Code ein: {{ .VerificationCode }}
+
+    Du möchtest immer auf dem Laufenden bleiben? Dann melde dich für unseren Newsletter an https://www.faktenforum.org/. Falls du Fragen hast oder Unterstützung benötigst, erreichst du uns jederzeit unter faktenforum@correctiv.org.
+
+    Danke, dass du Teil unserer Community wirst!
+
+    Herzliche Grüße
+    dein CORRECTIV.Faktenforum-Team
+
+
 {{end}}
 
 {{define "de"}}
-    Willkommen beim Faktenforum, der Weg um Faktenews aufzudecken - als eine Community.
+    Hallo,
 
-    Um deine Registrierung abzuschließen, gib bitten diesen Code ein "{{ .VerificationCode }}" oder besuche {{ .VerificationURL }}
+    herzlich willkommen im CORRECTIV.Faktenforum! Du bist nun Teil einer engagierten Community, die gemeinsam Desinformationen aufdeckt und faktenbasierten Austausch fördert.
+
+    Um deine Registrierung abzuschließen, folge einfach diesem Link:
+    {{ .VerificationURL }}
+
+    Oder gib diesen Code ein: {{ .VerificationCode }}
+
+    Du möchtest immer auf dem Laufenden bleiben? Dann melde dich für unseren Newsletter an https://www.faktenforum.org/. Falls du Fragen hast oder Unterstützung benötigst, erreichst du uns jederzeit unter faktenforum@correctiv.org.
+
+    Danke, dass du Teil unserer Community wirst!
+
+    Herzliche Grüße
+    dein CORRECTIV.Faktenforum-Team
+
+    
 {{end}}
 
 {{- if eq .Identity.metadata_public.lang "en" -}}

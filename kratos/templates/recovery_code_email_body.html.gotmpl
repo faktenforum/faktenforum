@@ -1,0 +1,21 @@
+{{define "en"}}
+    <p>Hallo,</p>
+    <p>um wieder Zugang zu deinem Konto zu erhalten, gib bitte folgenden Code auf der Plattform ein:</p>
+    <p>Code: <b>{{ .RecoveryCode }}</b></p>
+    <p>Nach Eingabe des Codes kannst du ein neues Passwort festlegen. Falls du weitere Unterstützung benötigst, erreichst du uns jederzeit unter faktenforum@correctiv.org.</p>
+    <p>Viel Erfolg und herzliche Grüße,<br>dein CORRECTIV.Faktenforum-Team</p>
+{{end}}
+
+{{define "de"}}
+    <p>Hallo,</p>
+    <p>um wieder Zugang zu deinem Konto zu erhalten, gib bitte folgenden Code auf der Plattform ein:</p>
+    <p>Code: <b>{{ .RecoveryCode }}</b></p>
+    <p>Nach Eingabe des Codes kannst du ein neues Passwort festlegen. Falls du weitere Unterstützung benötigst, erreichst du uns jederzeit unter faktenforum@correctiv.org.</p>
+    <p>Viel Erfolg und herzliche Grüße,<br>dein CORRECTIV.Faktenforum-Team</p>
+{{end}}
+
+{{- if eq .Identity.metadata_public.lang "en" -}}
+    {{ template "en" . }}
+{{- else -}}
+    {{ template "de" . }}
+{{- end -}}
