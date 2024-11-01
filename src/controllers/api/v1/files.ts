@@ -80,18 +80,18 @@ export class ClaimsController {
         throw new NotFound("Avatar not found");
       }
       const { profileImage, id: userId } = user;
+      const fileId = profileImage ?? userId;
       const { file: fileMetaData } = await this.hasuraService.adminRequest<
         GetFileByIdQuery,
         GetFileByIdQueryVariables
-      >(GetFileByIdDocument, { id: profileImage ?? userId });
+      >(GetFileByIdDocument, { id: fileId });
       if (!fileMetaData) {
         throw new NotFound("File not found");
       }
 
-      console.log(fileMetaData);
-
       const metaData = await this.fileService.getFileMetaData(fileMetaData.id);
-      const stream = await this.fileService.getFileStream(fileMetaData?.id || "");
+      const fileSized = fileMetaData.mimeType === "image/svg+xml" ? fileId : `${fileId}-sm`;
+      const stream = await this.fileService.getFileStream(fileSized);
       response.set({
         "Content-Type": fileMetaData.mimeType,
         "Content-Disposition": `filename=${fileMetaData.name}`,
