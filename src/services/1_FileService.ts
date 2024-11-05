@@ -48,6 +48,12 @@ export class FileService {
   getFileMetaData(key: string): Promise<Minio.BucketItemStat> {
     return this.minioClient.statObject(this.envService.minioBucketName, key);
   }
+  fileExists(key: string): Promise<boolean> {
+    return this.minioClient
+      .statObject(this.envService.minioBucketName, key)
+      .then(() => true)
+      .catch(() => false);
+  }
 
   async saveFile(
     objectName: string,

@@ -4,7 +4,6 @@ import loggerConfig from "./logger/index";
 import { s3storage } from "./minio";
 import type { S3MulterFile } from "~/config/minio";
 import { allowedMimeTypes, type MimeType } from "~/utils/consts";
-const pkg = JSON.parse(readFileSync("./package.json", { encoding: "utf8" }));
 import "@tsed/swagger"; // import swagger Ts.ED module
 import "@tsed/platform-express";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
@@ -18,7 +17,7 @@ const fileFilter = (req: Request, file: S3MulterFile, cb: Function) => {
 
 // eslint-disable-next-line no-undef
 export const config: Partial<TsED.Configuration> = {
-  version: pkg.version,
+  version: "1.0.0",
   envs,
   logger: loggerConfig,
   swagger: [

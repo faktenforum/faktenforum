@@ -11967,6 +11967,11 @@ export type DeleteUserByPkMutationVariables = Exact<{
 
 export type DeleteUserByPkMutation = { __typename?: 'mutation_root', deleteUserByPk?: { __typename?: 'User', id: any } | null };
 
+export type GetAllUsersProfileImagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersProfileImagesQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', id: any, profileImage?: any | null, username: string }> };
+
 export type GetUserByUsernameQueryVariables = Exact<{
   username: Scalars['String']['input'];
 }>;
@@ -12091,6 +12096,15 @@ export const DeleteUserByPkDocument = gql`
     mutation deleteUserByPk($id: uuid!) {
   deleteUserByPk(id: $id) {
     id
+  }
+}
+    `;
+export const GetAllUsersProfileImagesDocument = gql`
+    query GetAllUsersProfileImages {
+  user {
+    id
+    profileImage
+    username
   }
 }
     `;
@@ -12262,6 +12276,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     deleteUserByPk(variables: DeleteUserByPkMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteUserByPkMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteUserByPkMutation>(DeleteUserByPkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteUserByPk', 'mutation', variables);
+    },
+    GetAllUsersProfileImages(variables?: GetAllUsersProfileImagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllUsersProfileImagesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllUsersProfileImagesQuery>(GetAllUsersProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllUsersProfileImages', 'query', variables);
     },
     getUserByUsername(variables: GetUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserByUsernameQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserByUsernameQuery>(GetUserByUsernameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserByUsername', 'query', variables);
