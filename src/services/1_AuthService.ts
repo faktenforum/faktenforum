@@ -2,7 +2,7 @@ import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
 import type { Session } from "@ory/kratos-client";
-import { Configuration, IdentityApi } from "@ory/kratos-client";
+import { Configuration, IdentityApi, type Identity } from "@ory/kratos-client";
 import type { UserRole } from "~/models";
 import { Logger } from "@tsed/common";
 
@@ -98,12 +98,10 @@ export class AuthService {
     await this.kratosIdentityApi.deleteIdentity({ id: userId });
   }
 
-  async getAllUsers(): Promise<KratosUser[]> {
-    const response = await fetch(`${this.envService.kratosAdminUrl}/admin/identities`);
-    if (!response.ok) {
-      throw new Exception(response.status, await response.text());
-    }
-    return await response.json();
+  async getAllUsers(): Promise<Identity[]> {
+    const response = await this.kratosIdentityApi.listIdentities();
+
+    return await response.data;
   }
 
   async updateUserRole(userId: string, role: UserRole): Promise<KratosUser> {
