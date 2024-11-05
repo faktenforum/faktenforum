@@ -30,6 +30,10 @@ BEGIN
             v_claim_status := OLD.status;
             v_user_id := OLD.updated_by;
             v_entry_id := OLD.id;
+        ELSIF TG_TABLE_NAME = 'comment' THEN
+            v_claim_id := OLD.claim_id;
+            v_user_id := OLD.updated_by;
+            v_entry_id := OLD.id;
         ELSIF TG_TABLE_NAME = 'source' THEN
             SELECT f.claim_id INTO v_claim_id
             FROM public.fact f
@@ -53,6 +57,10 @@ BEGIN
             v_claim_status := NEW.status;
             v_user_id := NEW.created_by;
             v_entry_id := NEW.id;
+        ELSIF TG_TABLE_NAME = 'comment' THEN
+            v_claim_id := NEW.claim_id;
+            v_user_id := NEW.created_by;
+            v_entry_id := NEW.id;
         ELSIF TG_TABLE_NAME = 'source' THEN
             SELECT f.claim_id INTO v_claim_id
             FROM public.fact f
@@ -71,6 +79,10 @@ BEGIN
         IF TG_TABLE_NAME = 'claim' THEN
             v_claim_id := NEW.id;
             v_claim_status := NEW.status;
+            v_user_id := NEW.updated_by;
+            v_entry_id := NEW.id;
+        ELSIF TG_TABLE_NAME = 'comment' THEN
+            v_claim_id := NEW.claim_id;
             v_user_id := NEW.updated_by;
             v_entry_id := NEW.id;
         ELSIF TG_TABLE_NAME = 'source' THEN
