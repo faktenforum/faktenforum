@@ -1,0 +1,30 @@
+{{define "en"}}
+    Hallo,
+
+    um wieder Zugang zu deinem Konto zu erhalten, gib bitte folgenden Code auf der Plattform ein:
+
+    Code: {{ .RecoveryCode }}
+
+    Nach Eingabe des Codes kannst du ein neues Passwort festlegen. Falls du weitere Unterstützung benötigst, erreichst du uns jederzeit unter faktenforum@correctiv.org.
+    Viel Erfolg und herzliche Grüße,
+    dein CORRECTIV.Faktenforum-Team
+{{end}}
+
+{{define "de"}}
+    Hallo,
+
+    um wieder Zugang zu deinem Konto zu erhalten, gib bitte folgenden Code auf der Plattform ein:
+
+    Code: {{ .RecoveryCode }}
+
+    Nach Eingabe des Codes kannst du ein neues Passwort festlegen. Falls du weitere Unterstützung benötigst, erreichst du uns jederzeit unter faktenforum@correctiv.org.
+    Viel Erfolg und herzliche Grüße,
+    dein CORRECTIV.Faktenforum-Team
+
+{{end}}
+
+{{- if eq .Identity.metadata_public.lang "en" -}}
+    {{ template "en" . }}
+{{- else -}}
+    {{ template "de" . }}
+{{- end -}}
