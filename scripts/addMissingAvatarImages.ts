@@ -1,103 +1,46 @@
-import dotenv from "dotenv";
-import { GraphQLClient, gql } from "graphql-request";
-import fs from "fs/promises";
-import path from "path";
-import { InsertFileDocument, InsertFileMutation, InsertFileMutationVariables } from "~/generated/graphql";
-import { createAvatar } from "@dicebear/core";
-// Load environment variables
-dotenv.config();
+import { Configuration, Inject } from "@tsed/di";
+import { PlatformExpress } from "@tsed/platform-express";
+import { Server } from "../server"; // Adjust the import path as needed
+import { UserService } from "../services/UserService"; // Adjust the import path as needed
+import { FileService } from "../services/FileService"; // Adjust the import path as needed
 
-class HasuraClient {
-  private graphQLClient: GraphQLClient;
-  private hasuraAdminSecret: string;
+@Configuration({
+  rootDir: __dirname,
+  mount: {
+    "/": [`${__dirname}/../controllers/**/*.ts`]
+  },
+  imports: [
+    // Your server configuration imports
+  ]
+})
+class ScriptServer extends Server {}
 
-  constructor() {
-    const hasuraEndpoint = process.env.HASURA_API_URL;
-    this.hasuraAdminSecret = process.env.HASURA_ADMIN_SECRET as string;
+async function bootstrap() {
+  try {
+    const platform = await PlatformExpress.bootstrap(ScriptServer);
+    const userService = platform.injector.get<UserService>(UserService);
+    const fileService = platform.injector.get<FileService>(FileService);
 
-    if (!hasuraEndpoint || !this.hasuraAdminSecret) {
-      throw new Error("HASURA_ENDPOINT or HASURA_ADMIN_SECRET not found in .env file");
-    }
+    const users = await userService.getAllUsers();
+    console.log(`Found ${users.length} users`);
 
-    this.graphQLClient = new GraphQLClient(hasuraEndpoint);
-  }
-
-  async adminRequest<T, V extends Record<string, any> = Record<string, any>>(
-    document: string | gql,
-    variables: V
-  ): Promise<T> {
-    try {
-      return await this.graphQLClient.request(document, variables, {
-        "x-hasura-admin-secret": this.hasuraAdminSecret
-      });
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
-  }
-
-  private handleError(error: unknown): void {
-    console.error("GraphQL request failed:", error);
-  }
-
-  async getAllUsersProfileImages() {
-    const query = gql`
-      query GetAllUsersProfileImages {
-        user {
-          id
-          profileImage
-          username
+    for (const user of users) {
+      if (user.profile_image_id) {
+        const fileExists = await fileService.checkFileExists(user.profile_image_id);
+        if (fileExists) {
+          console.log(`User ${user.id} has a valid profile image (File ID: ${user.profile_image_id})`);
+        } else {
+          console.log(`User ${user.id} has an invalid profile image ID: ${user.profile_image_id}`);
         }
+      } else {
+        console.log(`User ${user.id} is missing a profile image`);
       }
-    `;
-
-    const response = await this.adminRequest<{
-      user: { id: string; profileImage: string | null; username: string }[];
-    }>(query, {});
-    return response.user;
-  }
-
-  async checkFileExists(fileId: string): Promise<boolean> {
-    const query = gql`
-      query getFileByPk($id: uuid = "") {
-        fileByPk(id: $id) {
-          id
-        }
-      }
-    `;
-
-    const response = await this.adminRequest<{ fileByPk: { id: string } | null }>(query, { id: fileId });
-    return !!response.fileByPk;
-  }
-}
-async function main() {
-  const client = new HasuraClient();
-  const users = await client.getAllUsersProfileImages();
-
-  console.log(`Found ${users.length} users`);
-
-  for (const user of users) {
-    const fileExists = await client.checkFileExists(user.id);
-    if (fileExists) {
-      console.log(`User ${user.id} has a valid profile image (File ID: ${user.id})`);
-    } else {
-      console.log(`User ${user.id} has an no Profile Iamge creating one`);
-      const avatar = createAvatar(glass, {
-        seed: user.username
-      });
-      const result = await this.fileService.saveFile(body.id, avatar.toString(), undefined, {
-        name: `avatar-${body.traits.username}.svg`,
-        "Content-Type": "image/svg+xml"
-      });
-      await client.adminRequest<InsertFileMutation, InsertFileMutationVariables>(InsertFileDocument, {
-        id: body.id,
-        mimeType: "image/svg+xml",
-        eTag: result.etag,
-        name: `avatar-${body.traits.username}.svg`,
-        size: avatar.toString().length * 8
-      });
     }
+
+    await platform.stop();
+  } catch (error) {
+    console.error(error);
   }
 }
 
-main().catch(console.error);
+bootstrap();
