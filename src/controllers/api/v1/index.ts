@@ -9,3 +9,4 @@ export * from "./urlInfo";
 export * from "./version";
 export * from "./webhooks/hasura";
 export * from "./webhooks/kratos";
+export * from "./webhooks/patch";
