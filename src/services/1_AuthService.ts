@@ -98,10 +98,27 @@ export class AuthService {
     await this.kratosIdentityApi.deleteIdentity({ id: userId });
   }
 
-  async getAllUsers(): Promise<Identity[]> {
-    const response = await this.kratosIdentityApi.listIdentities();
+  async getAllUsers(
+    perPage?: number,
+    pageToken?: string,
+    ids?: string[]
+  ): Promise<{ identities: Identity[]; nextPageToken?: string }> {
+    const response = await this.kratosIdentityApi.listIdentities({ perPage, pageToken, ids });
+    if (response.status !== 200) {
+      throw new Exception(response.status, response.statusText);
+    }
 
-    return await response.data;
+    const linkHeader = response.headers?.get("Link") ?? null;
+    let nextPageToken: string | undefined;
+
+    if (linkHeader) {
+      const matches = linkHeader.match(/<[^>]+page_token=([^>]+)>; rel="next"/);
+      if (matches) {
+        nextPageToken = matches[1];
+      }
+    }
+
+    return { identities: response.data, nextPageToken };
   }
 
   async updateUserRole(userId: string, role: UserRole): Promise<KratosUser> {
