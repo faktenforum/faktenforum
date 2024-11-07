@@ -1,14 +1,4 @@
 actions:
-  - name: allUsersWithRoles
-    definition:
-      kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/all-users-with-roles'
-      headers:
-        - name: x-api-key
-          value_from_env: HASURA_WEBHOOKS_API_KEY
-    permissions:
-      - role: administrator
-    comment: Get all users with their assigned role
   - name: updateUserRole
     definition:
       kind: synchronous
@@ -25,6 +15,22 @@ actions:
     permissions:
       - role: administrator
     comment: Update user role
+  - name: userRole
+    definition:
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/get-user-role'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input}}'
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: administrator
+    comment: Get Roles of users by array of user ids
 custom_types:
   enums:
     - name: Language
@@ -55,7 +61,19 @@ custom_types:
         - description: null
           is_deprecated: null
           value: administrator
-  input_objects: []
+  input_objects:
+    - name: SampleInput
   objects:
     - name: UserWithRole
+    - name: UserRoleResponse
+      relationships:
+        - field_mapping:
+            id: id
+          name: UserToUserRole
+          remote_table:
+            name: user
+            schema: public
+          source: faktenforum
+          type: object
+    - name: SampleOutput
   scalars: []
