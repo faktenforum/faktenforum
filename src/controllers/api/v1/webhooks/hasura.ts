@@ -16,6 +16,9 @@ import {
   SpaceNames
 } from "~/services";
 import { ClaimStatus, HasuraOperations, SubmissionStatuses } from "~/utils";
+import { Identity } from "@ory/kratos-client";
+import { isEAN } from "class-validator";
+import { NotFound } from "@tsed/exceptions";
 const DEFAULT_LANGUAGE = "de";
 
 @Controller("/webhooks")
@@ -67,7 +70,7 @@ export class HasuraWebHookController {
     return {}; // Returning an empty object with a 200 status code
   }
 
-  transformKratosUser(user: KratosUser) {
+  transformKratosUser(user: Identity) {
     return {
       id: user.id,
       email: user.traits.email,
@@ -77,12 +80,13 @@ export class HasuraWebHookController {
     };
   }
 
-  @Post("/all-users-with-roles")
+  @Post("/get-user-role")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
-  async allUsersWithRoles() {
-    const kratosUsers = await this.authService.getAllUsers();
-    return kratosUsers.map(this.transformKratosUser);
+  async getUsersRoles(@BodyParams() body: { ids: string[] }) {
+    console.log(body);
+    const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
+    return result.identities.map((user) => ({ id: user.id, role: user.metadata_public.role }));
   }
 
   @Post("/update-user-role")
@@ -91,7 +95,7 @@ export class HasuraWebHookController {
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
     this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
-    return this.transformKratosUser(kratosUser);
+    return this.transformKratosUser(kratosUser as Identity);
   }
 
   @Post("/on-claim-status-changed")

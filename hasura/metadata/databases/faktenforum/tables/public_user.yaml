@@ -114,6 +114,7 @@ select_permissions:
         - id
         - profile_image
       filter: {}
+      allow_aggregations: true
     comment: ""
   - role: aspirant
     permission:

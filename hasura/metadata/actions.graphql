@@ -1,12 +1,14 @@
-type Query {
-  allUsersWithRoles: [UserWithRole!]!
-}
-
 type Mutation {
   updateUserRole(
     userId: uuid!
     role: UserRole!
   ): UserWithRole!
+}
+
+type Query {
+  userRole(
+    ids: [uuid]!
+  ): [UserRoleResponse!]!
 }
 
 enum Language {
@@ -23,11 +25,25 @@ enum UserRole {
   administrator
 }
 
+input SampleInput {
+  username: String!
+  password: String!
+}
+
 type UserWithRole {
   id: String!
   username: String!
   email: String!
   role: UserRole!
   lang: Language!
+}
+
+type UserRoleResponse {
+  id: String!
+  role: UserRole!
+}
+
+type SampleOutput {
+  accessToken: String!
 }
 
