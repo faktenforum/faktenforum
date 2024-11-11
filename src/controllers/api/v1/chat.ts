@@ -35,7 +35,8 @@ export class AuthController {
     // Generate a JWT with the username (subject) using authlib
 
     const payload = { sub: (request.user as Session).username };
-    const secret = "my-secret-token";
+    const secret = this.envService.jwtSecret;
+
     const token = jwt.sign(payload, secret, { algorithm: "HS256" });
 
     // Send the JWT in the response

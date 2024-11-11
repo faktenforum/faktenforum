@@ -20,6 +20,7 @@ export class EnvService {
   private loadEnvVars() {
     this.envVars = {
       API_BASE_URL: process.env.API_BASE_URL,
+      JWT_SECRET: process.env.JWT_SECRET,
       MINIO_HOST: process.env.MINIO_HOST,
       MINIO_API_PORT: process.env.MINIO_API_PORT,
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
@@ -163,6 +164,15 @@ export class EnvService {
     return this.envVars.MATRIX_INTERNAL_URL;
   }
 
+  get jwtSecret(): string {
+    if (!this.envVars.JWT_SECRET) {
+      this.logger.error("JWT_SECRET is not set!");
+      process.exit(1);
+    }
+    return this.envVars.JWT_SECRET;
+  }
+  s;
+
   get env(): Environment {
     return (process.env.NODE_ENV || "development") as Environment;
   }
@@ -204,6 +214,7 @@ export class EnvService {
     if (!this.envVars.MATRIX_URL) errors.push("MATRIX_URL is not set!");
     if (!this.envVars.MATRIX_DOMAIN) errors.push("MATRIX_DOMAIN is not set!");
     if (!this.envVars.MATRIX_INTERNAL_URL) errors.push("MATRIX_INTERNAL_URL is not set!");
+    if (!this.envVars.JWT_SECRET) errors.push("JWT_SECRET is not set!");
     if (!this.validEnvs.includes(this.env)) {
       errors.push(`NODE_ENV is not set or invalid! It has to be ${this.validEnvs.join(" | ")}`);
     }
