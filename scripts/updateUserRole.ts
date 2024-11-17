@@ -57,14 +57,22 @@ async function promptForDetails(email?: string, role?: string) {
     });
   }
 
+  questions.push({
+    type: "input",
+    name: "baseUrl",
+    message: "Enter local API base URL:",
+    default: "http://localhost:8083"
+  });
+
   const answers = await inquirer.prompt(questions);
   return {
     email: email || answers.email,
-    role: role || answers.role
+    role: role || answers.role,
+    baseUrl: answers.baseUrl
   };
 }
 
-async function updateUserRole(email: string, role: string) {
+async function updateUserRole(email: string, role: string, baseUrl: string) {
   const spinner = ora();
   try {
     const hasuraAdminSecret = process.env.HASURA_ADMIN_SECRET;
@@ -102,7 +110,7 @@ async function updateUserRole(email: string, role: string) {
 
     spinner.text = "Updating user role...";
     const response = await axios.post(
-      "http://localhost:8083/api/v1/webhooks/update-user-role",
+      `${baseUrl}/api/v1/webhooks/update-user-role`,
       {
         userId,
         role: role
@@ -135,7 +143,7 @@ program
     try {
       loadEnvConfig();
       const details = await promptForDetails(email, options.role);
-      await updateUserRole(details.email, details.role);
+      await updateUserRole(details.email, details.role, details.baseUrl);
     } catch (error) {
       console.error(chalk.red("Error:"), error.message);
       process.exit(1);
