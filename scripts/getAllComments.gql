@@ -1,0 +1,16 @@
+query getAllComments {
+  comment {
+    threadId
+    content
+    claim {
+      shortId
+      status
+    }
+    createdAt
+
+    createdByUser {
+      id
+      username
+    }
+  }
+}
