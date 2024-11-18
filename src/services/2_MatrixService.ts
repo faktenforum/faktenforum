@@ -65,7 +65,7 @@ export class MatrixService {
 
     mxLogger.setLevel(envService.env === "development" ? mxLogger.levels.DEBUG : mxLogger.levels.INFO);
 
-    $log.info(`Waiting for Hasura endpoint ${envService.env} to be available...`);
+    $log.info(`Waiting for Hasura endpoint ${envService.hasuraEndpoint} to be available...`);
     this.waitUntilHasuraIsUp(logger);
   }
   private async waitUntilHasuraIsUp(logger: Logger) {
@@ -73,12 +73,12 @@ export class MatrixService {
       try {
         const response = await fetch(`${this.envService.hasuraEndpoint}/v1/version`);
         if (response.ok) {
-          logger.info(`Hasura endpoint ${this.envService.env} is now available.`);
+          logger.info(`Hasura endpoint ${this.envService.hasuraEndpoint} is now available.`);
           break;
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        logger.warn(`Endpoint ${this.envService.env} not available, waiting...`);
+        logger.warn(`Endpoint ${this.envService.hasuraEndpoint} not available, waiting...`);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
