@@ -54,6 +54,8 @@ export class HasuraWebHookController {
     const hasuraSession = {
       "X-Hasura-User-Id": session.identity!.id,
       "X-Hasura-Role": session.identity!.metadata_public.role.toLowerCase(),
+      "X-Hasura-Lang": session.identity!.metadata_public.lang ?? DEFAULT_LANGUAGE,
+      "X-Hasura-Username": session.identity!.traits.username,
       Expires: session.expires_at
     };
     return JSON.stringify(hasuraSession);
@@ -148,6 +150,29 @@ export class HasuraWebHookController {
     }
     return { alteredRoom: false }; // Returning an empty object with a 200 status code
   }
+
+  @Post("/block-room-message")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, Object).ContentType("application/json")) // prettier-ignore
+  async blockMessage(
+    @BodyParams()
+    body: {
+      roomId: string;
+      messageId: string;
+      userId: string;
+      userRole: string;
+      userName: string;
+    }
+  ) {
+    // Log the request headers
+    this.logger.info(`[HasuraWebHookController] block Request Headers: ${JSON.stringify(body)}`);
+
+    // await this.matrixService.blockMessage(body.roomId, body.messageId, body.userId);
+    return {
+      success: true
+    };
+  }
+
   private getSpaceName(status: ClaimStatus, internal: boolean) {
     const isSubmission = SubmissionStatuses.includes(status);
     if (isSubmission) {

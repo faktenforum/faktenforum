@@ -325,6 +325,26 @@ export class MatrixService {
     await this.client.kick(roomId, this.usernameToMatrixUser(username));
   }
 
+  public async isUserInChannel(username: string, roomId: string): Promise<boolean> {
+    if (!this.client) {
+      throw new Error("Matrix client is not initialized");
+    }
+
+    const userId = this.usernameToMatrixUser(username);
+
+    try {
+      const members = await this.client.getJoinedRoomMembers(roomId);
+      const isMember = members.joined[userId];
+      this.logger.info(`[MatrixService] User ${username} is ${isMember ? "" : "not "}in room ${roomId}`);
+      return !!isMember;
+    } catch (error) {
+      this.logger.error(
+        `[MatrixService] Error checking membership for user ${username} in room ${roomId}:`,
+        error
+      );
+      return false;
+    }
+  }
   // Add more methods as needed for other admin tasks
 
   public async moveRoomToSpace(roomAlias: string, fromSpace: SpaceNames, toSpace: SpaceNames): Promise<void> {
