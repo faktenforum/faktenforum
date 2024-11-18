@@ -93,8 +93,7 @@ const uploadDummyData = async (environment: string, numberOfClaims: number) => {
     });
 
     try {
-      console.log(`Uploading dummy data to ${url}`);
-      const result = await axios.post(url, form, {
+      await axios.post(url, form, {
         headers: form.getHeaders()
       });
     } catch (error) {

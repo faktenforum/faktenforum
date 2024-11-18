@@ -10,15 +10,13 @@ import {
   FileService,
   EnvService,
   HasuraService,
-  KratosUser,
   ImageService,
   MatrixService,
   SpaceNames
 } from "~/services";
 import { ClaimStatus, HasuraOperations, SubmissionStatuses } from "~/utils";
 import { Identity } from "@ory/kratos-client";
-import { isEAN } from "class-validator";
-import { NotFound } from "@tsed/exceptions";
+
 const DEFAULT_LANGUAGE = "de";
 
 @Controller("/webhooks")
@@ -54,6 +52,8 @@ export class HasuraWebHookController {
     const hasuraSession = {
       "X-Hasura-User-Id": session.identity!.id,
       "X-Hasura-Role": session.identity!.metadata_public.role.toLowerCase(),
+      "X-Hasura-Lang": session.identity!.metadata_public.lang ?? DEFAULT_LANGUAGE,
+      "X-Hasura-Username": session.identity!.traits.username,
       Expires: session.expires_at
     };
     return JSON.stringify(hasuraSession);
@@ -84,7 +84,6 @@ export class HasuraWebHookController {
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
   async getUsersRoles(@BodyParams() body: { ids: string[] }) {
-    console.log(body);
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
     return result.identities.map((user) => ({ id: user.id, role: user.metadata_public.role }));
   }
@@ -148,6 +147,29 @@ export class HasuraWebHookController {
     }
     return { alteredRoom: false }; // Returning an empty object with a 200 status code
   }
+
+  @Post("/block-room-message")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, Object).ContentType("application/json")) // prettier-ignore
+  async blockMessage(
+    @BodyParams()
+    body: {
+      roomId: string;
+      messageId: string;
+      userId: string;
+      userRole: string;
+      userName: string;
+    }
+  ) {
+    // Log the request headers
+    this.logger.info(`[HasuraWebHookController] block Request Headers: ${JSON.stringify(body)}`);
+
+    await this.matrixService.blockMessage(body.roomId, body.messageId, body.userName, body.userRole);
+    return {
+      success: true
+    };
+  }
+
   private getSpaceName(status: ClaimStatus, internal: boolean) {
     const isSubmission = SubmissionStatuses.includes(status);
     if (isSubmission) {

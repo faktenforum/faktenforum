@@ -1,4 +1,11 @@
 type Mutation {
+  blockRoomMessage(
+    roomId: String!
+    messageId: String!
+  ): BlockRoomMessageOutput
+}
+
+type Mutation {
   updateUserRole(
     userId: uuid!
     role: UserRole!
@@ -45,5 +52,9 @@ type UserRoleResponse {
 
 type SampleOutput {
   accessToken: String!
+}
+
+type BlockRoomMessageOutput {
+  success: Boolean
 }
 
