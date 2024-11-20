@@ -4,7 +4,7 @@ import * as Minio from "minio";
 import type {} from "minio";
 import { Readable } from "stream";
 import { EnvService } from "~/services";
-import { v4 as uuidv4 } from "uuid";
+
 @Service()
 export class FileService {
   @Inject()

@@ -1,4 +1,31 @@
 actions:
+  - name: blockRoomMessage
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/block-room-message'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "roomId": {{$body.input.roomId}},
+              "messageId": {{$body.input.messageId}},
+              "userId": {{$session_variables?['x-hasura-user-id']}} ,
+              "username": {{$session_variables?['x-hasura-username']}},
+              "userRole": {{$session_variables?['x-hasura-role']}}
+
+            }
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: moderator
+      - role: editor
+      - role: administrator
+    comment: Block Room message
   - name: updateUserRole
     definition:
       kind: synchronous
@@ -76,4 +103,5 @@ custom_types:
           source: faktenforum
           type: object
     - name: SampleOutput
+    - name: BlockRoomMessageOutput
   scalars: []

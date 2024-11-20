@@ -1,0 +1,7 @@
+query getUserProfileImages {
+  user {
+    id
+    username
+    profileImage
+  }
+}

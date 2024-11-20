@@ -7,7 +7,7 @@ import { $log, Logger } from "@tsed/common";
 import { logger as mxLogger } from "matrix-js-sdk/lib/logger";
 import { QueryChannelsDocument } from "~/generated/graphql";
 import type { QueryChannelsQuery, QueryChannelsQueryVariables } from "~/generated/graphql";
-import { POWER_LEVELS } from "~/utils/consts";
+import { ChatRedactedReasons, POWER_LEVELS } from "~/utils/consts";
 import MatrixAdminClient from "~/utils/matrix-admin-api";
 import { randomBytes } from "crypto";
 import { UserRole, PowerLevel } from "~/models";
@@ -65,7 +65,7 @@ export class MatrixService {
 
     mxLogger.setLevel(envService.env === "development" ? mxLogger.levels.DEBUG : mxLogger.levels.INFO);
 
-    $log.info(`Waiting for Hasura endpoint ${envService.env} to be available...`);
+    $log.info(`Waiting for Hasura endpoint ${envService.hasuraEndpoint} to be available...`);
     this.waitUntilHasuraIsUp(logger);
   }
   private async waitUntilHasuraIsUp(logger: Logger) {
@@ -73,12 +73,12 @@ export class MatrixService {
       try {
         const response = await fetch(`${this.envService.hasuraEndpoint}/v1/version`);
         if (response.ok) {
-          logger.info(`Hasura endpoint ${this.envService.env} is now available.`);
+          logger.info(`Hasura endpoint ${this.envService.hasuraEndpoint} is now available.`);
           break;
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        logger.warn(`Endpoint ${this.envService.env} not available, waiting...`);
+        logger.warn(`Endpoint ${this.envService.hasuraEndpoint} not available, waiting...`);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
@@ -325,7 +325,27 @@ export class MatrixService {
     await this.client.kick(roomId, this.usernameToMatrixUser(username));
   }
 
-  // Add more methods as needed for other admin tasks
+  public async isUserInChannel(username: string, roomId: string): Promise<boolean> {
+    if (!this.client) {
+      throw new Error("Matrix client is not initialized");
+    }
+
+    const userId = this.usernameToMatrixUser(username);
+
+    try {
+      const members = await this.client.getJoinedRoomMembers(roomId);
+      const isMember = members.joined[userId];
+      this.logger.info(`[MatrixService] User ${username} is ${isMember ? "" : "not "}in room ${roomId}`);
+      return !!isMember;
+    } catch (error) {
+      this.logger.error(
+        `[MatrixService] Error checking membership for user ${username} in room ${roomId}:`,
+        error
+      );
+      return false;
+    }
+  }
+  // Add more methods as needed for other admin task
 
   public async moveRoomToSpace(roomAlias: string, fromSpace: SpaceNames, toSpace: SpaceNames): Promise<void> {
     if (!this.client) {
@@ -389,6 +409,27 @@ export class MatrixService {
         `[MatrixService] Error moving room ${roomAlias} from ${fromSpace} to ${toSpace}:`,
         error
       );
+    }
+  }
+
+  public async blockMessage(roomId: string, messageId: string, userName: string, userRole: string) {
+    this.logger.info(
+      `[MatrixService] Blocking message ${messageId} in room ${roomId} by user ${userName} with role ${userRole}`
+    );
+
+    const spaceChecks = await Promise.all([
+      this.isRoomInSpace(roomId, SpaceNames.Internal),
+      this.isRoomInSpace(roomId, SpaceNames.InternalFactchecks),
+      this.isRoomInSpace(roomId, SpaceNames.InternalSubmissions)
+    ]);
+
+    const isInAnyInternalSpace = spaceChecks.some(Boolean);
+    const allowedRoles = [UserRole.Editor, UserRole.Administrator];
+
+    if ((isInAnyInternalSpace && allowedRoles.includes(userRole as UserRole)) || !isInAnyInternalSpace) {
+      this.client?.redactEvent(roomId, messageId, undefined, {
+        reason: ChatRedactedReasons.BLOCKED_BY_MODERATOR
+      });
     }
   }
 

@@ -15,6 +15,11 @@ export enum HasuraOperations {
   DELETE = "DELETE"
 }
 
+export enum ChatRedactedReasons {
+  DELETED_BY_USER = "Deleted by user",
+  BLOCKED_BY_MODERATOR = "Blocked by moderator"
+}
+
 export const allowedMimeTypes = [
   "application/pdf",
   "image/jpeg",
