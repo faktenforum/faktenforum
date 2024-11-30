@@ -1,7 +1,7 @@
 import { createClient } from "matrix-js-sdk";
 import { createObjectCsvWriter } from "csv-writer";
 import { GraphQLClient } from "graphql-request";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 axios.defaults.baseURL = process.env.SYNAPSE_URL || "http://chat.localhost:8000";
 
@@ -30,6 +30,7 @@ interface MigrationConfig {
   matrixDomain: string;
   username: string;
   password: string;
+  asToken: string;
   batchSize: number;
   hasuraApiUrl: string;
   hasuraAdminSecret: string;
@@ -40,6 +41,53 @@ interface MigrationLog {
   roomId: string;
   newEventId: string;
   status: string;
+}
+
+export class MatrixApiClient {
+  private client: AxiosInstance;
+
+  constructor(baseURL: string, accessToken: string) {
+    this.client = axios.create({
+      baseURL,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+  }
+
+  async createMessage(
+    matrixMessage: MatrixMessage,
+    roomId: string,
+    userId: string,
+    ts: number,
+    transactionId: string
+  ): Promise<string> {
+    const { data } = await this.client.put(
+      `/_matrix/client/v3/rooms/${roomId}/send/m.room.message/${transactionId}`,
+      matrixMessage,
+      {
+        params: { user_id: userId, ts }
+      }
+    );
+    return data.event_id;
+  }
+
+  async joinUserToRoom(roomId: string, userId: string): Promise<void> {
+    await this.client.post(
+      `/_matrix/client/v3/join/${roomId}`,
+      {},
+      {
+        params: { user_id: userId }
+      }
+    );
+  }
+
+  async getRoomIdFromAlias(roomAlias: string): Promise<string> {
+    const { data } = await this.client.get(
+      `/_matrix/client/v3/directory/room/${encodeURIComponent(roomAlias)}`
+    );
+    return data.room_id;
+  }
 }
 
 async function migrateCommentsToMatrix(comments: Comment[], config: MigrationConfig): Promise<void> {
@@ -53,51 +101,10 @@ async function migrateCommentsToMatrix(comments: Comment[], config: MigrationCon
     ]
   });
 
-  // Initialize Matrix client and login
-  const matrixClient = createClient({
-    baseUrl: config.matrixHomeserver
-  });
+  const matrixApiClient = new MatrixApiClient(config.matrixHomeserver, config.asToken);
 
-  const accessToken = "faktenforum";
-
-  try {
-    const loginResponse = await matrixClient.login("m.login.password", {
-      user: config.username,
-      password: config.password
-    });
-    console.log("Login Response", loginResponse);
-    await matrixClient.startClient(); // Start the client after successful login
-  } catch (error) {
-    console.error("Failed to login to Matrix:", error);
-    throw error;
-  }
-
-  async function createMessage(
-    matrixMessage: MatrixMessage,
-    room_id: string,
-    user_id: string,
-    ts: number,
-    transactionId: string
-  ): Promise<string> {
-    return (
-      await axios.put(
-        `/_matrix/client/v3/rooms/${room_id}/send/m.room.message/${transactionId}?user_id=${user_id}&ts=${ts}`,
-        matrixMessage,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      )
-    ).data.event_id;
-  }
-
-  async function joinUserToRoom(roomId: string, userId: string) {
-    await axios.post(
-      `/_matrix/client/v3/join/${roomId}`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: { user_id: userId } // This makes the request as the target user
-      }
-    );
-  }
+  // Add message ID mapping
+  const commentToEventIdMap = new Map<string, string>();
 
   // Process comments in batches to avoid overwhelming the server
   for (let i = 0; i < comments.length; i += config.batchSize) {
@@ -111,18 +118,18 @@ async function migrateCommentsToMatrix(comments: Comment[], config: MigrationCon
         const roomAlias = `#${comment.claim.shortId.replace(/\//g, "-")}:${config.matrixDomain}`;
 
         // Get room ID from alias
-
-        const response = await matrixClient.getRoomIdForAlias(roomAlias);
-        currentRoomId = response.room_id;
+        currentRoomId = await matrixApiClient.getRoomIdFromAlias(roomAlias);
 
         if (!currentRoomId) {
           throw new Error(`Room not found for alias: ${roomAlias}`);
         }
         const userId = `@${comment.createdByUser.username}:${config.matrixDomain}`;
-        await joinUserToRoom(currentRoomId, userId);
+        await matrixApiClient.joinUserToRoom(currentRoomId, userId);
         let messageResponse;
+
         if (!comment.threadId) {
-          messageResponse = await createMessage(
+          // Handle root message
+          messageResponse = await matrixApiClient.createMessage(
             {
               type: "m.room.message",
               msgtype: "m.text",
@@ -133,7 +140,38 @@ async function migrateCommentsToMatrix(comments: Comment[], config: MigrationCon
             new Date(comment.createdAt).getTime(),
             comment.id
           );
-          console.log(`Sent message Response`, messageResponse);
+          console.log("messageResponse", messageResponse);
+        } else {
+          // Handle thread reply
+          const parentEventId = commentToEventIdMap.get(comment.threadId);
+          if (!parentEventId) {
+            throw new Error(`Parent message not found for thread ID: ${comment.threadId}`);
+          }
+
+          messageResponse = await matrixApiClient.createMessage(
+            {
+              type: "m.room.message",
+              msgtype: "m.text",
+              body: comment.content,
+              "m.relates_to": {
+                rel_type: "m.thread",
+                event_id: parentEventId,
+                is_falling_back: true,
+                "m.in_reply_to": {
+                  event_id: parentEventId
+                }
+              }
+            },
+            currentRoomId,
+            userId,
+            new Date(comment.createdAt).getTime(),
+            comment.id
+          );
+        }
+
+        // Store the mapping for future thread replies
+        if (messageResponse) {
+          commentToEventIdMap.set(comment.id, messageResponse);
         }
 
         migrationLogs.push({
@@ -172,6 +210,7 @@ async function main() {
     password: "abcd1234!D",
     hasuraApiUrl: "http://localhost:8080/v1/graphql",
     hasuraAdminSecret: "faktenforum",
+    asToken: "faktenforum",
     batchSize: 100
   };
 
