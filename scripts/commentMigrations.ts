@@ -1,35 +1,52 @@
-import { MatrixClient } from "matrix-js-sdk";
 import { createClient } from "matrix-js-sdk";
-import * as fs from "fs";
 import { createObjectCsvWriter } from "csv-writer";
+import { GraphQLClient } from "graphql-request";
+import axios from "axios";
 
-interface CustomMessage {
-  id: string;
-  content: string;
-  sender: string;
-  timestamp: number;
-  roomId?: string;
-}
+axios.defaults.baseURL = process.env.SYNAPSE_URL || "http://chat.localhost:8000";
+
+export type MatrixMessage = {
+  body: string;
+  msgtype: string;
+  type: string;
+  format?: string;
+  formatted_body?: string;
+  "m.mentions"?: {
+    room?: boolean;
+    user_ids?: Array<string>;
+  };
+  "m.relates_to"?: {
+    rel_type: "m.thread";
+    event_id: string;
+    is_falling_back: true;
+    "m.in_reply_to": {
+      event_id: string;
+    };
+  };
+};
 
 interface MigrationConfig {
   matrixHomeserver: string;
+  matrixDomain: string;
   username: string;
   password: string;
   batchSize: number;
+  hasuraApiUrl: string;
+  hasuraAdminSecret: string;
 }
 
 interface MigrationLog {
-  oldMessageId: string;
+  oldcommentId: string;
   roomId: string;
   newEventId: string;
   status: string;
 }
 
-async function migrateMessagesToMatrix(messages: CustomMessage[], config: MigrationConfig): Promise<void> {
+async function migrateCommentsToMatrix(comments: Comment[], config: MigrationConfig): Promise<void> {
   const csvWriter = createObjectCsvWriter({
     path: "migration_log.csv",
     header: [
-      { id: "oldMessageId", title: "Original Message ID" },
+      { id: "oldcommentId", title: "Original Comment ID" },
       { id: "roomId", title: "Matrix Room ID" },
       { id: "newEventId", title: "Matrix Event ID" },
       { id: "status", title: "Status" }
@@ -41,54 +58,100 @@ async function migrateMessagesToMatrix(messages: CustomMessage[], config: Migrat
     baseUrl: config.matrixHomeserver
   });
 
+  const accessToken = "faktenforum";
+
   try {
     const loginResponse = await matrixClient.login("m.login.password", {
       user: config.username,
       password: config.password
     });
-    matrixClient.startClient(); // Start the client after successful login
+    console.log("Login Response", loginResponse);
+    await matrixClient.startClient(); // Start the client after successful login
   } catch (error) {
     console.error("Failed to login to Matrix:", error);
     throw error;
   }
 
-  // Process messages in batches to avoid overwhelming the server
-  for (let i = 0; i < messages.length; i += config.batchSize) {
-    const batch = messages.slice(i, i + config.batchSize);
-    const migrationLogs: MigrationLog[] = [];
+  async function createMessage(
+    matrixMessage: MatrixMessage,
+    room_id: string,
+    user_id: string,
+    ts: number,
+    transactionId: string
+  ): Promise<string> {
+    return (
+      await axios.put(
+        `/_matrix/client/v3/rooms/${room_id}/send/m.room.message/${transactionId}?user_id=${user_id}&ts=${ts}`,
+        matrixMessage,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+    ).data.event_id;
+  }
 
-    for (const message of batch) {
+  async function joinUserToRoom(roomId: string, userId: string) {
+    await axios.post(
+      `/_matrix/client/v3/join/${roomId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { user_id: userId } // This makes the request as the target user
+      }
+    );
+  }
+
+  // Process comments in batches to avoid overwhelming the server
+  for (let i = 0; i < comments.length; i += config.batchSize) {
+    const batch = comments.slice(i, i + config.batchSize);
+    const migrationLogs: MigrationLog[] = [];
+    let currentRoomId;
+    for (const comment of batch) {
+      currentRoomId = undefined;
       try {
+        // Fix the room alias format
+        const roomAlias = `#${comment.claim.shortId.replace(/\//g, "-")}:${config.matrixDomain}`;
+
         // Get room ID from alias
-        const roomId = await matrixClient.getRoomIdForAlias(message.roomId);
-        if (!roomId) {
-          throw new Error(`Room not found for alias: ${message.roomId}`);
+
+        const response = await matrixClient.getRoomIdForAlias(roomAlias);
+        currentRoomId = response.room_id;
+
+        if (!currentRoomId) {
+          throw new Error(`Room not found for alias: ${roomAlias}`);
+        }
+        const userId = `@${comment.createdByUser.username}:${config.matrixDomain}`;
+        await joinUserToRoom(currentRoomId, userId);
+        let messageResponse;
+        if (!comment.threadId) {
+          messageResponse = await createMessage(
+            {
+              type: "m.room.message",
+              msgtype: "m.text",
+              body: comment.content
+            },
+            currentRoomId,
+            userId,
+            new Date(comment.createdAt).getTime(),
+            comment.id
+          );
+          console.log(`Sent message Response`, messageResponse);
         }
 
-        // Send message and get the event ID
-        const response = await matrixClient.sendMessage(roomId.room_id, {
-          msgtype: "m.text",
-          body: message.content,
-          origin_server_ts: message.timestamp,
-          sender: message.sender
-        });
-
         migrationLogs.push({
-          oldMessageId: message.id,
-          roomId: roomId.room_id,
-          newEventId: response.event_id,
+          oldcommentId: comment.id,
+          roomId: currentRoomId,
+          newEventId: messageResponse?.event_id || "unknown",
           status: "success"
         });
 
-        console.log(`Migrated message ${message.id} successfully`);
+        console.log(`Migrated comment ${comment.id} successfully`);
       } catch (error) {
         migrationLogs.push({
-          oldMessageId: message.id,
-          roomId: message.roomId || "unknown",
+          oldcommentId: comment.id,
+          roomId: currentRoomId || "unknown",
           newEventId: "failed",
-          status: `error: ${error.message}`
+          status: `error: ${error.comment}`
         });
-        console.error(`Failed to migrate message ${message.id}:`, error);
+        console.error(`Failed to migrate comment ${comment.id}:`, error);
       }
     }
 
@@ -103,23 +166,60 @@ async function migrateMessagesToMatrix(messages: CustomMessage[], config: Migrat
 // Example usage
 async function main() {
   const config: MigrationConfig = {
-    matrixHomeserver: "https://matrix.org",
-    username: "your_username",
-    password: "your_password",
-    batchSize: 50
+    matrixHomeserver: "http://chat.localhost:8000",
+    matrixDomain: "chat.localhost:8000",
+    username: "system",
+    password: "abcd1234!D",
+    hasuraApiUrl: "http://localhost:8080/v1/graphql",
+    hasuraAdminSecret: "faktenforum",
+    batchSize: 100
   };
 
-  // Fetch your custom messages (implement this based on your storage)
-  const customMessages: CustomMessage[] = await fetchCustomMessages();
+  // Fetch your custom comments (implement this based on your storage)
+  const comments = await fetchCustomcomments(config);
+  console.log(`Got ${comments.length} comments to migrate`);
 
-  await migrateMessagesToMatrix(customMessages, config);
+  await migrateCommentsToMatrix(comments, config);
   console.log("Migration completed");
 }
 
-async function fetchCustomMessages(): Promise<CustomMessage[]> {
-  // Implement this function to fetch messages from your custom chat system
-  // This could be from a database, API, or file
-  throw new Error("Not implemented");
+type Comment = {
+  id: string;
+  threadId: string;
+  content: string;
+  claim: {
+    shortId: string;
+    status: string;
+  };
+  createdAt: string;
+  createdByUser: {
+    id: string;
+    username: string;
+  };
+};
+async function fetchCustomcomments(config: MigrationConfig): Promise<Comment[]> {
+  const client = new GraphQLClient(config.hasuraApiUrl, {
+    headers: {
+      "x-hasura-admin-secret": config.hasuraAdminSecret
+    }
+  });
+  const data = await client.request<{ comment: Comment[] }>(`query getAllComments {
+  comment(orderBy: { createdAt: ASC }) {
+    id
+    threadId
+    content
+    claim {
+      shortId
+      status
+    }
+    createdAt
+    createdByUser {
+      id
+      username
+    }
+  }
+}`);
+  return data.comment;
 }
 
 // Run the migration
