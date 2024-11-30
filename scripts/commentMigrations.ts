@@ -56,12 +56,30 @@ export class MatrixApiClient {
   }
 
   async createMessage(
-    matrixMessage: MatrixMessage,
+    content: string,
     roomId: string,
     userId: string,
     ts: number,
-    transactionId: string
+    transactionId: string,
+    parentEventId?: string
   ): Promise<string> {
+    const matrixMessage: MatrixMessage = {
+      type: "m.room.message",
+      msgtype: "m.text",
+      body: content
+    };
+
+    if (parentEventId) {
+      matrixMessage["m.relates_to"] = {
+        rel_type: "m.thread",
+        event_id: parentEventId,
+        is_falling_back: true,
+        "m.in_reply_to": {
+          event_id: parentEventId
+        }
+      };
+    }
+
     const { data } = await this.client.put(
       `/_matrix/client/v3/rooms/${roomId}/send/m.room.message/${transactionId}`,
       matrixMessage,
@@ -127,47 +145,16 @@ async function migrateCommentsToMatrix(comments: Comment[], config: MigrationCon
         await matrixApiClient.joinUserToRoom(currentRoomId, userId);
         let messageResponse;
 
-        if (!comment.threadId) {
-          // Handle root message
-          messageResponse = await matrixApiClient.createMessage(
-            {
-              type: "m.room.message",
-              msgtype: "m.text",
-              body: comment.content
-            },
-            currentRoomId,
-            userId,
-            new Date(comment.createdAt).getTime(),
-            comment.id
-          );
-          console.log("messageResponse", messageResponse);
-        } else {
-          // Handle thread reply
-          const parentEventId = commentToEventIdMap.get(comment.threadId);
-          if (!parentEventId) {
-            throw new Error(`Parent message not found for thread ID: ${comment.threadId}`);
-          }
-
-          messageResponse = await matrixApiClient.createMessage(
-            {
-              type: "m.room.message",
-              msgtype: "m.text",
-              body: comment.content,
-              "m.relates_to": {
-                rel_type: "m.thread",
-                event_id: parentEventId,
-                is_falling_back: true,
-                "m.in_reply_to": {
-                  event_id: parentEventId
-                }
-              }
-            },
-            currentRoomId,
-            userId,
-            new Date(comment.createdAt).getTime(),
-            comment.id
-          );
-        }
+        const parentEventId = commentToEventIdMap.get(comment.threadId);
+        messageResponse = await matrixApiClient.createMessage(
+          comment.content,
+          currentRoomId,
+          userId,
+          new Date(comment.createdAt).getTime(),
+          comment.id,
+          parentEventId
+        );
+        console.log("messageResponse", messageResponse);
 
         // Store the mapping for future thread replies
         if (messageResponse) {
