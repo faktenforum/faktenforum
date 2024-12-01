@@ -37,6 +37,7 @@ interface MigrationConfig {
 }
 
 interface MigrationLog {
+  type: "comment" | "reaction";
   oldcommentId: string;
   roomId: string;
   newEventId: string;
@@ -106,12 +107,45 @@ export class MatrixApiClient {
     );
     return data.room_id;
   }
+
+  async addReaction(
+    roomId: string,
+    messageId: string,
+    reactionEmoji: string,
+    userId: string,
+    transactionId: string
+  ): Promise<void> {
+    try {
+      await this.client.put(
+        `/_matrix/client/v3/rooms/${roomId}/send/m.reaction/${transactionId}`,
+        {
+          "m.relates_to": {
+            rel_type: "m.annotation",
+            event_id: messageId,
+            key: reactionEmoji
+          }
+        },
+        {
+          params: { user_id: userId }
+        }
+      );
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.errcode === "M_DUPLICATE_ANNOTATION") {
+        console.debug(
+          `Duplicate reaction to message ${messageId} with symbol ${reactionEmoji} for user ${userId}, skipping.`
+        );
+        return;
+      }
+      throw error;
+    }
+  }
 }
 
 async function migrateCommentsToMatrix(comments: Comment[], config: MigrationConfig): Promise<void> {
   const csvWriter = createObjectCsvWriter({
     path: "migration_log.csv",
     header: [
+      { id: "type", title: "Type" },
       { id: "oldcommentId", title: "Original Comment ID" },
       { id: "roomId", title: "Matrix Room ID" },
       { id: "newEventId", title: "Matrix Event ID" },
@@ -143,10 +177,9 @@ async function migrateCommentsToMatrix(comments: Comment[], config: MigrationCon
         }
         const userId = `@${comment.createdByUser.username}:${config.matrixDomain}`;
         await matrixApiClient.joinUserToRoom(currentRoomId, userId);
-        let messageResponse;
 
         const parentEventId = commentToEventIdMap.get(comment.threadId);
-        messageResponse = await matrixApiClient.createMessage(
+        const messageId = await matrixApiClient.createMessage(
           comment.content,
           currentRoomId,
           userId,
@@ -154,23 +187,39 @@ async function migrateCommentsToMatrix(comments: Comment[], config: MigrationCon
           comment.id,
           parentEventId
         );
-        console.log("messageResponse", messageResponse);
 
         // Store the mapping for future thread replies
-        if (messageResponse) {
-          commentToEventIdMap.set(comment.id, messageResponse);
+        if (messageId) {
+          commentToEventIdMap.set(comment.id, messageId);
         }
 
         migrationLogs.push({
+          type: "comment",
           oldcommentId: comment.id,
           roomId: currentRoomId,
-          newEventId: messageResponse?.event_id || "unknown",
+          newEventId: messageId || "unknown",
           status: "success"
         });
 
         console.log(`Migrated comment ${comment.id} successfully`);
+
+        // Add reactions
+        for (const reaction of comment.userReactions) {
+          console.log("Migrate  reaction from " + reaction.user.username, reaction.emoji);
+          const userId = `@${reaction.user.username}:${config.matrixDomain}`;
+          await matrixApiClient.joinUserToRoom(currentRoomId, userId);
+          await matrixApiClient.addReaction(currentRoomId, messageId, reaction.emoji, userId, reaction.id);
+          migrationLogs.push({
+            type: "reaction",
+            oldcommentId: reaction.id,
+            roomId: currentRoomId,
+            newEventId: "unknown",
+            status: "success"
+          });
+        }
       } catch (error) {
         migrationLogs.push({
+          type: "comment",
           oldcommentId: comment.id,
           roomId: currentRoomId || "unknown",
           newEventId: "failed",
@@ -222,6 +271,13 @@ type Comment = {
     id: string;
     username: string;
   };
+  userReactions: {
+    id: string;
+    emoji: string;
+    user: {
+      username: string;
+    };
+  }[];
 };
 async function fetchCustomcomments(config: MigrationConfig): Promise<Comment[]> {
   const client = new GraphQLClient(config.hasuraApiUrl, {
@@ -230,7 +286,7 @@ async function fetchCustomcomments(config: MigrationConfig): Promise<Comment[]> 
     }
   });
   const data = await client.request<{ comment: Comment[] }>(`query getAllComments {
-  comment(orderBy: { createdAt: ASC }) {
+  comment(orderBy: {createdAt: ASC}, where: {blocked: {_eq: false}, deleted: {_eq: false}}) {
     id
     threadId
     content
@@ -243,8 +299,16 @@ async function fetchCustomcomments(config: MigrationConfig): Promise<Comment[]> 
       id
       username
     }
+    userReactions {
+    id
+      emoji
+      user {
+        username
+      }
+    }
   }
-}`);
+}
+`);
   return data.comment;
 }
 
