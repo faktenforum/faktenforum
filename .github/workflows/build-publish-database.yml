@@ -1,4 +1,4 @@
-name: "FF-DB | Build & Push Docker Images"
+name: "Build-Database-Image"
 on:
   push:
     branches: [main, production]
