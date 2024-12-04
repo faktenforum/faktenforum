@@ -1,4 +1,4 @@
-name: "FF-API | Build & Push Docker Images"
+name: "Build-Api-Images"
 on:
   push:
     branches: [main, production]

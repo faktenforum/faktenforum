@@ -1,4 +1,4 @@
-name: "FF-KRATOS | Build & Push Docker Images"
+name: "Build-Kratos-Migrate-Image"
 on:
   push:
     branches: [main, production]
