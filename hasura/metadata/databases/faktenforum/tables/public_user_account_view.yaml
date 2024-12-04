@@ -6,16 +6,17 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - updated_at
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -28,16 +29,17 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - updated_at
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -50,16 +52,17 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - updated_at
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -72,16 +75,17 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - updated_at
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -94,16 +98,17 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - updated_at
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -116,16 +121,17 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - updated_at
+        - username
       filter:
         id:
           _eq: X-Hasura-User-Id
