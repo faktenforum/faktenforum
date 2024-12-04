@@ -37,11 +37,17 @@
               }
             }
           }
+        },
+        "data_protection_agreement": {
+          "type": "boolean",
+          "title": "I agree to the data protection policy",
+          "const": true
         }
       },
       "required": [
         "email",
-        "username"
+        "username",
+        "data_protection_agreement"
       ],
       "additionalProperties": false
     },
@@ -73,5 +79,25 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "traits": {
+            "properties": {
+              "data_protection_agreement": { "const": false }
+            }
+          }
+        }
+      },
+      "then": {
+        "errorMessage": {
+          "traits": {
+            "data_protection_agreement": "You must agree to the data protection policy to register."
+          }
+        }
+      }
+    }
+  ]
 }

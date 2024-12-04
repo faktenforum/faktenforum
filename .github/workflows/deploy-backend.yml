@@ -1,0 +1,45 @@
+name: Backend | Deploy
+
+on:
+  workflow_run:
+    workflows:
+      - Build-Hasura-Migrate-Image
+      - Build-Database-Image
+      - Build-Kratos-Migrate-Image
+    types:
+      - completed
+    branches:
+      - main
+      - production
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print portainer url
+        if: github.ref != 'refs/heads/production'
+        run: echo "${{ vars.DEV_PORTAINER_URL }}"
+      - name: Print portainer url
+        if: github.ref == 'refs/heads/production'
+        run: echo "${{ vars.PROD_PORTAINER_URL }}"
+
+      - name: Deploy to DEV Environment
+        if: github.ref != 'refs/heads/production'
+        uses: faktenforum/portami@main
+        with:
+          endpoint: "${{ vars.DEV_PORTAINER_URL }}"
+          access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
+          stack_name: "${{ vars.DEV_PORTAINER_BACKEND_STACK_NAME }}"
+          prune: true
+          pull: true
+
+      - name: Deploy to Production Environment
+        if: github.ref == 'refs/heads/production'
+        uses: faktenforum/portami@main
+        with:
+          endpoint: ${{ vars.PROD_PORTAINER_URL }}
+          access_token: ${{ secrets.PROD_PORTAINER_ACCESSTOKEN }}
+          stack_name: "${{ vars.PROD_PORTAINER_BACKEND_STACK_NAME }}"
+          prune: true
+          pull: true
