@@ -198,6 +198,7 @@ update_permissions:
         - mobile_number
         - profile_image
         - pronouns
+        - signed_code_of_conduct
         - updated_at
       filter: {}
       check: null
@@ -226,6 +227,7 @@ update_permissions:
         - mobile_number
         - profile_image
         - pronouns
+        - signed_code_of_conduct
         - updated_at
       filter: {}
       check: null
@@ -239,6 +241,7 @@ update_permissions:
         - mobile_number
         - profile_image
         - pronouns
+        - signed_code_of_conduct
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -254,6 +257,7 @@ update_permissions:
         - mobile_number
         - profile_image
         - pronouns
+        - signed_code_of_conduct
         - updated_at
       filter: {}
       check: null
@@ -267,6 +271,7 @@ update_permissions:
         - mobile_number
         - profile_image
         - pronouns
+        - signed_code_of_conduct
       filter:
         id:
           _eq: X-Hasura-User-Id
