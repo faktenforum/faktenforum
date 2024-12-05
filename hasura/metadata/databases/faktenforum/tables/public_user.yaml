@@ -102,17 +102,18 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - sys_period
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - sys_period
+        - updated_at
+        - username
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -126,17 +127,18 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - sys_period
-        - id
         - profile_image
+        - pronouns
+        - signed_code_of_conduct
+        - sys_period
+        - updated_at
+        - username
       filter: {}
     comment: ""
   - role: junior
@@ -145,7 +147,6 @@ select_permissions:
         - bio
         - created_at
         - id
-        - mobile_number
         - profile_image
         - pronouns
         - sys_period
