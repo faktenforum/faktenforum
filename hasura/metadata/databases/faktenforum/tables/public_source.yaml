@@ -49,6 +49,28 @@ insert_permissions:
         - remarks
         - url
     comment: ""
+  - role: junior
+    permission:
+      check:
+        fact:
+          claim:
+            _and:
+              - internal:
+                  _eq: false
+              - status:
+                  _nin:
+                    - checked
+                    - published
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - archive_url
+        - excerpt
+        - fact_id
+        - file_id
+        - remarks
+        - url
+    comment: ""
   - role: moderator
     permission:
       check: {}
@@ -64,7 +86,16 @@ insert_permissions:
     comment: ""
   - role: senior
     permission:
-      check: {}
+      check:
+        fact:
+          claim:
+            _and:
+              - internal:
+                  _eq: false
+              - status:
+                  _nin:
+                    - checked
+                    - published
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -203,6 +234,31 @@ update_permissions:
       set:
         updated_by: x-hasura-User-Id
     comment: ""
+  - role: junior
+    permission:
+      columns:
+        - archive_url
+        - excerpt
+        - file_id
+        - remarks
+        - url
+      filter:
+        _and:
+          - fact:
+              claim:
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
+          - created_by:
+              _eq: X-Hasura-User-Id
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -229,10 +285,16 @@ update_permissions:
         - remarks
         - url
       filter:
-        fact:
-          claim:
-            internal:
-              _eq: false
+        _and:
+          - fact:
+              claim:
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -246,6 +308,22 @@ delete_permissions:
     permission:
       filter: {}
     comment: ""
+  - role: junior
+    permission:
+      filter:
+        _and:
+          - fact:
+              claim:
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
+          - created_by:
+              _eq: X-Hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       filter:
@@ -257,8 +335,14 @@ delete_permissions:
   - role: senior
     permission:
       filter:
-        fact:
-          claim:
-            internal:
-              _eq: false
+        _and:
+          - fact:
+              claim:
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
     comment: ""

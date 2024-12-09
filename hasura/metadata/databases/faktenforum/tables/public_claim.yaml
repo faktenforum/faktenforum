@@ -96,6 +96,9 @@ insert_permissions:
         internal: "false"
         status: submitted
       columns:
+        - rating_label_name
+        - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""
@@ -273,6 +276,8 @@ update_permissions:
   - role: junior
     permission:
       columns:
+        - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
       filter:
@@ -281,6 +286,10 @@ update_permissions:
               _eq: false
           - created_by:
               _eq: X-Hasura-User-Id
+          - status:
+              _in:
+                - checked
+                - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -310,8 +319,13 @@ update_permissions:
         - submitter_notes
         - synopsis
       filter:
-        internal:
-          _eq: false
+        _and:
+          - internal:
+              _eq: false
+          - status:
+              _nin:
+                - checked
+                - published
       check: null
       set:
         updated_by: x-hasura-User-Id

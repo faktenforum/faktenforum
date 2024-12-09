@@ -62,8 +62,10 @@ insert_permissions:
           _and:
             - internal:
                 _eq: false
-            - created_by:
-                _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -100,8 +102,13 @@ insert_permissions:
     permission:
       check:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -262,6 +269,10 @@ update_permissions:
                 _eq: false
             - created_by:
                 _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -296,8 +307,13 @@ update_permissions:
         - url
       filter:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -320,6 +336,10 @@ delete_permissions:
                 _eq: false
             - created_by:
                 _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
     comment: ""
   - role: moderator
     permission:
@@ -332,6 +352,11 @@ delete_permissions:
     permission:
       filter:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
     comment: ""
