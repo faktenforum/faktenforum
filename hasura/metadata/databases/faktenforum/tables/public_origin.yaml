@@ -59,11 +59,8 @@ insert_permissions:
     permission:
       check:
         claim:
-          _and:
-            - internal:
-                _eq: false
-            - created_by:
-                _eq: X-Hasura-User-Id
+          internal:
+            _eq: false
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -256,12 +253,12 @@ update_permissions:
         - updated_by
         - url
       filter:
-        claim:
-          _and:
-            - internal:
+        _and:
+          - created_by:
+              _eq: X-Hasura-User-Id
+          - claim:
+              internal:
                 _eq: false
-            - created_by:
-                _eq: X-Hasura-User-Id
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -314,12 +311,12 @@ delete_permissions:
   - role: junior
     permission:
       filter:
-        claim:
-          _and:
-            - internal:
+        _and:
+          - created_by:
+              _eq: X-Hasura-User-Id
+          - claim:
+              internal:
                 _eq: false
-            - created_by:
-                _eq: X-Hasura-User-Id
     comment: ""
   - role: moderator
     permission:

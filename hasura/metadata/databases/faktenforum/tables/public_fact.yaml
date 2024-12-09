@@ -47,6 +47,17 @@ insert_permissions:
         - created_by
         - text
     comment: ""
+  - role: junior
+    permission:
+      check:
+        claim:
+          internal:
+            _eq: false
+      set:
+        created_by: x-hasura-Hasura-User-Id
+      columns:
+        - text
+    comment: ""
   - role: moderator
     permission:
       check:
@@ -178,6 +189,21 @@ update_permissions:
       set:
         updated_by: x-hasura-User-Id
     comment: ""
+  - role: junior
+    permission:
+      columns:
+        - text
+      filter: {}
+      check:
+        _and:
+          - created_by:
+              _eq: X-Hasura-User-Id
+          - claim:
+              internal:
+                _eq: false
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -193,7 +219,10 @@ update_permissions:
       columns:
         - text
         - updated_by
-      filter: {}
+      filter:
+        claim:
+          internal:
+            _eq: false
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -206,6 +235,16 @@ delete_permissions:
   - role: editor
     permission:
       filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      filter:
+        _and:
+          - created_by:
+              _eq: X-Hasura-User-Id
+          - claim:
+              internal:
+                _eq: false
     comment: ""
   - role: moderator
     permission:

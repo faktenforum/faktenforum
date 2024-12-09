@@ -49,6 +49,23 @@ insert_permissions:
         - remarks
         - url
     comment: ""
+  - role: junior
+    permission:
+      check:
+        fact:
+          claim:
+            internal:
+              _eq: false
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - archive_url
+        - excerpt
+        - fact_id
+        - file_id
+        - remarks
+        - url
+    comment: ""
   - role: moderator
     permission:
       check: {}
@@ -64,7 +81,11 @@ insert_permissions:
     comment: ""
   - role: senior
     permission:
-      check: {}
+      check:
+        fact:
+          claim:
+            internal:
+              _eq: false
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -199,6 +220,26 @@ update_permissions:
         - remarks
         - url
       filter: {}
+      check: null
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - archive_url
+        - excerpt
+        - file_id
+        - remarks
+        - url
+      filter:
+        _and:
+          - fact:
+              claim:
+                internal:
+                  _eq: false
+          - created_by:
+              _eq: X-Hasura-User-Id
       check: null
       set:
         updated_by: x-hasura-User-Id
