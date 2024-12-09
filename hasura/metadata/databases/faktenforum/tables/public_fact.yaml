@@ -47,6 +47,23 @@ insert_permissions:
         - created_by
         - text
     comment: ""
+  - role: junior
+    permission:
+      check:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
+      set:
+        created_by: x-hasura-User-Id
+      columns:
+        - claim_id
+        - text
+    comment: ""
   - role: moderator
     permission:
       check:
@@ -64,13 +81,17 @@ insert_permissions:
     permission:
       check:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       set:
         created_by: x-hasura-User-Id
       columns:
         - claim_id
-        - created_by
         - text
     comment: ""
 select_permissions:
@@ -178,6 +199,25 @@ update_permissions:
       set:
         updated_by: x-hasura-User-Id
     comment: ""
+  - role: junior
+    permission:
+      columns:
+        - text
+      filter:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
+      check: {}
+      set:
+        updated_by: x-hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       columns:
@@ -193,7 +233,15 @@ update_permissions:
       columns:
         - text
         - updated_by
-      filter: {}
+      filter:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -207,6 +255,20 @@ delete_permissions:
     permission:
       filter: {}
     comment: ""
+  - role: junior
+    permission:
+      filter:
+        claim:
+          _and:
+            - internal:
+                _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
+    comment: ""
   - role: moderator
     permission:
       filter:
@@ -218,6 +280,11 @@ delete_permissions:
     permission:
       filter:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
     comment: ""
