@@ -9,6 +9,7 @@ serve:
   admin:
     base_url: http://localhost:4434/
 
+
 selfservice:
   default_browser_return_url: http://app.localhost:8000/
   allowed_return_urls:
@@ -150,3 +151,4 @@ cookies:
   path: /
   same_site: Lax
 
+expose-metrics-port: 4434

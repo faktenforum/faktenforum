@@ -19,7 +19,7 @@ allow_public_rooms_without_auth: false
 block_non_admin_invites: true
 suppress_key_server_warning: true
 presence:
-  enabled: false
+  enabled: true
 listeners:
   - port: 8008
     tls: false
@@ -28,6 +28,10 @@ listeners:
     resources:
       - names: [client]
         compress: false
+  - port: 9000
+    type: metrics
+    x_forwarded: true
+    tls: false
 
 database:
   name: psycopg2
@@ -130,3 +134,7 @@ jwt_config:
 
 app_service_config_files:
   - /data/appservices/migration_service.yaml
+
+# Add metrics configuration
+enable_metrics: true
+

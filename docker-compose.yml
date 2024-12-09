@@ -10,6 +10,7 @@ services:
       - "--accesslog.fields.headers.names.User-Agent=drop"
       - "--accesslog.fields.headers.names.Content-Type=drop"
       - "--entryPoints.web.address=:80"
+      - "--metrics.prometheus=true"
 
     ports:
       - "8000:80"
@@ -43,6 +44,7 @@ services:
     image: hasura/graphql-engine:v2.40.0-ce
     ports:
       - "8080:8080"
+      - "8081:8081"
     restart: always
     environment:
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/hasura
@@ -59,6 +61,9 @@ services:
       HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
       HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: "naming_convention"
       HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION: "graphql-default"
+      HASURA_GRAPHQL_ENABLE_TELEMETRY: "false"
+      HASURA_GRAPHQL_METRICS_PORT: "8081"
+      HASURA_GRAPHQL_ENABLE_METRICS: "true"
     # depends_on:
     #   data-connector-agent:
     #     condition: service_healthy
@@ -199,6 +204,7 @@ services:
     ports:
       - "8008:8008" # HTTP
       - "8448:8448" # Federation
+      - "9009:9000" # Metrics
     environment:
       UID: 0
       GID: 0
@@ -224,6 +230,51 @@ services:
     depends_on:
       - matrix-server
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9001:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+    networks:
+      - faktenforum
+      - traefik-ingress
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "9002:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - faktenforum
+      - traefik-ingress
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/postgres?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - faktenforum
+
 volumes:
   db_data:
   minio_data:
@@ -233,6 +284,8 @@ volumes:
   matrix_data:
   kratos_home:
   kratos_sqlite:
+  prometheus_data:
+  grafana_data:
 
 networks:
   faktenforum:
