@@ -1,4 +1,4 @@
-name: Chat | Deploy
+name: API | Deploy
 
 on:
   workflow_run:
