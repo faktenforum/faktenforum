@@ -96,6 +96,9 @@ insert_permissions:
         internal: "false"
         status: submitted
       columns:
+        - rating_label_name
+        - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""
@@ -273,6 +276,8 @@ update_permissions:
   - role: junior
     permission:
       columns:
+        - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
       filter:

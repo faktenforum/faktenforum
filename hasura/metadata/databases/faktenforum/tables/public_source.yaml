@@ -287,6 +287,17 @@ delete_permissions:
     permission:
       filter: {}
     comment: ""
+  - role: junior
+    permission:
+      filter:
+        _and:
+          - fact:
+              claim:
+                internal:
+                  _eq: false
+          - created_by:
+              _eq: X-Hasura-User-Id
+    comment: ""
   - role: moderator
     permission:
       filter:
