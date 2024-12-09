@@ -54,8 +54,13 @@ insert_permissions:
       check:
         fact:
           claim:
-            internal:
-              _eq: false
+            _and:
+              - internal:
+                  _eq: false
+              - status:
+                  _nin:
+                    - checked
+                    - published
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -84,8 +89,13 @@ insert_permissions:
       check:
         fact:
           claim:
-            internal:
-              _eq: false
+            _and:
+              - internal:
+                  _eq: false
+              - status:
+                  _nin:
+                    - checked
+                    - published
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -236,8 +246,13 @@ update_permissions:
         _and:
           - fact:
               claim:
-                internal:
-                  _eq: false
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
           - created_by:
               _eq: X-Hasura-User-Id
       check: null
@@ -270,10 +285,16 @@ update_permissions:
         - remarks
         - url
       filter:
-        fact:
-          claim:
-            internal:
-              _eq: false
+        _and:
+          - fact:
+              claim:
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -293,8 +314,13 @@ delete_permissions:
         _and:
           - fact:
               claim:
-                internal:
-                  _eq: false
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
           - created_by:
               _eq: X-Hasura-User-Id
     comment: ""
@@ -309,8 +335,14 @@ delete_permissions:
   - role: senior
     permission:
       filter:
-        fact:
-          claim:
-            internal:
-              _eq: false
+        _and:
+          - fact:
+              claim:
+                _and:
+                  - internal:
+                      _eq: false
+                  - status:
+                      _nin:
+                        - checked
+                        - published
     comment: ""

@@ -51,11 +51,17 @@ insert_permissions:
     permission:
       check:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       set:
-        created_by: x-hasura-Hasura-User-Id
+        created_by: x-hasura-User-Id
       columns:
+        - claim_id
         - text
     comment: ""
   - role: moderator
@@ -75,13 +81,17 @@ insert_permissions:
     permission:
       check:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       set:
         created_by: x-hasura-User-Id
       columns:
         - claim_id
-        - created_by
         - text
     comment: ""
 select_permissions:
@@ -193,14 +203,18 @@ update_permissions:
     permission:
       columns:
         - text
-      filter: {}
-      check:
-        _and:
-          - created_by:
-              _eq: X-Hasura-User-Id
-          - claim:
-              internal:
+      filter:
+        claim:
+          _and:
+            - internal:
                 _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
+      check: {}
       set:
         updated_by: x-hasura-User-Id
     comment: ""
@@ -221,8 +235,13 @@ update_permissions:
         - updated_by
       filter:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
       check: null
       set:
         updated_by: x-hasura-User-Id
@@ -239,12 +258,16 @@ delete_permissions:
   - role: junior
     permission:
       filter:
-        _and:
-          - created_by:
-              _eq: X-Hasura-User-Id
-          - claim:
-              internal:
+        claim:
+          _and:
+            - internal:
                 _eq: false
+            - created_by:
+                _eq: X-Hasura-User-Id
+            - status:
+                _nin:
+                  - checked
+                  - published
     comment: ""
   - role: moderator
     permission:
@@ -257,6 +280,11 @@ delete_permissions:
     permission:
       filter:
         claim:
-          internal:
-            _eq: false
+          _and:
+            - internal:
+                _eq: false
+            - status:
+                _nin:
+                  - checked
+                  - published
     comment: ""
