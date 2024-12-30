@@ -174,6 +174,10 @@ select_permissions:
         - id
         - profile_image
       filter: {}
+      query_root_fields:
+        - select
+        - select_by_pk
+      subscription_root_fields: []
     comment: ""
   - role: senior
     permission:
@@ -188,6 +192,7 @@ select_permissions:
         - username
       filter: {}
       query_root_fields:
+        - select
         - select_by_pk
       subscription_root_fields: []
     comment: ""
