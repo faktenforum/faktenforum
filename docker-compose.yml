@@ -40,7 +40,7 @@ services:
       - faktenforum
 
   graphql-engine:
-    image: hasura/graphql-engine:v2.40.0-ce
+    image: hasura/graphql-engine:v2.45.1-ce
     ports:
       - "8080:8080"
     restart: always
