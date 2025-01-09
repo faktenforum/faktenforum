@@ -69,7 +69,7 @@ insert_permissions:
         created_by: x-hasura-User-Id
         status: submitted
       columns:
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -83,7 +83,7 @@ insert_permissions:
         created_by: x-hasura-User-Id
         status: submitted
       columns:
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -141,7 +141,7 @@ select_permissions:
         - id
         - internal
         - process_id
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -163,7 +163,7 @@ select_permissions:
         - id
         - internal
         - process_id
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -185,7 +185,7 @@ select_permissions:
         - id
         - internal
         - process_id
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -209,7 +209,7 @@ select_permissions:
         - id
         - internal
         - process_id
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -233,7 +233,7 @@ select_permissions:
         - id
         - internal
         - process_id
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -254,7 +254,7 @@ update_permissions:
     permission:
       columns:
         - internal
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -270,7 +270,7 @@ update_permissions:
     permission:
       columns:
         - internal
-        - published_article_url
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
