@@ -85,7 +85,11 @@ export class HasuraWebHookController {
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
   async getUsersRoles(@BodyParams() body: { ids: string[] }) {
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
-    return result.identities.map((user) => ({ id: user.id, role: user.metadata_public.role }));
+    return result.identities.map((user) => ({
+      id: user.id,
+      role: user.metadata_public.role,
+      verified: !!user.verifiable_addresses?.[0]?.verified
+    }));
   }
 
   @Post("/update-user-role")

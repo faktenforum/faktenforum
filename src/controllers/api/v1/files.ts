@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams, BodyParams } from "@tsed/platform-params";
 import { Consumes, Description, Get, Post, Returns, getJsonSchema } from "@tsed/schema";
-import { NotFound, Unauthorized } from "@tsed/exceptions";
+import { NotFound, Unauthorized, Forbidden } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
 import Ajv from "ajv";
@@ -219,7 +219,7 @@ export class ClaimsController {
         mimeType: file.mimetype,
         name: file.originalname,
         size: file.size,
-        eTag: file.etag, // minio uses md5 as etag
+        eTag: file.etag.replace('"', ""), // minio uses md5 as etag
         entryId: body.id
       };
       let tableData;
@@ -236,20 +236,25 @@ export class ClaimsController {
           if (request.user.userId !== vars.entryId) {
             throw new Unauthorized("Unauthorized");
           }
-          const { insertFileOne } = await this.hasuraService.adminRequest<
+          const { insertFileOne, updateUserByPk } = await this.hasuraService.adminRequest<
             InsertFileAndUpdateUserProfileImageMutation,
             InsertFileAndUpdateUserProfileImageMutationVariables
           >(InsertFileAndUpdateUserProfileImageDocument, vars);
-
+          if (!updateUserByPk?.id) {
+            throw new Forbidden("Access to user denied");
+          }
           response = { fileId: insertFileOne?.id, entryId: vars.entryId };
           break;
         }
         case "source": {
           if (!body.tableData) {
-            const { insertFileOne } = await this.hasuraService.clientRequest<
+            const { insertFileOne, updateSourceByPk } = await this.hasuraService.clientRequest<
               InsertFileAndUpdateSourceFileMutation,
               InsertFileAndUpdateSourceFileMutationVariables
             >(InsertFileAndUpdateSourceFileDocument, vars, request.headers);
+            if (!updateSourceByPk?.id) {
+              throw new Forbidden("Access to claim denied");
+            }
             response = { fileId: insertFileOne?.id, entryId: vars.entryId };
             break;
           } else {
@@ -258,16 +263,22 @@ export class ClaimsController {
               InsertFileAndInsertSourceMutation,
               InsertFileAndInsertSourceMutationVariables
             >(InsertFileAndInsertSourceDocument, { ...vars, ...tableData }, request.headers);
+            if (!insertSourceOne?.id) {
+              throw new Forbidden("Failed to insert source");
+            }
             response = { fileId: insertFileOne?.id, entryId: insertSourceOne?.id };
             break;
           }
         }
         case "origin": {
           if (!body.tableData) {
-            const { insertFileOne } = await this.hasuraService.clientRequest<
+            const { insertFileOne, updateOriginByPk } = await this.hasuraService.clientRequest<
               InsertFileAndUpdateOriginFileMutation,
               InsertFileAndUpdateOriginFileMutationVariables
             >(InsertFileAndUpdateOriginFileDocument, vars, request.headers);
+            if (!updateOriginByPk?.id) {
+              throw new Forbidden("Access to origin denied");
+            }
             response = { fileId: insertFileOne?.id, entryId: vars.entryId };
             break;
           } else {
@@ -277,6 +288,9 @@ export class ClaimsController {
               InsertFileAndInsertOriginMutationVariables
             >(InsertFileAndInsertOriginDocument, { ...vars, ...tableData }, request.headers);
             response = { fileId: insertFileOne?.id, entryId: insertOriginOne?.id };
+            if (!insertOriginOne?.id) {
+              throw new Forbidden("Failed to insert Origin");
+            }
             break;
           }
         }

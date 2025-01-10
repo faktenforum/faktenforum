@@ -69,9 +69,10 @@ insert_permissions:
         created_by: x-hasura-User-Id
         status: submitted
       columns:
+        - publishing_url
         - rating_label_name
-        - rating_summary
         - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""
@@ -82,9 +83,10 @@ insert_permissions:
         created_by: x-hasura-User-Id
         status: submitted
       columns:
+        - publishing_url
         - rating_label_name
-        - rating_summary
         - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""
@@ -111,8 +113,8 @@ insert_permissions:
         status: submitted
       columns:
         - rating_label_name
-        - rating_summary
         - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""
@@ -125,8 +127,8 @@ insert_permissions:
         status: submitted
       columns:
         - rating_label_name
-        - rating_summary
         - rating_statement
+        - rating_summary
         - submitter_notes
         - synopsis
     comment: ""
@@ -139,6 +141,7 @@ select_permissions:
         - id
         - internal
         - process_id
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -160,6 +163,7 @@ select_permissions:
         - id
         - internal
         - process_id
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -181,6 +185,7 @@ select_permissions:
         - id
         - internal
         - process_id
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -204,6 +209,7 @@ select_permissions:
         - id
         - internal
         - process_id
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -227,6 +233,7 @@ select_permissions:
         - id
         - internal
         - process_id
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -247,6 +254,7 @@ update_permissions:
     permission:
       columns:
         - internal
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -262,6 +270,7 @@ update_permissions:
     permission:
       columns:
         - internal
+        - publishing_url
         - rating_label_name
         - rating_statement
         - rating_summary
@@ -298,8 +307,8 @@ update_permissions:
     permission:
       columns:
         - rating_label_name
-        - rating_summary
         - rating_statement
+        - rating_summary
         - status
         - submitter_notes
         - synopsis
