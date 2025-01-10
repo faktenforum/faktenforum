@@ -11,8 +11,7 @@ export class EnvService {
   @Inject()
   logger: Logger;
 
-  constructor(logger: Logger) {
-    this.logger = logger;
+  constructor() {
     this.loadEnvVars();
     this.validate();
   }

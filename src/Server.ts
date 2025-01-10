@@ -65,4 +65,8 @@ export class Server {
       $log.error("Error checking or creating the bucket:", error);
     }
   }
+  async $onDestroy() {
+    console.log("Server is shutting down");
+    process.exit(0);
+  }
 }

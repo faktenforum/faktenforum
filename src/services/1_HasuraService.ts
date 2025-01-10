@@ -16,9 +16,7 @@ export class HasuraService {
 
   graphQLClient: GraphQLClient;
 
-  constructor(envService: EnvService, logger: Logger) {
-    this.envService = envService;
-    this.logger = logger;
+  constructor() {
     this.logger.info("[HasuraService] Hasura API URL: ", this.envService.hasuraApiUrl);
     this.graphQLClient = new GraphQLClient(this.envService.hasuraApiUrl, {});
   }
