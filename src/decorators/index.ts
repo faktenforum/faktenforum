@@ -4,3 +4,4 @@
 
 export * from "./AccessControlDecorator";
 export * from "./ApiKeyAccessControlDecorator";
+export * from "./RateLimitDecorator";

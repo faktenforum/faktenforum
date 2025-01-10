@@ -1,0 +1,21 @@
+http:
+  routers:
+    grafana:
+      entryPoints:
+        - web
+      rule: host(`api.localhost`) && PathPrefix(`/grafana`)
+      service: grafana
+      middlewares:
+        - grafana-strip
+
+  middlewares:
+    grafana-strip:
+      stripPrefix:
+        prefixes:
+          - /grafana
+
+  services:
+    grafana:
+      loadBalancer:
+        servers:
+          - url: http://grafana:3000

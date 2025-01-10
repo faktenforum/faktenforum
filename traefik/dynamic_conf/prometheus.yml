@@ -1,0 +1,21 @@
+http:
+  routers:
+    prometheus:
+      entryPoints:
+        - web
+      rule: host(`api.localhost`) && PathPrefix(`/prometheus`)
+      service: prometheus
+      middlewares:
+        - prometheus-auth
+
+  services:
+    prometheus:
+      loadBalancer:
+        servers:
+          - url: http://prometheus:9090
+
+  middlewares:
+    prometheus-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$RXeftD4a$oBcsrT1nXEbQIM0daG7/v0"
