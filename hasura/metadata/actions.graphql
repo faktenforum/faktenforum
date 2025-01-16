@@ -6,6 +6,12 @@ type Mutation {
 }
 
 type Mutation {
+  sendMessageToCheckbotMessagePost(
+    textPayloadInput: TextPayloadInput!
+  ): CheckbotResponse
+}
+
+type Mutation {
   updateUserRole(
     userId: uuid!
     role: UserRole!
@@ -32,9 +38,19 @@ enum UserRole {
   administrator
 }
 
+enum CheckbotResponseType {
+  unknown
+  factcheck
+  learningmaterial
+}
+
 input SampleInput {
   username: String!
   password: String!
+}
+
+input TextPayloadInput {
+  text: String!
 }
 
 type UserWithRole {
@@ -56,5 +72,19 @@ type SampleOutput {
 
 type BlockRoomMessageOutput {
   success: Boolean
+}
+
+type CheckbotResponse {
+  data: [DataListItem]!
+  type: CheckbotResponseType!
+}
+
+type DataListItem {
+  claim: String
+  fileType: String
+  label: String
+  link: String
+  summary: String
+  url: String
 }
 

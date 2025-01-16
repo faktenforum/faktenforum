@@ -53,4 +53,4 @@ $$;
 -- Add trigger using the specific function (only for INSERT and UPDATE)
 CREATE TRIGGER log_checkworthiness_event
 AFTER INSERT OR UPDATE ON public.checkworthiness
-FOR EACH ROW EXECUTE FUNCTION public.log_checkworthiness_event();
+FOR EACH ROW EXECUTE FUNCTION public.log_checkworthiness_event()
