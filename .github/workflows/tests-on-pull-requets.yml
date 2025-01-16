@@ -20,8 +20,11 @@ jobs:
         with:
           node-version: "20" # Specify the Node.js version
 
+      - name: Install Bun
+        run: npm install bun
+        
       - name: Install Dependencies
-        run: npm install
+        run: bun install
 
       - name: Run Tests
         run: npm test # Replace with your test command

@@ -75,7 +75,7 @@ type BlockRoomMessageOutput {
 }
 
 type CheckbotResponse {
-  data: [DataListItem]!
+  data: [DataListItem]
   type: CheckbotResponseType!
 }
 
