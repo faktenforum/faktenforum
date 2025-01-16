@@ -26,6 +26,46 @@ actions:
       - role: editor
       - role: administrator
     comment: Block Room message
+  - name: sendMessageToCheckbotMessagePost
+    definition:
+      kind: synchronous
+      handler: '{{CHECKBOT_BASE_URL}}'
+      forward_client_headers: true
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.textPayloadInput}}'
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/message'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "type": {{$body?['type']}},
+              "data": {{if inverse(empty($body?['data']))}} {{ range _, data := $body?['data']}} {
+                "link": {{data?['link']}},
+                "fileType": {{data?['file_type']}},
+                "summary": {{data?['summary']}},
+                "claim": {{data?['claim']}},
+                "label": {{data?['label']}},
+                "url": {{data?['url']}}
+                } {{end}} {{else}} null {{end}}
+            }
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: aspirant
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: administrator
+    comment: |-
+      Enqueue the incoming request in the FIFO queue. We'll wait on the
+      future that is resolved by one of the background workers.
   - name: updateUserRole
     definition:
       kind: synchronous
@@ -88,8 +128,20 @@ custom_types:
         - description: null
           is_deprecated: null
           value: administrator
+    - name: CheckbotResponseType
+      values:
+        - description: null
+          is_deprecated: null
+          value: unknown
+        - description: null
+          is_deprecated: null
+          value: factcheck
+        - description: null
+          is_deprecated: null
+          value: learningmaterial
   input_objects:
     - name: SampleInput
+    - name: TextPayloadInput
   objects:
     - name: UserWithRole
     - name: UserRoleResponse
@@ -104,4 +156,6 @@ custom_types:
           type: object
     - name: SampleOutput
     - name: BlockRoomMessageOutput
+    - name: CheckbotResponse
+    - name: DataListItem
   scalars: []
