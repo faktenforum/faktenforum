@@ -3,7 +3,12 @@ import { Logger } from "@tsed/common";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
-import { UpdateUserRoleRequest, OnClaimStatusUpdatedRequest, KratosUserSchema } from "~/models";
+import {
+  UpdateUserRoleRequest,
+  OnClaimStatusUpdatedRequest,
+  KratosUserSchema,
+  CalculateClaimWorthinessRequest
+} from "~/models";
 
 import {
   AuthService,
@@ -181,5 +186,14 @@ export class HasuraWebHookController {
     } else {
       return internal ? SpaceNames.InternalFactchecks : SpaceNames.CommunityFactchecks;
     }
+  }
+
+  @Post("/calculate-checkworthiness")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(204).ContentType("application/json")) // prettier-ignore
+  async calculateCheckworthiness(@BodyParams() body: CalculateClaimWorthinessRequest): Promise<void> {
+    this.logger.info(`[HasuraWebHookController] calculateCheckworthiness: ${JSON.stringify(body)}`);
+
+    return;
   }
 }

@@ -17,6 +17,7 @@ export type Scalars = {
   Float: { input: number; output: number; }
   bigint: { input: any; output: any; }
   claim_status: { input: any; output: any; }
+  float8: { input: any; output: any; }
   timestamptz: { input: any; output: any; }
   tstzrange: { input: any; output: any; }
   uuid: { input: any; output: any; }
@@ -33,6 +34,11 @@ export type BigintComparisonExp = {
   _lte?: InputMaybe<Scalars['bigint']['input']>;
   _neq?: InputMaybe<Scalars['bigint']['input']>;
   _nin?: InputMaybe<Array<Scalars['bigint']['input']>>;
+};
+
+export type BlockRoomMessageOutput = {
+  __typename?: 'BlockRoomMessageOutput';
+  success?: Maybe<Scalars['Boolean']['output']>;
 };
 
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
@@ -431,6 +437,229 @@ export type ChannelUpdates = {
   where: ChannelBoolExp;
 };
 
+export type CheckbotResponse = {
+  __typename?: 'CheckbotResponse';
+  data?: Maybe<Array<Maybe<DataListItem>>>;
+  type: CheckbotResponseType;
+};
+
+export enum CheckbotResponseType {
+  Factcheck = 'factcheck',
+  Learningmaterial = 'learningmaterial',
+  Unknown = 'unknown'
+}
+
+/** columns and relationships of "checkworthiness" */
+export type Checkworthiness = {
+  __typename?: 'Checkworthiness';
+  claimId: Scalars['uuid']['output'];
+  confidence: Scalars['float8']['output'];
+  id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "checkworthiness" */
+export type CheckworthinessAggregate = {
+  __typename?: 'CheckworthinessAggregate';
+  aggregate?: Maybe<CheckworthinessAggregateFields>;
+  nodes: Array<Checkworthiness>;
+};
+
+/** aggregate fields of "checkworthiness" */
+export type CheckworthinessAggregateFields = {
+  __typename?: 'CheckworthinessAggregateFields';
+  avg?: Maybe<CheckworthinessAvgFields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<CheckworthinessMaxFields>;
+  min?: Maybe<CheckworthinessMinFields>;
+  stddev?: Maybe<CheckworthinessStddevFields>;
+  stddevPop?: Maybe<CheckworthinessStddevPopFields>;
+  stddevSamp?: Maybe<CheckworthinessStddevSampFields>;
+  sum?: Maybe<CheckworthinessSumFields>;
+  varPop?: Maybe<CheckworthinessVarPopFields>;
+  varSamp?: Maybe<CheckworthinessVarSampFields>;
+  variance?: Maybe<CheckworthinessVarianceFields>;
+};
+
+
+/** aggregate fields of "checkworthiness" */
+export type CheckworthinessAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<CheckworthinessSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type CheckworthinessAvgFields = {
+  __typename?: 'CheckworthinessAvgFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "checkworthiness". All fields are combined with a logical 'AND'. */
+export type CheckworthinessBoolExp = {
+  _and?: InputMaybe<Array<CheckworthinessBoolExp>>;
+  _not?: InputMaybe<CheckworthinessBoolExp>;
+  _or?: InputMaybe<Array<CheckworthinessBoolExp>>;
+  claimId?: InputMaybe<UuidComparisonExp>;
+  confidence?: InputMaybe<Float8ComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "checkworthiness" */
+export enum CheckworthinessConstraint {
+  /** unique or primary key constraint on columns "claim_id" */
+  CheckworthinessClaimIdKey = 'checkworthiness_claim_id_key',
+  /** unique or primary key constraint on columns "id" */
+  CheckworthinessPkey = 'checkworthiness_pkey'
+}
+
+/** input type for incrementing numeric columns in table "checkworthiness" */
+export type CheckworthinessIncInput = {
+  confidence?: InputMaybe<Scalars['float8']['input']>;
+};
+
+/** input type for inserting data into table "checkworthiness" */
+export type CheckworthinessInsertInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  confidence?: InputMaybe<Scalars['float8']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type CheckworthinessMaxFields = {
+  __typename?: 'CheckworthinessMaxFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  confidence?: Maybe<Scalars['float8']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** aggregate min on columns */
+export type CheckworthinessMinFields = {
+  __typename?: 'CheckworthinessMinFields';
+  claimId?: Maybe<Scalars['uuid']['output']>;
+  confidence?: Maybe<Scalars['float8']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** response of any mutation on the table "checkworthiness" */
+export type CheckworthinessMutationResponse = {
+  __typename?: 'CheckworthinessMutationResponse';
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Checkworthiness>;
+};
+
+/** on_conflict condition type for table "checkworthiness" */
+export type CheckworthinessOnConflict = {
+  constraint: CheckworthinessConstraint;
+  updateColumns?: Array<CheckworthinessUpdateColumn>;
+  where?: InputMaybe<CheckworthinessBoolExp>;
+};
+
+/** Ordering options when selecting data from "checkworthiness". */
+export type CheckworthinessOrderBy = {
+  claimId?: InputMaybe<OrderBy>;
+  confidence?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: checkworthiness */
+export type CheckworthinessPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "checkworthiness" */
+export enum CheckworthinessSelectColumn {
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  Confidence = 'confidence',
+  /** column name */
+  Id = 'id'
+}
+
+/** input type for updating data in table "checkworthiness" */
+export type CheckworthinessSetInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  confidence?: InputMaybe<Scalars['float8']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type CheckworthinessStddevFields = {
+  __typename?: 'CheckworthinessStddevFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddevPop on columns */
+export type CheckworthinessStddevPopFields = {
+  __typename?: 'CheckworthinessStddevPopFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddevSamp on columns */
+export type CheckworthinessStddevSampFields = {
+  __typename?: 'CheckworthinessStddevSampFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "checkworthiness" */
+export type CheckworthinessStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: CheckworthinessStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type CheckworthinessStreamCursorValueInput = {
+  claimId?: InputMaybe<Scalars['uuid']['input']>;
+  confidence?: InputMaybe<Scalars['float8']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate sum on columns */
+export type CheckworthinessSumFields = {
+  __typename?: 'CheckworthinessSumFields';
+  confidence?: Maybe<Scalars['float8']['output']>;
+};
+
+/** update columns of table "checkworthiness" */
+export enum CheckworthinessUpdateColumn {
+  /** column name */
+  ClaimId = 'claimId',
+  /** column name */
+  Confidence = 'confidence',
+  /** column name */
+  Id = 'id'
+}
+
+export type CheckworthinessUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<CheckworthinessIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<CheckworthinessSetInput>;
+  /** filter the rows which have to be updated */
+  where: CheckworthinessBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type CheckworthinessVarPopFields = {
+  __typename?: 'CheckworthinessVarPopFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate varSamp on columns */
+export type CheckworthinessVarSampFields = {
+  __typename?: 'CheckworthinessVarSampFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type CheckworthinessVarianceFields = {
+  __typename?: 'CheckworthinessVarianceFields';
+  confidence?: Maybe<Scalars['Float']['output']>;
+};
+
 /** columns and relationships of "claim" */
 export type Claim = {
   __typename?: 'Claim';
@@ -465,6 +694,7 @@ export type Claim = {
   /** An aggregate relationship */
   originsAggregate: OriginAggregate;
   processId?: Maybe<Scalars['bigint']['output']>;
+  publishingUrl?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   ratingLabel?: Maybe<RatingLabel>;
   ratingLabelName?: Maybe<Scalars['String']['output']>;
@@ -717,6 +947,7 @@ export type ClaimBoolExp = {
   origins?: InputMaybe<OriginBoolExp>;
   originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
   processId?: InputMaybe<BigintComparisonExp>;
+  publishingUrl?: InputMaybe<StringComparisonExp>;
   ratingLabel?: InputMaybe<RatingLabelBoolExp>;
   ratingLabelName?: InputMaybe<StringComparisonExp>;
   ratingStatement?: InputMaybe<StringComparisonExp>;
@@ -1484,6 +1715,7 @@ export type ClaimInsertInput = {
   internal?: InputMaybe<Scalars['Boolean']['input']>;
   origins?: InputMaybe<OriginArrRelInsertInput>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
+  publishingUrl?: InputMaybe<Scalars['String']['input']>;
   ratingLabel?: InputMaybe<RatingLabelObjRelInsertInput>;
   ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingStatement?: InputMaybe<Scalars['String']['input']>;
@@ -1506,6 +1738,7 @@ export type ClaimMaxFields = {
   createdBy?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   processId?: Maybe<Scalars['bigint']['output']>;
+  publishingUrl?: Maybe<Scalars['String']['output']>;
   ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingStatement?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
@@ -1523,6 +1756,7 @@ export type ClaimMaxOrderBy = {
   createdBy?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
+  publishingUrl?: InputMaybe<OrderBy>;
   ratingLabelName?: InputMaybe<OrderBy>;
   ratingStatement?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
@@ -1541,6 +1775,7 @@ export type ClaimMinFields = {
   createdBy?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   processId?: Maybe<Scalars['bigint']['output']>;
+  publishingUrl?: Maybe<Scalars['String']['output']>;
   ratingLabelName?: Maybe<Scalars['String']['output']>;
   ratingStatement?: Maybe<Scalars['String']['output']>;
   ratingSummary?: Maybe<Scalars['String']['output']>;
@@ -1558,6 +1793,7 @@ export type ClaimMinOrderBy = {
   createdBy?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   processId?: InputMaybe<OrderBy>;
+  publishingUrl?: InputMaybe<OrderBy>;
   ratingLabelName?: InputMaybe<OrderBy>;
   ratingStatement?: InputMaybe<OrderBy>;
   ratingSummary?: InputMaybe<OrderBy>;
@@ -1606,6 +1842,7 @@ export type ClaimOrderBy = {
   internal?: InputMaybe<OrderBy>;
   originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   processId?: InputMaybe<OrderBy>;
+  publishingUrl?: InputMaybe<OrderBy>;
   ratingLabel?: InputMaybe<RatingLabelOrderBy>;
   ratingLabelName?: InputMaybe<OrderBy>;
   ratingStatement?: InputMaybe<OrderBy>;
@@ -1638,6 +1875,8 @@ export enum ClaimSelectColumn {
   Internal = 'internal',
   /** column name */
   ProcessId = 'processId',
+  /** column name */
+  PublishingUrl = 'publishingUrl',
   /** column name */
   RatingLabelName = 'ratingLabelName',
   /** column name */
@@ -1679,6 +1918,7 @@ export type ClaimSetInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   internal?: InputMaybe<Scalars['Boolean']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
+  publishingUrl?: InputMaybe<Scalars['String']['input']>;
   ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingStatement?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
@@ -1752,6 +1992,7 @@ export type ClaimStreamCursorValueInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   internal?: InputMaybe<Scalars['Boolean']['input']>;
   processId?: InputMaybe<Scalars['bigint']['input']>;
+  publishingUrl?: InputMaybe<Scalars['String']['input']>;
   ratingLabelName?: InputMaybe<Scalars['String']['input']>;
   ratingStatement?: InputMaybe<Scalars['String']['input']>;
   ratingSummary?: InputMaybe<Scalars['String']['input']>;
@@ -1787,6 +2028,8 @@ export enum ClaimUpdateColumn {
   Internal = 'internal',
   /** column name */
   ProcessId = 'processId',
+  /** column name */
+  PublishingUrl = 'publishingUrl',
   /** column name */
   RatingLabelName = 'ratingLabelName',
   /** column name */
@@ -2537,7 +2780,7 @@ export type CommentUserReactionsBoolExp = {
 export enum CommentUserReactionsConstraint {
   /** unique or primary key constraint on columns "id" */
   CommentUserReactionsPkey = 'comment_user_reactions_pkey',
-  /** unique or primary key constraint on columns "comment_id", "user_id", "emoji" */
+  /** unique or primary key constraint on columns "user_id", "emoji", "comment_id" */
   UniqueUserCommentEmoji = 'unique_user_comment_emoji'
 }
 
@@ -2688,6 +2931,16 @@ export enum CursorOrdering {
   /** descending ordering of the cursor */
   Desc = 'DESC'
 }
+
+export type DataListItem = {
+  __typename?: 'DataListItem';
+  claim?: Maybe<Scalars['String']['output']>;
+  fileType?: Maybe<Scalars['String']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  summary?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
 
 /** columns and relationships of "event" */
 export type Event = {
@@ -4830,13 +5083,26 @@ export type FileVarianceOrderBy = {
   size?: InputMaybe<OrderBy>;
 };
 
+/** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
+export type Float8ComparisonExp = {
+  _eq?: InputMaybe<Scalars['float8']['input']>;
+  _gt?: InputMaybe<Scalars['float8']['input']>;
+  _gte?: InputMaybe<Scalars['float8']['input']>;
+  _in?: InputMaybe<Array<Scalars['float8']['input']>>;
+  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['float8']['input']>;
+  _lte?: InputMaybe<Scalars['float8']['input']>;
+  _neq?: InputMaybe<Scalars['float8']['input']>;
+  _nin?: InputMaybe<Array<Scalars['float8']['input']>>;
+};
+
 /** columns and relationships of "handbook_sections" */
 export type HandbookSections = {
   __typename?: 'HandbookSections';
   contentDe: Scalars['String']['output'];
   contentEn: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
-  teaserImage: Scalars['String']['output'];
+  teaserImage?: Maybe<Scalars['uuid']['output']>;
   teaserTextDe: Scalars['String']['output'];
   teaserTextEn: Scalars['String']['output'];
   titleDe: Scalars['String']['output'];
@@ -4873,7 +5139,7 @@ export type HandbookSectionsBoolExp = {
   contentDe?: InputMaybe<StringComparisonExp>;
   contentEn?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  teaserImage?: InputMaybe<StringComparisonExp>;
+  teaserImage?: InputMaybe<UuidComparisonExp>;
   teaserTextDe?: InputMaybe<StringComparisonExp>;
   teaserTextEn?: InputMaybe<StringComparisonExp>;
   titleDe?: InputMaybe<StringComparisonExp>;
@@ -4891,7 +5157,7 @@ export type HandbookSectionsInsertInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['String']['input']>;
+  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -4904,7 +5170,7 @@ export type HandbookSectionsMaxFields = {
   contentDe?: Maybe<Scalars['String']['output']>;
   contentEn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  teaserImage?: Maybe<Scalars['String']['output']>;
+  teaserImage?: Maybe<Scalars['uuid']['output']>;
   teaserTextDe?: Maybe<Scalars['String']['output']>;
   teaserTextEn?: Maybe<Scalars['String']['output']>;
   titleDe?: Maybe<Scalars['String']['output']>;
@@ -4917,7 +5183,7 @@ export type HandbookSectionsMinFields = {
   contentDe?: Maybe<Scalars['String']['output']>;
   contentEn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  teaserImage?: Maybe<Scalars['String']['output']>;
+  teaserImage?: Maybe<Scalars['uuid']['output']>;
   teaserTextDe?: Maybe<Scalars['String']['output']>;
   teaserTextEn?: Maybe<Scalars['String']['output']>;
   titleDe?: Maybe<Scalars['String']['output']>;
@@ -4982,7 +5248,7 @@ export type HandbookSectionsSetInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['String']['input']>;
+  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -5002,7 +5268,7 @@ export type HandbookSectionsStreamCursorValueInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['String']['input']>;
+  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -7250,6 +7516,10 @@ export type StringComparisonExp = {
   _similar?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type TextPayloadInput = {
+  text: Scalars['String']['input'];
+};
+
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type TimestamptzComparisonExp = {
   _eq?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7334,6 +7604,7 @@ export type User = {
   originsAggregate: OriginAggregate;
   profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
+  signedCodeOfConduct?: Maybe<Scalars['Boolean']['output']>;
   /** An array relationship */
   sources: Array<Source>;
   /** An aggregate relationship */
@@ -7607,7 +7878,7 @@ export type UserUserHistoriesAggregateArgs = {
   where?: InputMaybe<UserHistoryBoolExp>;
 };
 
-/** View of user table to set Hasura Permissions for User to real all */
+/** View of user table to set Hasura Permissions for User to read all, including signed_code_of_conduct */
 export type UserAccountView = {
   __typename?: 'UserAccountView';
   bio?: Maybe<Scalars['String']['output']>;
@@ -7619,6 +7890,7 @@ export type UserAccountView = {
   mobileNumber?: Maybe<Scalars['String']['output']>;
   profileImage?: Maybe<Scalars['uuid']['output']>;
   pronouns?: Maybe<Scalars['String']['output']>;
+  signedCodeOfConduct?: Maybe<Scalars['Boolean']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
@@ -7659,6 +7931,7 @@ export type UserAccountViewBoolExp = {
   mobileNumber?: InputMaybe<StringComparisonExp>;
   profileImage?: InputMaybe<UuidComparisonExp>;
   pronouns?: InputMaybe<StringComparisonExp>;
+  signedCodeOfConduct?: InputMaybe<BooleanComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   username?: InputMaybe<StringComparisonExp>;
 };
@@ -7674,6 +7947,7 @@ export type UserAccountViewInsertInput = {
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
   profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -7730,6 +8004,7 @@ export type UserAccountViewOrderBy = {
   mobileNumber?: InputMaybe<OrderBy>;
   profileImage?: InputMaybe<OrderBy>;
   pronouns?: InputMaybe<OrderBy>;
+  signedCodeOfConduct?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
   username?: InputMaybe<OrderBy>;
 };
@@ -7755,6 +8030,8 @@ export enum UserAccountViewSelectColumn {
   /** column name */
   Pronouns = 'pronouns',
   /** column name */
+  SignedCodeOfConduct = 'signedCodeOfConduct',
+  /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
   Username = 'username'
@@ -7771,6 +8048,7 @@ export type UserAccountViewSetInput = {
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
   profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -7794,6 +8072,7 @@ export type UserAccountViewStreamCursorValueInput = {
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
   profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -7813,6 +8092,8 @@ export type UserAggregate = {
 };
 
 export type UserAggregateBoolExp = {
+  bool_and?: InputMaybe<UserAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<UserAggregateBoolExpBool_Or>;
   count?: InputMaybe<UserAggregateBoolExpCount>;
 };
 
@@ -7882,6 +8163,7 @@ export type UserBoolExp = {
   originsAggregate?: InputMaybe<OriginAggregateBoolExp>;
   profileImage?: InputMaybe<UuidComparisonExp>;
   pronouns?: InputMaybe<StringComparisonExp>;
+  signedCodeOfConduct?: InputMaybe<BooleanComparisonExp>;
   sources?: InputMaybe<SourceBoolExp>;
   sourcesAggregate?: InputMaybe<SourceAggregateBoolExp>;
   sysPeriod?: InputMaybe<TstzrangeComparisonExp>;
@@ -8474,6 +8756,7 @@ export type UserInsertInput = {
   origins?: InputMaybe<OriginArrRelInsertInput>;
   profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   sources?: InputMaybe<SourceArrRelInsertInput>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -8589,6 +8872,7 @@ export type UserOrderBy = {
   originsAggregate?: InputMaybe<OriginAggregateOrderBy>;
   profileImage?: InputMaybe<OrderBy>;
   pronouns?: InputMaybe<OrderBy>;
+  signedCodeOfConduct?: InputMaybe<OrderBy>;
   sourcesAggregate?: InputMaybe<SourceAggregateOrderBy>;
   sysPeriod?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
@@ -8609,6 +8893,13 @@ export enum UserRole {
   Moderator = 'moderator',
   Senior = 'senior'
 }
+
+export type UserRoleResponse = {
+  __typename?: 'UserRoleResponse';
+  UserToUserRole?: Maybe<User>;
+  id: Scalars['String']['output'];
+  role: UserRole;
+};
 
 /** select columns of table "user" */
 export enum UserSelectColumn {
@@ -8631,11 +8922,25 @@ export enum UserSelectColumn {
   /** column name */
   Pronouns = 'pronouns',
   /** column name */
+  SignedCodeOfConduct = 'signedCodeOfConduct',
+  /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
   Username = 'username'
+}
+
+/** select "userAggregateBoolExpBool_andArgumentsColumns" columns of table "user" */
+export enum UserSelectColumnUserAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  SignedCodeOfConduct = 'signedCodeOfConduct'
+}
+
+/** select "userAggregateBoolExpBool_orArgumentsColumns" columns of table "user" */
+export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  SignedCodeOfConduct = 'signedCodeOfConduct'
 }
 
 /** input type for updating data in table "user" */
@@ -8649,6 +8954,7 @@ export type UserSetInput = {
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
   profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -8673,6 +8979,7 @@ export type UserStreamCursorValueInput = {
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
   profileImage?: InputMaybe<Scalars['uuid']['input']>;
   pronouns?: InputMaybe<Scalars['String']['input']>;
+  signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -8698,6 +9005,8 @@ export enum UserUpdateColumn {
   ProfileImage = 'profileImage',
   /** column name */
   Pronouns = 'pronouns',
+  /** column name */
+  SignedCodeOfConduct = 'signedCodeOfConduct',
   /** column name */
   SysPeriod = 'sysPeriod',
   /** column name */
@@ -8836,6 +9145,8 @@ export type FileHistoryAggregateBoolExpCount = {
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
+  /** Block Room message */
+  blockRoomMessage?: Maybe<BlockRoomMessageOutput>;
   /** delete data from the table: "category" */
   deleteCategory?: Maybe<CategoryMutationResponse>;
   /** delete single row from the table: "category" */
@@ -8844,6 +9155,10 @@ export type Mutation_Root = {
   deleteChannel?: Maybe<ChannelMutationResponse>;
   /** delete single row from the table: "channel" */
   deleteChannelByPk?: Maybe<Channel>;
+  /** delete data from the table: "checkworthiness" */
+  deleteCheckworthiness?: Maybe<CheckworthinessMutationResponse>;
+  /** delete single row from the table: "checkworthiness" */
+  deleteCheckworthinessByPk?: Maybe<Checkworthiness>;
   /** delete data from the table: "claim" */
   deleteClaim?: Maybe<ClaimMutationResponse>;
   /** delete single row from the table: "claim" */
@@ -8938,6 +9253,10 @@ export type Mutation_Root = {
   insertChannel?: Maybe<ChannelMutationResponse>;
   /** insert a single row into the table: "channel" */
   insertChannelOne?: Maybe<Channel>;
+  /** insert data into the table: "checkworthiness" */
+  insertCheckworthiness?: Maybe<CheckworthinessMutationResponse>;
+  /** insert a single row into the table: "checkworthiness" */
+  insertCheckworthinessOne?: Maybe<Checkworthiness>;
   /** insert data into the table: "claim" */
   insertClaim?: Maybe<ClaimMutationResponse>;
   /** insert data into the table: "claim_category" */
@@ -9026,6 +9345,11 @@ export type Mutation_Root = {
   insertUserHistoryOne?: Maybe<UserHistory>;
   /** insert a single row into the table: "user" */
   insertUserOne?: Maybe<User>;
+  /**
+   * Enqueue the incoming request in the FIFO queue. We'll wait on the
+   * future that is resolved by one of the background workers.
+   */
+  sendMessageToCheckbotMessagePost?: Maybe<CheckbotResponse>;
   /** update data of the table: "category" */
   updateCategory?: Maybe<CategoryMutationResponse>;
   /** update single row of the table: "category" */
@@ -9038,6 +9362,12 @@ export type Mutation_Root = {
   updateChannelByPk?: Maybe<Channel>;
   /** update multiples rows of table: "channel" */
   updateChannelMany?: Maybe<Array<Maybe<ChannelMutationResponse>>>;
+  /** update data of the table: "checkworthiness" */
+  updateCheckworthiness?: Maybe<CheckworthinessMutationResponse>;
+  /** update single row of the table: "checkworthiness" */
+  updateCheckworthinessByPk?: Maybe<Checkworthiness>;
+  /** update multiples rows of table: "checkworthiness" */
+  updateCheckworthinessMany?: Maybe<Array<Maybe<CheckworthinessMutationResponse>>>;
   /** update data of the table: "claim" */
   updateClaim?: Maybe<ClaimMutationResponse>;
   /** update single row of the table: "claim" */
@@ -9174,6 +9504,13 @@ export type Mutation_Root = {
 
 
 /** mutation root */
+export type Mutation_RootBlockRoomMessageArgs = {
+  messageId: Scalars['String']['input'];
+  roomId: Scalars['String']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDeleteCategoryArgs = {
   where: CategoryBoolExp;
 };
@@ -9194,6 +9531,18 @@ export type Mutation_RootDeleteChannelArgs = {
 /** mutation root */
 export type Mutation_RootDeleteChannelByPkArgs = {
   name: Scalars['String']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteCheckworthinessArgs = {
+  where: CheckworthinessBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteCheckworthinessByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -9481,6 +9830,20 @@ export type Mutation_RootInsertChannelArgs = {
 export type Mutation_RootInsertChannelOneArgs = {
   object: ChannelInsertInput;
   onConflict?: InputMaybe<ChannelOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertCheckworthinessArgs = {
+  objects: Array<CheckworthinessInsertInput>;
+  onConflict?: InputMaybe<CheckworthinessOnConflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsertCheckworthinessOneArgs = {
+  object: CheckworthinessInsertInput;
+  onConflict?: InputMaybe<CheckworthinessOnConflict>;
 };
 
 
@@ -9791,6 +10154,12 @@ export type Mutation_RootInsertUserOneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootSendMessageToCheckbotMessagePostArgs = {
+  textPayloadInput: TextPayloadInput;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdateCategoryArgs = {
   _set?: InputMaybe<CategorySetInput>;
   where: CategoryBoolExp;
@@ -9827,6 +10196,28 @@ export type Mutation_RootUpdateChannelByPkArgs = {
 /** mutation root */
 export type Mutation_RootUpdateChannelManyArgs = {
   updates: Array<ChannelUpdates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCheckworthinessArgs = {
+  _inc?: InputMaybe<CheckworthinessIncInput>;
+  _set?: InputMaybe<CheckworthinessSetInput>;
+  where: CheckworthinessBoolExp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCheckworthinessByPkArgs = {
+  _inc?: InputMaybe<CheckworthinessIncInput>;
+  _set?: InputMaybe<CheckworthinessSetInput>;
+  pkColumns: CheckworthinessPkColumnsInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdateCheckworthinessManyArgs = {
+  updates: Array<CheckworthinessUpdates>;
 };
 
 
@@ -10307,8 +10698,6 @@ export type OriginHistoryAggregateBoolExpCount = {
 
 export type Query_Root = {
   __typename?: 'query_root';
-  /** Get all users with their assigned role */
-  allUsersWithRoles: Array<UserWithRole>;
   /** fetch data from the table: "category" */
   category: Array<Category>;
   /** fetch aggregated fields from the table: "category" */
@@ -10321,6 +10710,12 @@ export type Query_Root = {
   channelAggregate: ChannelAggregate;
   /** fetch data from the table: "channel" using primary key columns */
   channelByPk?: Maybe<Channel>;
+  /** fetch data from the table: "checkworthiness" */
+  checkworthiness: Array<Checkworthiness>;
+  /** fetch aggregated fields from the table: "checkworthiness" */
+  checkworthinessAggregate: CheckworthinessAggregate;
+  /** fetch data from the table: "checkworthiness" using primary key columns */
+  checkworthinessByPk?: Maybe<Checkworthiness>;
   /** fetch data from the table: "claim" */
   claim: Array<Claim>;
   /** fetch aggregated fields from the table: "claim" */
@@ -10451,6 +10846,8 @@ export type Query_Root = {
   userHistoryAggregate: UserHistoryAggregate;
   /** fetch data from the table: "user_history" using primary key columns */
   userHistoryByPk?: Maybe<UserHistory>;
+  /** Get Roles of users by array of user ids */
+  userRole: Array<UserRoleResponse>;
 };
 
 
@@ -10497,6 +10894,29 @@ export type Query_RootChannelAggregateArgs = {
 
 export type Query_RootChannelByPkArgs = {
   name: Scalars['String']['input'];
+};
+
+
+export type Query_RootCheckworthinessArgs = {
+  distinctOn?: InputMaybe<Array<CheckworthinessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CheckworthinessOrderBy>>;
+  where?: InputMaybe<CheckworthinessBoolExp>;
+};
+
+
+export type Query_RootCheckworthinessAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CheckworthinessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CheckworthinessOrderBy>>;
+  where?: InputMaybe<CheckworthinessBoolExp>;
+};
+
+
+export type Query_RootCheckworthinessByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -11001,6 +11421,11 @@ export type Query_RootUserHistoryByPkArgs = {
   historyId: Scalars['uuid']['input'];
 };
 
+
+export type Query_RootUserRoleArgs = {
+  ids: Array<InputMaybe<Scalars['uuid']['input']>>;
+};
+
 export type SourceAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<SourceSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
@@ -11033,6 +11458,14 @@ export type Subscription_Root = {
   channelByPk?: Maybe<Channel>;
   /** fetch data from the table in a streaming manner: "channel" */
   channelStream: Array<Channel>;
+  /** fetch data from the table: "checkworthiness" */
+  checkworthiness: Array<Checkworthiness>;
+  /** fetch aggregated fields from the table: "checkworthiness" */
+  checkworthinessAggregate: CheckworthinessAggregate;
+  /** fetch data from the table: "checkworthiness" using primary key columns */
+  checkworthinessByPk?: Maybe<Checkworthiness>;
+  /** fetch data from the table in a streaming manner: "checkworthiness" */
+  checkworthinessStream: Array<Checkworthiness>;
   /** fetch data from the table: "claim" */
   claim: Array<Claim>;
   /** fetch aggregated fields from the table: "claim" */
@@ -11267,6 +11700,36 @@ export type Subscription_RootChannelStreamArgs = {
   batchSize: Scalars['Int']['input'];
   cursor: Array<InputMaybe<ChannelStreamCursorInput>>;
   where?: InputMaybe<ChannelBoolExp>;
+};
+
+
+export type Subscription_RootCheckworthinessArgs = {
+  distinctOn?: InputMaybe<Array<CheckworthinessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CheckworthinessOrderBy>>;
+  where?: InputMaybe<CheckworthinessBoolExp>;
+};
+
+
+export type Subscription_RootCheckworthinessAggregateArgs = {
+  distinctOn?: InputMaybe<Array<CheckworthinessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CheckworthinessOrderBy>>;
+  where?: InputMaybe<CheckworthinessBoolExp>;
+};
+
+
+export type Subscription_RootCheckworthinessByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootCheckworthinessStreamArgs = {
+  batchSize: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<CheckworthinessStreamCursorInput>>;
+  where?: InputMaybe<CheckworthinessBoolExp>;
 };
 
 
@@ -11925,6 +12388,20 @@ export type Subscription_RootUserStreamArgs = {
   where?: InputMaybe<UserBoolExp>;
 };
 
+export type UserAggregateBoolExpBool_And = {
+  arguments: UserSelectColumnUserAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UserBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type UserAggregateBoolExpBool_Or = {
+  arguments: UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UserBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
 export type UserAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<UserSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
@@ -11972,12 +12449,28 @@ export type GetAllUsersProfileImagesQueryVariables = Exact<{ [key: string]: neve
 
 export type GetAllUsersProfileImagesQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', id: any, profileImage?: any | null, username: string }> };
 
+export type GetClaimSubmitterNotesQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetClaimSubmitterNotesQuery = { __typename?: 'query_root', data?: { __typename?: 'Claim', submitterNotes?: string | null } | null };
+
 export type GetUserByUsernameQueryVariables = Exact<{
   username: Scalars['String']['input'];
 }>;
 
 
 export type GetUserByUsernameQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', profileImage?: any | null, id: any }> };
+
+export type InsertCheckworthinessMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  confidence: Scalars['float8']['input'];
+  claimId: Scalars['uuid']['input'];
+}>;
+
+
+export type InsertCheckworthinessMutation = { __typename?: 'mutation_root', data?: { __typename?: 'Checkworthiness', id: any } | null };
 
 export type InsertUserMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -12091,6 +12584,11 @@ export type InsertFileAndUpdateUserProfileImageMutationVariables = Exact<{
 
 export type InsertFileAndUpdateUserProfileImageMutation = { __typename?: 'mutation_root', insertFileOne?: { __typename?: 'File', id: any } | null, updateUserByPk?: { __typename?: 'User', id: any } | null };
 
+export type GetUserProfileImagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserProfileImagesQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', id: any, username: string, profileImage?: any | null }> };
+
 
 export const DeleteUserByPkDocument = gql`
     mutation deleteUserByPk($id: uuid!) {
@@ -12108,10 +12606,26 @@ export const GetAllUsersProfileImagesDocument = gql`
   }
 }
     `;
+export const GetClaimSubmitterNotesDocument = gql`
+    query getClaimSubmitterNotes($id: uuid!) {
+  data: claimByPk(id: $id) {
+    submitterNotes
+  }
+}
+    `;
 export const GetUserByUsernameDocument = gql`
     query getUserByUsername($username: String!) {
   user(where: {username: {_eq: $username}}) {
     profileImage
+    id
+  }
+}
+    `;
+export const InsertCheckworthinessDocument = gql`
+    mutation insertCheckworthiness($id: uuid!, $confidence: float8!, $claimId: uuid!) {
+  data: insertCheckworthinessOne(
+    object: {claimId: $claimId, confidence: $confidence, id: $id}
+  ) {
     id
   }
 }
@@ -12266,6 +12780,15 @@ export const InsertFileAndUpdateUserProfileImageDocument = gql`
   }
 }
     `;
+export const GetUserProfileImagesDocument = gql`
+    query getUserProfileImages {
+  user {
+    id
+    username
+    profileImage
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -12280,8 +12803,14 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetAllUsersProfileImages(variables?: GetAllUsersProfileImagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllUsersProfileImagesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAllUsersProfileImagesQuery>(GetAllUsersProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllUsersProfileImages', 'query', variables);
     },
+    getClaimSubmitterNotes(variables: GetClaimSubmitterNotesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetClaimSubmitterNotesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetClaimSubmitterNotesQuery>(GetClaimSubmitterNotesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getClaimSubmitterNotes', 'query', variables);
+    },
     getUserByUsername(variables: GetUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserByUsernameQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserByUsernameQuery>(GetUserByUsernameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserByUsername', 'query', variables);
+    },
+    insertCheckworthiness(variables: InsertCheckworthinessMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertCheckworthinessMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<InsertCheckworthinessMutation>(InsertCheckworthinessDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertCheckworthiness', 'mutation', variables);
     },
     insertUser(variables: InsertUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertUserMutation>(InsertUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertUser', 'mutation', variables);
@@ -12312,6 +12841,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     insertFileAndUpdateUserProfileImage(variables: InsertFileAndUpdateUserProfileImageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertFileAndUpdateUserProfileImageMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertFileAndUpdateUserProfileImageMutation>(InsertFileAndUpdateUserProfileImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertFileAndUpdateUserProfileImage', 'mutation', variables);
+    },
+    getUserProfileImages(variables?: GetUserProfileImagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserProfileImagesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserProfileImagesQuery>(GetUserProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserProfileImages', 'query', variables);
     }
   };
 }

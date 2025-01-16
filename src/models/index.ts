@@ -5,6 +5,7 @@
 export * from "./Claim";
 export * from "./Session";
 export * from "./User";
+export * from "./requests/CalculateClaimWorthiness";
 export * from "./requests/DeleteFileRequest";
 export * from "./requests/FileUploadFormData";
 export * from "./requests/OnClaimStatusUpdatedRequest";
