@@ -16,6 +16,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   bigint: { input: any; output: any; }
+  check_worth_category: { input: any; output: any; }
   claim_status: { input: any; output: any; }
   float8: { input: any; output: any; }
   timestamptz: { input: any; output: any; }
@@ -437,6 +438,19 @@ export type ChannelUpdates = {
   where: ChannelBoolExp;
 };
 
+/** Boolean expression to compare columns of type "check_worth_category". All fields are combined with logical 'AND'. */
+export type CheckWorthCategoryComparisonExp = {
+  _eq?: InputMaybe<Scalars['check_worth_category']['input']>;
+  _gt?: InputMaybe<Scalars['check_worth_category']['input']>;
+  _gte?: InputMaybe<Scalars['check_worth_category']['input']>;
+  _in?: InputMaybe<Array<Scalars['check_worth_category']['input']>>;
+  _isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['check_worth_category']['input']>;
+  _lte?: InputMaybe<Scalars['check_worth_category']['input']>;
+  _neq?: InputMaybe<Scalars['check_worth_category']['input']>;
+  _nin?: InputMaybe<Array<Scalars['check_worth_category']['input']>>;
+};
+
 export type CheckbotResponse = {
   __typename?: 'CheckbotResponse';
   data?: Maybe<Array<Maybe<DataListItem>>>;
@@ -452,6 +466,7 @@ export enum CheckbotResponseType {
 /** columns and relationships of "checkworthiness" */
 export type Checkworthiness = {
   __typename?: 'Checkworthiness';
+  category: Scalars['check_worth_category']['output'];
   claimId: Scalars['uuid']['output'];
   confidence: Scalars['float8']['output'];
   id: Scalars['uuid']['output'];
@@ -498,6 +513,7 @@ export type CheckworthinessBoolExp = {
   _and?: InputMaybe<Array<CheckworthinessBoolExp>>;
   _not?: InputMaybe<CheckworthinessBoolExp>;
   _or?: InputMaybe<Array<CheckworthinessBoolExp>>;
+  category?: InputMaybe<CheckWorthCategoryComparisonExp>;
   claimId?: InputMaybe<UuidComparisonExp>;
   confidence?: InputMaybe<Float8ComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
@@ -518,6 +534,7 @@ export type CheckworthinessIncInput = {
 
 /** input type for inserting data into table "checkworthiness" */
 export type CheckworthinessInsertInput = {
+  category?: InputMaybe<Scalars['check_worth_category']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   confidence?: InputMaybe<Scalars['float8']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -526,6 +543,7 @@ export type CheckworthinessInsertInput = {
 /** aggregate max on columns */
 export type CheckworthinessMaxFields = {
   __typename?: 'CheckworthinessMaxFields';
+  category?: Maybe<Scalars['check_worth_category']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   confidence?: Maybe<Scalars['float8']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -534,6 +552,7 @@ export type CheckworthinessMaxFields = {
 /** aggregate min on columns */
 export type CheckworthinessMinFields = {
   __typename?: 'CheckworthinessMinFields';
+  category?: Maybe<Scalars['check_worth_category']['output']>;
   claimId?: Maybe<Scalars['uuid']['output']>;
   confidence?: Maybe<Scalars['float8']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -557,6 +576,7 @@ export type CheckworthinessOnConflict = {
 
 /** Ordering options when selecting data from "checkworthiness". */
 export type CheckworthinessOrderBy = {
+  category?: InputMaybe<OrderBy>;
   claimId?: InputMaybe<OrderBy>;
   confidence?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -570,6 +590,8 @@ export type CheckworthinessPkColumnsInput = {
 /** select columns of table "checkworthiness" */
 export enum CheckworthinessSelectColumn {
   /** column name */
+  Category = 'category',
+  /** column name */
   ClaimId = 'claimId',
   /** column name */
   Confidence = 'confidence',
@@ -579,6 +601,7 @@ export enum CheckworthinessSelectColumn {
 
 /** input type for updating data in table "checkworthiness" */
 export type CheckworthinessSetInput = {
+  category?: InputMaybe<Scalars['check_worth_category']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   confidence?: InputMaybe<Scalars['float8']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -612,6 +635,7 @@ export type CheckworthinessStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type CheckworthinessStreamCursorValueInput = {
+  category?: InputMaybe<Scalars['check_worth_category']['input']>;
   claimId?: InputMaybe<Scalars['uuid']['input']>;
   confidence?: InputMaybe<Scalars['float8']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -625,6 +649,8 @@ export type CheckworthinessSumFields = {
 
 /** update columns of table "checkworthiness" */
 export enum CheckworthinessUpdateColumn {
+  /** column name */
+  Category = 'category',
   /** column name */
   ClaimId = 'claimId',
   /** column name */
@@ -12464,9 +12490,9 @@ export type GetUserByUsernameQueryVariables = Exact<{
 export type GetUserByUsernameQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', profileImage?: any | null, id: any }> };
 
 export type InsertCheckworthinessMutationVariables = Exact<{
-  id: Scalars['uuid']['input'];
   confidence: Scalars['float8']['input'];
   claimId: Scalars['uuid']['input'];
+  category: Scalars['check_worth_category']['input'];
 }>;
 
 
@@ -12622,9 +12648,9 @@ export const GetUserByUsernameDocument = gql`
 }
     `;
 export const InsertCheckworthinessDocument = gql`
-    mutation insertCheckworthiness($id: uuid!, $confidence: float8!, $claimId: uuid!) {
+    mutation insertCheckworthiness($confidence: float8!, $claimId: uuid!, $category: check_worth_category!) {
   data: insertCheckworthinessOne(
-    object: {claimId: $claimId, confidence: $confidence, id: $id}
+    object: {claimId: $claimId, confidence: $confidence, category: $category}
   ) {
     id
   }

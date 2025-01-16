@@ -11,6 +11,7 @@ import type {
   InsertCheckworthinessMutation,
   InsertCheckworthinessMutationVariables
 } from "~/generated/graphql";
+import { ClaimWorthinessResponse, ClaimWorthinessRequest } from "~/models";
 @Service()
 export class ClaimWorthinessService {
   @Inject()
@@ -22,9 +23,11 @@ export class ClaimWorthinessService {
   @Inject()
   private logger: Logger;
 
-  async evaluateClaimWorthiness(claimId: string): Promise<void> {
+  async inferClaimWorthiness(claimId: string, options: { backoffTime: number }): Promise<void> {
     try {
       // 1. Fetch claim data
+      const backoffTime = options?.backoffTime || 0;
+      await new Promise((resolve) => setTimeout(resolve, backoffTime));
 
       const queryResponse = await this.hasuraService.adminRequest<
         GetClaimSubmitterNotesQuery,
@@ -37,28 +40,35 @@ export class ClaimWorthinessService {
       }
 
       // 2. Call external service
-      //   const externalServiceResponse = await axios.post<(
-      //     this.envService.worthinessServiceUrl,
-      //     {
-      //       claimId,
-      //       description: claimData.claims_by_pk.description,
-      //       amount: claimData.claims_by_pk.amount,
-      //       incidentDate: claimData.claims_by_pk.incident_date
-      //     }
-      //   );
+      if (!claimData.submitterNotes) {
+        await this.hasuraService.adminRequest<
+          InsertCheckworthinessMutation,
+          InsertCheckworthinessMutationVariables
+        >(InsertCheckworthinessDocument, {
+          confidence: 1.0,
+          claimId: claimId,
+          category: "uncheckable"
+        });
+        return;
+      }
 
-      // 3. Update claim with worthiness score
+      const externalServiceResponse = await axios.post<ClaimWorthinessResponse>(
+        this.envService.checkWorthinessBaseUrl + "/inference",
+        {
+          text: claimData.submitterNotes
+        }
+      );
 
       await this.hasuraService.adminRequest<
         InsertCheckworthinessMutation,
         InsertCheckworthinessMutationVariables
       >(InsertCheckworthinessDocument, {
-        confidence: 0.0,
+        confidence: externalServiceResponse.data.confidence,
+        category: externalServiceResponse.data.category,
         claimId: claimId
       });
     } catch (error) {
       this.logger.error(`Error evaluating claim worthiness for claim ${claimId}:`, error);
-      throw error;
     }
   }
 }

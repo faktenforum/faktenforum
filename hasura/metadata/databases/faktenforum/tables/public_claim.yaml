@@ -2,6 +2,13 @@ table:
   name: claim
   schema: public
 object_relationships:
+  - name: checkworthiness
+    using:
+      foreign_key_constraint_on:
+        column: claim_id
+        table:
+          name: checkworthiness
+          schema: public
   - name: createdByUser
     using:
       foreign_key_constraint_on: created_by
@@ -340,6 +347,31 @@ update_permissions:
         updated_by: x-hasura-User-Id
     comment: ""
 event_triggers:
+  - name: check_claim_worthiness
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/calculate-checkworthiness'
+    headers:
+      - name: x-api-key
+        value_from_env: HASURA_WEBHOOKS_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "claimId": {{$body.event.data.new.id}}
+          }
+      method: POST
+      query_params:
+        x-api-key: HASURA_WEBHOOKS_API_KEY
+      template_engine: Kriti
+      version: 2
   - name: on_claim_insert_and_internal_status_update
     definition:
       enable_manual: false

@@ -1,4 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
+import { Docs } from "@tsed/swagger";
 import { Logger } from "@tsed/common";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
@@ -17,7 +18,8 @@ import {
   HasuraService,
   ImageService,
   MatrixService,
-  SpaceNames
+  SpaceNames,
+  ClaimWorthinessService
 } from "~/services";
 import { ClaimStatus, HasuraOperations, SubmissionStatuses } from "~/utils";
 import { Identity } from "@ory/kratos-client";
@@ -43,6 +45,9 @@ export class HasuraWebHookController {
 
   @Inject(MatrixService)
   matrixService: MatrixService;
+
+  @Inject(ClaimWorthinessService)
+  claimWorthinessService: ClaimWorthinessService;
 
   @Inject(Logger)
   logger: Logger;
@@ -193,7 +198,7 @@ export class HasuraWebHookController {
   @(Returns(204).ContentType("application/json")) // prettier-ignore
   async calculateCheckworthiness(@BodyParams() body: CalculateClaimWorthinessRequest): Promise<void> {
     this.logger.info(`[HasuraWebHookController] calculateCheckworthiness: ${JSON.stringify(body)}`);
-
+    this.claimWorthinessService.inferClaimWorthiness(body.claimId, { backoffTime: 1000 });
     return;
   }
 }
