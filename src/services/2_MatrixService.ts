@@ -54,8 +54,6 @@ export class MatrixService {
 
   constructor(envService: EnvService, logger: Logger) {
     // rewrite matrix logger
-
-    this.envService = envService;
     mxLogger.info = (...msg) => logger.info(msg);
     mxLogger.log = (...msg) => logger.debug(msg);
     mxLogger.warn = (...msg) => logger.warn(msg);

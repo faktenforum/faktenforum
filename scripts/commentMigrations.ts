@@ -1,4 +1,3 @@
-import { createClient } from "matrix-js-sdk";
 import { createObjectCsvWriter } from "csv-writer";
 import { GraphQLClient } from "graphql-request";
 import axios, { AxiosInstance } from "axios";

@@ -11,8 +11,7 @@ export class EnvService {
   @Inject()
   logger: Logger;
 
-  constructor(logger: Logger) {
-    this.logger = logger;
+  constructor() {
     this.loadEnvVars();
     this.validate();
   }
@@ -38,7 +37,8 @@ export class EnvService {
       MATRIX_PASSWORD: process.env.MATRIX_PASSWORD,
       MATRIX_ACCOUNT: process.env.MATRIX_ACCOUNT,
       MATRIX_DOMAIN: process.env.MATRIX_DOMAIN,
-      MATRIX_INTERNAL_URL: process.env.MATRIX_INTERNAL_URL
+      MATRIX_INTERNAL_URL: process.env.MATRIX_INTERNAL_URL,
+      CHECK_WORTHINESS_BASE_URL: process.env.CHECK_WORTHINESS_BASE_URL
     };
 
     // Delete environment variables to prevent security risks
@@ -171,7 +171,14 @@ export class EnvService {
     }
     return this.envVars.JWT_SECRET;
   }
-  s;
+
+  get checkWorthinessBaseUrl(): string {
+    if (!this.envVars.CHECK_WORTHINESS_BASE_URL) {
+      this.logger.error("CHECHECK_ is not set!");
+      process.exit(1);
+    }
+    return this.envVars.CHECK_WORTHINESS_BASE_URL;
+  }
 
   get env(): Environment {
     return (process.env.NODE_ENV || "development") as Environment;
@@ -215,6 +222,7 @@ export class EnvService {
     if (!this.envVars.MATRIX_DOMAIN) errors.push("MATRIX_DOMAIN is not set!");
     if (!this.envVars.MATRIX_INTERNAL_URL) errors.push("MATRIX_INTERNAL_URL is not set!");
     if (!this.envVars.JWT_SECRET) errors.push("JWT_SECRET is not set!");
+    if (!this.envVars.CHECK_WORTHINESS_BASE_URL) errors.push("CHECK_WORTHINESS_BASE_URL is not set!");
     if (!this.validEnvs.includes(this.env)) {
       errors.push(`NODE_ENV is not set or invalid! It has to be ${this.validEnvs.join(" | ")}`);
     }

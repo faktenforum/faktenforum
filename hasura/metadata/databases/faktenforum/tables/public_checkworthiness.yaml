@@ -1,0 +1,22 @@
+table:
+  name: checkworthiness
+  schema: public
+select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - category
+        - claim_id
+        - confidence
+        - id
+      filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - category
+        - claim_id
+        - confidence
+        - id
+      filter: {}
+    comment: ""
