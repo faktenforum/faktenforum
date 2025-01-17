@@ -105,8 +105,6 @@ export class ClaimWorthinessService {
           this.logger.info("Analyze " + claims[i].id);
           await this.inferClaimWorthiness(claims[i].id);
         }
-
-        offset += BATCH_SIZE;
       } catch (error) {
         this.logger.error("Error processing claims batch:", error);
         hasMore = false;
