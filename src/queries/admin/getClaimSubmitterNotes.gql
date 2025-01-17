@@ -1,0 +1,5 @@
+query getClaimSubmitterNotes($id: uuid!) {
+  data: claimByPk(id: $id) {
+    submitterNotes
+  }
+}

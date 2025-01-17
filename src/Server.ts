@@ -28,7 +28,22 @@ import helmet from "helmet";
     SetSecurityResponseHeaders,
     "cors",
     "cookie-parser",
-    "compression",
+    {
+      use: "compression",
+      options: {
+        level: 6,
+        threshold: "1kb",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        filter: (req: any, res: any) => {
+          // Don't compress responses for specific routes
+          if (req.path.startsWith("/api/docs") || req.path === "/api/some-large-route") {
+            return false;
+          }
+          // Use compression for all other routes
+          return true;
+        }
+      }
+    },
     "method-override",
     "json-parser",
     helmet({

@@ -23,8 +23,18 @@ export const config: Partial<TsED.Configuration> = {
   logger: loggerConfig,
   swagger: [
     {
-      path: "/api/doc",
-      specVersion: "3.0.1"
+      path: "/api/docs",
+      specVersion: "3.0.1", // or "2.0"
+      spec: {
+        info: {
+          title: "Faktenforum backend API documentation",
+          version: "1.0.0"
+        }
+      },
+      showExplorer: true,
+      options: {
+        responseValidation: true
+      }
     }
   ],
   passport: {

@@ -1,0 +1,5 @@
+mutation insertCheckworthiness($confidence: float8! , $claimId: uuid!, $category: check_worth_category!) {
+  data: insertCheckworthinessOne(object: {claimId: $claimId, confidence: $confidence, category: $category}) {
+    id
+  }
+}

@@ -1,1 +1,21 @@
-[]
+- name: calculateCheckWorthinessForAllClaims
+  webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/calculate-cw-for-all-claims'
+  schedule: 7 1 * * *
+  include_in_metadata: true
+  payload: {}
+  retry_conf:
+    num_retries: 1
+    retry_interval_seconds: 10
+    timeout_seconds: 60
+    tolerance_seconds: 21600
+  headers:
+    - name: "x-api-key\t"
+      value_from_env: HASURA_WEBHOOKS_API_KEY
+  comment: Calculates for all claim checkworthiness which have no checkworthiness
+  request_transform:
+    body:
+      action: remove
+    method: POST
+    query_params: {}
+    template_engine: Kriti
+    version: 2

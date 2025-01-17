@@ -5,16 +5,18 @@ select_permissions:
   - role: administrator
     permission:
       columns:
-        - confidence
+        - category
         - claim_id
+        - confidence
         - id
       filter: {}
     comment: ""
   - role: editor
     permission:
       columns:
-        - confidence
+        - category
         - claim_id
+        - confidence
         - id
       filter: {}
     comment: ""
