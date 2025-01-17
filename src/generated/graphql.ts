@@ -567,6 +567,13 @@ export type CheckworthinessMutationResponse = {
   returning: Array<Checkworthiness>;
 };
 
+/** input type for inserting object relation for remote table "checkworthiness" */
+export type CheckworthinessObjRelInsertInput = {
+  data: CheckworthinessInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<CheckworthinessOnConflict>;
+};
+
 /** on_conflict condition type for table "checkworthiness" */
 export type CheckworthinessOnConflict = {
   constraint: CheckworthinessConstraint;
@@ -689,6 +696,8 @@ export type CheckworthinessVarianceFields = {
 /** columns and relationships of "claim" */
 export type Claim = {
   __typename?: 'Claim';
+  /** An object relationship */
+  checkworthiness?: Maybe<Checkworthiness>;
   /** An array relationship */
   claimCategories: Array<ClaimCategory>;
   /** An aggregate relationship */
@@ -955,6 +964,7 @@ export type ClaimBoolExp = {
   _and?: InputMaybe<Array<ClaimBoolExp>>;
   _not?: InputMaybe<ClaimBoolExp>;
   _or?: InputMaybe<Array<ClaimBoolExp>>;
+  checkworthiness?: InputMaybe<CheckworthinessBoolExp>;
   claimCategories?: InputMaybe<ClaimCategoryBoolExp>;
   claimCategoriesAggregate?: InputMaybe<ClaimCategoryAggregateBoolExp>;
   claimHistories?: InputMaybe<ClaimHistoryBoolExp>;
@@ -1729,6 +1739,7 @@ export type ClaimIncInput = {
 
 /** input type for inserting data into table "claim" */
 export type ClaimInsertInput = {
+  checkworthiness?: InputMaybe<CheckworthinessObjRelInsertInput>;
   claimCategories?: InputMaybe<ClaimCategoryArrRelInsertInput>;
   claimHistories?: InputMaybe<ClaimHistoryArrRelInsertInput>;
   comments?: InputMaybe<CommentArrRelInsertInput>;
@@ -1856,6 +1867,7 @@ export type ClaimOnConflict = {
 
 /** Ordering options when selecting data from "claim". */
 export type ClaimOrderBy = {
+  checkworthiness?: InputMaybe<CheckworthinessOrderBy>;
   claimCategoriesAggregate?: InputMaybe<ClaimCategoryAggregateOrderBy>;
   claimHistoriesAggregate?: InputMaybe<ClaimHistoryAggregateOrderBy>;
   commentsAggregate?: InputMaybe<CommentAggregateOrderBy>;
@@ -12482,6 +12494,14 @@ export type GetClaimSubmitterNotesQueryVariables = Exact<{
 
 export type GetClaimSubmitterNotesQuery = { __typename?: 'query_root', data?: { __typename?: 'Claim', submitterNotes?: string | null } | null };
 
+export type GetClaimsWithoutCheckworthinessQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+  offset: Scalars['Int']['input'];
+}>;
+
+
+export type GetClaimsWithoutCheckworthinessQuery = { __typename?: 'query_root', data: Array<{ __typename?: 'Claim', id: any }> };
+
 export type GetUserByUsernameQueryVariables = Exact<{
   username: Scalars['String']['input'];
 }>;
@@ -12636,6 +12656,17 @@ export const GetClaimSubmitterNotesDocument = gql`
     query getClaimSubmitterNotes($id: uuid!) {
   data: claimByPk(id: $id) {
     submitterNotes
+  }
+}
+    `;
+export const GetClaimsWithoutCheckworthinessDocument = gql`
+    query getClaimsWithoutCheckworthiness($limit: Int!, $offset: Int!) {
+  data: claim(
+    limit: $limit
+    offset: $offset
+    where: {_not: {checkworthiness: {}}}
+  ) {
+    id
   }
 }
     `;
@@ -12831,6 +12862,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getClaimSubmitterNotes(variables: GetClaimSubmitterNotesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetClaimSubmitterNotesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetClaimSubmitterNotesQuery>(GetClaimSubmitterNotesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getClaimSubmitterNotes', 'query', variables);
+    },
+    getClaimsWithoutCheckworthiness(variables: GetClaimsWithoutCheckworthinessQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetClaimsWithoutCheckworthinessQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetClaimsWithoutCheckworthinessQuery>(GetClaimsWithoutCheckworthinessDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getClaimsWithoutCheckworthiness', 'query', variables);
     },
     getUserByUsername(variables: GetUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserByUsernameQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserByUsernameQuery>(GetUserByUsernameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserByUsername', 'query', variables);

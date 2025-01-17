@@ -4,10 +4,16 @@ import { HasuraService } from "./1_HasuraService";
 
 import axios from "axios";
 import { EnvService } from "~/services";
-import { GetClaimSubmitterNotesDocument, InsertCheckworthinessDocument } from "~/generated/graphql";
+import {
+  GetClaimSubmitterNotesDocument,
+  InsertCheckworthinessDocument,
+  GetClaimsWithoutCheckworthinessDocument
+} from "~/generated/graphql";
 import type {
   GetClaimSubmitterNotesQuery,
   GetClaimSubmitterNotesQueryVariables,
+  GetClaimsWithoutCheckworthinessQuery,
+  GetClaimsWithoutCheckworthinessQueryVariables,
   InsertCheckworthinessMutation,
   InsertCheckworthinessMutationVariables
 } from "~/generated/graphql";
@@ -23,12 +29,8 @@ export class ClaimWorthinessService {
   @Inject()
   private logger: Logger;
 
-  async inferClaimWorthiness(claimId: string, options: { backoffTime: number }): Promise<void> {
+  async inferClaimWorthiness(claimId: string): Promise<void> {
     try {
-      // 1. Fetch claim data
-      const backoffTime = options?.backoffTime || 0;
-      await new Promise((resolve) => setTimeout(resolve, backoffTime));
-
       const queryResponse = await this.hasuraService.adminRequest<
         GetClaimSubmitterNotesQuery,
         GetClaimSubmitterNotesQueryVariables
@@ -70,5 +72,47 @@ export class ClaimWorthinessService {
     } catch (error) {
       this.logger.error(`Error evaluating claim worthiness for claim ${claimId}:`, error);
     }
+  }
+
+  async inferAllnewClaims(): Promise<void> {
+    const BATCH_SIZE = 10;
+    let offset = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+      try {
+        // Fetch batch of claims
+        this.logger.info("Fetching claims offset " + offset);
+        const response = await this.hasuraService.adminRequest<
+          GetClaimsWithoutCheckworthinessQuery,
+          GetClaimsWithoutCheckworthinessQueryVariables
+        >(GetClaimsWithoutCheckworthinessDocument, {
+          limit: BATCH_SIZE,
+          offset: offset
+        });
+
+        const claims = response.data;
+
+        // Stop if no more claims found
+        if (claims.length === 0) {
+          this.logger.info("No more claims found");
+          hasMore = false;
+          break;
+        }
+
+        // Process claims sequentially with increasing backoff
+        for (let i = 0; i < claims.length; i++) {
+          this.logger.info("Analyze " + claims[i].id);
+          await this.inferClaimWorthiness(claims[i].id);
+        }
+
+        offset += BATCH_SIZE;
+      } catch (error) {
+        this.logger.error("Error processing claims batch:", error);
+        hasMore = false;
+      }
+    }
+
+    this.logger.info(`Finished processing all claims without checkworthiness`);
   }
 }

@@ -1,0 +1,5 @@
+query getClaimsWithoutCheckworthiness($limit: Int!, $offset: Int!) {
+  data: claim(limit: $limit, offset: $offset, where: { _not: { checkworthiness: {} } }) {
+    id
+  }
+}

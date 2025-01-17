@@ -198,7 +198,16 @@ export class HasuraWebHookController {
   @(Returns(204).ContentType("application/json")) // prettier-ignore
   async calculateCheckworthiness(@BodyParams() body: CalculateClaimWorthinessRequest): Promise<void> {
     this.logger.info(`[HasuraWebHookController] calculateCheckworthiness: ${JSON.stringify(body)}`);
-    this.claimWorthinessService.inferClaimWorthiness(body.claimId, { backoffTime: 1000 });
+    this.claimWorthinessService.inferClaimWorthiness(body.claimId);
+    return;
+  }
+
+  @Post("/calculate-cw-for-all-claims")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200).ContentType("application/json")) // prettier-ignore
+  async calculateForAllClaims(): Promise<void> {
+    this.logger.info(`[HasuraWebHookController] calculateForAllClaims`);
+    this.claimWorthinessService.inferAllnewClaims();
     return;
   }
 }
