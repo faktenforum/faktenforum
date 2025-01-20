@@ -1,0 +1,2 @@
+ALTER TABLE public.claim 
+ALTER COLUMN synopsis DROP DEFAULT
