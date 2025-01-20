@@ -43,6 +43,20 @@ insert_permissions:
         - id
         - updated_by
     comment: ""
+  - role: junior
+    permission:
+      check:
+        _and:
+          - claim:
+              internal:
+                _eq: false
+          - claim:
+              created_by:
+                _eq: X-Hasura-User-Id
+      columns:
+        - category_name
+        - claim_id
+    comment: ""
   - role: moderator
     permission:
       check:
@@ -150,6 +164,21 @@ delete_permissions:
   - role: administrator
     permission:
       filter: {}
+    comment: ""
+  - role: editor
+    permission:
+      filter: {}
+    comment: ""
+  - role: junior
+    permission:
+      filter:
+        _and:
+          - claim:
+              internal:
+                _eq: false
+          - claim:
+              created_by:
+                _eq: X-Hasura-User-Id
     comment: ""
   - role: moderator
     permission:
