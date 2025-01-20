@@ -20,3 +20,36 @@ select_permissions:
         - id
       filter: {}
     comment: ""
+  - role: junior
+    permission:
+      columns:
+        - confidence
+        - category
+        - claim_id
+        - id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - confidence
+        - category
+        - claim_id
+        - id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - confidence
+        - category
+        - claim_id
+        - id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
