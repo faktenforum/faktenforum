@@ -41,7 +41,7 @@ import { BadRequest } from "@tsed/exceptions";
 const ajv = new Ajv();
 const OriginSourceDataJsonSchema = getJsonSchema(OrginSourceData);
 @Controller("/files")
-export class ClaimsController {
+export class FilesController {
   @Inject()
   fileService: FileService;
 

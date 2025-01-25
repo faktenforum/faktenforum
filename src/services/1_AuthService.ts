@@ -144,4 +144,15 @@ export class AuthService {
 
     return await response.json();
   }
+
+  async resendVerificationEmail(email: string): Promise<void> {
+    const response = await fetch(`${this.envService.kratosPublicUrl}/self-service/verification/api`, {
+      method: "Get"
+    });
+    if (!response.ok) {
+      throw new Exception(response.status, response.statusText);
+    }
+    const data = await response.json();
+    console.log(data);
+  }
 }

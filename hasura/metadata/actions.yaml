@@ -26,6 +26,17 @@ actions:
       - role: editor
       - role: administrator
     comment: Block Room message
+  - name: hasuraWebHookControllerResendVerificationEmail
+    definition:
+      kind: synchronous
+      handler: http://localhost
+      forward_client_headers: true
+      request_transform:
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/api/v1/webhooks/resend-verification-email'
+        version: 2
   - name: sendMessageToCheckbotMessagePost
     definition:
       kind: synchronous
@@ -158,4 +169,6 @@ custom_types:
     - name: BlockRoomMessageOutput
     - name: CheckbotResponse
     - name: DataListItem
-  scalars: []
+    - name: KratosUserSchema
+  scalars:
+    - name: JSON

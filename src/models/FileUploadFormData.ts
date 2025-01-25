@@ -9,17 +9,6 @@ enum Tables {
   Message = "message"
 }
 
-export class OrginSourceData {
-  @Optional()
-  url: string;
-  @Optional()
-  archive_url: string;
-  @Optional()
-  excerpt: string;
-  @Optional()
-  remarks: string;
-}
-
 export class FileUploadFormData {
   @Property()
   @Optional()

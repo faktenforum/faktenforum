@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { Docs } from "@tsed/swagger";
+
 import { Logger } from "@tsed/common";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
@@ -8,7 +8,11 @@ import {
   UpdateUserRoleRequest,
   OnClaimStatusUpdatedRequest,
   KratosUserSchema,
-  CalculateClaimWorthinessRequest
+  CalculateClaimWorthinessRequest,
+  ResendVerificationEmailRequest,
+  DeleteFileRequest,
+  GetUserRoleRequest,
+  BlockMessageRequest
 } from "~/models";
 
 import {
@@ -72,7 +76,7 @@ export class HasuraWebHookController {
   @Delete("/delete-file")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
-  async deleteFile(@BodyParams() body: { id: string; mimeType: string }) {
+  async deleteFile(@BodyParams() body: DeleteFileRequest) {
     this.fileService.deleteFile(body.id);
     if (body.mimeType.startsWith("image/")) {
       this.imageService.deleteImageVersions(body.id);
@@ -90,10 +94,18 @@ export class HasuraWebHookController {
     };
   }
 
+  @Post("/resend-verification-email")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @Returns(200)
+  async resendVerificationEmail(@BodyParams() body: ResendVerificationEmailRequest) {
+    this.authService.resendVerificationEmail(body.email);
+    return;
+  }
+
   @Post("/get-user-role")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
-  async getUsersRoles(@BodyParams() body: { ids: string[] }) {
+  async getUsersRoles(@BodyParams() body: GetUserRoleRequest) {
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
     return result.identities.map((user) => ({
       id: user.id,
@@ -167,13 +179,7 @@ export class HasuraWebHookController {
   @(Returns(200, Object).ContentType("application/json")) // prettier-ignore
   async blockMessage(
     @BodyParams()
-    body: {
-      roomId: string;
-      messageId: string;
-      userId: string;
-      userRole: string;
-      userName: string;
-    }
+    body: BlockMessageRequest
   ) {
     // Log the request headers
     this.logger.info(`[HasuraWebHookController] block Request Headers: ${JSON.stringify(body)}`);

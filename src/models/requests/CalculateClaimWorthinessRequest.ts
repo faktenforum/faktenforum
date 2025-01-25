@@ -1,13 +1,9 @@
 import { Property, Required } from "@tsed/schema";
 import { IsUUID } from "class-validator";
 
-export class DeleteFileRequest {
+export class CalculateClaimWorthinessRequest {
   @Property()
   @Required()
   @IsUUID()
-  id: string;
-
-  @Property()
-  @Required()
-  mimeType: string;
+  claimId: string;
 }

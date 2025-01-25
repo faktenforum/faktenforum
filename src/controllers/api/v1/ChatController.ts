@@ -9,7 +9,7 @@ import { Returns } from "@tsed/schema";
 import { Session } from "~/models";
 
 @Controller("/chat")
-export class AuthController {
+export class ChatController {
   @Inject(AuthService)
   authService: AuthService;
 

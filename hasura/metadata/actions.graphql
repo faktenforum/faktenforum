@@ -6,6 +6,12 @@ type Mutation {
 }
 
 type Mutation {
+  hasuraWebHookControllerResendVerificationEmail(
+    apiV1WebhooksResendVerificationEmailInput: JSON
+  ): KratosUserSchema
+}
+
+type Mutation {
   sendMessageToCheckbotMessagePost(
     textPayloadInput: TextPayloadInput!
   ): CheckbotResponse
@@ -64,6 +70,7 @@ type UserWithRole {
 type UserRoleResponse {
   id: String!
   role: UserRole!
+  verified: Boolean
 }
 
 type SampleOutput {
@@ -87,4 +94,14 @@ type DataListItem {
   summary: String
   url: String
 }
+
+type KratosUserSchema {
+  email: String!
+  id: String!
+  lang: String!
+  role: String!
+  username: String!
+}
+
+scalar JSON
 
