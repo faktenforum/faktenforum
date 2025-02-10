@@ -54,6 +54,17 @@ insert_permissions:
         - id
         - updated_by
     comment: ""
+  - role: aspirant
+    permission:
+      check: {}
+      columns:
+        - e_tag
+        - id
+        - mime_type
+        - name
+        - size
+        - transcription
+    comment: ""
   - role: editor
     permission:
       check: {}
@@ -84,20 +95,7 @@ insert_permissions:
     comment: ""
   - role: moderator
     permission:
-      check:
-        _or:
-          - origins:
-              claim:
-                internal:
-                  _eq: false
-          - sources:
-              fact:
-                claim:
-                  internal:
-                    _eq: false
-          - users:
-              id:
-                _eq: X-Hasura-User-Id
+      check: {}
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -111,20 +109,7 @@ insert_permissions:
     comment: ""
   - role: senior
     permission:
-      check:
-        _or:
-          - origins:
-              claim:
-                internal:
-                  _eq: false
-          - sources:
-              fact:
-                claim:
-                  internal:
-                    _eq: false
-          - users:
-              id:
-                _eq: X-Hasura-User-Id
+      check: {}
       set:
         created_by: x-hasura-User-Id
       columns:
@@ -168,7 +153,10 @@ select_permissions:
         - created_by
         - id
         - updated_by
-      filter: {}
+      filter:
+        users:
+          id:
+            _eq: X-Hasura-User-Id
       query_root_fields:
         - select_by_pk
       subscription_root_fields: []
@@ -206,7 +194,20 @@ select_permissions:
         - created_by
         - id
         - updated_by
-      filter: {}
+      filter:
+        _or:
+          - origins:
+              claim:
+                internal:
+                  _eq: false
+          - sources:
+              fact:
+                claim:
+                  internal:
+                    _eq: false
+          - users:
+              id:
+                _is_null: false
       query_root_fields:
         - select_by_pk
       subscription_root_fields: []
@@ -225,7 +226,20 @@ select_permissions:
         - created_by
         - id
         - updated_by
-      filter: {}
+      filter:
+        _or:
+          - origins:
+              claim:
+                internal:
+                  _eq: false
+          - sources:
+              fact:
+                claim:
+                  internal:
+                    _eq: false
+          - users:
+              id:
+                _is_null: false
       query_root_fields:
         - select_by_pk
       subscription_root_fields: []
@@ -244,7 +258,20 @@ select_permissions:
         - created_by
         - id
         - updated_by
-      filter: {}
+      filter:
+        _or:
+          - origins:
+              claim:
+                internal:
+                  _eq: false
+          - sources:
+              fact:
+                claim:
+                  internal:
+                    _eq: false
+          - users:
+              id:
+                _is_null: false
       query_root_fields:
         - select_by_pk
       subscription_root_fields: []

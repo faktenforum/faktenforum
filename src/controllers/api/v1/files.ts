@@ -139,7 +139,7 @@ export class ClaimsController {
       const metaData = await this.fileService.getFileMetaData(fileMetaData.id);
       const stream = await this.fileService.getFileStream(fileMetaData?.id || "");
       response.set({
-        "Content-Type": metaData?.metaData.contentType,
+        "Content-Type": fileMetaData.mimeType,
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
@@ -187,9 +187,8 @@ export class ClaimsController {
 
       const metaData = await this.fileService.getFileMetaData(fileSized);
       const stream = await this.fileService.getFileStream(fileSized);
-      console.log(metaData.metaData["content-type"]);
       response.set({
-        "Content-Type": metaData.metaData["content-type"],
+        "Content-Type": fileMetaData.mimeType,
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
@@ -236,10 +235,10 @@ export class ClaimsController {
           if (request.user.userId !== vars.entryId) {
             throw new Unauthorized("Unauthorized");
           }
-          const { insertFileOne, updateUserByPk } = await this.hasuraService.adminRequest<
+          const { insertFileOne, updateUserByPk } = await this.hasuraService.clientRequest<
             InsertFileAndUpdateUserProfileImageMutation,
             InsertFileAndUpdateUserProfileImageMutationVariables
-          >(InsertFileAndUpdateUserProfileImageDocument, vars);
+          >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
           if (!updateUserByPk?.id) {
             throw new Forbidden("Access to user denied");
           }
