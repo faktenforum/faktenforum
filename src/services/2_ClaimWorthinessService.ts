@@ -17,7 +17,7 @@ import type {
   InsertCheckworthinessMutation,
   InsertCheckworthinessMutationVariables
 } from "~/generated/graphql";
-import { ClaimWorthinessResponse, ClaimWorthinessRequest } from "~/models";
+import { ClaimWorthinessResponse } from "~/models";
 @Service()
 export class ClaimWorthinessService {
   @Inject()
