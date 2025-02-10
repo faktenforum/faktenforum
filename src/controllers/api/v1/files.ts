@@ -299,7 +299,7 @@ export class ClaimsController {
       }
       if (file.mimetype.startsWith("image/")) {
         // Resize and upload the image
-        this.imageService.resizeAndUpload(file.key);
+        await this.imageService.resizeAndUpload(file.key);
       }
       return response;
     } catch (error) {
