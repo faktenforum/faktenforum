@@ -5140,7 +5140,7 @@ export type HandbookSections = {
   contentDe: Scalars['String']['output'];
   contentEn: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
-  teaserImage?: Maybe<Scalars['uuid']['output']>;
+  teaserImage: Scalars['String']['output'];
   teaserTextDe: Scalars['String']['output'];
   teaserTextEn: Scalars['String']['output'];
   titleDe: Scalars['String']['output'];
@@ -5177,7 +5177,7 @@ export type HandbookSectionsBoolExp = {
   contentDe?: InputMaybe<StringComparisonExp>;
   contentEn?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  teaserImage?: InputMaybe<UuidComparisonExp>;
+  teaserImage?: InputMaybe<StringComparisonExp>;
   teaserTextDe?: InputMaybe<StringComparisonExp>;
   teaserTextEn?: InputMaybe<StringComparisonExp>;
   titleDe?: InputMaybe<StringComparisonExp>;
@@ -5195,7 +5195,7 @@ export type HandbookSectionsInsertInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
+  teaserImage?: InputMaybe<Scalars['String']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -5208,7 +5208,7 @@ export type HandbookSectionsMaxFields = {
   contentDe?: Maybe<Scalars['String']['output']>;
   contentEn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  teaserImage?: Maybe<Scalars['uuid']['output']>;
+  teaserImage?: Maybe<Scalars['String']['output']>;
   teaserTextDe?: Maybe<Scalars['String']['output']>;
   teaserTextEn?: Maybe<Scalars['String']['output']>;
   titleDe?: Maybe<Scalars['String']['output']>;
@@ -5221,7 +5221,7 @@ export type HandbookSectionsMinFields = {
   contentDe?: Maybe<Scalars['String']['output']>;
   contentEn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  teaserImage?: Maybe<Scalars['uuid']['output']>;
+  teaserImage?: Maybe<Scalars['String']['output']>;
   teaserTextDe?: Maybe<Scalars['String']['output']>;
   teaserTextEn?: Maybe<Scalars['String']['output']>;
   titleDe?: Maybe<Scalars['String']['output']>;
@@ -5286,7 +5286,7 @@ export type HandbookSectionsSetInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
+  teaserImage?: InputMaybe<Scalars['String']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -5306,7 +5306,7 @@ export type HandbookSectionsStreamCursorValueInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
+  teaserImage?: InputMaybe<Scalars['String']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -12475,6 +12475,13 @@ export type UserHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type AnonymizeUserProfileMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type AnonymizeUserProfileMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null };
+
 export type DeleteUserByPkMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
@@ -12636,6 +12643,16 @@ export type GetUserProfileImagesQueryVariables = Exact<{ [key: string]: never; }
 export type GetUserProfileImagesQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', id: any, username: string, profileImage?: any | null }> };
 
 
+export const AnonymizeUserProfileDocument = gql`
+    mutation anonymizeUserProfile($id: uuid!) {
+  updateUserByPk(
+    pkColumns: {id: $id}
+    _set: {username: $id, bio: null, email: "", lastName: null, mobileNumber: null, profileImage: null, pronouns: null}
+  ) {
+    id
+  }
+}
+    `;
 export const DeleteUserByPkDocument = gql`
     mutation deleteUserByPk($id: uuid!) {
   deleteUserByPk(id: $id) {
@@ -12854,6 +12871,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    anonymizeUserProfile(variables: AnonymizeUserProfileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AnonymizeUserProfileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AnonymizeUserProfileMutation>(AnonymizeUserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'anonymizeUserProfile', 'mutation', variables);
+    },
     deleteUserByPk(variables: DeleteUserByPkMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteUserByPkMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteUserByPkMutation>(DeleteUserByPkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteUserByPk', 'mutation', variables);
     },

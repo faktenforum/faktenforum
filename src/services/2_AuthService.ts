@@ -1,10 +1,12 @@
 import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { EnvService } from "~/services";
+import { EnvService, HasuraService } from "~/services";
 import type { Session } from "@ory/kratos-client";
 import { Configuration, IdentityApi, type Identity } from "@ory/kratos-client";
 import type { UserRole } from "~/models";
 import { Logger } from "@tsed/common";
+
+import { AnonymizeUserProfileDocument } from "~/generated/graphql";
 
 export type KratosAddress = {
   id: string;
@@ -53,8 +55,10 @@ export class AuthService {
   envService: EnvService;
   @Inject()
   logger: Logger;
+
   kratosSessionUrl: URL;
   kratosIdentityApi: IdentityApi;
+
   constructor(envService: EnvService) {
     this.kratosSessionUrl = new URL(`${envService.kratosPublicUrl}/sessions/whoami`);
     this.kratosIdentityApi = new IdentityApi(new Configuration({ basePath: envService.kratosAdminUrl }));

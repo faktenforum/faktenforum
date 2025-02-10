@@ -197,8 +197,12 @@ export class MatrixService {
     });
   }
 
-  public async deleteUser(username: string): Promise<void> {
+  public async deleteUser(username: string, anonymousUsername: string): Promise<void> {
     await this.adminClient?.deactivateUserAccount(this.usernameToMatrixUser(username), true);
+    await this.adminClient?.createOrModifyUserAccount(this.usernameToMatrixUser(username), {
+      displayname: anonymousUsername,
+      avatar_url: "" // Clear the avatar
+    });
   }
 
   public async alterSpaceMembershipsByRole(userId: string, role: UserRole) {
