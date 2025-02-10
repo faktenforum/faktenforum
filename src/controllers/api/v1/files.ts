@@ -235,10 +235,10 @@ export class ClaimsController {
           if (request.user.userId !== vars.entryId) {
             throw new Unauthorized("Unauthorized");
           }
-          const { insertFileOne, updateUserByPk } = await this.hasuraService.adminRequest<
+          const { insertFileOne, updateUserByPk } = await this.hasuraService.clientRequest<
             InsertFileAndUpdateUserProfileImageMutation,
             InsertFileAndUpdateUserProfileImageMutationVariables
-          >(InsertFileAndUpdateUserProfileImageDocument, vars);
+          >(InsertFileAndUpdateUserProfileImageDocument, vars, request.headers);
           if (!updateUserByPk?.id) {
             throw new Forbidden("Access to user denied");
           }
