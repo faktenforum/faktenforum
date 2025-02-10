@@ -139,7 +139,7 @@ export class ClaimsController {
       const metaData = await this.fileService.getFileMetaData(fileMetaData.id);
       const stream = await this.fileService.getFileStream(fileMetaData?.id || "");
       response.set({
-        "Content-Type": metaData?.metaData.contentType,
+        "Content-Type": fileMetaData.mimeType,
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
@@ -187,9 +187,8 @@ export class ClaimsController {
 
       const metaData = await this.fileService.getFileMetaData(fileSized);
       const stream = await this.fileService.getFileStream(fileSized);
-      console.log(metaData.metaData["content-type"]);
       response.set({
-        "Content-Type": metaData.metaData["content-type"],
+        "Content-Type": fileMetaData.mimeType,
         "Content-Disposition": `filename=${fileMetaData.name}`,
         "Content-Length": metaData?.size,
         "Last-Modified": fileMetaData?.updatedAt,
