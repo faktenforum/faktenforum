@@ -1,7 +1,16 @@
-mutation anonymizeUserProfile($id: uuid!) {
+mutation anonymizeUserProfile($id: uuid!, $username: String!) {
   updateUserByPk(
     pkColumns: { id: $id }
-    _set: { bio: null, email: "", lastName: null, mobileNumber: null, profileImage: null, pronouns: null }
+    _set: {
+      username: $username
+      bio: null
+      email: $username
+      firstName: null
+      lastName: null
+      mobileNumber: null
+      profileImage: $username
+      pronouns: null
+    }
   ) {
     id
   }

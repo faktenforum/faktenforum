@@ -10,7 +10,8 @@ import {
   CalculateClaimWorthinessRequest,
   DeleteUserRequest,
   DeleteFileRequest,
-  GetUserRoleRequest
+  GetUserRoleRequest,
+  RequestSucessInfo
 } from "~/models";
 
 import {
@@ -167,7 +168,7 @@ export class HasuraWebHookController {
 
   @Post("/block-room-message")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, Object).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
   async blockMessage(
     @BodyParams()
     body: {
@@ -214,22 +215,26 @@ export class HasuraWebHookController {
     return;
   }
 
-  @Delete("/delete-user")
+  @Post("/delete-account")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, Object).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSucessInfo).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
   async deleteUser(@BodyParams() body: DeleteUserRequest) {
     try {
       this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
       // Get username from id
-      const identity = await this.authService.getUserIdentity(body.userId);
-      const username = identity.traits.username;
-      this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
-      // Delete the user from Kratos using the Admin API
-      this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
-      await this.authService.deleteUser(body.userId);
+      // const identity = await this.authService.getUserIdentity(body.userId);
+      // const username = identity.traits.username;
+      // this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
+      // // Delete the user from Kratos using the Admin API
+      // this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
+      // await this.authService.deleteUser(body.userId);
       // anonymize user profile
+      const username = "supertesta";
       this.logger.debug(`[HasuraWebHookController] Anonymizing user profile`);
-      await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, { id: body.userId });
+      await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
+        id: body.userId,
+        username: body.userId
+      });
       // deactivate user in matrix and set anonymous username
       this.logger.debug(`[HasuraWebHookController] Deactivating user in matrix`);
       await this.matrixService.deleteUser(username, body.userId);

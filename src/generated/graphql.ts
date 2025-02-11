@@ -7554,6 +7554,11 @@ export type StringComparisonExp = {
   _similar?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SuccessInfo = {
+  __typename?: 'SuccessInfo';
+  success: Scalars['Boolean']['output'];
+};
+
 export type TextPayloadInput = {
   text: Scalars['String']['input'];
 };
@@ -9185,6 +9190,8 @@ export type Mutation_Root = {
   __typename?: 'mutation_root';
   /** Block Room message */
   blockRoomMessage?: Maybe<BlockRoomMessageOutput>;
+  /** This Action deletes a user this is not reverserable */
+  deleteAccount: SuccessInfo;
   /** delete data from the table: "category" */
   deleteCategory?: Maybe<CategoryMutationResponse>;
   /** delete single row from the table: "category" */
@@ -9545,6 +9552,12 @@ export type Mutation_Root = {
 export type Mutation_RootBlockRoomMessageArgs = {
   messageId: Scalars['String']['input'];
   roomId: Scalars['String']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteAccountArgs = {
+  userId: Scalars['uuid']['input'];
 };
 
 
@@ -12477,6 +12490,7 @@ export type UserHistoryAggregateBoolExpCount = {
 
 export type AnonymizeUserProfileMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
+  username: Scalars['String']['input'];
 }>;
 
 
@@ -12644,10 +12658,10 @@ export type GetUserProfileImagesQuery = { __typename?: 'query_root', user: Array
 
 
 export const AnonymizeUserProfileDocument = gql`
-    mutation anonymizeUserProfile($id: uuid!) {
+    mutation anonymizeUserProfile($id: uuid!, $username: String!) {
   updateUserByPk(
     pkColumns: {id: $id}
-    _set: {username: $id, bio: null, email: "", lastName: null, mobileNumber: null, profileImage: null, pronouns: null}
+    _set: {username: $username, bio: null, email: $username, lastName: null, mobileNumber: null, profileImage: null, pronouns: null}
   ) {
     id
   }

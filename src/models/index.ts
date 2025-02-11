@@ -17,6 +17,7 @@ export * from "./requests/UpdateUserRoleRequest";
 export * from "./responses/FileUploadResponse";
 export * from "./responses/KratosUserSchema";
 export * from "./responses/RegistrationPreResponse";
+export * from "./responses/RequestSucessInfo";
 export * from "./responses/SubmissionCreateResponse";
 export * from "./responses/UrlInfoResponse";
 export * from "./responses/VersionResponse";

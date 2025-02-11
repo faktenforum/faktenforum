@@ -26,6 +26,26 @@ actions:
       - role: editor
       - role: administrator
     comment: Block Room message
+  - name: deleteAccount
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/delete-account'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "userId": {{$body.input.userId}}
+            }
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: administrator
+    comment: This Action deletes a user this is not reverserable
   - name: sendMessageToCheckbotMessagePost
     definition:
       kind: synchronous
@@ -70,6 +90,7 @@ actions:
     definition:
       kind: synchronous
       handler: '{{HASURA_WEBHOOKS_BASE_URL}}/update-user-role'
+      forward_client_headers: true
       headers:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
@@ -158,4 +179,5 @@ custom_types:
     - name: BlockRoomMessageOutput
     - name: CheckbotResponse
     - name: DataListItem
+    - name: SuccessInfo
   scalars: []
