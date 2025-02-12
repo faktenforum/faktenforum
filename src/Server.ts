@@ -34,7 +34,7 @@ import helmet from "helmet";
         level: 6,
         threshold: "1kb",
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        filter: (req: any, res: any) => {
+        filter: (req: any) => {
           // Don't compress responses for specific routes
           if (req.path.startsWith("/api/docs") || req.path === "/api/some-large-route") {
             return false;

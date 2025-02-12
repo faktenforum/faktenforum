@@ -1,5 +1,4 @@
 import { Controller, Inject } from "@tsed/di";
-import { Docs } from "@tsed/swagger";
 import { Logger } from "@tsed/common";
 import { BodyParams, Context, Cookies } from "@tsed/platform-params";
 import { Delete, Get, Post, Returns } from "@tsed/schema";
