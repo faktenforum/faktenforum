@@ -186,23 +186,23 @@ export class MatrixService {
     }
   }
 
-  public async createUser(username: string, email: string): Promise<void> {
+  public async createUser(username: string): Promise<void> {
     await this.adminClient?.createOrModifyUserAccount(this.usernameToMatrixUser(username), {
       // id: username,
       password:
         this.envService.env === "development"
           ? "abcd1234!D"
           : randomBytes(24).toString("base64").slice(0, 24),
-      threepids: [{ medium: "email", address: email }]
+      threepids: []
     });
   }
 
   public async deleteUser(username: string, anonymousUsername: string): Promise<void> {
-    await this.adminClient?.deactivateUserAccount(this.usernameToMatrixUser(username), true);
     await this.adminClient?.createOrModifyUserAccount(this.usernameToMatrixUser(username), {
       displayname: anonymousUsername,
-      avatar_url: "" // Clear the avatar
+      threepids: []
     });
+    await this.adminClient?.deactivateUserAccount(this.usernameToMatrixUser(username), true);
   }
 
   public async alterSpaceMembershipsByRole(userId: string, role: UserRole) {

@@ -8,7 +8,7 @@ mutation anonymizeUserProfile($id: uuid!, $username: String!) {
       firstName: null
       lastName: null
       mobileNumber: null
-      profileImage: $username
+      profileImage: $id
       pronouns: null
     }
   ) {

@@ -19,6 +19,7 @@ import type {
 } from "~/generated/graphql";
 
 import { Logger } from "@tsed/common";
+import { BadRequest } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -45,7 +46,9 @@ export class KratosWebHookController {
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
     let id = null;
     let chatUsername = null;
-
+    // check if username is already taken by an deleted user
+    // throw for testing username already taken
+    // throw new BadRequest("Username already taken");
     try {
       //Generate Avatar
       const avatar = createAvatar(glass, {
@@ -77,9 +80,9 @@ export class KratosWebHookController {
         }
       );
       id = response.insertUserOne?.id;
-      await this.matrixService.createUser(body.traits.username, body.traits.email);
+      await this.matrixService.createUser(body.traits.username);
       chatUsername = body.traits.username;
-      return {};
+      return body;
     } catch (error) {
       this.logger.error(error);
       this.fileService.deleteFile(body.id);
@@ -93,10 +96,11 @@ export class KratosWebHookController {
         );
       }
       if (chatUsername) {
-        await this.matrixService.deleteUser(chatUsername);
+        await this.matrixService.deleteUser(chatUsername, body.id);
       }
       throw new Error(error);
     }
+   
   }
 
   @Post("/registration-metadata")

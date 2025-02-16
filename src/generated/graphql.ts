@@ -5140,7 +5140,7 @@ export type HandbookSections = {
   contentDe: Scalars['String']['output'];
   contentEn: Scalars['String']['output'];
   id: Scalars['uuid']['output'];
-  teaserImage: Scalars['String']['output'];
+  teaserImage?: Maybe<Scalars['uuid']['output']>;
   teaserTextDe: Scalars['String']['output'];
   teaserTextEn: Scalars['String']['output'];
   titleDe: Scalars['String']['output'];
@@ -5177,7 +5177,7 @@ export type HandbookSectionsBoolExp = {
   contentDe?: InputMaybe<StringComparisonExp>;
   contentEn?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
-  teaserImage?: InputMaybe<StringComparisonExp>;
+  teaserImage?: InputMaybe<UuidComparisonExp>;
   teaserTextDe?: InputMaybe<StringComparisonExp>;
   teaserTextEn?: InputMaybe<StringComparisonExp>;
   titleDe?: InputMaybe<StringComparisonExp>;
@@ -5195,7 +5195,7 @@ export type HandbookSectionsInsertInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['String']['input']>;
+  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -5208,7 +5208,7 @@ export type HandbookSectionsMaxFields = {
   contentDe?: Maybe<Scalars['String']['output']>;
   contentEn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  teaserImage?: Maybe<Scalars['String']['output']>;
+  teaserImage?: Maybe<Scalars['uuid']['output']>;
   teaserTextDe?: Maybe<Scalars['String']['output']>;
   teaserTextEn?: Maybe<Scalars['String']['output']>;
   titleDe?: Maybe<Scalars['String']['output']>;
@@ -5221,7 +5221,7 @@ export type HandbookSectionsMinFields = {
   contentDe?: Maybe<Scalars['String']['output']>;
   contentEn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  teaserImage?: Maybe<Scalars['String']['output']>;
+  teaserImage?: Maybe<Scalars['uuid']['output']>;
   teaserTextDe?: Maybe<Scalars['String']['output']>;
   teaserTextEn?: Maybe<Scalars['String']['output']>;
   titleDe?: Maybe<Scalars['String']['output']>;
@@ -5286,7 +5286,7 @@ export type HandbookSectionsSetInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['String']['input']>;
+  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -5306,7 +5306,7 @@ export type HandbookSectionsStreamCursorValueInput = {
   contentDe?: InputMaybe<Scalars['String']['input']>;
   contentEn?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  teaserImage?: InputMaybe<Scalars['String']['input']>;
+  teaserImage?: InputMaybe<Scalars['uuid']['input']>;
   teaserTextDe?: InputMaybe<Scalars['String']['input']>;
   teaserTextEn?: InputMaybe<Scalars['String']['input']>;
   titleDe?: InputMaybe<Scalars['String']['input']>;
@@ -12661,7 +12661,7 @@ export const AnonymizeUserProfileDocument = gql`
     mutation anonymizeUserProfile($id: uuid!, $username: String!) {
   updateUserByPk(
     pkColumns: {id: $id}
-    _set: {username: $username, bio: null, email: $username, lastName: null, mobileNumber: null, profileImage: null, pronouns: null}
+    _set: {username: $username, bio: null, email: $username, firstName: null, lastName: null, mobileNumber: null, profileImage: $id, pronouns: null}
   ) {
     id
   }
