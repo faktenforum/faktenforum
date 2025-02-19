@@ -33,13 +33,6 @@ array_relationships:
         table:
           name: claim_history
           schema: public
-  - name: comments
-    using:
-      foreign_key_constraint_on:
-        column: claim_id
-        table:
-          name: comment
-          schema: public
   - name: events
     using:
       foreign_key_constraint_on:

@@ -2,6 +2,9 @@ table:
   name: event
   schema: public
 object_relationships:
+  - name: claim
+    using:
+      foreign_key_constraint_on: claim_id
   - name: user
     using:
       foreign_key_constraint_on: user_id
@@ -10,10 +13,10 @@ select_permissions:
     permission:
       columns:
         - id
+        - content
         - action
         - table_name
         - created_at
-        - claim_status
         - claim_id
         - entry_id
         - user_id
@@ -23,10 +26,10 @@ select_permissions:
     permission:
       columns:
         - id
+        - content
         - action
         - table_name
         - created_at
-        - claim_status
         - claim_id
         - entry_id
         - user_id
@@ -36,38 +39,56 @@ select_permissions:
     permission:
       columns:
         - id
+        - content
         - action
         - table_name
         - created_at
-        - claim_status
         - claim_id
         - entry_id
         - user_id
-      filter: {}
+      filter:
+        _or:
+          - claim:
+              internal:
+                _eq: false
+          - claim_id:
+              _is_null: true
     comment: ""
   - role: moderator
     permission:
       columns:
         - id
+        - content
         - action
         - table_name
         - created_at
-        - claim_status
         - claim_id
         - entry_id
         - user_id
-      filter: {}
+      filter:
+        _or:
+          - claim:
+              internal:
+                _eq: false
+          - claim_id:
+              _is_null: true
     comment: ""
   - role: senior
     permission:
       columns:
         - id
+        - content
         - action
         - table_name
         - created_at
-        - claim_status
         - claim_id
         - entry_id
         - user_id
-      filter: {}
+      filter:
+        _or:
+          - claim:
+              internal:
+                _eq: false
+          - claim_id:
+              _is_null: true
     comment: ""

@@ -24,7 +24,7 @@ class ValidationMessage {
   type: "error" | "info" | "success";
 
   @Property()
-  context: Record<string, any>;
+  context: Record<string, unknown>;
 }
 
 class ValidationMessages {

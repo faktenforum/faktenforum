@@ -27,20 +27,6 @@ array_relationships:
         table:
           name: claim
           schema: public
-  - name: comments
-    using:
-      foreign_key_constraint_on:
-        column: created_by
-        table:
-          name: comment
-          schema: public
-  - name: commentsByUpdatedBy
-    using:
-      foreign_key_constraint_on:
-        column: updated_by
-        table:
-          name: comment
-          schema: public
   - name: factResourcesByUpdatedBy
     using:
       foreign_key_constraint_on:
