@@ -3,12 +3,15 @@ DROP TRIGGER IF EXISTS log_claim_event ON public.claim;
 DROP TRIGGER IF EXISTS log_fact_event ON public.fact;
 DROP TRIGGER IF EXISTS log_origin_event ON public.origin;
 DROP TRIGGER IF EXISTS log_source_event ON public.source;
+DROP TRIGGER IF EXISTS log_claim_category_event ON public.claim_category;
+
 
 DROP FUNCTION IF EXISTS public.log_generic_event ();
 DROP FUNCTION IF EXISTS public.log_claim_event();  
 DROP FUNCTION IF EXISTS public.log_fact_event();
 DROP FUNCTION IF EXISTS public.log_origin_event();
 DROP FUNCTION IF EXISTS public.log_source_event();
+DROP FUNCTION IF EXISTS public.log_claim_category_event();
 -- Only dro(p claim-specific function
 -- Step 2: Create NEW function
 CREATE OR REPLACE FUNCTION public.log_generic_event(
@@ -64,20 +67,17 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION public.log_claim_event()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Handle claim deletion first
     IF TG_OP = 'UPDATE' AND NEW.deleted THEN
         DELETE FROM public.claim WHERE id = NEW.id;
     END IF;
 
-    -- Call generic function with claim-specific parameters
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
-        NEW.id,  -- claim_id´
-        TG_OP,
+        NEW.id,
+        CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME
     );
-
     RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql;
@@ -93,7 +93,7 @@ BEGIN
         to_jsonb(OLD),
         to_jsonb(NEW),
         NEW.claim_id,  -- different claim_id source
-        TG_OP,
+        CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME
     );
     RETURN COALESCE(NEW, OLD);
@@ -107,12 +107,25 @@ BEGIN
     IF TG_OP = 'UPDATE' AND NEW.deleted THEN
         DELETE FROM public.origin WHERE id = NEW.id;
     END IF;
-    PERFORM public.log_generic_event(
-        to_jsonb(OLD),
-        to_jsonb(NEW),
+
+
+    INSERT INTO public.event (
+        claim_id,
+        user_id,
+        action,
+        table_name,
+        created_at,
+        entry_id,
+        content
+    )
+    VALUES (
         NEW.claim_id,
-        TG_OP,
-        TG_TABLE_NAME
+        COALESCE((NEW->>'updated_by')::uuid, (NEW->>'created_by')::uuid, null),
+        CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
+        TG_TABLE_NAME,
+        NOW(),
+        NEW.id,
+        '{}'::jsonb
     );
     RETURN COALESCE(NEW, OLD);
 END;
@@ -128,14 +141,42 @@ BEGIN
         to_jsonb(OLD),
         to_jsonb(NEW),
         (SELECT claim_id FROM public.fact WHERE id = NEW.fact_id LIMIT 1),  -- Get claim_id via fact
-        TG_OP,
+        CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME
     );
     RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql;
 
-
+CREATE OR REPLACE FUNCTION public.log_claim_category_event()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'UPDATE' AND NEW.deleted THEN
+        DELETE FROM public.claim_category WHERE id = NEW.id;
+    END IF;
+   
+    INSERT INTO public.event (
+        claim_id,
+        user_id,
+        action,
+        table_name,
+        created_at,
+        entry_id,
+        content
+    )
+    VALUES (
+        new.claim_id,
+        new.created_by,
+        'DELETE',
+        'claim_category',
+        new.created_at,
+        new.id,
+        jsonb_build_object('category', new.category_name)
+    );
+    
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql;
 
 -- Triggers remain the same
 CREATE TRIGGER log_claim_event
@@ -156,3 +197,6 @@ AFTER INSERT OR UPDATE ON public.source
 FOR EACH ROW EXECUTE FUNCTION public.log_source_event();
 
 
+CREATE TRIGGER log_claim_category_event
+AFTER INSERT OR UPDATE ON public.claim_category
+FOR EACH ROW EXECUTE FUNCTION public.log_claim_category_event();
