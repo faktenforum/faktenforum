@@ -2,7 +2,6 @@ mutation anonymizeUserProfile($id: uuid!, $username: String!) {
   updateUserByPk(
     pkColumns: { id: $id }
     _set: {
-      username: $username
       bio: null
       email: $username
       firstName: null
@@ -10,8 +9,12 @@ mutation anonymizeUserProfile($id: uuid!, $username: String!) {
       mobileNumber: null
       profileImage: $id
       pronouns: null
+      deleted: true
     }
   ) {
     id
+  }
+  deleteUserHistory(where: { id: { _eq: $id } }) {
+    affectedRows
   }
 }

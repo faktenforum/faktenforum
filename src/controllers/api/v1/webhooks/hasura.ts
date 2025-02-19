@@ -222,14 +222,13 @@ export class HasuraWebHookController {
     try {
       this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
       // Get username from id
-      // const identity = await this.authService.getUserIdentity(body.userId);
-      // const username = identity.traits.username;
-      // this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
-      // // Delete the user from Kratos using the Admin API
-      // this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
-      // await this.authService.deleteUser(body.userId);
+      const identity = await this.authService.getUserIdentity(body.userId);
+      const username = identity.traits.username;
+      this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
+      // Delete the user from Kratos using the Admin API
+      this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
+      await this.authService.deleteUser(body.userId);
       // anonymize user profile
-      const username = "supertesta";
       this.logger.debug(`[HasuraWebHookController] Anonymizing user profile`);
       await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
         id: body.userId,

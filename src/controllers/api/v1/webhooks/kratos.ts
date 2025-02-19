@@ -8,14 +8,21 @@ import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, FileService, HasuraService, MatrixService } from "~/services";
 import { UserRole } from "~/models";
 
-import { InsertUserDocument, DeleteUserByPkDocument, InsertFileDocument } from "~/generated/graphql";
+import {
+  InsertUserDocument,
+  DeleteUserByPkDocument,
+  InsertFileDocument,
+  GetUserByUsernameDocument
+} from "~/generated/graphql";
 import type {
   InsertFileMutation,
   InsertFileMutationVariables,
   InsertUserMutation,
   InsertUserMutationVariables,
   DeleteUserByPkMutation,
-  DeleteUserByPkMutationVariables
+  DeleteUserByPkMutationVariables,
+  GetUserByUsernameQuery,
+  GetUserByUsernameQueryVariables
 } from "~/generated/graphql";
 
 import { Logger } from "@tsed/common";
@@ -40,15 +47,12 @@ export class KratosWebHookController {
   @Inject(Logger)
   logger: Logger;
 
-  @Post("/registration-creation")
+  @Post("/finalize-registration")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
     let id = null;
     let chatUsername = null;
-    // check if username is already taken by an deleted user
-    // throw for testing username already taken
-    // throw new BadRequest("Username already taken");
     try {
       //Generate Avatar
       const avatar = createAvatar(glass, {
@@ -82,7 +86,7 @@ export class KratosWebHookController {
       id = response.insertUserOne?.id;
       await this.matrixService.createUser(body.traits.username);
       chatUsername = body.traits.username;
-      return body;
+      return;
     } catch (error) {
       this.logger.error(error);
       this.fileService.deleteFile(body.id);
@@ -100,14 +104,46 @@ export class KratosWebHookController {
       }
       throw new Error(error);
     }
-   
   }
 
-  @Post("/registration-metadata")
+  @Post("/pre-registration")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, RegistrationPreResponse)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async preFinalizeAccount(@BodyParams() body: RegistrationRequest) {
+  async preRegistration(@BodyParams() body: RegistrationRequest) {
+    // check if username is already taken by an deleted user
+    console.log("preRegistration", body);
+    const result = await this.hasuraService.adminRequest<
+      GetUserByUsernameQuery,
+      GetUserByUsernameQueryVariables
+    >(GetUserByUsernameDocument, {
+      username: body.traits.username
+    });
+    console.log("result", result);
+
+    if (result.user.length > 0) {
+      const error = new BadRequest("Username already taken");
+      error.body = {
+        messages: [
+          {
+            instance_ptr: "#/traits/username",
+            messages: [
+              {
+                id: 4000007, // Unique error code for username taken
+                text: "Username already taken",
+                type: "error",
+                context: {
+                  field: "username",
+                  value: body.traits.username
+                }
+              }
+            ]
+          }
+        ]
+      };
+      throw error;
+    }
+
+    console.log("no error");
     return {
       identity: {
         metadata_public: {

@@ -7614,6 +7614,7 @@ export type User = {
   /** An aggregate relationship */
   commentsByUpdatedByAggregate: CommentAggregate;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  deleted?: Maybe<Scalars['Boolean']['output']>;
   email: Scalars['String']['output'];
   /** An array relationship */
   factResourcesByUpdatedBy: Array<Source>;
@@ -8186,6 +8187,7 @@ export type UserBoolExp = {
   commentsByUpdatedBy?: InputMaybe<CommentBoolExp>;
   commentsByUpdatedByAggregate?: InputMaybe<CommentAggregateBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  deleted?: InputMaybe<BooleanComparisonExp>;
   email?: InputMaybe<StringComparisonExp>;
   factResourcesByUpdatedBy?: InputMaybe<SourceBoolExp>;
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateBoolExp>;
@@ -8785,6 +8787,7 @@ export type UserInsertInput = {
   comments?: InputMaybe<CommentArrRelInsertInput>;
   commentsByUpdatedBy?: InputMaybe<CommentArrRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   factResourcesByUpdatedBy?: InputMaybe<SourceArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
@@ -8901,6 +8904,7 @@ export type UserOrderBy = {
   commentsAggregate?: InputMaybe<CommentAggregateOrderBy>;
   commentsByUpdatedByAggregate?: InputMaybe<CommentAggregateOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
+  deleted?: InputMaybe<OrderBy>;
   email?: InputMaybe<OrderBy>;
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
@@ -8951,6 +8955,8 @@ export enum UserSelectColumn {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
+  Deleted = 'deleted',
+  /** column name */
   Email = 'email',
   /** column name */
   FirstName = 'firstName',
@@ -8977,11 +8983,15 @@ export enum UserSelectColumn {
 /** select "userAggregateBoolExpBool_andArgumentsColumns" columns of table "user" */
 export enum UserSelectColumnUserAggregateBoolExpBool_AndArgumentsColumns {
   /** column name */
+  Deleted = 'deleted',
+  /** column name */
   SignedCodeOfConduct = 'signedCodeOfConduct'
 }
 
 /** select "userAggregateBoolExpBool_orArgumentsColumns" columns of table "user" */
 export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Deleted = 'deleted',
   /** column name */
   SignedCodeOfConduct = 'signedCodeOfConduct'
 }
@@ -8990,6 +9000,7 @@ export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
 export type UserSetInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -9015,6 +9026,7 @@ export type UserStreamCursorInput = {
 export type UserStreamCursorValueInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -9034,6 +9046,8 @@ export enum UserUpdateColumn {
   Bio = 'bio',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  Deleted = 'deleted',
   /** column name */
   Email = 'email',
   /** column name */
@@ -12494,7 +12508,7 @@ export type AnonymizeUserProfileMutationVariables = Exact<{
 }>;
 
 
-export type AnonymizeUserProfileMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null };
+export type AnonymizeUserProfileMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null, deleteUserHistory?: { __typename?: 'UserHistoryMutationResponse', affectedRows: number } | null };
 
 export type DeleteUserByPkMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -12661,9 +12675,12 @@ export const AnonymizeUserProfileDocument = gql`
     mutation anonymizeUserProfile($id: uuid!, $username: String!) {
   updateUserByPk(
     pkColumns: {id: $id}
-    _set: {username: $username, bio: null, email: $username, firstName: null, lastName: null, mobileNumber: null, profileImage: $id, pronouns: null}
+    _set: {bio: null, email: $username, firstName: null, lastName: null, mobileNumber: null, profileImage: $id, pronouns: null, deleted: true}
   ) {
     id
+  }
+  deleteUserHistory(where: {id: {_eq: $id}}) {
+    affectedRows
   }
 }
     `;
