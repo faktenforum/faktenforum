@@ -212,6 +212,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -225,6 +226,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -238,6 +240,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -263,6 +266,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -280,6 +284,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -298,51 +303,4 @@ update_permissions:
       check: null
       set:
         updated_by: x-hasura-User-Id
-    comment: ""
-delete_permissions:
-  - role: administrator
-    permission:
-      filter: {}
-    comment: ""
-  - role: editor
-    permission:
-      filter: {}
-    comment: ""
-  - role: junior
-    permission:
-      filter:
-        _and:
-          - fact:
-              claim:
-                _and:
-                  - internal:
-                      _eq: false
-                  - status:
-                      _nin:
-                        - checked
-                        - published
-          - created_by:
-              _eq: X-Hasura-User-Id
-    comment: ""
-  - role: moderator
-    permission:
-      filter:
-        fact:
-          claim:
-            internal:
-              _eq: false
-    comment: ""
-  - role: senior
-    permission:
-      filter:
-        _and:
-          - fact:
-              claim:
-                _and:
-                  - internal:
-                      _eq: false
-                  - status:
-                      _nin:
-                        - checked
-                        - published
     comment: ""
