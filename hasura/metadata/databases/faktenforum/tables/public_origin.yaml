@@ -14,14 +14,6 @@ object_relationships:
   - name: updatedByUser
     using:
       foreign_key_constraint_on: updated_by
-array_relationships:
-  - name: originHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: origin_history
-          schema: public
 insert_permissions:
   - role: administrator
     permission:

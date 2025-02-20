@@ -26,13 +26,6 @@ array_relationships:
         table:
           name: claim_category
           schema: public
-  - name: claimHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: claim_history
-          schema: public
   - name: events
     using:
       foreign_key_constraint_on:

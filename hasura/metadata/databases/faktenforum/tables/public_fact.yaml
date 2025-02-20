@@ -12,13 +12,6 @@ object_relationships:
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
-  - name: factHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: fact_history
-          schema: public
   - name: sources
     using:
       foreign_key_constraint_on:
