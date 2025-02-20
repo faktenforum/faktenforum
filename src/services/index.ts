@@ -3,10 +3,10 @@
  */
 
 export * from "./0_EnvService";
-export * from "./1_AuthService";
-export * from "./1_FileService";
 export * from "./1_HasuraService";
-export * from "./1_UrlInfoService";
-export * from "./2_ClaimWorthinessService";
-export * from "./2_ImageService";
-export * from "./2_MatrixService";
+export * from "./2_AuthService";
+export * from "./2_FileService";
+export * from "./2_UrlInfoService";
+export * from "./3_ClaimWorthinessService";
+export * from "./3_ImageService";
+export * from "./3_MatrixService";

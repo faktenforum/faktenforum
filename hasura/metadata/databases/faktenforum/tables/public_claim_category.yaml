@@ -160,17 +160,25 @@ select_permissions:
             _eq: false
       allow_aggregations: true
     comment: ""
-delete_permissions:
+update_permissions:
   - role: administrator
     permission:
+      columns:
+        - deleted
       filter: {}
+      check: null
     comment: ""
   - role: editor
     permission:
+      columns:
+        - deleted
       filter: {}
+      check: null
     comment: ""
   - role: junior
     permission:
+      columns:
+        - deleted
       filter:
         _and:
           - claim:
@@ -179,17 +187,23 @@ delete_permissions:
           - claim:
               created_by:
                 _eq: X-Hasura-User-Id
+      check: null
     comment: ""
   - role: moderator
     permission:
-      filter:
+      columns:
+        - deleted
+      filter: {}
+      check:
         claim:
           internal:
             _eq: false
     comment: ""
   - role: senior
     permission:
-      filter:
+      columns: []
+      filter: {}
+      check:
         claim:
           internal:
             _eq: false

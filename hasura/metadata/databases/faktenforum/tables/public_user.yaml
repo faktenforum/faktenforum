@@ -27,20 +27,6 @@ array_relationships:
         table:
           name: claim
           schema: public
-  - name: comments
-    using:
-      foreign_key_constraint_on:
-        column: created_by
-        table:
-          name: comment
-          schema: public
-  - name: commentsByUpdatedBy
-    using:
-      foreign_key_constraint_on:
-        column: updated_by
-        table:
-          name: comment
-          schema: public
   - name: factResourcesByUpdatedBy
     using:
       foreign_key_constraint_on:
@@ -103,6 +89,7 @@ select_permissions:
       columns:
         - bio
         - created_at
+        - deleted
         - email
         - first_name
         - id
@@ -128,6 +115,7 @@ select_permissions:
       columns:
         - bio
         - created_at
+        - deleted
         - email
         - first_name
         - id
@@ -146,6 +134,7 @@ select_permissions:
       columns:
         - bio
         - created_at
+        - deleted
         - id
         - profile_image
         - pronouns
@@ -162,17 +151,18 @@ select_permissions:
     permission:
       columns:
         - bio
+        - created_at
+        - deleted
         - email
         - first_name
+        - id
         - last_name
         - mobile_number
-        - pronouns
-        - username
-        - created_at
-        - updated_at
-        - sys_period
-        - id
         - profile_image
+        - pronouns
+        - sys_period
+        - updated_at
+        - username
       filter: {}
       query_root_fields:
         - select
@@ -184,6 +174,7 @@ select_permissions:
       columns:
         - bio
         - created_at
+        - deleted
         - id
         - profile_image
         - pronouns

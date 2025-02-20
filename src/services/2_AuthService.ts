@@ -53,8 +53,10 @@ export class AuthService {
   envService: EnvService;
   @Inject()
   logger: Logger;
+
   kratosSessionUrl: URL;
   kratosIdentityApi: IdentityApi;
+
   constructor(envService: EnvService) {
     this.kratosSessionUrl = new URL(`${envService.kratosPublicUrl}/sessions/whoami`);
     this.kratosIdentityApi = new IdentityApi(new Configuration({ basePath: envService.kratosAdminUrl }));

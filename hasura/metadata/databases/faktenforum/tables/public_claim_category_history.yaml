@@ -1,0 +1,3 @@
+table:
+  name: claim_category_history
+  schema: public

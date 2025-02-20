@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams } from "@tsed/platform-params";
+import { BodyParams, Context } from "@tsed/platform-params";
 import { Post, Returns } from "@tsed/schema";
 import { createAvatar } from "@dicebear/core";
 import { glass } from "@dicebear/collection";
@@ -8,17 +8,25 @@ import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, FileService, HasuraService, MatrixService } from "~/services";
 import { UserRole } from "~/models";
 
-import { InsertUserDocument, DeleteUserByPkDocument, InsertFileDocument } from "~/generated/graphql";
+import {
+  InsertUserDocument,
+  DeleteUserByPkDocument,
+  InsertFileDocument,
+  GetUserByUsernameDocument
+} from "~/generated/graphql";
 import type {
   InsertFileMutation,
   InsertFileMutationVariables,
   InsertUserMutation,
   InsertUserMutationVariables,
   DeleteUserByPkMutation,
-  DeleteUserByPkMutationVariables
+  DeleteUserByPkMutationVariables,
+  GetUserByUsernameQuery,
+  GetUserByUsernameQueryVariables
 } from "~/generated/graphql";
 
 import { Logger } from "@tsed/common";
+import { BadRequest } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -39,13 +47,12 @@ export class KratosWebHookController {
   @Inject(Logger)
   logger: Logger;
 
-  @Post("/registration-creation")
+  @Post("/finalize-registration")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
     let id = null;
     let chatUsername = null;
-
     try {
       //Generate Avatar
       const avatar = createAvatar(glass, {
@@ -77,9 +84,9 @@ export class KratosWebHookController {
         }
       );
       id = response.insertUserOne?.id;
-      await this.matrixService.createUser(body.traits.username, body.traits.email);
+      await this.matrixService.createUser(body.traits.username);
       chatUsername = body.traits.username;
-      return {};
+      return;
     } catch (error) {
       this.logger.error(error);
       this.fileService.deleteFile(body.id);
@@ -93,24 +100,58 @@ export class KratosWebHookController {
         );
       }
       if (chatUsername) {
-        await this.matrixService.deleteUser(chatUsername);
+        await this.matrixService.deleteUser(chatUsername, body.id);
       }
       throw new Error(error);
     }
   }
 
-  @Post("/registration-metadata")
-  @ApiKeyAccessControlDecorator({ service: "kratos" })
+  @Post("/pre-registration")
   @Returns(200, RegistrationPreResponse)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async preFinalizeAccount(@BodyParams() body: RegistrationRequest) {
-    return {
-      identity: {
-        metadata_public: {
-          role: UserRole.Aspirant,
-          lang: DEFAULT_LANGUAGE // TODO take from language selector on the page, once it exists
-        }
+  @(Returns(400, Object).ContentType("application/json"))
+  async preRegistration(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {
+    try {
+      const result = await this.hasuraService.adminRequest<
+        GetUserByUsernameQuery,
+        GetUserByUsernameQueryVariables
+      >(GetUserByUsernameDocument, {
+        username: body.traits.username
+      });
+
+      if (result.user.length > 0) {
+        ctx.response.status(400).body({
+          messages: [
+            {
+              messages: [
+                {
+                  id: 4000007,
+                  text: "An account with the same identifier (email, phone, username, ...) exists already.",
+                  type: "error",
+                  context: {
+                    field: "username",
+                    value: body.traits.username
+                  }
+                }
+              ]
+            }
+          ]
+        });
+        return;
       }
-    };
+
+      return {
+        identity: {
+          metadata_public: {
+            role: UserRole.Aspirant,
+            lang: DEFAULT_LANGUAGE
+          }
+        }
+      };
+    } catch (error) {
+      this.logger.error("Pre-registration error", error);
+      ctx.response.status(500).body({
+        error: "Internal server error"
+      });
+    }
   }
 }
