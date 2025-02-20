@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams } from "@tsed/platform-params";
+import { BodyParams, Context } from "@tsed/platform-params";
 import { Post, Returns } from "@tsed/schema";
 import { createAvatar } from "@dicebear/core";
 import { glass } from "@dicebear/collection";
@@ -107,50 +107,51 @@ export class KratosWebHookController {
   }
 
   @Post("/pre-registration")
-  @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, RegistrationPreResponse)
-  async preRegistration(@BodyParams() body: RegistrationRequest) {
-    // check if username is already taken by an deleted user
-    console.log("preRegistration", body);
-    const result = await this.hasuraService.adminRequest<
-      GetUserByUsernameQuery,
-      GetUserByUsernameQueryVariables
-    >(GetUserByUsernameDocument, {
-      username: body.traits.username
-    });
-    console.log("result", result);
+  @(Returns(400, Object).ContentType("application/json"))
+  async preRegistration(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {
+    try {
+      const result = await this.hasuraService.adminRequest<
+        GetUserByUsernameQuery,
+        GetUserByUsernameQueryVariables
+      >(GetUserByUsernameDocument, {
+        username: body.traits.username
+      });
 
-    if (result.user.length > 0) {
-      const error = new BadRequest("Username already taken");
-      error.body = {
-        messages: [
-          {
-            instance_ptr: "#/traits/username",
-            messages: [
-              {
-                id: 4000007, // Unique error code for username taken
-                text: "Username already taken",
-                type: "error",
-                context: {
-                  field: "username",
-                  value: body.traits.username
+      if (result.user.length > 0) {
+        ctx.response.status(400).body({
+          messages: [
+            {
+              messages: [
+                {
+                  id: 4000007,
+                  text: "An account with the same identifier (email, phone, username, ...) exists already.",
+                  type: "error",
+                  context: {
+                    field: "username",
+                    value: body.traits.username
+                  }
                 }
-              }
-            ]
-          }
-        ]
-      };
-      throw error;
-    }
-
-    console.log("no error");
-    return {
-      identity: {
-        metadata_public: {
-          role: UserRole.Aspirant,
-          lang: DEFAULT_LANGUAGE // TODO take from language selector on the page, once it exists
-        }
+              ]
+            }
+          ]
+        });
+        return;
       }
-    };
+
+      return {
+        identity: {
+          metadata_public: {
+            role: UserRole.Aspirant,
+            lang: DEFAULT_LANGUAGE
+          }
+        }
+      };
+    } catch (error) {
+      this.logger.error("Pre-registration error", error);
+      ctx.response.status(500).body({
+        error: "Internal server error"
+      });
+    }
   }
 }
