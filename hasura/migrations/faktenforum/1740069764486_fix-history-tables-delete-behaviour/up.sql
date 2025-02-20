@@ -15,3 +15,4 @@ CREATE INDEX IF NOT EXISTS idx_source_id ON public.source_history (id);
 CREATE INDEX IF NOT EXISTS idx_fact_id ON public.fact_history (id);
 CREATE INDEX IF NOT EXISTS idx_user_id ON public.user_history (id);
 CREATE INDEX IF NOT EXISTS idx_file_id ON public.file_history (id);
+
