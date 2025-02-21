@@ -13,6 +13,7 @@ WORKDIR /app
 COPY ./migrations /app/migrations
 COPY ./metadata /app/metadata
 COPY ./seeds /app/seeds
+COPY ./triggers /app/triggers
 
 # Copy config file and startup script
 COPY ./config.yaml /app/config.yaml
