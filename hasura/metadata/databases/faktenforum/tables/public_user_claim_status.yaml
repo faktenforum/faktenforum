@@ -70,6 +70,7 @@ select_permissions:
         - created_at
         - has_marked
         - has_read
+        - last_viewed_at
         - updated_at
         - user_id
       filter:
@@ -83,6 +84,7 @@ select_permissions:
         - created_at
         - has_marked
         - has_read
+        - last_viewed_at
         - updated_at
         - user_id
       filter:
@@ -96,6 +98,7 @@ select_permissions:
         - created_at
         - has_marked
         - has_read
+        - last_viewed_at
         - updated_at
         - user_id
       filter:
@@ -109,6 +112,7 @@ select_permissions:
         - created_at
         - has_marked
         - has_read
+        - last_viewed_at
         - updated_at
         - user_id
       filter:
@@ -122,6 +126,7 @@ select_permissions:
         - created_at
         - has_marked
         - has_read
+        - last_viewed_at
         - updated_at
         - user_id
       filter:

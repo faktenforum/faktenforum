@@ -224,3 +224,5 @@ FOR EACH ROW EXECUTE FUNCTION public.log_claim_category_event();
 CREATE TRIGGER log_user_event
 AFTER INSERT OR UPDATE ON public.user
 FOR EACH ROW EXECUTE FUNCTION public.log_user_event();
+
+
