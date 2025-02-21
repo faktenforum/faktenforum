@@ -1,8 +1,8 @@
 # Use the latest debian image as the base
 FROM debian:bookworm-slim
 
-# Install Hasura CLI
-RUN apt update && apt install -y curl \
+# Install Hasura CLI and PostgreSQL client
+RUN apt update && apt install -y curl postgresql-client \
     && curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /app/migrations /app/metadata /app/seeds

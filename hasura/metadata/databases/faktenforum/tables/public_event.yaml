@@ -12,39 +12,42 @@ select_permissions:
   - role: administrator
     permission:
       columns:
-        - id
-        - content
         - action
-        - table_name
-        - created_at
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter: {}
     comment: ""
   - role: editor
     permission:
       columns:
-        - id
-        - content
         - action
-        - table_name
-        - created_at
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter: {}
     comment: ""
   - role: junior
     permission:
       columns:
-        - id
-        - content
         - action
-        - table_name
-        - created_at
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter:
         _or:
@@ -53,17 +56,23 @@ select_permissions:
                 _eq: false
           - claim_id:
               _is_null: true
+          - _and:
+              - action:
+                  _eq: INSERT
+              - metadata:
+                  _has_key: internal
     comment: ""
   - role: moderator
     permission:
       columns:
-        - id
-        - content
         - action
-        - table_name
-        - created_at
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter:
         _or:
@@ -76,13 +85,14 @@ select_permissions:
   - role: senior
     permission:
       columns:
-        - id
-        - content
         - action
-        - table_name
-        - created_at
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter:
         _or:

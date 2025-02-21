@@ -76,11 +76,16 @@ services:
       - postgres-db
       - graphql-engine
     environment:
+      PG_PORT: ${POSTGRES_PORT}
+      PG_USER: ${POSTGRES_USER}
+      PG_PASSWORD: ${POSTGRES_PASSWORD}
+      PG_DATABASE: ${POSTGRES_DB}
       HASURA_ENDPOINT: "http://graphql-engine:8080"
       HASURA_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       APPLY_METADATA: "true"
       APPLY_MIGRATIONS: "true"
       APPLY_SEEDS: "true"
+      APPLY_TRIGGERS: "true"
     # import current files as volume so a rebuild is no required on database/metada changes
     volumes:
       - ./hasura:/app
