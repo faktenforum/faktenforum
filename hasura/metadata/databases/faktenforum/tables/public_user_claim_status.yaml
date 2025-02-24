@@ -13,6 +13,7 @@ insert_permissions:
         - claim_id
         - has_marked
         - has_read
+        - last_viewed_at
     comment: ""
   - role: editor
     permission:
@@ -25,6 +26,7 @@ insert_permissions:
         - claim_id
         - has_marked
         - has_read
+        - last_viewed_at
     comment: ""
   - role: junior
     permission:
@@ -37,6 +39,7 @@ insert_permissions:
         - claim_id
         - has_marked
         - has_read
+        - last_viewed_at
     comment: ""
   - role: moderator
     permission:
@@ -49,6 +52,7 @@ insert_permissions:
         - claim_id
         - has_marked
         - has_read
+        - last_viewed_at
     comment: ""
   - role: senior
     permission:
@@ -61,6 +65,7 @@ insert_permissions:
         - claim_id
         - has_marked
         - has_read
+        - last_viewed_at
     comment: ""
 select_permissions:
   - role: administrator
@@ -139,6 +144,7 @@ update_permissions:
       columns:
         - has_marked
         - has_read
+        - last_viewed_at
       filter:
         user_id:
           _eq: X-Hasura-User-Id
@@ -149,6 +155,7 @@ update_permissions:
       columns:
         - has_marked
         - has_read
+        - last_viewed_at
       filter:
         user_id:
           _eq: X-Hasura-User-Id
@@ -159,6 +166,7 @@ update_permissions:
       columns:
         - has_marked
         - has_read
+        - last_viewed_at
       filter:
         user_id:
           _eq: X-Hasura-User-Id
@@ -169,6 +177,7 @@ update_permissions:
       columns:
         - has_marked
         - has_read
+        - last_viewed_at
       filter:
         user_id:
           _eq: X-Hasura-User-Id
@@ -179,6 +188,7 @@ update_permissions:
       columns:
         - has_marked
         - has_read
+        - last_viewed_at
       filter:
         user_id:
           _eq: X-Hasura-User-Id

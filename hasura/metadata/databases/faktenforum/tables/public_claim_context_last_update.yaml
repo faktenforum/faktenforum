@@ -1,6 +1,10 @@
 table:
   name: claim_context_last_update
   schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: updated_by
 select_permissions:
   - role: administrator
     permission:

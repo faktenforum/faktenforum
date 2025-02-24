@@ -104,8 +104,8 @@ BEGIN
         NEW.claim_id,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
-        '{index}'::text[],
-        jsonb_build_object('index', NEW.index)
+        '{index,claim_id}'::text[],
+        jsonb_build_object('index', NEW.index, 'claim_id', NEW.claim_id)
     );
     RETURN COALESCE(NEW, OLD);
 END;
@@ -126,7 +126,7 @@ BEGIN
         NEW.claim_id,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
-        '{index}'::text[],
+        '{index,claim_id}'::text[],
         jsonb_build_object('index', NEW.index)
     );
     RETURN COALESCE(NEW, OLD);
@@ -155,7 +155,8 @@ BEGIN
         '{index}'::text[],
         jsonb_build_object(
             'index', NEW.index,
-            'fact_index', v_fact_index  -- Add fact index to metadata
+            'fact_index', v_fact_index,  -- Add fact index to metadata
+            'fact_id', NEW.fact_id
         )
     );
     RETURN COALESCE(NEW, OLD);

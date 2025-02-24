@@ -9,6 +9,9 @@ object_relationships:
         table:
           name: checkworthiness
           schema: public
+  - name: claim_context_last_update
+    using:
+      foreign_key_constraint_on: last_context_update_id
   - name: createdByUser
     using:
       foreign_key_constraint_on: created_by
