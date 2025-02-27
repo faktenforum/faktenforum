@@ -6,4 +6,8 @@ export class DeleteFileRequest {
   @Required()
   @IsUUID()
   id: string;
+
+  @Property()
+  @Required()
+  mimeType: string;
 }

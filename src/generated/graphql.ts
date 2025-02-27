@@ -7554,6 +7554,11 @@ export type StringComparisonExp = {
   _similar?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SuccessInfo = {
+  __typename?: 'SuccessInfo';
+  success: Scalars['Boolean']['output'];
+};
+
 export type TextPayloadInput = {
   text: Scalars['String']['input'];
 };
@@ -7609,6 +7614,7 @@ export type User = {
   /** An aggregate relationship */
   commentsByUpdatedByAggregate: CommentAggregate;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  deleted?: Maybe<Scalars['Boolean']['output']>;
   email: Scalars['String']['output'];
   /** An array relationship */
   factResourcesByUpdatedBy: Array<Source>;
@@ -8181,6 +8187,7 @@ export type UserBoolExp = {
   commentsByUpdatedBy?: InputMaybe<CommentBoolExp>;
   commentsByUpdatedByAggregate?: InputMaybe<CommentAggregateBoolExp>;
   createdAt?: InputMaybe<TimestamptzComparisonExp>;
+  deleted?: InputMaybe<BooleanComparisonExp>;
   email?: InputMaybe<StringComparisonExp>;
   factResourcesByUpdatedBy?: InputMaybe<SourceBoolExp>;
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateBoolExp>;
@@ -8780,6 +8787,7 @@ export type UserInsertInput = {
   comments?: InputMaybe<CommentArrRelInsertInput>;
   commentsByUpdatedBy?: InputMaybe<CommentArrRelInsertInput>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   factResourcesByUpdatedBy?: InputMaybe<SourceArrRelInsertInput>;
   facts?: InputMaybe<FactArrRelInsertInput>;
@@ -8896,6 +8904,7 @@ export type UserOrderBy = {
   commentsAggregate?: InputMaybe<CommentAggregateOrderBy>;
   commentsByUpdatedByAggregate?: InputMaybe<CommentAggregateOrderBy>;
   createdAt?: InputMaybe<OrderBy>;
+  deleted?: InputMaybe<OrderBy>;
   email?: InputMaybe<OrderBy>;
   factResourcesByUpdatedByAggregate?: InputMaybe<SourceAggregateOrderBy>;
   factsAggregate?: InputMaybe<FactAggregateOrderBy>;
@@ -8946,6 +8955,8 @@ export enum UserSelectColumn {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
+  Deleted = 'deleted',
+  /** column name */
   Email = 'email',
   /** column name */
   FirstName = 'firstName',
@@ -8972,11 +8983,15 @@ export enum UserSelectColumn {
 /** select "userAggregateBoolExpBool_andArgumentsColumns" columns of table "user" */
 export enum UserSelectColumnUserAggregateBoolExpBool_AndArgumentsColumns {
   /** column name */
+  Deleted = 'deleted',
+  /** column name */
   SignedCodeOfConduct = 'signedCodeOfConduct'
 }
 
 /** select "userAggregateBoolExpBool_orArgumentsColumns" columns of table "user" */
 export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Deleted = 'deleted',
   /** column name */
   SignedCodeOfConduct = 'signedCodeOfConduct'
 }
@@ -8985,6 +9000,7 @@ export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
 export type UserSetInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -9010,6 +9026,7 @@ export type UserStreamCursorInput = {
 export type UserStreamCursorValueInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -9029,6 +9046,8 @@ export enum UserUpdateColumn {
   Bio = 'bio',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  Deleted = 'deleted',
   /** column name */
   Email = 'email',
   /** column name */
@@ -9185,6 +9204,8 @@ export type Mutation_Root = {
   __typename?: 'mutation_root';
   /** Block Room message */
   blockRoomMessage?: Maybe<BlockRoomMessageOutput>;
+  /** This Action deletes a user this is not reverserable */
+  deleteAccount: SuccessInfo;
   /** delete data from the table: "category" */
   deleteCategory?: Maybe<CategoryMutationResponse>;
   /** delete single row from the table: "category" */
@@ -9545,6 +9566,12 @@ export type Mutation_Root = {
 export type Mutation_RootBlockRoomMessageArgs = {
   messageId: Scalars['String']['input'];
   roomId: Scalars['String']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDeleteAccountArgs = {
+  userId: Scalars['uuid']['input'];
 };
 
 
@@ -12475,6 +12502,14 @@ export type UserHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type AnonymizeUserProfileMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  username: Scalars['String']['input'];
+}>;
+
+
+export type AnonymizeUserProfileMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null, deleteUserHistory?: { __typename?: 'UserHistoryMutationResponse', affectedRows: number } | null };
+
 export type DeleteUserByPkMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
@@ -12636,6 +12671,19 @@ export type GetUserProfileImagesQueryVariables = Exact<{ [key: string]: never; }
 export type GetUserProfileImagesQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', id: any, username: string, profileImage?: any | null }> };
 
 
+export const AnonymizeUserProfileDocument = gql`
+    mutation anonymizeUserProfile($id: uuid!, $username: String!) {
+  updateUserByPk(
+    pkColumns: {id: $id}
+    _set: {bio: null, email: $username, firstName: null, lastName: null, mobileNumber: null, profileImage: $id, pronouns: null, deleted: true}
+  ) {
+    id
+  }
+  deleteUserHistory(where: {id: {_eq: $id}}) {
+    affectedRows
+  }
+}
+    `;
 export const DeleteUserByPkDocument = gql`
     mutation deleteUserByPk($id: uuid!) {
   deleteUserByPk(id: $id) {
@@ -12854,6 +12902,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    anonymizeUserProfile(variables: AnonymizeUserProfileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AnonymizeUserProfileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AnonymizeUserProfileMutation>(AnonymizeUserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'anonymizeUserProfile', 'mutation', variables);
+    },
     deleteUserByPk(variables: DeleteUserByPkMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteUserByPkMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteUserByPkMutation>(DeleteUserByPkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteUserByPk', 'mutation', variables);
     },

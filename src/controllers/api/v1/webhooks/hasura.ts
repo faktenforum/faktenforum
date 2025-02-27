@@ -7,7 +7,11 @@ import {
   UpdateUserRoleRequest,
   OnClaimStatusUpdatedRequest,
   KratosUserSchema,
-  CalculateClaimWorthinessRequest
+  CalculateClaimWorthinessRequest,
+  DeleteUserRequest,
+  DeleteFileRequest,
+  GetUserRoleRequest,
+  RequestSucessInfo
 } from "~/models";
 
 import {
@@ -22,6 +26,7 @@ import {
 } from "~/services";
 import { ClaimStatus, HasuraOperations, SubmissionStatuses } from "~/utils";
 import { Identity } from "@ory/kratos-client";
+import { AnonymizeUserProfileDocument } from "~/generated/graphql";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -71,7 +76,7 @@ export class HasuraWebHookController {
   @Delete("/delete-file")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
-  async deleteFile(@BodyParams() body: { id: string; mimeType: string }) {
+  async deleteFile(@BodyParams() body: DeleteFileRequest) {
     this.fileService.deleteFile(body.id);
     if (body.mimeType.startsWith("image/")) {
       this.imageService.deleteImageVersions(body.id);
@@ -92,7 +97,7 @@ export class HasuraWebHookController {
   @Post("/get-user-role")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
-  async getUsersRoles(@BodyParams() body: { ids: string[] }) {
+  async getUsersRoles(@BodyParams() body: GetUserRoleRequest) {
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
     return result.identities.map((user) => ({
       id: user.id,
@@ -163,7 +168,7 @@ export class HasuraWebHookController {
 
   @Post("/block-room-message")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, Object).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
   async blockMessage(
     @BodyParams()
     body: {
@@ -208,5 +213,36 @@ export class HasuraWebHookController {
     this.logger.info(`[HasuraWebHookController] calculateForAllClaims`);
     this.claimWorthinessService.inferAllnewClaims();
     return;
+  }
+
+  @Post("/delete-account")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
+  async deleteUser(@BodyParams() body: DeleteUserRequest) {
+    try {
+      this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
+      // Get username from id
+      const identity = await this.authService.getUserIdentity(body.userId);
+      const username = identity.traits.username;
+      this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
+      // Delete the user from Kratos using the Admin API
+      this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
+      await this.authService.deleteUser(body.userId);
+      // anonymize user profile
+      this.logger.debug(`[HasuraWebHookController] Anonymizing user profile`);
+      await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
+        id: body.userId,
+        username: body.userId
+      });
+      // deactivate user in matrix and set anonymous username
+      this.logger.debug(`[HasuraWebHookController] Deactivating user in matrix`);
+      await this.matrixService.deleteUser(username, body.userId);
+      this.logger.debug(`[HasuraWebHookController] Successfully deleted user`);
+      // Remove specific user data from Hasura
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Error deleting user: ${error.message}`);
+      throw error;
+    }
   }
 }

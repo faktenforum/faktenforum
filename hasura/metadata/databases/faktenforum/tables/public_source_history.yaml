@@ -1,7 +1,3 @@
 table:
   name: source_history
   schema: public
-object_relationships:
-  - name: source
-    using:
-      foreign_key_constraint_on: id

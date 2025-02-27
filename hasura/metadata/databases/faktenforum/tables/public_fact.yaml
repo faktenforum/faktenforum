@@ -12,13 +12,6 @@ object_relationships:
     using:
       foreign_key_constraint_on: updated_by
 array_relationships:
-  - name: factHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: fact_history
-          schema: public
   - name: sources
     using:
       foreign_key_constraint_on:
@@ -182,6 +175,7 @@ update_permissions:
   - role: administrator
     permission:
       columns:
+        - deleted
         - text
         - updated_by
       filter: {}
@@ -192,6 +186,7 @@ update_permissions:
   - role: editor
     permission:
       columns:
+        - deleted
         - text
         - updated_by
       filter: {}
@@ -202,6 +197,7 @@ update_permissions:
   - role: junior
     permission:
       columns:
+        - deleted
         - text
       filter:
         claim:
@@ -221,6 +217,7 @@ update_permissions:
   - role: moderator
     permission:
       columns:
+        - deleted
         - text
         - updated_by
       filter: {}
@@ -231,6 +228,7 @@ update_permissions:
   - role: senior
     permission:
       columns:
+        - deleted
         - text
         - updated_by
       filter:
@@ -245,46 +243,4 @@ update_permissions:
       check: null
       set:
         updated_by: x-hasura-User-Id
-    comment: ""
-delete_permissions:
-  - role: administrator
-    permission:
-      filter: {}
-    comment: ""
-  - role: editor
-    permission:
-      filter: {}
-    comment: ""
-  - role: junior
-    permission:
-      filter:
-        claim:
-          _and:
-            - internal:
-                _eq: false
-            - created_by:
-                _eq: X-Hasura-User-Id
-            - status:
-                _nin:
-                  - checked
-                  - published
-    comment: ""
-  - role: moderator
-    permission:
-      filter:
-        claim:
-          internal:
-            _eq: false
-    comment: ""
-  - role: senior
-    permission:
-      filter:
-        claim:
-          _and:
-            - internal:
-                _eq: false
-            - status:
-                _nin:
-                  - checked
-                  - published
     comment: ""

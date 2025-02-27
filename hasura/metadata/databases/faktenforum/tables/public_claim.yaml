@@ -9,6 +9,9 @@ object_relationships:
         table:
           name: checkworthiness
           schema: public
+  - name: claim_context_last_update
+    using:
+      foreign_key_constraint_on: last_context_update_id
   - name: createdByUser
     using:
       foreign_key_constraint_on: created_by
@@ -25,20 +28,6 @@ array_relationships:
         column: claim_id
         table:
           name: claim_category
-          schema: public
-  - name: claimHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: claim_history
-          schema: public
-  - name: comments
-    using:
-      foreign_key_constraint_on:
-        column: claim_id
-        table:
-          name: comment
           schema: public
   - name: events
     using:

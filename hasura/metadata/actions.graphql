@@ -6,6 +6,12 @@ type Mutation {
 }
 
 type Mutation {
+  deleteAccount(
+    userId: uuid!
+  ): SuccessInfo!
+}
+
+type Mutation {
   sendMessageToCheckbotMessagePost(
     textPayloadInput: TextPayloadInput!
   ): CheckbotResponse
@@ -86,5 +92,9 @@ type DataListItem {
   link: String
   summary: String
   url: String
+}
+
+type SuccessInfo {
+  success: Boolean!
 }
 

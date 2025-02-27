@@ -2,6 +2,9 @@ table:
   name: event
   schema: public
 object_relationships:
+  - name: claim
+    using:
+      foreign_key_constraint_on: claim_id
   - name: user
     using:
       foreign_key_constraint_on: user_id
@@ -9,65 +12,93 @@ select_permissions:
   - role: administrator
     permission:
       columns:
-        - id
         - action
-        - table_name
-        - created_at
-        - claim_status
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter: {}
     comment: ""
   - role: editor
     permission:
       columns:
-        - id
         - action
-        - table_name
-        - created_at
-        - claim_status
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
       filter: {}
     comment: ""
   - role: junior
     permission:
       columns:
-        - id
         - action
-        - table_name
-        - created_at
-        - claim_status
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
-      filter: {}
+      filter:
+        _or:
+          - claim:
+              internal:
+                _eq: false
+          - claim_id:
+              _is_null: true
+          - _and:
+              - action:
+                  _eq: INSERT
+              - metadata:
+                  _has_key: internal
     comment: ""
   - role: moderator
     permission:
       columns:
-        - id
         - action
-        - table_name
-        - created_at
-        - claim_status
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
-      filter: {}
+      filter:
+        _or:
+          - claim:
+              internal:
+                _eq: false
+          - claim_id:
+              _is_null: true
     comment: ""
   - role: senior
     permission:
       columns:
-        - id
         - action
-        - table_name
-        - created_at
-        - claim_status
         - claim_id
+        - content
+        - created_at
         - entry_id
+        - id
+        - metadata
+        - table_name
         - user_id
-      filter: {}
+      filter:
+        _or:
+          - claim:
+              internal:
+                _eq: false
+          - claim_id:
+              _is_null: true
     comment: ""

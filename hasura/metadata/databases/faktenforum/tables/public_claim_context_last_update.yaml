@@ -1,0 +1,58 @@
+table:
+  name: claim_context_last_update
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: updated_by
+select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - updated_at
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - updated_at
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - updated_at
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - updated_at
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - updated_at
+        - id
+        - updated_by
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""

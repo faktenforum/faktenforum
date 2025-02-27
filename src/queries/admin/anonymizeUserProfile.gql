@@ -1,0 +1,20 @@
+mutation anonymizeUserProfile($id: uuid!, $username: String!) {
+  updateUserByPk(
+    pkColumns: { id: $id }
+    _set: {
+      bio: null
+      email: $username
+      firstName: null
+      lastName: null
+      mobileNumber: null
+      profileImage: $id
+      pronouns: null
+      deleted: true
+    }
+  ) {
+    id
+  }
+  deleteUserHistory(where: { id: { _eq: $id } }) {
+    affectedRows
+  }
+}

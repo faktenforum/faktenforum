@@ -14,14 +14,6 @@ object_relationships:
   - name: updatedByUser
     using:
       foreign_key_constraint_on: updated_by
-array_relationships:
-  - name: originHistories
-    using:
-      foreign_key_constraint_on:
-        column: id
-        table:
-          name: origin_history
-          schema: public
 insert_permissions:
   - role: administrator
     permission:
@@ -226,6 +218,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -241,6 +234,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -256,6 +250,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -281,6 +276,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -299,6 +295,7 @@ update_permissions:
     permission:
       columns:
         - archive_url
+        - deleted
         - excerpt
         - file_id
         - remarks
@@ -317,46 +314,4 @@ update_permissions:
       check: null
       set:
         updated_by: x-hasura-User-Id
-    comment: ""
-delete_permissions:
-  - role: administrator
-    permission:
-      filter: {}
-    comment: ""
-  - role: editor
-    permission:
-      filter: {}
-    comment: ""
-  - role: junior
-    permission:
-      filter:
-        claim:
-          _and:
-            - internal:
-                _eq: false
-            - created_by:
-                _eq: X-Hasura-User-Id
-            - status:
-                _nin:
-                  - checked
-                  - published
-    comment: ""
-  - role: moderator
-    permission:
-      filter:
-        claim:
-          internal:
-            _eq: false
-    comment: ""
-  - role: senior
-    permission:
-      filter:
-        claim:
-          _and:
-            - internal:
-                _eq: false
-            - status:
-                _nin:
-                  - checked
-                  - published
     comment: ""

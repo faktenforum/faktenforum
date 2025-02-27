@@ -60,4 +60,22 @@ else
     echo "Skipping metadata second round."
 fi
 
+# New trigger section
+: ${APPLY_TRIGGERS:=false}
+: ${POSTGRES_HOST:=postgres}
+: ${POSTGRES_PORT:=5432}
+: ${POSTGRES_USER:=postgres}
+: ${POSTGRES_PASSWORD:=postgres}
+: ${POSTGRES_DATABASE:=postgres}
+
+if [ "$APPLY_TRIGGERS" = "true" ]; then
+    echo "Applying database triggers..."
+    for f in ./triggers/*.sql; do
+        echo "Applying trigger: $f"
+        PGPASSWORD=$POSTGRES_PASSWORD psql -q -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DATABASE -f "$f"
+    done
+else
+    echo "Skipping trigger application."
+fi
+
 
