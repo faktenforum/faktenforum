@@ -183,10 +183,21 @@ export class AuthService {
       const response = await this.kratosIdentityApi.patchIdentity({
         id: userId,
         jsonPatch: [
+          //users have to have only on eemail adresss so it save to asume that the first one is the verified one
           {
             op: "replace",
-            path: "/state",
-            value: "active"
+            path: "/verifiable_addresses/0/verified",
+            value: true
+          },
+          {
+            op: "replace",
+            path: "/verifiable_addresses/0/status",
+            value: "completed"
+          },
+          {
+            op: "replace",
+            path: "/verifiable_addresses/0/verified_at",
+            value: new Date().toISOString()
           }
         ]
       });

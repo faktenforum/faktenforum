@@ -21,7 +21,9 @@ type Mutation {
 type Mutation {
   verifiyUserAccount(userId: uuid!): SuccessInfo
 }
-
+type Mutation {
+  requestVerificationCode(email: String!): SuccessInfo
+}
 enum Language {
   en
   de

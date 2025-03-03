@@ -139,6 +139,26 @@ actions:
     permissions:
       - role: administrator
     comment: This Action verifies a user account
+  - name: requestVerificationCode
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/request-verification-code'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "email": {{$body.input.email}}
+            }
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: administrator
+    comment: This Action sends a new verification code to the user's email
 custom_types:
   enums:
     - name: Language
