@@ -2,7 +2,7 @@ import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
 import type { Session } from "@ory/kratos-client";
-import { Configuration, IdentityApi, type Identity } from "@ory/kratos-client";
+import { Configuration, IdentityApi, type Identity, FrontendApi } from "@ory/kratos-client";
 import type { UserRole } from "~/models";
 import { Logger } from "@tsed/common";
 
@@ -56,10 +56,17 @@ export class AuthService {
 
   kratosSessionUrl: URL;
   kratosIdentityApi: IdentityApi;
+  kratosFrontendApi: FrontendApi;
 
   constructor(envService: EnvService) {
     this.kratosSessionUrl = new URL(`${envService.kratosPublicUrl}/sessions/whoami`);
-    this.kratosIdentityApi = new IdentityApi(new Configuration({ basePath: envService.kratosAdminUrl }));
+    const config = new Configuration({
+      basePath: envService.kratosAdminUrl,
+      baseOptions: { validateStatus: () => true }
+    });
+
+    this.kratosIdentityApi = new IdentityApi(config);
+    this.kratosFrontendApi = new FrontendApi(config);
   }
 
   async getUserSession(sessionCookie: string): Promise<Session> {
@@ -145,5 +152,66 @@ export class AuthService {
     }
 
     return await response.json();
+  }
+
+  async requestVerificationCode(email: string): Promise<void> {
+    try {
+      const flow = await this.kratosFrontendApi.createNativeVerificationFlow();
+
+      const response = await this.kratosFrontendApi.updateVerificationFlow({
+        flow: flow.data.id,
+        updateVerificationFlowBody: {
+          email,
+          method: "code"
+        }
+      });
+
+      if (response.status !== 200 || !response.data) {
+        throw new Exception(
+          response.status,
+          response.data?.error?.message || "Failed to resend verification code"
+        );
+      }
+    } catch (error) {
+      this.logger.error("Verification code resend failed", error);
+      throw new Exception(500, "Failed to resend verification code");
+    }
+  }
+
+  async activateUser(userId: string): Promise<Identity> {
+    try {
+      const response = await this.kratosIdentityApi.patchIdentity({
+        id: userId,
+        jsonPatch: [
+          //users have to have only on eemail adresss so it save to asume that the first one is the verified one
+          {
+            op: "replace",
+            path: "/verifiable_addresses/0/verified",
+            value: true
+          },
+          {
+            op: "replace",
+            path: "/verifiable_addresses/0/status",
+            value: "completed"
+          },
+          {
+            op: "replace",
+            path: "/verifiable_addresses/0/verified_at",
+            value: new Date().toISOString()
+          }
+        ]
+      });
+
+      if (response.status !== 200 || !response.data) {
+        const errorDetails = response.data?.error?.message || JSON.stringify(response.data);
+        this.logger.error(`Activation failed: ${errorDetails}`);
+        throw new Exception(response.status, `Kratos error: ${errorDetails}`);
+      }
+
+      return response.data;
+    } catch (error) {
+      this.logger.error("User activation failed", error);
+      throw new Exception(error.status || 500, error.message || "Failed to activate user");
+    }
   }
 }

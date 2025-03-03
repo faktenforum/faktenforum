@@ -5,6 +5,7 @@
 export * from "./Claim";
 export * from "./Session";
 export * from "./User";
+export * from "./requests/ActivateAccountRequest";
 export * from "./requests/CalculateClaimWorthiness";
 export * from "./requests/DeleteFileRequest";
 export * from "./requests/DeleteUserRequest";
@@ -12,6 +13,7 @@ export * from "./requests/FileUploadFormData";
 export * from "./requests/GetUserRoleRequest";
 export * from "./requests/OnClaimStatusUpdatedRequest";
 export * from "./requests/RegistrationRequest";
+export * from "./requests/RequestVerifcationCode";
 export * from "./requests/SubmissionRequest";
 export * from "./requests/UpdateUserRoleRequest";
 export * from "./responses/FileUploadResponse";
