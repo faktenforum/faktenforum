@@ -1,4 +1,20 @@
 actions:
+  - name: accountDetails
+    definition:
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/get-user-account-details'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input}}'
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: administrator
+    comment: Get Roles of users by array of user ids
   - name: blockRoomMessage
     definition:
       kind: synchronous
@@ -103,22 +119,46 @@ actions:
     permissions:
       - role: administrator
     comment: Update user role
-  - name: userRole
+  - name: verifiyUserAccount
     definition:
-      kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/get-user-role'
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/activate-account'
+      forward_client_headers: true
       headers:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
       request_transform:
         body:
           action: transform
-          template: '{{$body.input}}'
+          template: |-
+            {
+              "userId": {{$body.input.userId}}
+            }
         template_engine: Kriti
         version: 2
     permissions:
       - role: administrator
-    comment: Get Roles of users by array of user ids
+    comment: This Action verifies a user account
+  - name: requestVerificationCode
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/request-verification-code'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "email": {{$body.input.email}}
+            }
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: administrator
+    comment: This Action sends a new verification code to the user's email
 custom_types:
   enums:
     - name: Language
@@ -165,11 +205,11 @@ custom_types:
     - name: TextPayloadInput
   objects:
     - name: UserWithRole
-    - name: UserRoleResponse
+    - name: AccountDetailsResponse
       relationships:
         - field_mapping:
             id: id
-          name: UserToUserRole
+          name: User
           remote_table:
             name: user
             schema: public
