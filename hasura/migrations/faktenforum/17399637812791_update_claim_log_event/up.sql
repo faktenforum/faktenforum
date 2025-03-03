@@ -34,7 +34,7 @@ BEGIN
         ) AS keys
     ) 
     LOOP
-        IF key IN ('id','deleted','updated_at', 'updated_by', 'created_at', 'created_by', 'sys_period','submitter_notes','index') THEN
+        IF key IN ('id','claim_id','deleted','updated_at', 'updated_by', 'created_at', 'created_by', 'sys_period','submitter_notes','index') THEN
             CONTINUE;
         END IF;
         IF (p_old ->> key) IS DISTINCT FROM (p_new ->> key) THEN
@@ -108,24 +108,12 @@ BEGIN
         DELETE FROM public.origin WHERE id = NEW.id;
     END IF;
 
-
-    INSERT INTO public.event (
-        claim_id,
-        user_id,
-        action,
-        table_name,
-        created_at,
-        entry_id,
-        content
-    )
-    VALUES (
-        NEW.claim_id,
-        COALESCE((NEW->>'updated_by')::uuid, (NEW->>'created_by')::uuid, null),
+    PERFORM public.log_generic_event(
+        to_jsonb(OLD),
+        to_jsonb(NEW),
+        NEW.claim_id,  -- different claim_id source
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
-        TG_TABLE_NAME,
-        NOW(),
-        NEW.id,
-        '{}'::jsonb
+        TG_TABLE_NAME
     );
     RETURN COALESCE(NEW, OLD);
 END;
