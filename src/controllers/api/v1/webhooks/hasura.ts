@@ -96,11 +96,13 @@ export class HasuraWebHookController {
     };
   }
 
-  @Post("/get-user-role")
+  @Post("/get-user-account-details")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
-  async getUsersRoles(@BodyParams() body: GetUserRoleRequest) {
+  async getUsersWithAccountDetails(@BodyParams() body: GetUserRoleRequest) {
+    this.logger.warn(`[HasuraWebHookController] getUsersWithAccountDetails: ${JSON.stringify(body)}`);
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
+    this.logger.warn(`[HasuraWebHookController] getUsersWithAccountDetails: ${JSON.stringify(result)}`);
     return result.identities.map((user) => ({
       id: user.id,
       role: user.metadata_public.role,
