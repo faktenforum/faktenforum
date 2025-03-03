@@ -92,7 +92,8 @@ export class HasuraWebHookController {
       email: user.traits.email,
       username: user.traits.username,
       role: user.metadata_public.role,
-      lang: user.metadata_public.lang ?? DEFAULT_LANGUAGE
+      lang: user.metadata_public.lang ?? DEFAULT_LANGUAGE,
+      verified: !!user.verifiable_addresses?.[0]?.verified
     };
   }
 
@@ -100,9 +101,7 @@ export class HasuraWebHookController {
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
   async getUsersWithAccountDetails(@BodyParams() body: GetUserRoleRequest) {
-    this.logger.warn(`[HasuraWebHookController] getUsersWithAccountDetails: ${JSON.stringify(body)}`);
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
-    this.logger.warn(`[HasuraWebHookController] getUsersWithAccountDetails: ${JSON.stringify(result)}`);
     return result.identities.map((user) => ({
       id: user.id,
       role: user.metadata_public.role,

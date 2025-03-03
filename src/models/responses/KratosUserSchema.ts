@@ -19,5 +19,9 @@ export class KratosUserSchema {
 
   @Property()
   @Required()
+  verified: boolean;
+
+  @Property()
+  @Required()
   lang: string;
 }
