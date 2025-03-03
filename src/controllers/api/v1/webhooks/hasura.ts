@@ -11,7 +11,9 @@ import {
   DeleteUserRequest,
   DeleteFileRequest,
   GetUserRoleRequest,
-  RequestSucessInfo
+  RequestSucessInfo,
+  ActivateAccountRequest,
+  ResendVerificationRequest
 } from "~/models";
 
 import {
@@ -243,6 +245,32 @@ export class HasuraWebHookController {
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Error deleting user: ${error.message}`);
       throw error;
+    }
+  }
+
+  @Post("/activate-account")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  async activateAccount(@BodyParams() body: { userId: string }) {
+    try {
+      await this.authService.activateUser(body.userId);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
+      return { success: false };
+    }
+  }
+
+  @Post("/request-verification-code")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  async resendVerificationEmail(@BodyParams() body: { email: string }) {
+    try {
+      await this.authService.requestVerificationCode(body.email);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Resend failed: ${error.message}`);
+      return { success: false, error: error.message };
     }
   }
 }
