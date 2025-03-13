@@ -47,6 +47,11 @@ BEGIN
         END IF;
     END LOOP;
 
+    -- If there are no changes which are for intrest of the user, don't create an event
+    IF p_operation = 'UPDATE' AND v_changes = '{}'::jsonb THEN
+        RETURN;
+    END IF;
+
     INSERT INTO public.event (
         claim_id,
         user_id,
@@ -84,7 +89,7 @@ BEGIN
         NEW.id,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
-        '{submitter_notes,process_id}'::text[],
+        '{submitter_notes,process_id,last_context_update_id}'::text[],
         null
     );
     RETURN COALESCE(NEW, OLD);
@@ -176,7 +181,10 @@ BEGIN
         COALESCE(NEW.claim_id, OLD.claim_id),
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
-        null
+        null,
+        jsonb_build_object(
+            'category_name', COALESCE(NEW.category_name, OLD.category_name)
+        )
     );
     
     RETURN COALESCE(NEW, OLD);
