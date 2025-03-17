@@ -6,7 +6,8 @@
     "./src/decorators",
     "./src/middlewares",
     "./src/models",
-    "./src/utils"
+    "./src/utils",
+    "./src/exceptionfilters"
   ],
   "exclude": [
     "__mock__",

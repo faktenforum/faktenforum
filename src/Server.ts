@@ -12,6 +12,7 @@ import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
 import { FileService } from "./services";
 import { SetSecurityResponseHeaders } from "~/middlewares";
+
 import helmet from "helmet";
 
 @Configuration({
@@ -20,10 +21,8 @@ import helmet from "helmet";
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE
   disableComponentsScan: true,
-  mount: {
-    "/api/v1": [...Object.values(apiV1)],
-    "/api/": [...Object.values(pages)]
-  },
+  mount: { "/api/v1": [...Object.values(apiV1)], "/api/": [...Object.values(pages)] },
+
   middlewares: [
     SetSecurityResponseHeaders,
     "cors",
