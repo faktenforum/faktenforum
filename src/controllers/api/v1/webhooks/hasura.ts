@@ -11,9 +11,7 @@ import {
   DeleteUserRequest,
   DeleteFileRequest,
   GetUserRoleRequest,
-  RequestSucessInfo,
-  ActivateAccountRequest,
-  ResendVerificationRequest
+  RequestSucessInfo
 } from "~/models";
 
 import {
@@ -186,9 +184,7 @@ export class HasuraWebHookController {
     this.logger.info(`[HasuraWebHookController] block Request Headers: ${JSON.stringify(body)}`);
 
     await this.matrixService.blockMessage(body.roomId, body.messageId, body.userName, body.userRole);
-    return {
-      success: true
-    };
+    return { success: true };
   }
 
   private getSpaceName(status: ClaimStatus, internal: boolean) {

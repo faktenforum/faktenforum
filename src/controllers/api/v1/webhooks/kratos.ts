@@ -26,7 +26,6 @@ import type {
 } from "~/generated/graphql";
 
 import { Logger } from "@tsed/common";
-import { BadRequest } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -55,9 +54,7 @@ export class KratosWebHookController {
     let chatUsername = null;
     try {
       //Generate Avatar
-      const avatar = createAvatar(glass, {
-        seed: body.traits.username
-      });
+      const avatar = createAvatar(glass, { seed: body.traits.username });
       const result = await this.fileService.saveFile(body.id, avatar.toString(), undefined, {
         name: `avatar-${body.traits.username}.svg`,
         "Content-Type": "image/svg+xml"
@@ -94,9 +91,7 @@ export class KratosWebHookController {
       if (id) {
         await this.hasuraService.adminRequest<DeleteUserByPkMutation, DeleteUserByPkMutationVariables>(
           DeleteUserByPkDocument,
-          {
-            id
-          }
+          { id }
         );
       }
       if (chatUsername) {
@@ -114,12 +109,10 @@ export class KratosWebHookController {
       const result = await this.hasuraService.adminRequest<
         GetUserByUsernameQuery,
         GetUserByUsernameQueryVariables
-      >(GetUserByUsernameDocument, {
-        username: body.traits.username
-      });
+      >(GetUserByUsernameDocument, { username: body.traits.username });
 
       if (result.user.length > 0) {
-        ctx.response.status(400).body({
+        const response = {
           messages: [
             {
               messages: [
@@ -127,31 +120,20 @@ export class KratosWebHookController {
                   id: 4000007,
                   text: "An account with the same identifier (email, phone, username, ...) exists already.",
                   type: "error",
-                  context: {
-                    field: "username",
-                    value: body.traits.username
-                  }
+                  context: { field: "username", value: body.traits.username }
                 }
               ]
             }
           ]
-        });
+        };
+        ctx.response.status(400).body(response);
         return;
       }
 
-      return {
-        identity: {
-          metadata_public: {
-            role: UserRole.Aspirant,
-            lang: DEFAULT_LANGUAGE
-          }
-        }
-      };
+      return { identity: { metadata_public: { role: UserRole.Aspirant, lang: DEFAULT_LANGUAGE } } };
     } catch (error) {
       this.logger.error("Pre-registration error", error);
-      ctx.response.status(500).body({
-        error: "Internal server error"
-      });
+      ctx.response.status(500).body({ error: "Internal server error" });
     }
   }
 }
