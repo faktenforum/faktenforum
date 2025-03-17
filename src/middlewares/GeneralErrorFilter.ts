@@ -27,7 +27,11 @@ export class GeneralErrorFilter implements ExceptionFilterMethods {
       message: error.message,
       status: error.status || 500,
       errors: this.getErrors(error),
-      stack: this.envService.env === "development" ? error.stack : undefined
+      // Only show stack trace in development mode for errors with status code 500 or higher
+      stack:
+        this.envService.env === "development" && (!error.status || error.status >= 500)
+          ? error.stack
+          : undefined
     };
   }
 
