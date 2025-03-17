@@ -1,0 +1,90 @@
+{
+    "description": "Submission to faktenforum platform",
+    "type": "object",
+    "required": [
+        "id",
+        "createdAt",
+        "origins"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "id": {
+            "description": "Auto generated uuid from database",
+            "type": "string",
+            "format": "uuid"
+        },
+        "createdAt": {
+            "description": "Timestamp of submission",
+            "type": "string",
+            "format": "date-time"
+        },
+        "submitterNotes": {
+            "description": "Notes from submitter",
+            "type": "string"
+        },
+        "origins": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "createdAt"
+                ],
+                "additionalProperties": true,
+                "properties": {
+                    "id": {
+                        "description": "Auto generated uuid from database",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "createdAt": {
+                        "description": "Timestamp of origin creation",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "url": {
+                        "description": "URL of origin",
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "file": {
+                        "description": "File object submitted by user",
+                        "type": "object",
+                        "required": [
+                            "eTag",
+                            "mimeType",
+                            "name",
+                            "id",
+                            "size"
+                        ],
+                        "additionalProperties": true,
+                        "properties": {
+                            "eTag": {
+                                "type": "string"
+                            },
+                            "mimeType": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "size": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

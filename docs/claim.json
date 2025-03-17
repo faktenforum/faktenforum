@@ -1,0 +1,355 @@
+{
+    "type": "object",
+    "required": [
+        "id",
+        "createdAt",
+        "origins"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "description": "Auto generated uuid from database",
+            "type": "string",
+            "format": "uuid"
+        },
+        "submitterNotes": {
+            "description": "Notes from submitter",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "createdAt": {
+            "description": "Timestamp of claim creation",
+            "type": "string",
+            "format": "date-time"
+        },
+        "origins": {
+            "description": "List of Origins of the claim",
+            "type": "array",
+            "items": {
+                "description": "Origin of the claim",
+                "type": "object",
+                "required": [
+                    "id",
+                    "createdAt"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "description": "Auto generated uuid from database",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "createdAt": {
+                        "description": "Timestamp of origin creation",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "url": {
+                        "description": "Source URL of origin",
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "file": {
+                        "description": "File object submitted by user",
+                        "type": "object",
+                        "required": [
+                            "eTag",
+                            "mimeType",
+                            "name",
+                            "id",
+                            "size"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "eTag": {
+                                "type": "string"
+                            },
+                            "mimeType": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "size": {
+                                "type": "integer"
+                            },
+                            "transcription": {
+                                "oneOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "index": {
+                        "description": "Index of the origin in the claim",
+                        "type": "integer"
+                    },
+                    "remarks": {
+                        "description": "Remarks made by faktenforum users",
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "ratingLabelName": {
+            "description": "Rating label name",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "ratingStatement": {
+            "description": "Rating statement",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "ratingSummary": {
+            "description": "Explanation of the rating",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "synopsis": {
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "facts": {
+            "type": "array",
+            "description": "List of facts in context of the claim",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "text",
+                    "createdAt"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "description": "Auto generated uuid from database",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "index": {
+                        "description": "Index of the fact in the claim",
+                        "type": "integer"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "description": "Timestamp of fact creation",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "sources": {
+                        "description": "List of sources of the fact",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "createdAt"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "excerpt": {
+                                    "description": "Excerpt of the source made by faktenforum users",
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "createdAt": {
+                                    "description": "Timestamp of source creation",
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "archiveUrl": {
+                                    "description": "Archive URL of the source entered by faktenforum users",
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "id": {
+                                    "description": "Auto generated uuid from database",
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "index": {
+                                    "description": "Index of the source in the fact",
+                                    "type": "integer"
+                                },
+                                "remarks": {
+                                    "description": "Remarks made by faktenforum users",
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "description": "URL of the source",
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "file": {
+                                    "type": "object",
+                                    "description": "File object of the source",
+                                    "required": [
+                                        "eTag",
+                                        "mimeType",
+                                        "name",
+                                        "id",
+                                        "size",
+                                        "createdAt"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "id": {
+                                            "description": "Auto generated uuid from database",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "createdAt": {
+                                            "description": "Timestamp of file creation",
+                                            "type": "string"
+                                        },
+                                        "eTag": {
+                                            "description": "ETag of the file",
+                                            "type": "string"
+                                        },
+                                        "mimeType": {
+                                            "description": "MIME type of the file",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "description": "Name of the file",
+                                            "type": "string"
+                                        },
+                                        "size": {
+                                            "description": "Size of the file",
+                                            "type": "integer"
+                                        },
+                                        "transcription": {
+                                            "description": "Transcription of the file not used yet",
+                                            "oneOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "internal": {
+            "description": "Internal flag of the claim shows editorial or community claim",
+            "type": "boolean"
+        },
+        "publishingUrl": {
+            "description": "Publishing URL of the fact check",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "processId": {
+            "description": "Process ID of claim automatically generated by faktenforum",
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "status": {
+            "description": "Status of the claim, submitted, published, rejected, etc.",
+            "type": "string"
+        },
+        "shortId": {
+            "description": "Short ID of the claim",
+            "type": "string"
+        }
+    }
+}
