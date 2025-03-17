@@ -1,0 +1,81 @@
+[
+  {
+    "id": "dd8c00ea-2fd6-4542-9ab7-e99face84172",
+    "createdAt": "2024-10-21T13:26:12.237924+00:00",
+    "submitterNotes": "Türkei trete aus Nato aus: Der türkische Präsident Recep Tayyip Erdoğan habe gesagt, die Türkei trete aus der Nato aus. Auf X, Tiktok, Telegram",
+    "origins": [
+      {
+        "id": "0f201cb6-f2b5-4c63-a609-6764663e8dfc",
+        "createdAt": "2024-10-21T13:31:16.840143+00:00",
+        "url": "https://t.me/infoNeueZeit/115034",
+        "file": null
+      },
+      {
+        "id": "e06acd1b-f5d1-4c72-8f93-dd0ed84f2057",
+        "createdAt": "2024-10-21T13:32:29.483216+00:00",
+        "url": "https://x.com/DelphineSankara/status/1821288201551818753",
+        "file": null
+      },
+      {
+        "id": "7b40e968-6a67-45c5-b310-bfcbad4566fb",
+        "createdAt": "2024-10-21T13:30:31.189246+00:00",
+        "url": "https://www.tiktok.com/@antjebiesel/photo/7417775841603538208",
+        "file": {
+          "id": "86b2c6fd-e56b-4752-a0b1-fccd0f77c609",
+          "createdAt": "2024-10-21T13:33:14.686277+00:00",
+          "eTag": "\"0a2a831412283c9815394b2591ec6f56\"",
+          "mimeType": "image/png",
+          "name": "Bildschirmfoto 2024-10-08 um 16.13.52.png",
+          "size": 1141467,
+          "transcription": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "85d1d083-8f6d-425b-b92d-2af5a6fb1db2",
+    "createdAt": "2025-03-06T19:23:41.941955+00:00",
+    "submitterNotes": "",
+    "origins": [
+      {
+        "id": "ee339ed4-496a-4d49-8cb8-d853781d0831",
+        "createdAt": "2025-03-06T19:23:41.941955+00:00",
+        "url": null,
+        "file": {
+          "id": "e0005cf3-e066-44dc-970f-6b87e905e41f",
+          "createdAt": "2025-03-06T19:23:41.941955+00:00",
+          "eTag": "52f30b6cf0d6e8f392a723b6985f2118",
+          "mimeType": "image/png",
+          "name": "IMG_1870.png",
+          "size": 915896,
+          "transcription": null
+        }
+      },
+      {
+        "id": "fcf6fe84-3235-4e75-b86a-64ee3fc8929d",
+        "createdAt": "2025-03-07T08:37:43.699378+00:00",
+        "url": "https://www.stern.de/panorama/wissen/mitten-im-tschernobylreaktor-gedeiht-ein-schwarzer-pilz---er-ernaehrt-sich-von-der-strahlung--9143054.html",
+        "file": null
+      },
+      {
+        "id": "dfcae787-94c8-4a0c-970e-103c248ee6c1",
+        "createdAt": "2025-03-07T08:40:49.973758+00:00",
+        "url": "https://www.youtube.com/watch?v=bi_Fl6MtqoI",
+        "file": null
+      }
+    ]
+  },
+  {
+    "id": "ad4d5a83-c245-44d3-9ed8-b20083cc1ddc",
+    "createdAt": "2025-03-10T09:44:16.961058+00:00",
+    "submitterNotes": null,
+    "origins": [
+      {
+        "id": "dcf65a5c-bcc1-4371-90cb-edaf510620a3",
+        "createdAt": "2025-03-10T09:46:08.081429+00:00",
+        "url": "https://www.tiktok.com/@alice_weidel_fan/video/7478794085277388054",
+        "file": null
+      }
+    ]
+  }
+]
