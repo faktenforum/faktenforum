@@ -23,6 +23,7 @@ import {
 } from "~/services";
 import { Identity } from "@ory/kratos-client";
 import { AnonymizeUserProfileDocument } from "~/generated/graphql";
+import { BadRequest, Exception, InternalServerError } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -79,28 +80,71 @@ export class HasuraAccountWebHookController {
   async deleteUser(@BodyParams() body: DeleteUserRequest) {
     try {
       this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
+
       // Get username from id
-      const identity = await this.authService.getUserIdentity(body.userId);
+      let identity;
+      try {
+        identity = await this.authService.getUserIdentity(body.userId);
+        if (!identity) {
+          throw new BadRequest(`User with ID ${body.userId} not found`);
+        }
+      } catch (error) {
+        this.logger.error(`[HasuraWebHookController] Error fetching user identity: ${error.message}`);
+        throw new BadRequest(`Failed to retrieve user identity: ${error.message}`);
+      }
+
       const username = identity.traits.username;
       this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
+
       // Delete the user from Kratos using the Admin API
       this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
-      await this.authService.deleteUser(body.userId);
+      try {
+        await this.authService.deleteUser(body.userId);
+      } catch (error) {
+        this.logger.error(`[HasuraWebHookController] Error deleting user from Kratos: ${error.message}`);
+        throw new InternalServerError(`Failed to delete user from authentication system: ${error.message}`);
+      }
+
       // anonymize user profile
       this.logger.debug(`[HasuraWebHookController] Anonymizing user profile`);
-      await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
-        id: body.userId,
-        username: body.userId
-      });
+      try {
+        await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
+          id: body.userId,
+          username: body.userId
+        });
+      } catch (error) {
+        this.logger.error(`[HasuraWebHookController] Error anonymizing user profile: ${error.message}`);
+        // Continue with deletion process but log the error
+        this.logger.warn(
+          `[HasuraWebHookController] Continuing deletion process despite anonymization failure`
+        );
+      }
+
       // deactivate user in matrix and set anonymous username
       this.logger.debug(`[HasuraWebHookController] Deactivating user in matrix`);
-      await this.matrixService.deleteUser(username, body.userId);
+      try {
+        await this.matrixService.deleteUser(username, body.userId);
+      } catch (error) {
+        this.logger.error(`[HasuraWebHookController] Error deactivating user in matrix: ${error.message}`);
+        // Continue with deletion process but log the error
+        this.logger.warn(
+          `[HasuraWebHookController] Continuing deletion process despite matrix deactivation failure`
+        );
+      }
+
       this.logger.debug(`[HasuraWebHookController] Successfully deleted user`);
       // Remove specific user data from Hasura
       return { success: true };
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Error deleting user: ${error.message}`);
-      throw error;
+
+      // If it's already a TS.ED exception, just rethrow it
+      if (error instanceof Exception) {
+        throw error;
+      }
+
+      // Otherwise, wrap it in an InternalServerError
+      throw new InternalServerError(`Failed to delete user: ${error.message}`);
     }
   }
 
