@@ -2,7 +2,7 @@ actions:
   - name: accountDetails
     definition:
       kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/get-user-account-details'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/hasura/account/get-details'
       headers:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
@@ -45,7 +45,7 @@ actions:
   - name: deleteAccount
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/delete-account'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/hasura/account/delete'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -105,7 +105,7 @@ actions:
   - name: updateUserRole
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/update-user-role'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/hasura/account/update-role'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -122,7 +122,7 @@ actions:
   - name: verifiyUserAccount
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/activate-account'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/hasura/account/activate'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -142,7 +142,7 @@ actions:
   - name: requestVerificationCode
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/request-verification-code'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/hasura/account/request-verification-code'
       forward_client_headers: true
       headers:
         - name: x-api-key

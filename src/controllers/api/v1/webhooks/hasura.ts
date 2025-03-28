@@ -95,27 +95,6 @@ export class HasuraWebHookController {
     };
   }
 
-  @Post("/get-user-account-details")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
-  async getUsersWithAccountDetails(@BodyParams() body: GetUserRoleRequest) {
-    const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
-    return result.identities.map((user) => ({
-      id: user.id,
-      role: user.metadata_public.role,
-      verified: !!user.verifiable_addresses?.[0]?.verified
-    }));
-  }
-
-  @Post("/update-user-role")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
-  async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
-    this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
-    const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
-    return this.transformKratosUser(kratosUser as Identity);
-  }
-
   @Post("/on-claim-status-changed")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
@@ -212,62 +191,5 @@ export class HasuraWebHookController {
     this.logger.info(`[HasuraWebHookController] calculateForAllClaims`);
     this.claimWorthinessService.inferAllnewClaims();
     return;
-  }
-
-  @Post("/delete-account")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
-  async deleteUser(@BodyParams() body: DeleteUserRequest) {
-    try {
-      this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
-      // Get username from id
-      const identity = await this.authService.getUserIdentity(body.userId);
-      const username = identity.traits.username;
-      this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
-      // Delete the user from Kratos using the Admin API
-      this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
-      await this.authService.deleteUser(body.userId);
-      // anonymize user profile
-      this.logger.debug(`[HasuraWebHookController] Anonymizing user profile`);
-      await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
-        id: body.userId,
-        username: body.userId
-      });
-      // deactivate user in matrix and set anonymous username
-      this.logger.debug(`[HasuraWebHookController] Deactivating user in matrix`);
-      await this.matrixService.deleteUser(username, body.userId);
-      this.logger.debug(`[HasuraWebHookController] Successfully deleted user`);
-      // Remove specific user data from Hasura
-      return { success: true };
-    } catch (error) {
-      this.logger.error(`[HasuraWebHookController] Error deleting user: ${error.message}`);
-      throw error;
-    }
-  }
-
-  @Post("/activate-account")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
-  async activateAccount(@BodyParams() body: { userId: string }) {
-    try {
-      await this.authService.activateUser(body.userId);
-      return { success: true };
-    } catch (error) {
-      this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
-      return { success: false };
-    }
-  }
-
-  @Post("/request-verification-code")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
-  async resendVerificationEmail(@BodyParams() body: { email: string }) {
-    try {
-      await this.authService.requestVerificationCode(body.email);
-      return { success: true };
-    } catch (error) {
-      this.logger.error(`[HasuraWebHookController] Resend failed: ${error.message}`);
-      return { success: false, error: error.message };
-    }
   }
 }

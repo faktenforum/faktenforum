@@ -6,6 +6,7 @@ export * from "./Claim";
 export * from "./Session";
 export * from "./User";
 export * from "./requests/ActivateAccountRequest";
+export * from "./requests/BlockAccountRequest";
 export * from "./requests/CalculateClaimWorthiness";
 export * from "./requests/DeleteFileRequest";
 export * from "./requests/DeleteUserRequest";

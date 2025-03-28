@@ -1,0 +1,175 @@
+import { Controller, Inject } from "@tsed/di";
+import { Logger } from "@tsed/common";
+import { BodyParams, Context, Cookies } from "@tsed/platform-params";
+import { Delete, Get, Post, Returns } from "@tsed/schema";
+import { ApiKeyAccessControlDecorator } from "~/decorators";
+import {
+  UpdateUserRoleRequest,
+  KratosUserSchema,
+  DeleteUserRequest,
+  GetUserRoleRequest,
+  RequestSucessInfo,
+  BlockAccountRequest
+} from "~/models";
+
+import {
+  AuthService,
+  FileService,
+  EnvService,
+  HasuraService,
+  ImageService,
+  MatrixService,
+  ClaimWorthinessService
+} from "~/services";
+import { Identity } from "@ory/kratos-client";
+import { AnonymizeUserProfileDocument } from "~/generated/graphql";
+
+const DEFAULT_LANGUAGE = "de";
+
+@Controller("/webhooks/hasura/account")
+export class HasuraAccountWebHookController {
+  @Inject(FileService)
+  fileService: FileService;
+
+  @Inject(ImageService)
+  imageService: ImageService;
+
+  @Inject(HasuraService)
+  hasuraService: HasuraService;
+
+  @Inject(AuthService)
+  authService: AuthService;
+
+  @Inject(EnvService)
+  envService: EnvService;
+
+  @Inject(MatrixService)
+  matrixService: MatrixService;
+
+  @Inject(ClaimWorthinessService)
+  claimWorthinessService: ClaimWorthinessService;
+
+  @Inject(Logger)
+  logger: Logger;
+
+  @Post("/get-details")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
+  async getUsersWithAccountDetails(@BodyParams() body: GetUserRoleRequest) {
+    const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
+    return result.identities.map((user) => ({
+      id: user.id,
+      role: user.metadata_public.role,
+      verified: !!user.verifiable_addresses?.[0]?.verified
+    }));
+  }
+
+  @Post("/update-role")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
+  async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
+    this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
+    const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
+    return this.transformKratosUser(kratosUser as Identity);
+  }
+
+  @Post("/delete")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
+  async deleteUser(@BodyParams() body: DeleteUserRequest) {
+    try {
+      this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
+      // Get username from id
+      const identity = await this.authService.getUserIdentity(body.userId);
+      const username = identity.traits.username;
+      this.logger.debug(`[HasuraWebHookController] Username: ${username}`);
+      // Delete the user from Kratos using the Admin API
+      this.logger.debug(`[HasuraWebHookController] Deleting user from Kratos`);
+      await this.authService.deleteUser(body.userId);
+      // anonymize user profile
+      this.logger.debug(`[HasuraWebHookController] Anonymizing user profile`);
+      await this.hasuraService.adminRequest(AnonymizeUserProfileDocument, {
+        id: body.userId,
+        username: body.userId
+      });
+      // deactivate user in matrix and set anonymous username
+      this.logger.debug(`[HasuraWebHookController] Deactivating user in matrix`);
+      await this.matrixService.deleteUser(username, body.userId);
+      this.logger.debug(`[HasuraWebHookController] Successfully deleted user`);
+      // Remove specific user data from Hasura
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Error deleting user: ${error.message}`);
+      throw error;
+    }
+  }
+
+  @Post("/activate")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  async activateAccount(@BodyParams() body: { userId: string }) {
+    try {
+      await this.authService.activateUser(body.userId);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
+      return { success: false };
+    }
+  }
+
+  @Post("/request-verification-code")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  async resendVerificationEmail(@BodyParams() body: { email: string }) {
+    try {
+      await this.authService.requestVerificationCode(body.email);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Resend failed: ${error.message}`);
+      return { success: false, error: error.message };
+    }
+  }
+
+  @Post("/block-account")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  async blockAccount(@BodyParams() body: BlockAccountRequest) {
+    try {
+      this.logger.info(
+        `[HasuraWebHookController] ${body.blocked ? "Blocking" : "Unblocking"} user: ${body.userId}`
+      );
+
+      let blockedUntil = null;
+
+      // Update user status in Kratos
+      await this.authService.updateUserBlockStatus(body.userId, body.blocked, blockedUntil);
+
+      // // If blocking, invalidate all sessions for this user
+      // if (body.blocked) {
+      //   await this.authService.revokeAllUserSessions(body.userId);
+      // }
+
+      this.logger.info(
+        `[HasuraWebHookController] Successfully ${body.blocked ? "blocked" : "unblocked"} user: ${body.userId}`
+      );
+      return { success: true };
+    } catch (error) {
+      this.logger.error(
+        `[HasuraWebHookController] Error ${body.blocked ? "blocking" : "unblocking"} user: ${error.message}`
+      );
+      return { success: false, error: error.message };
+    }
+  }
+
+  transformKratosUser(user: Identity) {
+    return {
+      id: user.id,
+      email: user.traits.email,
+      username: user.traits.username,
+      role: user.metadata_public.role,
+      lang: user.metadata_public.lang ?? DEFAULT_LANGUAGE,
+      blocked: user.metadata_public.blocked ?? null,
+      verified: !!user.verifiable_addresses?.[0]?.verified
+    };
+  }
+}
