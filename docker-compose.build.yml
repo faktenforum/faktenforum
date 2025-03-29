@@ -53,7 +53,7 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
-      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_WEBHOOKS_BASE_URL}/session
+      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_WEBHOOKS_BASE_URL}/hasura/auth/session
       HASURA_WEBHOOKS_BASE_URL: ${HASURA_WEBHOOKS_BASE_URL}
       HASURA_WEBHOOKS_API_KEY: ${HASURA_API_KEY}
       HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}

@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
-import { BodyParams, Context, Cookies } from "@tsed/platform-params";
-import { Delete, Get, Post, Returns } from "@tsed/schema";
+import { BodyParams } from "@tsed/platform-params";
+import { Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import {
   UpdateUserRoleRequest,
@@ -12,43 +12,23 @@ import {
   BlockAccountRequest
 } from "~/models";
 
-import {
-  AuthService,
-  FileService,
-  EnvService,
-  HasuraService,
-  ImageService,
-  MatrixService,
-  ClaimWorthinessService
-} from "~/services";
+import { AuthService, HasuraService, MatrixService } from "~/services";
 import { Identity } from "@ory/kratos-client";
 import { AnonymizeUserProfileDocument } from "~/generated/graphql";
-import { BadRequest, Exception, InternalServerError } from "@tsed/exceptions";
+import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
 
 @Controller("/webhooks/hasura/account")
 export class HasuraAccountWebHookController {
-  @Inject(FileService)
-  fileService: FileService;
-
-  @Inject(ImageService)
-  imageService: ImageService;
-
   @Inject(HasuraService)
   hasuraService: HasuraService;
 
   @Inject(AuthService)
   authService: AuthService;
 
-  @Inject(EnvService)
-  envService: EnvService;
-
   @Inject(MatrixService)
   matrixService: MatrixService;
-
-  @Inject(ClaimWorthinessService)
-  claimWorthinessService: ClaimWorthinessService;
 
   @Inject(Logger)
   logger: Logger;

@@ -1,48 +1,19 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
-import { BodyParams, Context, Cookies } from "@tsed/platform-params";
-import { Delete, Get, Post, Returns } from "@tsed/schema";
+import { BodyParams } from "@tsed/platform-params";
+import { Delete, Post, Returns } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
-import {
-  UpdateUserRoleRequest,
-  OnClaimStatusUpdatedRequest,
-  KratosUserSchema,
-  CalculateClaimWorthinessRequest,
-  DeleteUserRequest,
-  DeleteFileRequest,
-  GetUserRoleRequest,
-  RequestSucessInfo
-} from "~/models";
-
-import {
-  AuthService,
-  FileService,
-  EnvService,
-  HasuraService,
-  ImageService,
-  MatrixService,
-  SpaceNames,
-  ClaimWorthinessService
-} from "~/services";
+import { OnClaimStatusUpdatedRequest, DeleteFileRequest } from "~/models";
+import { FileService, EnvService, ImageService, MatrixService, SpaceNames } from "~/services";
 import { ClaimStatus, HasuraOperations, SubmissionStatuses } from "~/utils";
-import { Identity } from "@ory/kratos-client";
-import { AnonymizeUserProfileDocument } from "~/generated/graphql";
 
-const DEFAULT_LANGUAGE = "de";
-
-@Controller("/webhooks")
-export class HasuraWebHookController {
+@Controller("/webhooks/hasura/trigger")
+export class HasuraTriggerWebHookController {
   @Inject(FileService)
   fileService: FileService;
 
   @Inject(ImageService)
   imageService: ImageService;
-
-  @Inject(HasuraService)
-  hasuraService: HasuraService;
-
-  @Inject(AuthService)
-  authService: AuthService;
 
   @Inject(EnvService)
   envService: EnvService;
@@ -50,30 +21,10 @@ export class HasuraWebHookController {
   @Inject(MatrixService)
   matrixService: MatrixService;
 
-  @Inject(ClaimWorthinessService)
-  claimWorthinessService: ClaimWorthinessService;
-
   @Inject(Logger)
   logger: Logger;
 
-  @Get("/session")
-  @(Returns(200, String).ContentType("application/json")) // prettier-ignore
-  async getSessions(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
-    const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
-
-    const session = await this.authService.getUserSession(sessionCookie);
-
-    const hasuraSession = {
-      "X-Hasura-User-Id": session.identity!.id,
-      "X-Hasura-Role": session.identity!.metadata_public.role.toLowerCase(),
-      "X-Hasura-Lang": session.identity!.metadata_public.lang ?? DEFAULT_LANGUAGE,
-      "X-Hasura-Username": session.identity!.traits.username,
-      Expires: session.expires_at
-    };
-    return JSON.stringify(hasuraSession);
-  }
-
-  @Delete("/delete-file")
+  @Delete("/on-delete-file")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async deleteFile(@BodyParams() body: DeleteFileRequest) {
@@ -82,17 +33,6 @@ export class HasuraWebHookController {
       this.imageService.deleteImageVersions(body.id);
     }
     return {}; // Returning an empty object with a 200 status code
-  }
-
-  transformKratosUser(user: Identity) {
-    return {
-      id: user.id,
-      email: user.traits.email,
-      username: user.traits.username,
-      role: user.metadata_public.role,
-      lang: user.metadata_public.lang ?? DEFAULT_LANGUAGE,
-      verified: !!user.verifiable_addresses?.[0]?.verified
-    };
   }
 
   @Post("/on-claim-status-changed")
@@ -145,27 +85,6 @@ export class HasuraWebHookController {
     }
     return { alteredRoom: false }; // Returning an empty object with a 200 status code
   }
-
-  @Post("/block-room-message")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
-  async blockMessage(
-    @BodyParams()
-    body: {
-      roomId: string;
-      messageId: string;
-      userId: string;
-      userRole: string;
-      userName: string;
-    }
-  ) {
-    // Log the request headers
-    this.logger.info(`[HasuraWebHookController] block Request Headers: ${JSON.stringify(body)}`);
-
-    await this.matrixService.blockMessage(body.roomId, body.messageId, body.userName, body.userRole);
-    return { success: true };
-  }
-
   private getSpaceName(status: ClaimStatus, internal: boolean) {
     const isSubmission = SubmissionStatuses.includes(status);
     if (isSubmission) {
@@ -173,23 +92,5 @@ export class HasuraWebHookController {
     } else {
       return internal ? SpaceNames.InternalFactchecks : SpaceNames.CommunityFactchecks;
     }
-  }
-
-  @Post("/calculate-checkworthiness")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(204).ContentType("application/json")) // prettier-ignore
-  async calculateCheckworthiness(@BodyParams() body: CalculateClaimWorthinessRequest): Promise<void> {
-    this.logger.info(`[HasuraWebHookController] calculateCheckworthiness: ${JSON.stringify(body)}`);
-    this.claimWorthinessService.inferClaimWorthiness(body.claimId);
-    return;
-  }
-
-  @Post("/calculate-cw-for-all-claims")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200).ContentType("application/json")) // prettier-ignore
-  async calculateForAllClaims(): Promise<void> {
-    this.logger.info(`[HasuraWebHookController] calculateForAllClaims`);
-    this.claimWorthinessService.inferAllnewClaims();
-    return;
   }
 }
