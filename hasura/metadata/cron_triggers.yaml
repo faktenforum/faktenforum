@@ -1,5 +1,5 @@
 - name: calculateCheckWorthinessForAllClaims
-  webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/hasura/checkworthiness/calculate-all-claims'
+  webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/ai/checkworthiness/calculate-all-claims'
   schedule: 7 1 * * *
   include_in_metadata: true
   payload: {}

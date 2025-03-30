@@ -69,7 +69,7 @@ selfservice:
           hooks:
             - hook: web_hook
               config:
-                url: http://host.docker.internal:8083/api/v1/webhooks/pre-registration
+                url: http://host.docker.internal:8083/api/v1/webhooks/auth/registration/validate
                 method: POST
                 can_interrupt: true
                 body: file:///etc/config/kratos/jsonnet/register.jsonnet
@@ -83,7 +83,7 @@ selfservice:
                     in: header # alternatively "cookie"
             - hook: web_hook
               config:
-                url: http://host.docker.internal:8083/api/v1/webhooks/finalize-registration
+                url: http://host.docker.internal:8083/api/v1/webhooks/auth/registration/finalise
                 method: POST
                 can_interrupt: false
                 body: file:///etc/config/kratos/jsonnet/register.jsonnet

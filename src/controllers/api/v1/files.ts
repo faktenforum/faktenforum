@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { PathParams, BodyParams } from "@tsed/platform-params";
-import { Consumes, Description, Get, Post, Returns, getJsonSchema } from "@tsed/schema";
+import { Consumes, Description, Get, Post, Returns, getJsonSchema, Tags } from "@tsed/schema";
 import { NotFound, Unauthorized, Forbidden } from "@tsed/exceptions";
 import { MultipartFile, Next, Req, Res } from "@tsed/common";
 import { FileService, HasuraService, ImageService } from "~/services";
@@ -52,6 +52,7 @@ export class ClaimsController {
   imageService: ImageService;
 
   @Get("/avatar/:username")
+  @Tags("Files")
   @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
@@ -118,6 +119,7 @@ export class ClaimsController {
     ) // prettier-ignore
   @(Returns(500, String).Description("Internal server error. An unexpected error occurred.") // prettier-ignore
     ) // prettier-ignore
+  @Tags("Files")
   async getFile(
     @PathParams("fileId") fileId: string,
     @Req() request: Request,
@@ -154,6 +156,7 @@ export class ClaimsController {
 
   // route to get file by id and size, Size is in Bucket format xs sm md lg xl
   @Get("/:fileId/:size")
+  @Tags("Files")
   @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.")) // prettier-ignore
@@ -202,6 +205,7 @@ export class ClaimsController {
   }
 
   @Post("/")
+  @Tags("Files")
   @Description("This endpoint allows for uploading a file to the server.")
   @Consumes("multipart/form-data")
   @AccessControlDecorator({})

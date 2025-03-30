@@ -345,7 +345,7 @@ event_triggers:
       interval_sec: 10
       num_retries: 0
       timeout_sec: 60
-    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/hasura/checkworthiness/calculate'
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/ai/checkworthiness/calculate'
     headers:
       - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY
@@ -374,7 +374,7 @@ event_triggers:
       interval_sec: 10
       num_retries: 3
       timeout_sec: 60
-    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/hasura/webhooks/on-claim-status-changed'
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/hasura/webhooks/chat/room/change-claim-room-visibility'
     headers:
       - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY

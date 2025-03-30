@@ -1,8 +1,9 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { Post, Returns } from "@tsed/schema";
+import { Post, Returns, Tags } from "@tsed/schema";
 import { createAvatar } from "@dicebear/core";
 import { glass } from "@dicebear/collection";
+
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, FileService, HasuraService, MatrixService } from "~/services";
@@ -29,8 +30,8 @@ import { Logger } from "@tsed/common";
 
 const DEFAULT_LANGUAGE = "de";
 
-@Controller("/webhooks")
-export class KratosWebHookController {
+@Controller("/webhooks/auth/registration")
+export class AuthRegistrationWebHookController {
   @Inject(HasuraService)
   hasuraService: HasuraService;
 
@@ -46,10 +47,11 @@ export class KratosWebHookController {
   @Inject(Logger)
   logger: Logger;
 
-  @Post("/finalize-registration")
+  @Post("/finalise")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
-  async postFinalizeAcount(@BodyParams() body: RegistrationRequest) {
+  async postfinaliseAcount(@BodyParams() body: RegistrationRequest) {
     let id = null;
     let chatUsername = null;
     try {
@@ -101,7 +103,8 @@ export class KratosWebHookController {
     }
   }
 
-  @Post("/pre-registration")
+  @Post("/validate")
+  @Tags("Auth")
   @Returns(200, RegistrationPreResponse)
   @(Returns(400, Object).ContentType("application/json"))
   async preRegistration(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {

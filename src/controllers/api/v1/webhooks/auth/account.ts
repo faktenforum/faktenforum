@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Post, Returns } from "@tsed/schema";
+import { Post, Returns, Tags } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import {
   UpdateUserRoleRequest,
@@ -19,8 +19,8 @@ import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
 
-@Controller("/webhooks/hasura/account")
-export class HasuraAccountWebHookController {
+@Controller("/webhooks/auth/account")
+export class AuthAccountWebHookController {
   @Inject(HasuraService)
   hasuraService: HasuraService;
 
@@ -34,6 +34,7 @@ export class HasuraAccountWebHookController {
   logger: Logger;
 
   @Post("/get-details")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
   async getUsersWithAccountDetails(@BodyParams() body: GetUserRoleRequest) {
@@ -46,6 +47,7 @@ export class HasuraAccountWebHookController {
   }
 
   @Post("/update-role")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
@@ -55,6 +57,7 @@ export class HasuraAccountWebHookController {
   }
 
   @Post("/delete")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSucessInfo).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
   async deleteUser(@BodyParams() body: DeleteUserRequest) {
@@ -129,6 +132,7 @@ export class HasuraAccountWebHookController {
   }
 
   @Post("/activate")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
   async activateAccount(@BodyParams() body: { userId: string }) {
@@ -142,6 +146,7 @@ export class HasuraAccountWebHookController {
   }
 
   @Post("/request-verification-code")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
   async resendVerificationEmail(@BodyParams() body: { email: string }) {
@@ -155,6 +160,7 @@ export class HasuraAccountWebHookController {
   }
 
   @Post("/block-account")
+  @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
   async blockAccount(@BodyParams() body: BlockAccountRequest) {

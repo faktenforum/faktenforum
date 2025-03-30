@@ -1,14 +1,14 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Delete, Post, Returns } from "@tsed/schema";
+import { Delete, Post, Returns, Tags } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { OnClaimStatusUpdatedRequest, DeleteFileRequest } from "~/models";
 import { FileService, EnvService, ImageService, MatrixService, SpaceNames } from "~/services";
 import { ClaimStatus, HasuraOperations, SubmissionStatuses } from "~/utils";
 
-@Controller("/webhooks/hasura/trigger")
-export class HasuraTriggerWebHookController {
+@Controller("/webhooks/chat/room")
+export class ChatRoomWebHookController {
   @Inject(FileService)
   fileService: FileService;
 
@@ -24,19 +24,9 @@ export class HasuraTriggerWebHookController {
   @Inject(Logger)
   logger: Logger;
 
-  @Delete("/on-delete-file")
+  @Post("/change-claim-room-visibility")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
-  async deleteFile(@BodyParams() body: DeleteFileRequest) {
-    this.fileService.deleteFile(body.id);
-    if (body.mimeType.startsWith("image/")) {
-      this.imageService.deleteImageVersions(body.id);
-    }
-    return {}; // Returning an empty object with a 200 status code
-  }
-
-  @Post("/on-claim-status-changed")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @Tags("Chat")
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async onClaimStatusChanged(@BodyParams() body: object) {
     // Changed type to 'any' for logging
