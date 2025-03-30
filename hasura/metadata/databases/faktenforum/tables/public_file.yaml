@@ -286,7 +286,7 @@ event_triggers:
       interval_sec: 10
       num_retries: 10
       timeout_sec: 60
-    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/hasura/webhooks/delete-file'
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/files/delete'
     headers:
       - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY

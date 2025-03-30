@@ -60,6 +60,7 @@ export class AuthAccountWebHookController {
     };
   }
 
+  @Post("/update-role")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, AccountSchema).ContentType("application/json")) // prettier-ignore

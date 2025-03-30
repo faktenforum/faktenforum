@@ -5,7 +5,7 @@ DROP TRIGGER IF EXISTS log_origin_event ON public.origin;
 DROP TRIGGER IF EXISTS log_source_event ON public.source;
 DROP TRIGGER IF EXISTS log_claim_category_event ON public.claim_category;
 DROP TRIGGER IF EXISTS log_user_event ON public.user;
-
+DROP TRIGGER IF EXISTS log_checkworthiness_event ON public.checkworthiness;
 
 DROP FUNCTION IF EXISTS public.log_claim_event();  
 DROP FUNCTION IF EXISTS public.log_fact_event();
@@ -13,6 +13,7 @@ DROP FUNCTION IF EXISTS public.log_origin_event();
 DROP FUNCTION IF EXISTS public.log_source_event();
 DROP FUNCTION IF EXISTS public.log_claim_category_event();
 DROP FUNCTION IF EXISTS public.log_user_event();
+DROP FUNCTION IF EXISTS public.log_checkworthiness_event();
 -- Only dro(p claim-specific function
 -- Step 2: Create NEW function
 CREATE OR REPLACE FUNCTION public.log_generic_event(
@@ -208,6 +209,27 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;  -- Added proper function termination
 
+CREATE OR REPLACE FUNCTION public.log_checkworthiness_event()
+RETURNS TRIGGER AS $$
+BEGIN
+
+    PERFORM public.log_generic_event(
+        to_jsonb(OLD),
+        to_jsonb(NEW),
+        COALESCE(NEW.claim_id, OLD.claim_id),
+        TG_OP,
+        TG_TABLE_NAME,
+        null,
+        jsonb_build_object(
+            'category', COALESCE(NEW.category, OLD.category),
+            'confidence', COALESCE(NEW.confidence, OLD.confidence)
+        )
+    );
+    
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql;
+
 -- Create Triggers 
 CREATE TRIGGER log_claim_event
 AFTER INSERT OR UPDATE ON public.claim
@@ -234,4 +256,7 @@ CREATE TRIGGER log_user_event
 AFTER INSERT OR UPDATE ON public.user
 FOR EACH ROW EXECUTE FUNCTION public.log_user_event();
 
+CREATE TRIGGER log_checkworthiness_event
+AFTER INSERT OR UPDATE ON public.checkworthiness
+FOR EACH ROW EXECUTE FUNCTION public.log_checkworthiness_event();
 
