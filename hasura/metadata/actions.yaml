@@ -2,7 +2,7 @@ actions:
   - name: accountDetails
     definition:
       kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/get-details'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/details'
       headers:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
@@ -18,7 +18,7 @@ actions:
   - name: accountRole
     definition:
       kind: synchronous
-      handler: http://app.localhost:8000/api/docs/swagger.json
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/role'
       forward_client_headers: true
       request_transform:
         body:
