@@ -4,9 +4,9 @@ type Query {
   ): [AccountDetailsResponse!]!
 }
 
-type Mutation {
+type Query {
   accountRole(
-    getAccountRoleRequestInput: GetAccountRoleRequestInput
+    id: uuid!
   ): GetUserRoleResponse
 }
 

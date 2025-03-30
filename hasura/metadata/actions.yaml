@@ -17,17 +17,19 @@ actions:
     comment: Get Roles of users by array of user ids
   - name: accountRole
     definition:
-      kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/role'
-      forward_client_headers: true
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
       request_transform:
         body:
           action: transform
-          template: '{{$body.input.getAccountRoleRequestInput}}'
+          template: '{{$body.input}}'
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/api/v1/webhooks/auth/account/role'
+        url: '{{$base_url}}/auth/account/role'
         version: 2
     permissions:
       - role: senior
