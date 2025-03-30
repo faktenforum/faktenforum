@@ -1,29 +1,53 @@
 type Query {
-  accountDetails(ids: [uuid]!): [AccountDetailsResponse!]!
+  accountDetails(
+    ids: [uuid]!
+  ): [AccountDetailsResponse!]!
 }
 
 type Mutation {
-  blockRoomMessage(roomId: String!, messageId: String!): BlockRoomMessageOutput
+  accountRole(
+    getAccountRoleRequestInput: GetAccountRoleRequestInput
+  ): GetUserRoleResponse
 }
 
 type Mutation {
-  deleteAccount(userId: uuid!): SuccessInfo!
+  blockRoomMessage(
+    roomId: String!
+    messageId: String!
+  ): BlockRoomMessageOutput
 }
 
 type Mutation {
-  sendMessageToCheckbotMessagePost(textPayloadInput: TextPayloadInput!): CheckbotResponse
+  deleteAccount(
+    userId: uuid!
+  ): SuccessInfo!
 }
 
 type Mutation {
-  updateUserRole(userId: uuid!, role: UserRole!): UserWithRole!
+  requestVerificationCode(
+    email: String!
+  ): SuccessInfo
 }
 
 type Mutation {
-  verifiyUserAccount(userId: uuid!): SuccessInfo
+  sendMessageToCheckbotMessagePost(
+    textPayloadInput: TextPayloadInput!
+  ): CheckbotResponse
 }
+
 type Mutation {
-  requestVerificationCode(email: String!): SuccessInfo
+  updateUserRole(
+    userId: uuid!
+    role: UserRole!
+  ): UserWithRole!
 }
+
+type Mutation {
+  verifiyUserAccount(
+    userId: uuid!
+  ): SuccessInfo
+}
+
 enum Language {
   en
   de
@@ -51,6 +75,10 @@ input SampleInput {
 
 input TextPayloadInput {
   text: String!
+}
+
+input GetAccountRoleRequestInput {
+  id: String!
 }
 
 type UserWithRole {
@@ -93,3 +121,9 @@ type DataListItem {
 type SuccessInfo {
   success: Boolean!
 }
+
+type GetUserRoleResponse {
+  id: String!
+  role: String!
+}
+

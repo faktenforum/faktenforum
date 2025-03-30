@@ -1,6 +1,6 @@
 import { Property, Required, ArrayOf } from "@tsed/schema";
 
-export class GetUserRoleRequest {
+export class GetAccountsDetailsRequest {
   @Property()
   @Required()
   @ArrayOf(String)

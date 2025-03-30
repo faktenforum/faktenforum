@@ -3,7 +3,7 @@ import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
 import { Post, Returns, Tags } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
-import { RequestSucessInfo } from "~/models";
+import { RequestSuccessResponse } from "~/models";
 
 import { MatrixService } from "~/services";
 
@@ -18,7 +18,7 @@ export class ChatMessageWebHookController {
   @Post("/block")
   @Tags("Chat")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async blockMessage(
     @BodyParams()
     body: {

@@ -4,12 +4,14 @@ import { BodyParams } from "@tsed/platform-params";
 import { Post, Returns, Tags } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import {
+  AccountSchema,
   UpdateUserRoleRequest,
-  KratosUserSchema,
   DeleteUserRequest,
-  GetUserRoleRequest,
-  RequestSucessInfo,
-  BlockAccountRequest
+  GetAccountsDetailsRequest,
+  GetAccountRoleRequest,
+  BlockAccountRequest,
+  RequestSuccessResponse,
+  GetUserRoleResponse
 } from "~/models";
 
 import { AuthService, HasuraService, MatrixService } from "~/services";
@@ -33,11 +35,11 @@ export class AuthAccountWebHookController {
   @Inject(Logger)
   logger: Logger;
 
-  @Post("/get-details")
+  @Post("/details")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, [KratosUserSchema]).ContentType("application/json")) // prettier-ignore
-  async getUsersWithAccountDetails(@BodyParams() body: GetUserRoleRequest) {
+  @(Returns(200, [AccountSchema]).ContentType("application/json")) // prettier-ignore
+  async getUsersWithAccountDetails(@BodyParams() body: GetAccountsDetailsRequest) {
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
     return result.identities.map((user) => ({
       id: user.id,
@@ -46,10 +48,21 @@ export class AuthAccountWebHookController {
     }));
   }
 
-  @Post("/update-role")
+  @Post("/role")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, KratosUserSchema).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, GetUserRoleResponse).ContentType("application/json")) // prettier-ignore
+  async getRole(@BodyParams() body: GetAccountRoleRequest) {
+    const result = await this.authService.getUserIdentity(body.id);
+    return {
+      id: result.id,
+      role: result.metadata_public.role
+    };
+  }
+
+  @Tags("Auth")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, AccountSchema).ContentType("application/json")) // prettier-ignore
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
     this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
@@ -59,7 +72,7 @@ export class AuthAccountWebHookController {
   @Post("/delete")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSuccessResponse).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
   async deleteUser(@BodyParams() body: DeleteUserRequest) {
     try {
       this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
@@ -134,7 +147,7 @@ export class AuthAccountWebHookController {
   @Post("/activate")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async activateAccount(@BodyParams() body: { userId: string }) {
     try {
       await this.authService.activateUser(body.userId);
@@ -148,7 +161,7 @@ export class AuthAccountWebHookController {
   @Post("/request-verification-code")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async resendVerificationEmail(@BodyParams() body: { email: string }) {
     try {
       await this.authService.requestVerificationCode(body.email);
@@ -162,7 +175,7 @@ export class AuthAccountWebHookController {
   @Post("/block-account")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, RequestSucessInfo).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async blockAccount(@BodyParams() body: BlockAccountRequest) {
     try {
       this.logger.info(
