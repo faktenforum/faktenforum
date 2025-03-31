@@ -44,7 +44,8 @@ export class AuthAccountWebHookController {
     return result.identities.map((user) => ({
       id: user.id,
       role: user.metadata_public.role,
-      verified: !!user.verifiable_addresses?.[0]?.verified
+      verified: !!user.verifiable_addresses?.[0]?.verified,
+      blocked: user.metadata_public.blocked
     }));
   }
 
