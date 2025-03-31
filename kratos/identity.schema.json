@@ -44,11 +44,7 @@
           "const": true
         }
       },
-      "required": [
-        "email",
-        "username",
-        "data_protection_agreement"
-      ],
+      "required": ["email", "username", "data_protection_agreement"],
       "additionalProperties": false
     },
     "metadata_public": {
@@ -58,26 +54,34 @@
           "title": "Role",
           "type": "string",
           "default": "aspirant",
-          "enum": [
-            "administrator",
-            "moderator",
-            "senior",
-            "junior",
-            "editor",
-            "aspirant"
-          ]
+          "enum": ["administrator", "moderator", "senior", "junior", "editor", "aspirant"]
         },
         "lang": {
           "title": "Language",
           "type": "string",
           "default": "de",
-          "enum": [
-            "en",
-            "de"
-          ]
+          "enum": ["en", "de"]
+        },
+        "blocked": {
+          "type": ["object", "null"],
+          "properties": {
+            "until": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO timestamp when the block expires (null for indefinite blocks)"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the block was applied"
+            },
+            "additionalProperties": false
+          },
+          "required": ["timestamp"]
         },
         "additionalProperties": false
-      }
+      },
+      "required": ["role", "lang"]
     }
   },
   "allOf": [
