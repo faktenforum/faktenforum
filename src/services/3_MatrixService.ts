@@ -360,11 +360,13 @@ export class MatrixService {
         `[MatrixService] Getting room ID for alias #${roomAlias}:${this.envService.matrixDomain}`
       );
       const response = await this.client.getRoomIdForAlias(`#${roomAlias}:${this.envService.matrixDomain}`);
-      this.logger.error(response);
+
       const { room_id } = response;
       if (!room_id) {
+        this.logger.error(`[MatrixService] Room ${roomAlias} not found`);
         throw new Error(`[MatrixService] Room ${roomAlias} not found`);
       }
+
       // Remove the room from the current space
       await this.client.sendStateEvent(this.spaceIdMap[fromSpace], EventType.SpaceChild, {}, room_id);
 
