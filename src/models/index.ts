@@ -19,6 +19,7 @@ export * from "./requests/RegistrationRequest";
 export * from "./requests/RequestVerifcationCode";
 export * from "./requests/SubmissionRequest";
 export * from "./requests/UpdateUserRoleRequest";
+export * from "./requests/WebhooksAuthLogin";
 export * from "./responses/FileUploadResponse";
 export * from "./responses/GetUserRoleResponse";
 export * from "./responses/RegistrationPreResponse";

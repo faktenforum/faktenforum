@@ -9,6 +9,7 @@ export * from "./urlInfo";
 export * from "./version";
 export * from "./webhooks/ai/checkworthiness";
 export * from "./webhooks/auth/account";
+export * from "./webhooks/auth/login";
 export * from "./webhooks/auth/registration";
 export * from "./webhooks/auth/session";
 export * from "./webhooks/chat/message";
