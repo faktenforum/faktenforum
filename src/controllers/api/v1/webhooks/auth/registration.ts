@@ -8,7 +8,7 @@ import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RegistrationPreResponse, RegistrationRequest } from "~/models";
 import { AuthService, FileService, HasuraService, MatrixService } from "~/services";
 import { UserRole } from "~/models";
-
+import { generateKratosResponse } from "~/utils";
 import {
   InsertUserDocument,
   DeleteUserByPkDocument,
@@ -85,7 +85,9 @@ export class AuthRegistrationWebHookController {
       id = response.insertUserOne?.id;
       await this.matrixService.createUser(body.traits.username);
       chatUsername = body.traits.username;
-      return;
+      return {
+        messages: []
+      };
     } catch (error) {
       this.logger.error(error);
       this.fileService.deleteFile(body.id);
@@ -99,7 +101,10 @@ export class AuthRegistrationWebHookController {
       if (chatUsername) {
         await this.matrixService.deleteUser(chatUsername, body.id);
       }
-      throw new Error(error);
+
+      ctx.response
+        .status(500)
+        .body(generateKratosResponse("#/server/error", 500, "Internal server error: " + error));
     }
   }
 
@@ -115,20 +120,13 @@ export class AuthRegistrationWebHookController {
       >(GetUserByUsernameDocument, { username: body.traits.username });
 
       if (result.user.length > 0) {
-        const response = {
-          messages: [
-            {
-              messages: [
-                {
-                  id: 4000007,
-                  text: "An account with the same identifier (email, phone, username, ...) exists already.",
-                  type: "error",
-                  context: { field: "username", value: body.traits.username }
-                }
-              ]
-            }
-          ]
-        };
+        const response = generateKratosResponse(
+          "#/traits/username",
+          4000007,
+          "An account with the same identifier (email, phone, username, ...) exists already.",
+          { field: "username", value: body.traits.username }
+        );
+
         ctx.response.status(400).body(response);
         return;
       }
@@ -136,7 +134,9 @@ export class AuthRegistrationWebHookController {
       return { identity: { metadata_public: { role: UserRole.Aspirant, lang: DEFAULT_LANGUAGE } } };
     } catch (error) {
       this.logger.error("Pre-registration error", error);
-      ctx.response.status(500).body({ error: "Internal server error" });
+      ctx.response
+        .status(500)
+        .body(generateKratosResponse("#/server/error", 500, "Internal server error: " + error));
     }
   }
 }
