@@ -35,5 +35,5 @@ if (isProduction) {
 export default {
   disableRoutesSummary: isProduction, // remove table with routes summary
   disableRequestLog: true, // Disable request logging
-  logLevel: isProduction ? "info" : "debug"
+  logLevel: isProduction ? "debug" : "debug"
 };

@@ -51,7 +51,7 @@ export class AuthRegistrationWebHookController {
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
-  async postfinaliseAcount(@BodyParams() body: RegistrationRequest) {
+  async postfinaliseAcount(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {
     let id = null;
     let chatUsername = null;
     try {
@@ -105,8 +105,8 @@ export class AuthRegistrationWebHookController {
 
   @Post("/validate")
   @Tags("Auth")
+  @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, RegistrationPreResponse)
-  @(Returns(400, Object).ContentType("application/json"))
   async preRegistration(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {
     try {
       const result = await this.hasuraService.adminRequest<

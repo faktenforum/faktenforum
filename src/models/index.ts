@@ -21,6 +21,7 @@ export * from "./requests/SubmissionRequest";
 export * from "./requests/UpdateUserRoleRequest";
 export * from "./requests/WebhooksAuthLogin";
 export * from "./responses/FileUploadResponse";
+export * from "./responses/ForKratosResponse";
 export * from "./responses/GetUserRoleResponse";
 export * from "./responses/RegistrationPreResponse";
 export * from "./responses/RequestSucessResponse";
