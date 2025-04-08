@@ -1,4 +1,4 @@
-import { Property, Required } from "@tsed/schema";
+import { Property, Required, AdditionalProperties } from "@tsed/schema";
 import { IsUUID } from "class-validator";
 
 class BlockedSchema {
@@ -17,8 +17,9 @@ export class WebhooksAuthLoginRequest {
   id: string;
 
   @Property()
+  @AdditionalProperties(true)
   @Required()
   metadata_public: {
-    blocked: BlockedSchema;
+    blocked?: BlockedSchema | null;
   };
 }

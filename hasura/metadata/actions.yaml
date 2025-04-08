@@ -37,6 +37,24 @@ actions:
       - role: junior
       - role: editor
       - role: administrator
+  - name: blockAccount
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.blockAccountRequestInput}}'
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/account/block'
+        version: 2
+    permissions:
+      - role: administrator
   - name: blockRoomMessage
     definition:
       kind: synchronous
@@ -226,6 +244,7 @@ custom_types:
     - name: SampleInput
     - name: TextPayloadInput
     - name: GetAccountRoleRequestInput
+    - name: BlockAccountRequestInput
   objects:
     - name: UserWithRole
     - name: AccountDetailsResponse
@@ -244,4 +263,6 @@ custom_types:
     - name: DataListItem
     - name: SuccessInfo
     - name: GetUserRoleResponse
+    - name: RequestSuccessResponse
+    - name: BlockedInfo
   scalars: []

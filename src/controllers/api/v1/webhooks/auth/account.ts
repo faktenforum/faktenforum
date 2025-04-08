@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Post, Returns, Tags } from "@tsed/schema";
+import { Post, Returns, Tags, CollectionOf } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import {
   AccountSchema,
@@ -38,7 +38,7 @@ export class AuthAccountWebHookController {
   @Post("/details")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @(Returns(200, [AccountSchema]).ContentType("application/json")) // prettier-ignore
+  @(Returns(200, Array).Of(AccountSchema))
   async getUsersWithAccountDetails(@BodyParams() body: GetAccountsDetailsRequest) {
     const result = await this.authService.getAllUsers(undefined, undefined, body.ids);
     return result.identities.map((user) => ({
@@ -174,7 +174,7 @@ export class AuthAccountWebHookController {
     }
   }
 
-  @Post("/block-account")
+  @Post("/block")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore

@@ -11,6 +11,12 @@ type Query {
 }
 
 type Mutation {
+  blockAccount(
+    blockAccountRequestInput: BlockAccountRequestInput
+  ): RequestSuccessResponse
+}
+
+type Mutation {
   blockRoomMessage(
     roomId: String!
     messageId: String!
@@ -81,6 +87,12 @@ input GetAccountRoleRequestInput {
   id: String!
 }
 
+input BlockAccountRequestInput {
+  blocked: Boolean!
+  blockedUntil: String
+  userId: String!
+}
+
 type UserWithRole {
   id: String!
   username: String!
@@ -94,7 +106,7 @@ type AccountDetailsResponse {
   id: String!
   role: UserRole!
   verified: Boolean!
-  blocked: Boolean
+  blocked: BlockedInfo
 }
 
 type SampleOutput {
@@ -126,5 +138,14 @@ type SuccessInfo {
 type GetUserRoleResponse {
   id: String!
   role: String!
+}
+
+type RequestSuccessResponse {
+  success: Boolean!
+}
+
+type BlockedInfo {
+  until: String
+  timestamp: String!
 }
 
