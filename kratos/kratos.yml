@@ -47,6 +47,7 @@ selfservice:
 
     verification:
       enabled: true
+      lifespan: 720m
       ui_url: http://app.localhost:8000/verification
       use: code
       after:
@@ -77,7 +78,7 @@ selfservice:
                   in: header
 
     registration:
-      lifespan: 10m
+      lifespan: 60m
       ui_url: http://app.localhost:8000/registration
 
       after:
@@ -159,8 +160,7 @@ courier:
             plaintext: file:///etc/config/kratos/templates/recovery_code_email_body.plaintext.gotmpl
           subject: file:///etc/config/kratos/templates/recovery_code_email_subject.gotmpl
 
-feature_flags:
-  use_continue_with_transitions: true
+
 
 cookies:
   path: /
