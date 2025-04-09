@@ -189,10 +189,10 @@ export class AuthAccountWebHookController {
       // Update user status in Kratos
       await this.authService.updateUserBlockStatus(body.userId, body.blocked, blockedUntil);
 
-      // // If blocking, invalidate all sessions for this user
-      // if (body.blocked) {
-      //   await this.authService.revokeAllUserSessions(body.userId);
-      // }
+      // If blocking, invalidate all sessions for this user
+      if (body.blocked) {
+        await this.authService.revokeAllUserSessions(body.userId);
+      }
 
       this.logger.info(
         `[HasuraWebHookController] Successfully ${body.blocked ? "blocked" : "unblocked"} user: ${body.userId}`

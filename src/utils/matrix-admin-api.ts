@@ -274,6 +274,45 @@ class MatrixAdminClient {
       throw error;
     }
   }
+
+  async getUserDevices(username: string) {
+    const response = await fetch(
+      `${this.client.defaults.baseURL}/_synapse/admin/v2/users/${encodeURIComponent("@" + username + ":" + this.client.defaults.baseURL.split("//")[1])}/devices`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.client.defaults.headers.Authorization}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to get user devices: ${response.statusText}`);
+    }
+
+    return await response.json();
+  }
+
+  async deleteUserDevices(username: string, deviceIds: string[]) {
+    const response = await fetch(
+      `${this.client.defaults.baseURL}/_synapse/admin/v2/users/${encodeURIComponent("@" + username + ":" + this.client.defaults.baseURL.split("//")[1])}/delete_devices`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.client.defaults.headers.Authorization}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ devices: deviceIds })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete user devices: ${response.statusText}`);
+    }
+
+    return await response.json();
+  }
 }
 
 export default MatrixAdminClient;

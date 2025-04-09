@@ -280,4 +280,20 @@ export class AuthService {
       throw new Exception(error.status || 500, error.message || "Failed to update user block status");
     }
   }
+
+  async revokeAllUserSessions(userId: string): Promise<void> {
+    try {
+      const response = await this.kratosIdentityApi.deleteIdentitySessions({ id: userId });
+      if (response.status !== 204) {
+        this.logger.info(`Successfully revoked all sessions for user ${userId}`);
+      } else {
+        this.logger.error(
+          `Failed to revoke all sessions for user ${userId}  with response status ${response.status}`
+        );
+      }
+    } catch (error) {
+      this.logger.error(`Error revoking sessions for user ${userId}`, error);
+      throw new Exception(error.status || 500, error.message || "Failed to revoke user sessions");
+    }
+  }
 }
