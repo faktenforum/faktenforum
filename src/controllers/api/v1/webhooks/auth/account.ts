@@ -192,6 +192,9 @@ export class AuthAccountWebHookController {
       // If blocking, invalidate all sessions for this user
       if (body.blocked) {
         await this.authService.revokeAllUserSessions(body.userId);
+        await this.matrixService.deactivateUser(body.userId);
+      } else {
+        await this.matrixService.reactivateUser(body.userId);
       }
 
       this.logger.info(

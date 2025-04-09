@@ -221,19 +221,6 @@ class MatrixAdminClient {
     }
   }
 
-  // Deactivate a user account
-  async deactivateUserAccount(userId: string, erase: boolean = false): Promise<void> {
-    try {
-      await this.client.post(`/_synapse/admin/v1/deactivate/${userId}`, {
-        erase
-      });
-      console.log(`User ${userId} deactivated successfully.`);
-    } catch (error) {
-      console.error(`Error deactivating user ${userId}:`, error);
-      throw error;
-    }
-  }
-
   // Fetch the state of a specific room
   async getRoomState(roomId: string): Promise<GetRoomStateResponse> {
     try {
@@ -313,6 +300,38 @@ class MatrixAdminClient {
 
     return await response.json();
   }
+
+  // Assuming this.client is already set up with the base URL, authentication, etc.
+
+  // Deactivates a user account.
+  async deactivateUserAccount(userId: string, erase: boolean = false): Promise<void> {
+    try {
+      const response = await this.client.post(`/_synapse/admin/v1/deactivate/${encodeURIComponent(userId)}`, {
+        erase
+      });
+      console.log(`User ${userId} deactivated successfully.`);
+
+      return response;
+    } catch (error) {
+      console.error(`Error deactivating user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  // Reactivates a user account by updating it via the Create or Modify Account API.
+  async reactivateUserAccount(userId: string): Promise<void> {
+    try {
+      await this.client.put(`/_synapse/admin/v2/users/${encodeURIComponent(userId)}`, {
+        deactivated: false
+      });
+      console.log(`User ${userId} reactivated successfully.`);
+    } catch (error) {
+      console.error(`Error reactivating user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  // ... other methods ...
 }
 
 export default MatrixAdminClient;

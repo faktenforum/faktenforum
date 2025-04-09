@@ -203,7 +203,7 @@ services:
       HS_TOKEN: faktenforum
 
   matrix-server:
-    image: docker.io/matrixdotorg/synapse:v1.117.0
+    image: docker.io/matrixdotorg/synapse:v1.128.0
     ports:
       - "8008:8008" # HTTP
       - "8448:8448" # Federation

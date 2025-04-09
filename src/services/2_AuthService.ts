@@ -284,7 +284,7 @@ export class AuthService {
   async revokeAllUserSessions(userId: string): Promise<void> {
     try {
       const response = await this.kratosIdentityApi.deleteIdentitySessions({ id: userId });
-      if (response.status !== 204) {
+      if (response.status === 204) {
         this.logger.info(`Successfully revoked all sessions for user ${userId}`);
       } else {
         this.logger.error(
