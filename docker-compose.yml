@@ -53,7 +53,7 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
-      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_WEBHOOKS_BASE_URL}/session
+      HASURA_GRAPHQL_AUTH_HOOK: ${HASURA_WEBHOOKS_BASE_URL}/auth/session
       HASURA_WEBHOOKS_BASE_URL: ${HASURA_WEBHOOKS_BASE_URL}
       HASURA_WEBHOOKS_API_KEY: ${HASURA_API_KEY}
       HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY: ${HASURA_GRAPHQL_AUTH_HOOK_SEND_REQUEST_BODY}
@@ -149,6 +149,7 @@ services:
       DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:${POSTGRES_PORT}/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
       SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_0_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
       SELFSERVICE_FLOWS_REGISTRATION_AFTER_PASSWORD_HOOKS_1_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
+      SELFSERVICE_FLOWS_LOGIN_AFTER_HOOKS_0_CONFIG_AUTH_CONFIG_VALUE: ${KRATOS_API_KEY}
       SECRETS_COOKIE: ${KRATOS_SECRETS_COOKIE}
       SECRETS_CIPHER: ${KRATOS_SECRETS_CIPHER}
 
@@ -202,7 +203,7 @@ services:
       HS_TOKEN: faktenforum
 
   matrix-server:
-    image: docker.io/matrixdotorg/synapse:v1.117.0
+    image: docker.io/matrixdotorg/synapse:v1.128.0
     ports:
       - "8008:8008" # HTTP
       - "8448:8448" # Federation

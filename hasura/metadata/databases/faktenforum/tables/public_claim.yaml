@@ -345,7 +345,7 @@ event_triggers:
       interval_sec: 10
       num_retries: 0
       timeout_sec: 60
-    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/calculate-checkworthiness'
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/ai/checkworthiness/calculate'
     headers:
       - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY
@@ -356,9 +356,6 @@ event_triggers:
           {
             "claimId": {{$body.event.data.new.id}}
           }
-      method: POST
-      query_params:
-        x-api-key: HASURA_WEBHOOKS_API_KEY
       template_engine: Kriti
       version: 2
   - name: on_claim_insert_and_internal_status_update
@@ -374,7 +371,7 @@ event_triggers:
       interval_sec: 10
       num_retries: 3
       timeout_sec: 60
-    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/on-claim-status-changed'
+    webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/chat/room/change-claim-room-visibility'
     headers:
       - name: x-api-key
         value_from_env: HASURA_WEBHOOKS_API_KEY

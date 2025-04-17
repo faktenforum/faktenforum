@@ -1,6 +1,6 @@
 import { Property, Required } from "@tsed/schema";
 
-export class RequestSucessInfo {
+export class RequestSuccessResponse {
   @Property()
   @Required()
   success: boolean;

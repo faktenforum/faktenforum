@@ -1,29 +1,59 @@
 type Query {
-  accountDetails(ids: [uuid]!): [AccountDetailsResponse!]!
+  accountDetails(
+    ids: [uuid]!
+  ): [AccountDetailsResponse!]!
+}
+
+type Query {
+  accountRole(
+    id: uuid!
+  ): GetUserRoleResponse
 }
 
 type Mutation {
-  blockRoomMessage(roomId: String!, messageId: String!): BlockRoomMessageOutput
+  blockAccount(
+    blockAccountRequestInput: BlockAccountRequestInput
+  ): RequestSuccessResponse
 }
 
 type Mutation {
-  deleteAccount(userId: uuid!): SuccessInfo!
+  blockRoomMessage(
+    roomId: String!
+    messageId: String!
+  ): BlockRoomMessageOutput
 }
 
 type Mutation {
-  sendMessageToCheckbotMessagePost(textPayloadInput: TextPayloadInput!): CheckbotResponse
+  deleteAccount(
+    userId: uuid!
+  ): SuccessInfo!
 }
 
 type Mutation {
-  updateUserRole(userId: uuid!, role: UserRole!): UserWithRole!
+  requestVerificationCode(
+    email: String!
+  ): SuccessInfo
 }
 
 type Mutation {
-  verifiyUserAccount(userId: uuid!): SuccessInfo
+  sendMessageToCheckbotMessagePost(
+    textPayloadInput: TextPayloadInput!
+  ): CheckbotResponse
 }
+
 type Mutation {
-  requestVerificationCode(email: String!): SuccessInfo
+  updateUserRole(
+    userId: uuid!
+    role: UserRole!
+  ): UserWithRole!
 }
+
+type Mutation {
+  verifiyUserAccount(
+    userId: uuid!
+  ): SuccessInfo
+}
+
 enum Language {
   en
   de
@@ -53,6 +83,16 @@ input TextPayloadInput {
   text: String!
 }
 
+input GetAccountRoleRequestInput {
+  id: String!
+}
+
+input BlockAccountRequestInput {
+  blocked: Boolean!
+  blockedUntil: String
+  userId: String!
+}
+
 type UserWithRole {
   id: String!
   username: String!
@@ -66,6 +106,7 @@ type AccountDetailsResponse {
   id: String!
   role: UserRole!
   verified: Boolean!
+  blocked: BlockedInfo
 }
 
 type SampleOutput {
@@ -93,3 +134,18 @@ type DataListItem {
 type SuccessInfo {
   success: Boolean!
 }
+
+type GetUserRoleResponse {
+  id: String!
+  role: String!
+}
+
+type RequestSuccessResponse {
+  success: Boolean!
+}
+
+type BlockedInfo {
+  until: String
+  timestamp: String!
+}
+

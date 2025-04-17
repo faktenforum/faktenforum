@@ -5,7 +5,7 @@ import { Cookies } from "@tsed/platform-params";
 import { AuthService, EnvService } from "~/services";
 import jwt from "jsonwebtoken"; // Import the jsonwebtoken library
 import { AccessControlDecorator } from "~/decorators";
-import { Returns } from "@tsed/schema";
+import { Returns, Tags } from "@tsed/schema";
 import { Session } from "~/models";
 
 @Controller("/chat")
@@ -17,6 +17,7 @@ export class AuthController {
   envService: EnvService;
 
   @AccessControlDecorator({})
+  @Tags("Chat")
   @(Returns(200, String).ContentType("*/*").Description("Generated JWT token") // prettier-ignore
     ) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore

@@ -2,7 +2,7 @@ actions:
   - name: accountDetails
     definition:
       kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/get-user-account-details'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/details'
       headers:
         - name: x-api-key
           value_from_env: HASURA_WEBHOOKS_API_KEY
@@ -15,10 +15,50 @@ actions:
     permissions:
       - role: administrator
     comment: Get Roles of users by array of user ids
+  - name: accountRole
+    definition:
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input}}'
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/account/role'
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: administrator
+  - name: blockAccount
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.blockAccountRequestInput}}'
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/account/block'
+        version: 2
+    permissions:
+      - role: administrator
   - name: blockRoomMessage
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/block-room-message'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/chat/message/block'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -45,7 +85,7 @@ actions:
   - name: deleteAccount
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/delete-account'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/delete'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -62,6 +102,26 @@ actions:
     permissions:
       - role: administrator
     comment: This Action deletes a user this is not reverserable
+  - name: requestVerificationCode
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/request-verification-code'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "email": {{$body.input.email}}
+            }
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: administrator
+    comment: This Action sends a new verification code to the user's email
   - name: sendMessageToCheckbotMessagePost
     definition:
       kind: synchronous
@@ -105,7 +165,7 @@ actions:
   - name: updateUserRole
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/update-user-role'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/update-role'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -122,7 +182,7 @@ actions:
   - name: verifiyUserAccount
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/activate-account'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/activate'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -139,26 +199,6 @@ actions:
     permissions:
       - role: administrator
     comment: This Action verifies a user account
-  - name: requestVerificationCode
-    definition:
-      kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/request-verification-code'
-      forward_client_headers: true
-      headers:
-        - name: x-api-key
-          value_from_env: HASURA_WEBHOOKS_API_KEY
-      request_transform:
-        body:
-          action: transform
-          template: |-
-            {
-              "email": {{$body.input.email}}
-            }
-        template_engine: Kriti
-        version: 2
-    permissions:
-      - role: administrator
-    comment: This Action sends a new verification code to the user's email
 custom_types:
   enums:
     - name: Language
@@ -203,6 +243,8 @@ custom_types:
   input_objects:
     - name: SampleInput
     - name: TextPayloadInput
+    - name: GetAccountRoleRequestInput
+    - name: BlockAccountRequestInput
   objects:
     - name: UserWithRole
     - name: AccountDetailsResponse
@@ -220,4 +262,7 @@ custom_types:
     - name: CheckbotResponse
     - name: DataListItem
     - name: SuccessInfo
+    - name: GetUserRoleResponse
+    - name: RequestSuccessResponse
+    - name: BlockedInfo
   scalars: []

@@ -1,11 +1,12 @@
 import { Controller, Get, Inject } from "@tsed/common";
 import { Exception } from "@tsed/exceptions";
 import { QueryParams } from "@tsed/platform-params";
-import { ContentType, Returns } from "@tsed/schema";
+import { ContentType, Returns, Tags } from "@tsed/schema";
 import { UrlInfoResponse } from "~/models/responses/UrlInfoResponse";
 import { UrlInfoService } from "~/services";
 
 @Controller("/url-info")
+@Tags("Tools")
 export class UrlInfoController {
   @Inject(UrlInfoService)
   urlInfo: UrlInfoService;

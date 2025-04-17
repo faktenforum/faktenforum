@@ -2,7 +2,7 @@ import { MultipartFile } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
-import { Consumes, Post, Returns, getJsonSchema } from "@tsed/schema";
+import { Consumes, Post, Returns, getJsonSchema, Tags } from "@tsed/schema";
 import Ajv from "ajv";
 import type { S3MulterFile } from "~/config/minio";
 import { SubmissionRequest } from "~/models";
@@ -34,6 +34,7 @@ export class SubmissionController {
   @Post()
   @Consumes("multipart/form-data")
   @Returns(200, SubmissionCreateResponse)
+  @Tags("Submission")
   async submitClaim(
     @BodyParams() body: { payload: string },
     @MultipartFile("files", 10) files: S3MulterFile[]

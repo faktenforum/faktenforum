@@ -1,6 +1,15 @@
 import { Property, Required } from "@tsed/schema";
 
-export class KratosUserSchema {
+export class BlockedSchema {
+  @Property()
+  until: Date;
+
+  @Property()
+  @Required()
+  timestamp: Date;
+}
+
+export class AccountSchema {
   @Property()
   @Required()
   id: string;
@@ -20,6 +29,9 @@ export class KratosUserSchema {
   @Property()
   @Required()
   verified: boolean;
+
+  @Property()
+  blocked: BlockedSchema | null;
 
   @Property()
   @Required()
