@@ -8,10 +8,6 @@
     "./src/models",
     "./src/utils"
   ],
-  "exclude": [
-    "__mock__",
-    "__mocks__",
-    ".spec.ts"
-  ],
+  "exclude": ["__mock__", "__mocks__", ".spec.ts", "__nonexistent__"],
   "delete": true
 }

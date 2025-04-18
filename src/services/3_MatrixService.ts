@@ -205,11 +205,15 @@ export class MatrixService {
     await this.adminClient?.deactivateUserAccount(this.usernameToMatrixUser(username), true);
   }
 
-  public async alterSpaceMembershipsByRole(userId: string, role: UserRole) {
+  public async alterSpaceMembershipsByRole(
+    userId: string,
+    role: UserRole,
+    options: { reactivate?: boolean } = {}
+  ) {
     this.logger.info(`Change user ${userId} membership to new role ${role}`);
     const identity = await this.authService.getUserIdentity(userId);
     const username = identity.traits.username;
-    const oldRole = identity.metadata_public.role as UserRole;
+    const oldRole = options.reactivate ? UserRole.Aspirant : (identity.metadata_public.role as UserRole);
     const oldPowerLevel = POWER_LEVELS[oldRole];
     const newPowerLevel = POWER_LEVELS[role];
     this.logger.info(
@@ -360,11 +364,13 @@ export class MatrixService {
         `[MatrixService] Getting room ID for alias #${roomAlias}:${this.envService.matrixDomain}`
       );
       const response = await this.client.getRoomIdForAlias(`#${roomAlias}:${this.envService.matrixDomain}`);
-      this.logger.error(response);
+
       const { room_id } = response;
       if (!room_id) {
+        this.logger.error(`[MatrixService] Room ${roomAlias} not found`);
         throw new Error(`[MatrixService] Room ${roomAlias} not found`);
       }
+
       // Remove the room from the current space
       await this.client.sendStateEvent(this.spaceIdMap[fromSpace], EventType.SpaceChild, {}, room_id);
 
@@ -433,6 +439,24 @@ export class MatrixService {
         reason: ChatRedactedReasons.BLOCKED_BY_MODERATOR
       });
     }
+  }
+
+  public async deactivateUser(userId: string): Promise<void> {
+    this.logger.info(`[MatrixService] Deactivating user ${userId}`);
+    const identity = await this.authService.getUserIdentity(userId);
+    const username = identity.traits.username;
+    const response = await this.adminClient?.deactivateUserAccount(this.usernameToMatrixUser(username));
+    this.logger.info(`[MatrixService] User ${username} deactivated:`, response?.data);
+  }
+
+  public async reactivateUser(userId: string): Promise<void> {
+    this.logger.info(`[MatrixService] Reactivating user ${userId}`);
+    const identity = await this.authService.getUserIdentity(userId);
+    const username = identity.traits.username;
+    const role = identity.metadata_public.role;
+    await this.adminClient?.reactivateUserAccount(this.usernameToMatrixUser(username));
+    await this.alterSpaceMembershipsByRole(userId, role, { reactivate: true });
+    this.logger.info(`[MatrixService] User ${username} reactivated`);
   }
 
   private usernameToMatrixUser(username: string): string {

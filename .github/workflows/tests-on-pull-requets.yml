@@ -13,18 +13,15 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "20" # Specify the Node.js version
+          bun-version: 1.2.0 # Specify the Bun version
 
-      - name: Install Bun
-        run: npm install bun
-        
       - name: Install Dependencies
         run: bun install
 
       - name: Run Tests
-        run: npm test # Replace with your test command
+        run: bun test # Replace with your test command

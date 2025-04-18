@@ -25,6 +25,11 @@ export enum KratosLang {
   en = "en"
 }
 
+export type BlockedInfo = {
+  until: string | null; // ISO timestamp or null for indefinite blocks
+  timestamp: string; // When the block was applied
+};
+
 export type KratosUser = {
   id: "fa4c3f21-ee87-4196-ac70-e9c401ac166b";
   schema_id: string;
@@ -40,6 +45,7 @@ export type KratosUser = {
   metadata_public: {
     role: UserRole;
     lang?: KratosLang;
+    blocked?: BlockedInfo | null;
   };
   metadata_admin: null | unknown;
   created_at: string;
@@ -212,6 +218,82 @@ export class AuthService {
     } catch (error) {
       this.logger.error("User activation failed", error);
       throw new Exception(error.status || 500, error.message || "Failed to activate user");
+    }
+  }
+
+  async updateUserBlockStatus(
+    userId: string,
+    isBlocked: boolean,
+    blockedUntil: Date | null = null
+  ): Promise<Identity> {
+    try {
+      //check if user exists
+      const response = await this.kratosIdentityApi.getIdentity({ id: userId });
+      if (response.status !== 200 || !response.data) {
+        throw new Exception(response.status, `Failed to get user: ${response.statusText}`);
+      }
+
+      if (isBlocked) {
+        const blockedInfo: BlockedInfo = {
+          until: blockedUntil?.toISOString() || null,
+          timestamp: new Date().toISOString()
+        };
+
+        // Use JSON Patch to update only the blocked field
+        const response = await this.kratosIdentityApi.patchIdentity({
+          id: userId,
+          jsonPatch: [
+            {
+              op: "replace",
+              path: "/metadata_public/blocked",
+              value: blockedInfo
+            }
+          ]
+        });
+
+        if (response.status !== 200 || !response.data) {
+          throw new Exception(response.status, `Failed to block user: ${response.statusText}`);
+        }
+
+        return response.data;
+      } else {
+        // When unblocking, set the blocked field to null
+        const response = await this.kratosIdentityApi.patchIdentity({
+          id: userId,
+          jsonPatch: [
+            {
+              op: "replace",
+              path: "/metadata_public/blocked",
+              value: null
+            }
+          ]
+        });
+
+        if (response.status !== 200 || !response.data) {
+          throw new Exception(response.status, `Failed to unblock user: ${response.statusText}`);
+        }
+
+        return response.data;
+      }
+    } catch (error) {
+      this.logger.error(`Failed to update user block status: ${error.message}`, error);
+      throw new Exception(error.status || 500, error.message || "Failed to update user block status");
+    }
+  }
+
+  async revokeAllUserSessions(userId: string): Promise<void> {
+    try {
+      const response = await this.kratosIdentityApi.deleteIdentitySessions({ id: userId });
+      if (response.status === 204) {
+        this.logger.info(`Successfully revoked all sessions for user ${userId}`);
+      } else {
+        this.logger.error(
+          `Failed to revoke all sessions for user ${userId}  with response status ${response.status}`
+        );
+      }
+    } catch (error) {
+      this.logger.error(`Error revoking sessions for user ${userId}`, error);
+      throw new Exception(error.status || 500, error.message || "Failed to revoke user sessions");
     }
   }
 }
