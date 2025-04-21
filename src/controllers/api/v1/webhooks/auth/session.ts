@@ -24,8 +24,7 @@ export class AuthSessionWebHookController {
       "X-Hasura-User-Id": session.identity!.id,
       "X-Hasura-Role": session.identity!.metadata_public.role.toLowerCase(),
       "X-Hasura-Lang": session.identity!.metadata_public.lang ?? DEFAULT_LANGUAGE,
-      "X-Hasura-Username": session.identity!.traits.username,
-      "Cache-Control": "max-age=0, no-store, must-revalidate"
+      "X-Hasura-Username": session.identity!.traits.username
     };
     return JSON.stringify(hasuraSession);
   }
