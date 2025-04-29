@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant User as Faktenforum User
+    participant fafo as Faktenforum REST API
+    participant fzi as FZI DeepFake Detector
+
+    User->>fafo: Submit claim
+    Note over fafo: Store claim
+    fzi->>fafo: Request claim artefacts since <timestamp>
+    activate fafo
+    fafo-->>fzi: Return claim(s)
+    deactivate fafo
+
+    fzi->>fzi: Process claim(s)
+    fzi->>fafo: Post process results
+    activate fafo
+    fafo-->>fzi: Acknowledge receipt
+    deactivate fafo
+
+    fafo->>User: Show detector results
+    activate User
+    User->>fafo: User rates method results
+    deactivate User
+    Note over fafo: Store user rating
+    fzi->>fafo: Get user ratings since <timestamp>
+    activate fafo
+    fafo-->>fzi: Return user ratings  
+    deactivate fafo

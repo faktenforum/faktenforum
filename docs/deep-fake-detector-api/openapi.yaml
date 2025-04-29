@@ -1,0 +1,225 @@
+openapi: 3.1.0
+info:
+  title: Claim Artefact API
+  version: "1.0.0"
+  description: >
+    API for retrieving claim artefacts, submitting processing results,
+    and retrieving user ratings for method results.
+servers:
+  - url: https://api.faktenforum.example.com/api/v1/deep-fake-detector
+paths:
+  /claimArtefacts:
+    get:
+      summary: Retrieve claim artefact(s) submitted after a given timestamp.
+      parameters:
+        - in: header
+          name: X-API-KEY
+          schema:
+            type: string
+          required: true
+          description: API key required for authentication.
+        - in: query
+          name: timestamp
+          schema:
+            type: string
+            format: date-time
+          required: true
+          description: Retrieve artefacts submitted after this ISO 8601 timestamp.
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          required: false
+          description: Offset for pagination, default is 0.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 1000
+          required: false
+          description: Limit for pagination, default is 1000.
+      responses:
+        '200':
+          description: An array containing one or more claim artefact objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    claimId:
+                      type: string
+                      format: uuid
+                      description: Unique identifier for the claim.
+                    artefactId:
+                      type: string
+                      format: uuid
+                      description: Unique identifier for the artefact.
+                    type:
+                      type: string
+                      enum: [image, audio, video, text]
+                      description: >
+                        Type of the artefact. For image, audio or video, supply a url.
+                        For text, supply the content.
+                    url:
+                      type: string
+                      format: uri
+                      description: URL for the media file (if type is image, audio, or video).
+                    content:
+                      type: string
+                      description: Content of the claim (if type is text).
+                    methodResults:
+                      type: array
+                      description: Array of processing method results, if available.
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            description: Unique identifier for the method result.
+                          methodName:
+                            type: string
+                            description: Name of the processing method.
+                          result:
+                            description: The result output from the processing method.
+                            oneOf:
+                              - type: number
+                              - type: boolean
+                              - type: string
+                        required:
+                          - id
+                          - methodName
+                          - result
+                        additionalProperties: true
+                  required:
+                    - claimId
+                    - artefactId
+                    - type
+        '400':
+          description: Invalid query parameters supplied.
+  /results:
+    post:
+      summary: Submit processing results for claim artefacts.
+      parameters:
+        - in: header
+          name: X-API-KEY
+          schema:
+            type: string
+          required: true
+          description: API key required for authentication.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  claimId:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the claim.
+                  artefactId:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the artefact.
+                  methodResults:
+                    type: array
+                    description: An array containing the output from each processing method.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier for the method result.
+                        methodName:
+                          type: string
+                          description: Name of the processing method.
+                        result:
+                          description: The result output from the processing method.
+                          oneOf:
+                            - type: number
+                            - type: boolean
+                            - type: string
+                      required:
+                        - id
+                        - methodName
+                        - result
+                      additionalProperties: true
+                required:
+                  - claimId
+                  - artefactId
+                  - methodResults
+      responses:
+        '200':
+          description: Processing results have been successfully submitted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Processing results acknowledged.
+        '400':
+          description: Invalid input payload.
+  /userRatings:
+    get:
+      summary: Retrieve user ratings for method results since a timestamp, with pagination.
+      parameters:
+        - in: header
+          name: X-API-KEY
+          schema:
+            type: string
+          required: true
+          description: API key required for authentication.
+        - in: query
+          name: since
+          schema:
+            type: string
+            format: date-time
+          required: true
+          description: Retrieve user ratings submitted after this ISO 8601 timestamp.
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          required: false
+          description: Offset for pagination, default is 0.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 1000
+          required: false
+          description: Limit for pagination, default is 1000.
+      responses:
+        '200':
+          description: An array of user rating objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      description: Unique identifier for the method result.
+                    rating:
+                      type: integer
+                      minimum: 0
+                      maximum: 5
+                      description: Rating for the method result (0-5).
+                  required:
+                    - id
+                    - rating
+        '400':
+          description: Invalid request.
