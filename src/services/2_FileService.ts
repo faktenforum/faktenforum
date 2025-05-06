@@ -86,4 +86,14 @@ export class FileService {
       })
     );
   }
+
+  async deleteFileAndVersions(key: string, mimeType?: string) {
+    await this.deleteFile(key);
+    // If it's an image, also delete all versions
+    if (mimeType && mimeType.startsWith("image/")) {
+      // Import SIZES from your consts
+      const { SIZES } = await import("~/utils/consts");
+      await Promise.all(SIZES.map((size) => this.deleteFile(`${key}-${size.key}`)));
+    }
+  }
 }
