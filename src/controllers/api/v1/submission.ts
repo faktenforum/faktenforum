@@ -75,7 +75,9 @@ export class SubmissionController {
         { origins, submitterNotes: claim.notes }
       );
     } catch (error) {
-      this.fileService.deleteFiles(files.map((file) => file.key));
+      files.forEach((file) => {
+        this.fileService.deleteFileAndVersions(file.key, file.mimetype);
+      });
       console.log(error);
     }
   }

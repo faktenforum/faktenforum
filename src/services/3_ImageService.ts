@@ -44,7 +44,7 @@ export class ImageService {
       });
 
     // Upload the transformed stream to Minio
-    this.fileService.saveFile(ImageService.generateKey(fileKey, size), transformedStream, undefined, {
+    await this.fileService.saveFile(ImageService.generateKey(fileKey, size), transformedStream, undefined, {
       "Content-Type": `image/${TO_FORMAT}`
     });
   }

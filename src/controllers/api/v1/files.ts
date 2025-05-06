@@ -234,6 +234,11 @@ export class ClaimsController {
       if (tableData && !ajv.validate(OriginSourceDataJsonSchema, tableData)) {
         throw new BadRequest("TableData validation failed!");
       }
+
+      if (file.mimetype.startsWith("image/")) {
+        // Resize and upload the image
+        await this.imageService.resizeAndUpload(file.key);
+      }
       switch (body.table) {
         case "user": {
           if (request.user.userId !== vars.entryId) {
@@ -300,13 +305,10 @@ export class ClaimsController {
         default:
           throw new BadRequest("Invalid table type");
       }
-      if (file.mimetype.startsWith("image/")) {
-        // Resize and upload the image
-        await this.imageService.resizeAndUpload(file.key);
-      }
+
       return response;
     } catch (error) {
-      this.fileService.deleteFile(file.key);
+      await this.fileService.deleteFileAndVersions(file.key, file.mimetype);
       throw error;
     }
   }

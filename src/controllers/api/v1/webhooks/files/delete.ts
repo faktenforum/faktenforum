@@ -28,10 +28,7 @@ export class FilesWebHookController {
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async deleteFile(@BodyParams() body: DeleteFileRequest) {
-    this.fileService.deleteFile(body.id);
-    if (body.mimeType.startsWith("image/")) {
-      this.imageService.deleteImageVersions(body.id);
-    }
+    await this.fileService.deleteFileAndVersions(body.id, body.mimeType);
     return {
       success: true
     }; // Returning an empty object with a 200 status code
