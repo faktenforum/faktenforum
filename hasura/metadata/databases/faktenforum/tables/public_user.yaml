@@ -83,11 +83,20 @@ array_relationships:
         table:
           name: user_history
           schema: public
+  - name: user_categories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_category
+          schema: public
 select_permissions:
   - role: administrator
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - deleted
         - email
@@ -95,6 +104,7 @@ select_permissions:
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -114,6 +124,8 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - deleted
         - email
@@ -121,6 +133,7 @@ select_permissions:
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -192,10 +205,13 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -207,9 +223,12 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
       filter:
@@ -221,10 +240,13 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -236,9 +258,12 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -251,10 +276,13 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -266,9 +294,12 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct

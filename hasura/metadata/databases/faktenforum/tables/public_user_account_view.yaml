@@ -1,17 +1,30 @@
 table:
   name: user_account_view
   schema: public
+object_relationships:
+  - name: user_categories
+    using:
+      manual_configuration:
+        column_mapping:
+          id: user_id
+        insertion_order: null
+        remote_table:
+          name: user_category
+          schema: public
 select_permissions:
   - role: administrator
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - email
         - first_name
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -29,12 +42,15 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - email
         - first_name
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -52,12 +68,15 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - email
         - first_name
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -75,12 +94,15 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - email
         - first_name
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -98,12 +120,15 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - email
         - first_name
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -121,12 +146,15 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - email
         - first_name
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct

@@ -6,6 +6,7 @@ DROP TRIGGER IF EXISTS log_source_event ON public.source;
 DROP TRIGGER IF EXISTS log_claim_category_event ON public.claim_category;
 DROP TRIGGER IF EXISTS log_user_event ON public.user;
 DROP TRIGGER IF EXISTS log_checkworthiness_event ON public.checkworthiness;
+DROP TRIGGER IF EXISTS log_user_category_event ON public.user_category;
 
 DROP FUNCTION IF EXISTS public.log_claim_event();  
 DROP FUNCTION IF EXISTS public.log_fact_event();
@@ -14,6 +15,7 @@ DROP FUNCTION IF EXISTS public.log_source_event();
 DROP FUNCTION IF EXISTS public.log_claim_category_event();
 DROP FUNCTION IF EXISTS public.log_user_event();
 DROP FUNCTION IF EXISTS public.log_checkworthiness_event();
+DROP FUNCTION IF EXISTS public.log_user_category_event();
 -- Only dro(p claim-specific function
 -- Step 2: Create NEW function
 CREATE OR REPLACE FUNCTION public.log_generic_event(
@@ -230,6 +232,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION public.log_user_category_event()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'UPDATE' AND NEW.deleted THEN
+        DELETE FROM public.claim_category WHERE id = NEW.id;
+    END IF;
+   
+    PERFORM public.log_generic_event(
+        to_jsonb(OLD),
+        to_jsonb(NEW),
+        COALESCE(NEW.user_id, OLD.user_id),
+        CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
+        TG_TABLE_NAME,
+        null,
+        jsonb_build_object(
+            'category_name', COALESCE(NEW.category_name, OLD.category_name)
+        )
+    );
+    
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql;
 -- Create Triggers 
 CREATE TRIGGER log_claim_event
 AFTER INSERT OR UPDATE ON public.claim
@@ -260,3 +285,6 @@ CREATE TRIGGER log_checkworthiness_event
 AFTER INSERT OR UPDATE ON public.checkworthiness
 FOR EACH ROW EXECUTE FUNCTION public.log_checkworthiness_event();
 
+CREATE TRIGGER log_user_category_event
+AFTER INSERT OR UPDATE ON public.user_category
+FOR EACH ROW EXECUTE FUNCTION public.log_user_category_event();
