@@ -1,0 +1,2 @@
+CREATE TABLE "public"."user_category" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "user_id" uuid NOT NULL, "category_name" text NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") , FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("category_name") REFERENCES "public"."category"("name") ON UPDATE cascade ON DELETE cascade, UNIQUE ("user_id", "category_name"));COMMENT ON TABLE "public"."user_category" IS E'User preffered claim topics';
+CREATE EXTENSION IF NOT EXISTS pgcrypto;

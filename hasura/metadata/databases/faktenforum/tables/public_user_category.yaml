@@ -1,0 +1,170 @@
+table:
+  name: user_category
+  schema: public
+insert_permissions:
+  - role: administrator
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - category_name
+    comment: ""
+  - role: aspirant
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - category_name
+    comment: ""
+  - role: editor
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - category_name
+    comment: ""
+  - role: junior
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - category_name
+    comment: ""
+  - role: moderator
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - category_name
+    comment: ""
+  - role: senior
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - category_name
+    comment: ""
+select_permissions:
+  - role: administrator
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - id
+        - user_id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - id
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: editor
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - id
+        - user_id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: junior
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - id
+        - user_id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: moderator
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - id
+        - user_id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+  - role: senior
+    permission:
+      columns:
+        - category_name
+        - created_at
+        - id
+        - user_id
+      filter: {}
+      query_root_fields: []
+      subscription_root_fields: []
+    comment: ""
+delete_permissions:
+  - role: administrator
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: aspirant
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: editor
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: junior
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: moderator
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: senior
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""

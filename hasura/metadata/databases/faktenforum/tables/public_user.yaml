@@ -88,6 +88,8 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - deleted
         - email
@@ -95,6 +97,7 @@ select_permissions:
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -114,6 +117,8 @@ select_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - deleted
         - email
@@ -121,6 +126,7 @@ select_permissions:
         - id
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
