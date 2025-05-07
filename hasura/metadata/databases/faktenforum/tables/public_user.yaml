@@ -107,6 +107,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - sys_period
         - updated_at
@@ -136,6 +137,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - sys_period
         - updated_at
@@ -151,6 +153,7 @@ select_permissions:
         - id
         - profile_image
         - pronouns
+        - role
         - sys_period
         - updated_at
         - username
@@ -173,6 +176,7 @@ select_permissions:
         - mobile_number
         - profile_image
         - pronouns
+        - role
         - sys_period
         - updated_at
         - username
@@ -191,6 +195,7 @@ select_permissions:
         - id
         - profile_image
         - pronouns
+        - role
         - sys_period
         - updated_at
         - username

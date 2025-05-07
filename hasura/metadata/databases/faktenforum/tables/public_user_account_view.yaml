@@ -27,6 +27,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - updated_at
         - username
@@ -53,6 +54,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - updated_at
         - username
@@ -79,6 +81,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - updated_at
         - username
@@ -105,6 +108,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - updated_at
         - username
@@ -131,6 +135,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - updated_at
         - username
@@ -157,6 +162,7 @@ select_permissions:
         - postal_code
         - profile_image
         - pronouns
+        - role
         - signed_code_of_conduct
         - updated_at
         - username
