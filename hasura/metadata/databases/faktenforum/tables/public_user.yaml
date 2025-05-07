@@ -205,10 +205,13 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -220,9 +223,12 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
       filter:
@@ -234,10 +240,13 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -249,9 +258,12 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -264,10 +276,13 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - created_at
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
@@ -279,9 +294,12 @@ update_permissions:
     permission:
       columns:
         - bio
+        - city
+        - country
         - first_name
         - last_name
         - mobile_number
+        - postal_code
         - profile_image
         - pronouns
         - signed_code_of_conduct
