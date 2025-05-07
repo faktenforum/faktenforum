@@ -16,7 +16,7 @@ import {
 
 import { AuthService, HasuraService, MatrixService } from "~/services";
 import { Identity } from "@ory/kratos-client";
-import { AnonymizeUserProfileDocument } from "~/generated/graphql";
+import { AnonymizeUserProfileDocument, UpdateUserRoleDocument } from "~/generated/graphql";
 import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
@@ -68,6 +68,10 @@ export class AuthAccountWebHookController {
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
     this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
+    await this.hasuraService.adminRequest(UpdateUserRoleDocument, {
+      id: body.userId,
+      role: body.role
+    });
     return this.transformKratosUser(kratosUser as Identity);
   }
 

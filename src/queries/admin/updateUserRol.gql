@@ -1,0 +1,5 @@
+mutation UpdateUserRole($id: uuid!, $role: String!) {
+  updateUserByPk(pkColumns: { id: $id }, _set: { role: $role }) {
+    id
+  }
+}
