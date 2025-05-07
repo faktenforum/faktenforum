@@ -95,6 +95,7 @@ select_permissions:
     permission:
       columns:
         - bio
+        - blocked
         - city
         - country
         - created_at
@@ -125,6 +126,7 @@ select_permissions:
     permission:
       columns:
         - bio
+        - blocked
         - city
         - country
         - created_at
