@@ -83,6 +83,13 @@ array_relationships:
         table:
           name: user_history
           schema: public
+  - name: user_categories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_category
+          schema: public
 select_permissions:
   - role: administrator
     permission:

@@ -1,6 +1,10 @@
 table:
   name: user_category
   schema: public
+object_relationships:
+  - name: category
+    using:
+      foreign_key_constraint_on: category_name
 insert_permissions:
   - role: administrator
     permission:
