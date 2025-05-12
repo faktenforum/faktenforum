@@ -21,6 +21,7 @@ DROP FUNCTION IF EXISTS public.log_user_category_event();
 CREATE OR REPLACE FUNCTION public.log_generic_event(
     p_old jsonb,
     p_new jsonb,
+    p_user_id uuid,
     p_claim_id uuid,
     p_operation text,
     p_table_name text,
@@ -67,7 +68,7 @@ BEGIN
     )
     VALUES (
         p_claim_id,
-        COALESCE((p_new->>'updated_by')::uuid, (p_new->>'created_by')::uuid, null),
+        p_user_id,
         p_operation,
         p_table_name,
         NOW(),
@@ -89,6 +90,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        COALESCE((NEW.updated_by)::uuid, (NEW.created_by)::uuid, null),
         NEW.id,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
@@ -109,6 +111,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        COALESCE((NEW.updated_by)::uuid, (NEW.created_by)::uuid, null),
         NEW.claim_id,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
@@ -131,6 +134,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        COALESCE((NEW.updated_by)::uuid, (NEW.created_by)::uuid, null),
         NEW.claim_id,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
@@ -157,6 +161,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        COALESCE((NEW.updated_by)::uuid, (NEW.created_by)::uuid, null),
         v_claim_id,  -- Use the fetched claim_id
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
@@ -181,6 +186,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        COALESCE((NEW.updated_by)::uuid, (NEW.created_by)::uuid, null),
         COALESCE(NEW.claim_id, OLD.claim_id),
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
@@ -201,6 +207,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        NEW.id,
         null,
         CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
         TG_TABLE_NAME,
@@ -218,6 +225,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
+        null,
         COALESCE(NEW.claim_id, OLD.claim_id),
         TG_OP,
         TG_TABLE_NAME,
@@ -236,15 +244,12 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION public.log_user_category_event()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF TG_OP = 'UPDATE' AND NEW.deleted THEN
-        DELETE FROM public.claim_category WHERE id = NEW.id;
-    END IF;
-   
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
-        COALESCE(NEW.user_id, OLD.user_id),
-        CASE WHEN TG_OP = 'UPDATE' AND NEW.deleted THEN 'DELETE' ELSE TG_OP END,
+        NEW.user_id,
+        null,
+        TG_OP,
         TG_TABLE_NAME,
         null,
         jsonb_build_object(
