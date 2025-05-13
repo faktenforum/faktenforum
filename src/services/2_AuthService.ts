@@ -232,6 +232,9 @@ export class AuthService {
       if (response.status !== 200 || !response.data) {
         throw new Exception(response.status, `Failed to get user: ${response.statusText}`);
       }
+      if (!!response.data.metadata_public.blocked === isBlocked && blockedUntil === null && !isBlocked) {
+        throw new Exception(400, "User is already unblocked");
+      }
 
       if (isBlocked) {
         const blockedInfo: BlockedInfo = {

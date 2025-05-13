@@ -96,6 +96,7 @@ select_permissions:
       columns:
         - bio
         - blocked
+        - blockedUntil
         - city
         - country
         - created_at
@@ -113,6 +114,7 @@ select_permissions:
         - sys_period
         - updated_at
         - username
+        - verified
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -127,6 +129,7 @@ select_permissions:
       columns:
         - bio
         - blocked
+        - blockedUntil
         - city
         - country
         - created_at
@@ -144,6 +147,7 @@ select_permissions:
         - sys_period
         - updated_at
         - username
+        - verified
       filter: {}
     comment: ""
   - role: junior

@@ -6959,6 +6959,7 @@ export type User = {
   __typename?: 'User';
   bio?: Maybe<Scalars['String']['output']>;
   blocked?: Maybe<Scalars['Boolean']['output']>;
+  blockedUntil?: Maybe<Scalars['timestamptz']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   claimResourcesByUpdatedBy: Array<Origin>;
@@ -7592,6 +7593,7 @@ export type UserBoolExp = {
   _or?: InputMaybe<Array<UserBoolExp>>;
   bio?: InputMaybe<StringComparisonExp>;
   blocked?: InputMaybe<BooleanComparisonExp>;
+  blockedUntil?: InputMaybe<TimestamptzComparisonExp>;
   city?: InputMaybe<StringComparisonExp>;
   claimResourcesByUpdatedBy?: InputMaybe<OriginBoolExp>;
   claimResourcesByUpdatedByAggregate?: InputMaybe<OriginAggregateBoolExp>;
@@ -8452,6 +8454,7 @@ export type UserHistoryUpdates = {
 export type UserInsertInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   blocked?: InputMaybe<Scalars['Boolean']['input']>;
+  blockedUntil?: InputMaybe<Scalars['timestamptz']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   claimResourcesByUpdatedBy?: InputMaybe<OriginArrRelInsertInput>;
   claims?: InputMaybe<ClaimArrRelInsertInput>;
@@ -8489,6 +8492,7 @@ export type UserInsertInput = {
 export type UserMaxFields = {
   __typename?: 'UserMaxFields';
   bio?: Maybe<Scalars['String']['output']>;
+  blockedUntil?: Maybe<Scalars['timestamptz']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
@@ -8508,6 +8512,7 @@ export type UserMaxFields = {
 /** order by max() on columns of table "user" */
 export type UserMaxOrderBy = {
   bio?: InputMaybe<OrderBy>;
+  blockedUntil?: InputMaybe<OrderBy>;
   city?: InputMaybe<OrderBy>;
   country?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
@@ -8528,6 +8533,7 @@ export type UserMaxOrderBy = {
 export type UserMinFields = {
   __typename?: 'UserMinFields';
   bio?: Maybe<Scalars['String']['output']>;
+  blockedUntil?: Maybe<Scalars['timestamptz']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
@@ -8547,6 +8553,7 @@ export type UserMinFields = {
 /** order by min() on columns of table "user" */
 export type UserMinOrderBy = {
   bio?: InputMaybe<OrderBy>;
+  blockedUntil?: InputMaybe<OrderBy>;
   city?: InputMaybe<OrderBy>;
   country?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
@@ -8590,6 +8597,7 @@ export type UserOnConflict = {
 export type UserOrderBy = {
   bio?: InputMaybe<OrderBy>;
   blocked?: InputMaybe<OrderBy>;
+  blockedUntil?: InputMaybe<OrderBy>;
   city?: InputMaybe<OrderBy>;
   claimResourcesByUpdatedByAggregate?: InputMaybe<OriginAggregateOrderBy>;
   claimsAggregate?: InputMaybe<ClaimAggregateOrderBy>;
@@ -8643,6 +8651,8 @@ export enum UserSelectColumn {
   Bio = 'bio',
   /** column name */
   Blocked = 'blocked',
+  /** column name */
+  BlockedUntil = 'blockedUntil',
   /** column name */
   City = 'city',
   /** column name */
@@ -8709,6 +8719,7 @@ export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
 export type UserSetInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   blocked?: InputMaybe<Scalars['Boolean']['input']>;
+  blockedUntil?: InputMaybe<Scalars['timestamptz']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -8741,6 +8752,7 @@ export type UserStreamCursorInput = {
 export type UserStreamCursorValueInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   blocked?: InputMaybe<Scalars['Boolean']['input']>;
+  blockedUntil?: InputMaybe<Scalars['timestamptz']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -8767,6 +8779,8 @@ export enum UserUpdateColumn {
   Bio = 'bio',
   /** column name */
   Blocked = 'blocked',
+  /** column name */
+  BlockedUntil = 'blockedUntil',
   /** column name */
   City = 'city',
   /** column name */
@@ -12397,6 +12411,7 @@ export type InsertClaimMutation = { __typename?: 'mutation_root', insertClaim?: 
 export type UpdateUserBlockedMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   blocked: Scalars['Boolean']['input'];
+  blockedUntil?: InputMaybe<Scalars['timestamptz']['input']>;
 }>;
 
 
@@ -12407,10 +12422,11 @@ export type UpdateUserIdentityDetailsMutationVariables = Exact<{
   role?: InputMaybe<Scalars['String']['input']>;
   verified?: InputMaybe<Scalars['Boolean']['input']>;
   blocked?: InputMaybe<Scalars['Boolean']['input']>;
+  blockedUntil?: InputMaybe<Scalars['timestamptz']['input']>;
 }>;
 
 
-export type UpdateUserIdentityDetailsMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any, role?: string | null, verified: boolean, blocked?: boolean | null } | null };
+export type UpdateUserIdentityDetailsMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any, role?: string | null, verified: boolean, blocked?: boolean | null, blockedUntil?: any | null } | null };
 
 export type UpdateUserRoleMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -12633,22 +12649,26 @@ export const InsertClaimDocument = gql`
 }
     `;
 export const UpdateUserBlockedDocument = gql`
-    mutation UpdateUserBlocked($id: uuid!, $blocked: Boolean!) {
-  updateUserByPk(pkColumns: {id: $id}, _set: {blocked: $blocked}) {
+    mutation UpdateUserBlocked($id: uuid!, $blocked: Boolean!, $blockedUntil: timestamptz) {
+  updateUserByPk(
+    pkColumns: {id: $id}
+    _set: {blocked: $blocked, blockedUntil: $blockedUntil}
+  ) {
     id
   }
 }
     `;
 export const UpdateUserIdentityDetailsDocument = gql`
-    mutation UpdateUserIdentityDetails($id: uuid!, $role: String, $verified: Boolean, $blocked: Boolean) {
+    mutation UpdateUserIdentityDetails($id: uuid!, $role: String, $verified: Boolean, $blocked: Boolean, $blockedUntil: timestamptz) {
   updateUserByPk(
     pkColumns: {id: $id}
-    _set: {role: $role, verified: $verified, blocked: $blocked}
+    _set: {role: $role, verified: $verified, blocked: $blocked, blockedUntil: $blockedUntil}
   ) {
     id
     role
     verified
     blocked
+    blockedUntil
   }
 }
     `;

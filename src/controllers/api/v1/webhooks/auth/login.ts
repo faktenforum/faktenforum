@@ -4,13 +4,17 @@ import { Post, Tags, Returns } from "@tsed/schema";
 import { Logger, Req } from "@tsed/common";
 import { Response } from "@tsed/common";
 import { ForKratosResponse } from "~/models";
-import { AuthService } from "~/services";
+import { AuthService, HasuraService } from "~/services";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { generateKratosResponse } from "~/utils";
+import { UpdateUserBlockedDocument } from "~/generated/graphql";
 @Controller("/webhooks/auth/login")
 export class AuthLoginWebhookController {
   @Inject(AuthService)
   authService: AuthService;
+
+  @Inject(HasuraService)
+  hasuraService: HasuraService;
 
   @Inject(Logger)
   logger: Logger;
@@ -40,6 +44,10 @@ export class AuthLoginWebhookController {
       } else {
         // If the block has expired, optionally update the block status in the database.
         await this.authService.updateUserBlockStatus(body.id, false);
+        await this.hasuraService.adminRequest(UpdateUserBlockedDocument, {
+          id: body.id,
+          blocked: false
+        });
       }
     }
 

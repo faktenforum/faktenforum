@@ -16,7 +16,12 @@ import {
 
 import { AuthService, HasuraService, MatrixService } from "~/services";
 import { Identity } from "@ory/kratos-client";
-import { AnonymizeUserProfileDocument, UpdateUserRoleDocument } from "~/generated/graphql";
+import {
+  AnonymizeUserProfileDocument,
+  UpdateUserRoleDocument,
+  UpdateUserVerifiedDocument,
+  UpdateUserBlockedDocument
+} from "~/generated/graphql";
 import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
@@ -157,6 +162,10 @@ export class AuthAccountWebHookController {
   async verifyEmailAddress(@BodyParams() body: { userId: string }) {
     try {
       await this.authService.verifyUserEmail(body.userId);
+      await this.hasuraService.adminRequest(UpdateUserVerifiedDocument, {
+        id: body.userId,
+        verified: true
+      });
       return { success: true };
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
@@ -192,7 +201,11 @@ export class AuthAccountWebHookController {
 
       // Update user status in Kratos
       await this.authService.updateUserBlockStatus(body.userId, body.blocked, blockedUntil);
-
+      await this.hasuraService.adminRequest(UpdateUserBlockedDocument, {
+        id: body.userId,
+        blocked: body.blocked,
+        blockedUntil: blockedUntil
+      });
       // If blocking, invalidate all sessions for this user
       if (body.blocked) {
         await this.authService.revokeAllUserSessions(body.userId);
@@ -204,6 +217,7 @@ export class AuthAccountWebHookController {
       this.logger.info(
         `[HasuraWebHookController] Successfully ${body.blocked ? "blocked" : "unblocked"} user: ${body.userId}`
       );
+
       return { success: true };
     } catch (error) {
       this.logger.error(

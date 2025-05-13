@@ -72,7 +72,8 @@ export class SyncAuthWebHookController {
             id: hasuraUser.id,
             role: kratosRole,
             verified: kratosVerified,
-            blocked: kratosBlocked
+            blocked: kratosBlocked,
+            blockedUntil: kratosBlocked ? kratosUser.metadata_public?.blocked?.until : null
           });
           totalUpdated++;
         }
