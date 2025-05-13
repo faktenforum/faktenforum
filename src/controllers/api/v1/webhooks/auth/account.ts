@@ -150,13 +150,13 @@ export class AuthAccountWebHookController {
     }
   }
 
-  @Post("/activate")
+  @Post("/verify")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
-  async activateAccount(@BodyParams() body: { userId: string }) {
+  async verifyEmailAddress(@BodyParams() body: { userId: string }) {
     try {
-      await this.authService.activateUser(body.userId);
+      await this.authService.verifyUserEmail(body.userId);
       return { success: true };
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);

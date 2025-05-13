@@ -184,7 +184,7 @@ export class AuthService {
     }
   }
 
-  async activateUser(userId: string): Promise<Identity> {
+  async verifyUserEmail(userId: string): Promise<Identity> {
     try {
       const response = await this.kratosIdentityApi.patchIdentity({
         id: userId,
