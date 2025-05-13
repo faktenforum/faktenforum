@@ -72,7 +72,7 @@ BEGIN
         p_operation,
         p_table_name,
         NOW(),
-        (p_new->>'id')::uuid,
+        COALESCE((p_new->>'id')::uuid, (p_old->>'id')::uuid),
         v_changes,
         p_metadata
     );
@@ -247,7 +247,7 @@ BEGIN
     PERFORM public.log_generic_event(
         to_jsonb(OLD),
         to_jsonb(NEW),
-        NEW.user_id,
+        COALESCE( NEW.user_id, OLD.user_id),
         null,
         TG_OP,
         TG_TABLE_NAME,
@@ -291,5 +291,5 @@ AFTER INSERT OR UPDATE ON public.checkworthiness
 FOR EACH ROW EXECUTE FUNCTION public.log_checkworthiness_event();
 
 CREATE TRIGGER log_user_category_event
-AFTER INSERT OR UPDATE ON public.user_category
+AFTER INSERT OR UPDATE OR DELETE ON public.user_category
 FOR EACH ROW EXECUTE FUNCTION public.log_user_category_event();
