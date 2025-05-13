@@ -12394,6 +12394,14 @@ export type InsertClaimMutationVariables = Exact<{
 
 export type InsertClaimMutation = { __typename?: 'mutation_root', insertClaim?: { __typename?: 'ClaimMutationResponse', returning: Array<{ __typename?: 'Claim', id: any, createdAt?: any | null, updatedAt?: any | null }> } | null };
 
+export type UpdateUserBlockedMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  blocked: Scalars['Boolean']['input'];
+}>;
+
+
+export type UpdateUserBlockedMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null };
+
 export type UpdateUserIdentityDetailsMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
@@ -12411,6 +12419,14 @@ export type UpdateUserRoleMutationVariables = Exact<{
 
 
 export type UpdateUserRoleMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null };
+
+export type UpdateUserVerifiedMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  verified: Scalars['Boolean']['input'];
+}>;
+
+
+export type UpdateUserVerifiedMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any } | null };
 
 export type GetFileByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -12616,6 +12632,13 @@ export const InsertClaimDocument = gql`
   }
 }
     `;
+export const UpdateUserBlockedDocument = gql`
+    mutation UpdateUserBlocked($id: uuid!, $blocked: Boolean!) {
+  updateUserByPk(pkColumns: {id: $id}, _set: {blocked: $blocked}) {
+    id
+  }
+}
+    `;
 export const UpdateUserIdentityDetailsDocument = gql`
     mutation UpdateUserIdentityDetails($id: uuid!, $role: String, $verified: Boolean, $blocked: Boolean) {
   updateUserByPk(
@@ -12632,6 +12655,13 @@ export const UpdateUserIdentityDetailsDocument = gql`
 export const UpdateUserRoleDocument = gql`
     mutation UpdateUserRole($id: uuid!, $role: String!) {
   updateUserByPk(pkColumns: {id: $id}, _set: {role: $role}) {
+    id
+  }
+}
+    `;
+export const UpdateUserVerifiedDocument = gql`
+    mutation UpdateUserVerified($id: uuid!, $verified: Boolean!) {
+  updateUserByPk(pkColumns: {id: $id}, _set: {verified: $verified}) {
     id
   }
 }
@@ -12800,11 +12830,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     InsertClaim(variables?: InsertClaimMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertClaimMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertClaimMutation>(InsertClaimDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsertClaim', 'mutation', variables);
     },
+    UpdateUserBlocked(variables: UpdateUserBlockedMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateUserBlockedMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserBlockedMutation>(UpdateUserBlockedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateUserBlocked', 'mutation', variables);
+    },
     UpdateUserIdentityDetails(variables: UpdateUserIdentityDetailsMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateUserIdentityDetailsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserIdentityDetailsMutation>(UpdateUserIdentityDetailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateUserIdentityDetails', 'mutation', variables);
     },
     UpdateUserRole(variables: UpdateUserRoleMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateUserRoleMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserRoleMutation>(UpdateUserRoleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateUserRole', 'mutation', variables);
+    },
+    UpdateUserVerified(variables: UpdateUserVerifiedMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateUserVerifiedMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserVerifiedMutation>(UpdateUserVerifiedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateUserVerified', 'mutation', variables);
     },
     getFileById(variables: GetFileByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetFileByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetFileByIdQuery>(GetFileByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFileById', 'query', variables);

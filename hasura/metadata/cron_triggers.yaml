@@ -21,7 +21,7 @@
     version: 2
 - name: syncUserIdentiyDetails
   webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/sync'
-  schedule: 0 4 * * *
+  schedule: 0 3 * * *
   include_in_metadata: true
   payload: {}
   headers:

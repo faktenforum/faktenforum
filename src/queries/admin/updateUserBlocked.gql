@@ -1,0 +1,5 @@
+mutation UpdateUserBlocked($id: uuid!, $blocked: Boolean!) {
+  updateUserByPk(pkColumns: { id: $id }, _set: { blocked: $blocked }) {
+    id
+  }
+}
