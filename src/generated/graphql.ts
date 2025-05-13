@@ -6958,6 +6958,7 @@ export type TstzrangeComparisonExp = {
 export type User = {
   __typename?: 'User';
   bio?: Maybe<Scalars['String']['output']>;
+  blocked?: Maybe<Scalars['Boolean']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   claimResourcesByUpdatedBy: Array<Origin>;
@@ -7025,6 +7026,7 @@ export type User = {
   /** An array relationship */
   user_categories: Array<UserCategory>;
   username: Scalars['String']['output'];
+  verified: Scalars['Boolean']['output'];
 };
 
 
@@ -7285,9 +7287,31 @@ export type UserAccountView = {
   role?: Maybe<Scalars['String']['output']>;
   signedCodeOfConduct?: Maybe<Scalars['Boolean']['output']>;
   updatedAt?: Maybe<Scalars['timestamptz']['output']>;
-  /** An object relationship */
-  user_categories?: Maybe<UserCategory>;
+  /** An aggregate relationship */
+  userCategoriesAggregate: UserCategoryAggregate;
+  /** An array relationship */
+  user_categories: Array<UserCategory>;
   username?: Maybe<Scalars['String']['output']>;
+};
+
+
+/** View of user table to set Hasura Permissions for User to read all, including signed_code_of_conduct */
+export type UserAccountViewUserCategoriesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<UserCategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserCategoryOrderBy>>;
+  where?: InputMaybe<UserCategoryBoolExp>;
+};
+
+
+/** View of user table to set Hasura Permissions for User to read all, including signed_code_of_conduct */
+export type UserAccountViewUser_CategoriesArgs = {
+  distinctOn?: InputMaybe<Array<UserCategorySelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserCategoryOrderBy>>;
+  where?: InputMaybe<UserCategoryBoolExp>;
 };
 
 /** aggregated selection of "user_account_view" */
@@ -7333,6 +7357,7 @@ export type UserAccountViewBoolExp = {
   signedCodeOfConduct?: InputMaybe<BooleanComparisonExp>;
   updatedAt?: InputMaybe<TimestamptzComparisonExp>;
   user_categories?: InputMaybe<UserCategoryBoolExp>;
+  user_categoriesAggregate?: InputMaybe<UserCategoryAggregateBoolExp>;
   username?: InputMaybe<StringComparisonExp>;
 };
 
@@ -7353,7 +7378,7 @@ export type UserAccountViewInsertInput = {
   role?: InputMaybe<Scalars['String']['input']>;
   signedCodeOfConduct?: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  user_categories?: InputMaybe<UserCategoryObjRelInsertInput>;
+  user_categories?: InputMaybe<UserCategoryArrRelInsertInput>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -7423,7 +7448,7 @@ export type UserAccountViewOrderBy = {
   role?: InputMaybe<OrderBy>;
   signedCodeOfConduct?: InputMaybe<OrderBy>;
   updatedAt?: InputMaybe<OrderBy>;
-  user_categories?: InputMaybe<UserCategoryOrderBy>;
+  user_categoriesAggregate?: InputMaybe<UserCategoryAggregateOrderBy>;
   username?: InputMaybe<OrderBy>;
 };
 
@@ -7566,6 +7591,7 @@ export type UserBoolExp = {
   _not?: InputMaybe<UserBoolExp>;
   _or?: InputMaybe<Array<UserBoolExp>>;
   bio?: InputMaybe<StringComparisonExp>;
+  blocked?: InputMaybe<BooleanComparisonExp>;
   city?: InputMaybe<StringComparisonExp>;
   claimResourcesByUpdatedBy?: InputMaybe<OriginBoolExp>;
   claimResourcesByUpdatedByAggregate?: InputMaybe<OriginAggregateBoolExp>;
@@ -7608,6 +7634,7 @@ export type UserBoolExp = {
   user_categories?: InputMaybe<UserCategoryBoolExp>;
   user_categoriesAggregate?: InputMaybe<UserCategoryAggregateBoolExp>;
   username?: InputMaybe<StringComparisonExp>;
+  verified?: InputMaybe<BooleanComparisonExp>;
 };
 
 /** User preffered claim topics */
@@ -7731,13 +7758,6 @@ export type UserCategoryMutationResponse = {
   affectedRows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
   returning: Array<UserCategory>;
-};
-
-/** input type for inserting object relation for remote table "user_category" */
-export type UserCategoryObjRelInsertInput = {
-  data: UserCategoryInsertInput;
-  /** upsert condition */
-  onConflict?: InputMaybe<UserCategoryOnConflict>;
 };
 
 /** on_conflict condition type for table "user_category" */
@@ -8431,6 +8451,7 @@ export type UserHistoryUpdates = {
 /** input type for inserting data into table "user" */
 export type UserInsertInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   claimResourcesByUpdatedBy?: InputMaybe<OriginArrRelInsertInput>;
   claims?: InputMaybe<ClaimArrRelInsertInput>;
@@ -8461,6 +8482,7 @@ export type UserInsertInput = {
   userHistories?: InputMaybe<UserHistoryArrRelInsertInput>;
   user_categories?: InputMaybe<UserCategoryArrRelInsertInput>;
   username?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** aggregate max on columns */
@@ -8567,6 +8589,7 @@ export type UserOnConflict = {
 /** Ordering options when selecting data from "user". */
 export type UserOrderBy = {
   bio?: InputMaybe<OrderBy>;
+  blocked?: InputMaybe<OrderBy>;
   city?: InputMaybe<OrderBy>;
   claimResourcesByUpdatedByAggregate?: InputMaybe<OriginAggregateOrderBy>;
   claimsAggregate?: InputMaybe<ClaimAggregateOrderBy>;
@@ -8597,6 +8620,7 @@ export type UserOrderBy = {
   userHistoriesAggregate?: InputMaybe<UserHistoryAggregateOrderBy>;
   user_categoriesAggregate?: InputMaybe<UserCategoryAggregateOrderBy>;
   username?: InputMaybe<OrderBy>;
+  verified?: InputMaybe<OrderBy>;
 };
 
 /** primary key columns input for table: user */
@@ -8618,6 +8642,8 @@ export enum UserSelectColumn {
   /** column name */
   Bio = 'bio',
   /** column name */
+  Blocked = 'blocked',
+  /** column name */
   City = 'city',
   /** column name */
   Country = 'country',
@@ -8650,28 +8676,39 @@ export enum UserSelectColumn {
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  Username = 'username'
+  Username = 'username',
+  /** column name */
+  Verified = 'verified'
 }
 
 /** select "userAggregateBoolExpBool_andArgumentsColumns" columns of table "user" */
 export enum UserSelectColumnUserAggregateBoolExpBool_AndArgumentsColumns {
   /** column name */
+  Blocked = 'blocked',
+  /** column name */
   Deleted = 'deleted',
   /** column name */
-  SignedCodeOfConduct = 'signedCodeOfConduct'
+  SignedCodeOfConduct = 'signedCodeOfConduct',
+  /** column name */
+  Verified = 'verified'
 }
 
 /** select "userAggregateBoolExpBool_orArgumentsColumns" columns of table "user" */
 export enum UserSelectColumnUserAggregateBoolExpBool_OrArgumentsColumns {
   /** column name */
+  Blocked = 'blocked',
+  /** column name */
   Deleted = 'deleted',
   /** column name */
-  SignedCodeOfConduct = 'signedCodeOfConduct'
+  SignedCodeOfConduct = 'signedCodeOfConduct',
+  /** column name */
+  Verified = 'verified'
 }
 
 /** input type for updating data in table "user" */
 export type UserSetInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -8689,6 +8726,7 @@ export type UserSetInput = {
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Streaming cursor of the table "user" */
@@ -8702,6 +8740,7 @@ export type UserStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type UserStreamCursorValueInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -8719,12 +8758,15 @@ export type UserStreamCursorValueInput = {
   sysPeriod?: InputMaybe<Scalars['tstzrange']['input']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** update columns of table "user" */
 export enum UserUpdateColumn {
   /** column name */
   Bio = 'bio',
+  /** column name */
+  Blocked = 'blocked',
   /** column name */
   City = 'city',
   /** column name */
@@ -8758,7 +8800,9 @@ export enum UserUpdateColumn {
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  Username = 'username'
+  Username = 'username',
+  /** column name */
+  Verified = 'verified'
 }
 
 export type UserUpdates = {
@@ -12308,6 +12352,14 @@ export type GetUserByUsernameQueryVariables = Exact<{
 
 export type GetUserByUsernameQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', profileImage?: any | null, id: any }> };
 
+export type GetUserIdentityDetailsPagedQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+  offset: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserIdentityDetailsPagedQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'User', id: any, role?: string | null, email: string, verified: boolean, blocked?: boolean | null }> };
+
 export type InsertCheckworthinessMutationVariables = Exact<{
   confidence: Scalars['float8']['input'];
   claimId: Scalars['uuid']['input'];
@@ -12341,6 +12393,16 @@ export type InsertClaimMutationVariables = Exact<{
 
 
 export type InsertClaimMutation = { __typename?: 'mutation_root', insertClaim?: { __typename?: 'ClaimMutationResponse', returning: Array<{ __typename?: 'Claim', id: any, createdAt?: any | null, updatedAt?: any | null }> } | null };
+
+export type UpdateUserIdentityDetailsMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
+  blocked?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type UpdateUserIdentityDetailsMutation = { __typename?: 'mutation_root', updateUserByPk?: { __typename?: 'User', id: any, role?: string | null, verified: boolean, blocked?: boolean | null } | null };
 
 export type UpdateUserRoleMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -12498,6 +12560,17 @@ export const GetUserByUsernameDocument = gql`
   }
 }
     `;
+export const GetUserIdentityDetailsPagedDocument = gql`
+    query GetUserIdentityDetailsPaged($limit: Int!, $offset: Int!) {
+  user(limit: $limit, offset: $offset) {
+    id
+    role
+    email
+    verified
+    blocked
+  }
+}
+    `;
 export const InsertCheckworthinessDocument = gql`
     mutation insertCheckworthiness($confidence: float8!, $claimId: uuid!, $category: check_worth_category!) {
   data: insertCheckworthinessOne(
@@ -12540,6 +12613,19 @@ export const InsertClaimDocument = gql`
       createdAt
       updatedAt
     }
+  }
+}
+    `;
+export const UpdateUserIdentityDetailsDocument = gql`
+    mutation UpdateUserIdentityDetails($id: uuid!, $role: String, $verified: Boolean, $blocked: Boolean) {
+  updateUserByPk(
+    pkColumns: {id: $id}
+    _set: {role: $role, verified: $verified, blocked: $blocked}
+  ) {
+    id
+    role
+    verified
+    blocked
   }
 }
     `;
@@ -12699,6 +12785,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getUserByUsername(variables: GetUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserByUsernameQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserByUsernameQuery>(GetUserByUsernameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserByUsername', 'query', variables);
     },
+    GetUserIdentityDetailsPaged(variables: GetUserIdentityDetailsPagedQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserIdentityDetailsPagedQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserIdentityDetailsPagedQuery>(GetUserIdentityDetailsPagedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserIdentityDetailsPaged', 'query', variables);
+    },
     insertCheckworthiness(variables: InsertCheckworthinessMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertCheckworthinessMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertCheckworthinessMutation>(InsertCheckworthinessDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'insertCheckworthiness', 'mutation', variables);
     },
@@ -12710,6 +12799,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     InsertClaim(variables?: InsertClaimMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<InsertClaimMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsertClaimMutation>(InsertClaimDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsertClaim', 'mutation', variables);
+    },
+    UpdateUserIdentityDetails(variables: UpdateUserIdentityDetailsMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateUserIdentityDetailsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserIdentityDetailsMutation>(UpdateUserIdentityDetailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateUserIdentityDetails', 'mutation', variables);
     },
     UpdateUserRole(variables: UpdateUserRoleMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateUserRoleMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserRoleMutation>(UpdateUserRoleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateUserRole', 'mutation', variables);
