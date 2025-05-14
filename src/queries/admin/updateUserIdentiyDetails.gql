@@ -1,0 +1,18 @@
+mutation UpdateUserIdentityDetails(
+  $id: uuid!
+  $role: String
+  $verified: Boolean
+  $blocked: Boolean
+  $blockedUntil: timestamptz
+) {
+  updateUserByPk(
+    pkColumns: { id: $id }
+    _set: { role: $role, verified: $verified, blocked: $blocked, blockedUntil: $blockedUntil }
+  ) {
+    id
+    role
+    verified
+    blocked
+    blockedUntil
+  }
+}

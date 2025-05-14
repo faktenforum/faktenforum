@@ -16,7 +16,12 @@ import {
 
 import { AuthService, HasuraService, MatrixService } from "~/services";
 import { Identity } from "@ory/kratos-client";
-import { AnonymizeUserProfileDocument } from "~/generated/graphql";
+import {
+  AnonymizeUserProfileDocument,
+  UpdateUserRoleDocument,
+  UpdateUserVerifiedDocument,
+  UpdateUserBlockedDocument
+} from "~/generated/graphql";
 import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
 
 const DEFAULT_LANGUAGE = "de";
@@ -68,6 +73,10 @@ export class AuthAccountWebHookController {
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
     this.matrixService.alterSpaceMembershipsByRole(body.userId, body.role);
     const kratosUser = await this.authService.updateUserRole(body.userId, body.role);
+    await this.hasuraService.adminRequest(UpdateUserRoleDocument, {
+      id: body.userId,
+      role: body.role
+    });
     return this.transformKratosUser(kratosUser as Identity);
   }
 
@@ -146,13 +155,17 @@ export class AuthAccountWebHookController {
     }
   }
 
-  @Post("/activate")
+  @Post("/verify")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
-  async activateAccount(@BodyParams() body: { userId: string }) {
+  async verifyEmailAddress(@BodyParams() body: { userId: string }) {
     try {
-      await this.authService.activateUser(body.userId);
+      await this.authService.verifyUserEmail(body.userId);
+      await this.hasuraService.adminRequest(UpdateUserVerifiedDocument, {
+        id: body.userId,
+        verified: true
+      });
       return { success: true };
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
@@ -188,7 +201,11 @@ export class AuthAccountWebHookController {
 
       // Update user status in Kratos
       await this.authService.updateUserBlockStatus(body.userId, body.blocked, blockedUntil);
-
+      await this.hasuraService.adminRequest(UpdateUserBlockedDocument, {
+        id: body.userId,
+        blocked: body.blocked,
+        blockedUntil: blockedUntil
+      });
       // If blocking, invalidate all sessions for this user
       if (body.blocked) {
         await this.authService.revokeAllUserSessions(body.userId);
@@ -200,6 +217,7 @@ export class AuthAccountWebHookController {
       this.logger.info(
         `[HasuraWebHookController] Successfully ${body.blocked ? "blocked" : "unblocked"} user: ${body.userId}`
       );
+
       return { success: true };
     } catch (error) {
       this.logger.error(

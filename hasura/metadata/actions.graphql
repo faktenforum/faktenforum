@@ -1,15 +1,3 @@
-type Query {
-  accountDetails(
-    ids: [uuid]!
-  ): [AccountDetailsResponse!]!
-}
-
-type Query {
-  accountRole(
-    id: uuid!
-  ): GetUserRoleResponse
-}
-
 type Mutation {
   blockAccount(
     blockAccountRequestInput: BlockAccountRequestInput

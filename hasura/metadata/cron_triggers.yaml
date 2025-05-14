@@ -1,6 +1,6 @@
 - name: calculateCheckWorthinessForAllClaims
   webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/webhooks/ai/checkworthiness/calculate-all-claims'
-  schedule: 7 1 * * *
+  schedule: 0 3 * * *
   include_in_metadata: true
   payload: {}
   retry_conf:
@@ -15,6 +15,20 @@
   request_transform:
     body:
       action: remove
+    method: POST
+    query_params: {}
+    template_engine: Kriti
+    version: 2
+- name: syncUserIdentiyDetails
+  webhook: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/sync'
+  schedule: 0 3 * * *
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: x-api-key
+      value_from_env: HASURA_WEBHOOKS_API_KEY
+  comment: Sync user blocked, activated, role state between kratos and fafo database
+  request_transform:
     method: POST
     query_params: {}
     template_engine: Kriti

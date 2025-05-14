@@ -1,0 +1,9 @@
+query GetUserIdentityDetailsPaged($limit: Int!, $offset: Int!) {
+  user(limit: $limit, offset: $offset) {
+    id
+    role
+    email
+    verified
+    blocked
+  }
+}
