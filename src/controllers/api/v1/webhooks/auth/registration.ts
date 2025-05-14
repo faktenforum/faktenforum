@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { Post, Returns, Tags } from "@tsed/schema";
+import { Post, Returns, Tags, Description } from "@tsed/schema";
 import { createAvatar } from "@dicebear/core";
 import { glass } from "@dicebear/collection";
 
@@ -49,6 +49,9 @@ export class AuthRegistrationWebHookController {
 
   @Post("/finalise")
   @Tags("Auth")
+  @Description(
+    "Webhook used by Kratos to finalise a user's account after registration, This in cludes the creation of the user in the database and the creation of the user in the matrix chat"
+  )
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async postfinaliseAcount(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {
@@ -79,7 +82,8 @@ export class AuthRegistrationWebHookController {
           username: body.traits.username,
           firstName: body.transientPayload.firstName ?? "",
           lastName: body.transientPayload.lastName ?? "",
-          profileImage: body.id
+          profileImage: body.id,
+          role: UserRole.Aspirant
         }
       );
       id = response.insertUserOne?.id;
@@ -110,6 +114,7 @@ export class AuthRegistrationWebHookController {
 
   @Post("/validate")
   @Tags("Auth")
+  @Description("Webhook used by Kratos to check if a username is already taken by an deleted user")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, RegistrationPreResponse)
   async preRegistration(@BodyParams() body: RegistrationRequest, @Context() ctx: Context) {

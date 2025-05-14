@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams } from "@tsed/platform-params";
-import { Post, Tags, Returns } from "@tsed/schema";
+import { Post, Tags, Returns, Description } from "@tsed/schema";
 import { Logger, Req } from "@tsed/common";
 import { Response } from "@tsed/common";
 import { ForKratosResponse } from "~/models";
@@ -21,6 +21,7 @@ export class AuthLoginWebhookController {
 
   @Post("/check-blocked")
   @Tags("Auth")
+  @Description("Webhook used by Kratos to check if a user is blocked during the login flow")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, ForKratosResponse)
   async checkBlock(@BodyParams() body: any, @Response() response: Response) {

@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Post, Returns, Tags, CollectionOf } from "@tsed/schema";
+import { Post, Returns, Tags, Description, CollectionOf } from "@tsed/schema";
 
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import {
@@ -69,6 +69,7 @@ export class AuthAccountWebHookController {
 
   @Post("/update-role")
   @Tags("Auth")
+  @Description("Webhook used by Hasura to update the role of a user")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, AccountSchema).ContentType("application/json")) // prettier-ignore
   async updateUserRole(@BodyParams() body: UpdateUserRoleRequest) {
@@ -83,6 +84,7 @@ export class AuthAccountWebHookController {
 
   @Post("/delete")
   @Tags("Auth")
+  @Description("Webhook used by Hasura to delete a user by fafo admin interface")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
   async deleteUser(@BodyParams() body: DeleteUserRequest) {
@@ -158,6 +160,7 @@ export class AuthAccountWebHookController {
 
   @Post("/verify")
   @Tags("Auth")
+  @Description("Webhook used by Hasura to verify a user's email address manually")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async verifyEmailAddress(@BodyParams() body: { userId: string }) {
@@ -175,13 +178,13 @@ export class AuthAccountWebHookController {
   }
 
   @Post("/verification/complete")
+  @Description("Webhook used by Kratos to set user as verified after verification flow")
   @ApiKeyAccessControlDecorator({ service: "kratos" })
   @Returns(200, ForKratosResponse)
   @Tags("Auth")
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async afterVerification(@BodyParams() body: any) {
     try {
-      this.logger.warn(`[HasuraWebHookController] Verifying user: ${body.id}`);
       await this.hasuraService.adminRequest(UpdateUserVerifiedDocument, {
         id: body.id,
         verified: true
@@ -204,6 +207,9 @@ export class AuthAccountWebHookController {
 
   @Post("/request-verification-code")
   @Tags("Auth")
+  @Description(
+    "Webhook used by Hasura to request a verification code for a user manually by admin. A new code is send to the user's email address"
+  )
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async resendVerificationEmail(@BodyParams() body: { email: string }) {
@@ -218,6 +224,7 @@ export class AuthAccountWebHookController {
 
   @Post("/block")
   @Tags("Auth")
+  @Description("Webhook used by Hasura to block a user by admin")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async blockAccount(@BodyParams() body: BlockAccountRequest) {

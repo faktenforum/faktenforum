@@ -2,7 +2,7 @@ import { Controller, Post, Inject, Logger } from "@tsed/common";
 
 import { AuthService, HasuraService } from "~/services";
 import { UpdateUserIdentityDetailsDocument, GetUserIdentityDetailsPagedDocument } from "~/generated/graphql";
-import { Returns, Tags } from "@tsed/schema";
+import { Returns, Tags, Description } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import type {
   UpdateUserIdentityDetailsMutation,
@@ -23,6 +23,9 @@ export class SyncAuthWebHookController {
 
   @Post("/sync")
   @Tags("Auth")
+  @Description(
+    "Webhook used by Hasura to sync the role of a user with Kratos. It is called via a hasura cron job"
+  )
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @Returns(200, Object)
   async syncAccounts() {

@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Delete, Returns, Tags } from "@tsed/schema";
+import { Delete, Returns, Tags, Description } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { DeleteFileRequest, RequestSuccessResponse } from "~/models";
 import { FileService, EnvService, ImageService, MatrixService } from "~/services";
@@ -25,6 +25,7 @@ export class FilesWebHookController {
 
   @Delete("/delete")
   @Tags("Files")
+  @Description("Webhook used by Hasura to delete a file and all its size versions")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore
   async deleteFile(@BodyParams() body: DeleteFileRequest) {

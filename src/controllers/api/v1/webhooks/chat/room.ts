@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Delete, Post, Returns, Tags } from "@tsed/schema";
+import { Description, Post, Returns, Tags } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { OnClaimStatusUpdatedRequest, DeleteFileRequest } from "~/models";
 import { FileService, EnvService, ImageService, MatrixService, SpaceNames } from "~/services";
@@ -25,6 +25,9 @@ export class ChatRoomWebHookController {
   logger: Logger;
 
   @Post("/change-claim-room-visibility")
+  @Description(
+    "Webhook used by Hasura to change the visibility of a claim room, this happens if an claim changed visibility between community and editorial"
+  )
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @Tags("Chat")
   @(Returns(200, Object).Description("Successfully deleted the file").ContentType("application/json")) // prettier-ignore

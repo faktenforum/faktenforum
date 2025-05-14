@@ -25,15 +25,6 @@ export type Scalars = {
   uuid: { input: any; output: any; }
 };
 
-export type AccountDetailsResponse = {
-  __typename?: 'AccountDetailsResponse';
-  User?: Maybe<User>;
-  blocked?: Maybe<BlockedInfo>;
-  id: Scalars['String']['output'];
-  role: UserRole;
-  verified: Scalars['Boolean']['output'];
-};
-
 /** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
 export type BigintComparisonExp = {
   _eq?: InputMaybe<Scalars['bigint']['input']>;
@@ -56,12 +47,6 @@ export type BlockAccountRequestInput = {
 export type BlockRoomMessageOutput = {
   __typename?: 'BlockRoomMessageOutput';
   success?: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type BlockedInfo = {
-  __typename?: 'BlockedInfo';
-  timestamp: Scalars['String']['output'];
-  until?: Maybe<Scalars['String']['output']>;
 };
 
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
@@ -4642,12 +4627,6 @@ export type Float8ComparisonExp = {
   _lte?: InputMaybe<Scalars['float8']['input']>;
   _neq?: InputMaybe<Scalars['float8']['input']>;
   _nin?: InputMaybe<Array<Scalars['float8']['input']>>;
-};
-
-export type GetUserRoleResponse = {
-  __typename?: 'GetUserRoleResponse';
-  id: Scalars['String']['output'];
-  role: Scalars['String']['output'];
 };
 
 /** columns and relationships of "handbook_sections" */
@@ -10551,9 +10530,6 @@ export type OriginAggregateBoolExpCount = {
 
 export type Query_Root = {
   __typename?: 'query_root';
-  /** Get Roles of users by array of user ids */
-  accountDetails: Array<AccountDetailsResponse>;
-  accountRole?: Maybe<GetUserRoleResponse>;
   /** fetch data from the table: "category" */
   category: Array<Category>;
   /** fetch aggregated fields from the table: "category" */
@@ -10702,16 +10678,6 @@ export type Query_Root = {
   userHistoryAggregate: UserHistoryAggregate;
   /** fetch data from the table: "user_history" using primary key columns */
   userHistoryByPk?: Maybe<UserHistory>;
-};
-
-
-export type Query_RootAccountDetailsArgs = {
-  ids: Array<InputMaybe<Scalars['uuid']['input']>>;
-};
-
-
-export type Query_RootAccountRoleArgs = {
-  id: Scalars['uuid']['input'];
 };
 
 
@@ -12390,6 +12356,7 @@ export type InsertUserMutationVariables = Exact<{
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   profileImage: Scalars['uuid']['input'];
+  role: Scalars['String']['input'];
 }>;
 
 
@@ -12613,9 +12580,9 @@ export const InsertCheckworthinessDocument = gql`
 }
     `;
 export const InsertUserDocument = gql`
-    mutation insertUser($id: uuid!, $email: String!, $username: String!, $firstName: String!, $lastName: String!, $profileImage: uuid!) {
+    mutation insertUser($id: uuid!, $email: String!, $username: String!, $firstName: String!, $lastName: String!, $profileImage: uuid!, $role: String!) {
   insertUserOne(
-    object: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName, profileImage: $profileImage}
+    object: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName, profileImage: $profileImage, role: $role}
   ) {
     id
   }
