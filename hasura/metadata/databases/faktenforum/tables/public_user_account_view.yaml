@@ -1,7 +1,7 @@
 table:
   name: user_account_view
   schema: public
-object_relationships:
+array_relationships:
   - name: user_categories
     using:
       manual_configuration:
