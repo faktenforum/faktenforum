@@ -2,6 +2,7 @@ import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
 import { Post, Returns, Tags, CollectionOf } from "@tsed/schema";
+
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import {
   AccountSchema,
@@ -11,9 +12,9 @@ import {
   GetAccountRoleRequest,
   BlockAccountRequest,
   RequestSuccessResponse,
-  GetUserRoleResponse
+  GetUserRoleResponse,
+  ForKratosResponse
 } from "~/models";
-
 import { AuthService, HasuraService, MatrixService } from "~/services";
 import { Identity } from "@ory/kratos-client";
 import {
@@ -170,6 +171,34 @@ export class AuthAccountWebHookController {
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
       return { success: false };
+    }
+  }
+
+  @Post("/verification/complete")
+  @ApiKeyAccessControlDecorator({ service: "kratos" })
+  @Returns(200, ForKratosResponse)
+  @Tags("Auth")
+  @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
+  async afterVerification(@BodyParams() body: any) {
+    try {
+      this.logger.warn(`[HasuraWebHookController] Verifying user: ${body.id}`);
+      await this.hasuraService.adminRequest(UpdateUserVerifiedDocument, {
+        id: body.id,
+        verified: true
+      });
+      return {
+        messages: []
+      };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Activation failed: ${error.message}`);
+      return {
+        messages: [
+          {
+            type: "error",
+            text: error.message
+          }
+        ]
+      };
     }
   }
 

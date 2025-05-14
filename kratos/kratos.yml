@@ -52,6 +52,21 @@ selfservice:
       use: code
       after:
         default_browser_return_url: http://app.localhost:8000/
+        hooks:
+          - hook: web_hook
+            config:
+              url: http://host.docker.internal:8083/api/v1/webhooks/auth/account/verification/complete
+              method: POST
+              can_interrupt: false
+              body: file:///etc/config/kratos/jsonnet/verification.jsonnet
+              response:
+                parse: true
+              auth:
+                type: api_key
+                config:
+                  name: x-api-key
+                  value: KRATOS_API_KEY_VALUE_SET_VIA_ENV_VARIABLE
+                  in: header
 
     logout:
       after:
@@ -74,7 +89,7 @@ selfservice:
                 type: api_key
                 config:
                   name: x-api-key
-                  value: KRATOS_API_KEY_VALUE
+                  value: KRATOS_API_KEY_VALUE_SET_VIA_ENV_VARIABLE
                   in: header
 
     registration:
@@ -96,7 +111,7 @@ selfservice:
                   type: api_key
                   config:
                     name: x-api-key
-                    value: KRATOS_API_KEY_VALUE
+                    value: KRATOS_API_KEY_VALUE_SET_VIA_ENV_VARIABLE
                     in: header # alternatively "cookie"
             - hook: web_hook
               config:
@@ -110,7 +125,7 @@ selfservice:
                   type: api_key
                   config:
                     name: x-api-key
-                    value: KRATOS_API_KEY_VALUE
+                    value: KRATOS_API_KEY_VALUE_SET_VIA_ENV_VARIABLE
                     in: header # alternatively "cookie"
             - hook: show_verification_ui
 
