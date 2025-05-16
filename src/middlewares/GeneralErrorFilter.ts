@@ -7,19 +7,23 @@ import { Exception } from "@tsed/exceptions";
 export class GeneralErrorFilter implements ExceptionFilterMethods {
   @Inject(EnvService)
   envService: EnvService;
-  catch(exception: Exception, ctx: PlatformContext) {
-    const { response, logger } = ctx;
+  async catch(exception: Exception, ctx: PlatformContext) {
+    const { response, logger, request } = ctx;
     const error = this.mapError(exception);
     const headers = this.getHeaders(exception);
-    console.log(error);
-    logger.error({ error });
+
+    logger.error({
+      method: request.method,
+      path: request.url,
+      reqId: ctx.id,
+      error
+    });
 
     response
       .setHeaders(headers)
       .status(error.status || 500)
       .body(error);
   }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapError(error: any) {
     return {
