@@ -18,6 +18,10 @@ type Mutation {
 }
 
 type Mutation {
+  deleteMyAccount: RequestSuccessResponse
+}
+
+type Mutation {
   requestVerificationCode(
     email: String!
   ): SuccessInfo
