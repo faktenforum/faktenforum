@@ -94,11 +94,11 @@ export class AuthAccountWebHookController {
 
   @Post("/delete-by-session")
   @Tags("Auth")
-  @Description("Webhook used by Hasura to delete a user by his kratos session, used by fafo users")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @Description("Webhook used by Hasura to delete a user by his kratos session, used by fafo users")
   @(Returns(200, RequestSuccessResponse).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
   async deleteUserBySession(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
-    this.logger.info(`[HasuraWebHookController] Deleting user: ${body.userId}`);
+    this.logger.info(`[HasuraWebHookController] Deleting user by Session`);
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
 
     const session = await this.authService.getUserSession(sessionCookie);
