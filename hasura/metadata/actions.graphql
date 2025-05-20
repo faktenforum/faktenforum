@@ -34,6 +34,13 @@ type Mutation {
 }
 
 type Mutation {
+  revokeMySessionById(
+    revokeMySessionInput: RevokeMySessionInput
+    oryKratosSession: String
+  ): RequestSuccessResponse
+}
+
+type Mutation {
   sendMessageToCheckbotMessagePost(
     textPayloadInput: TextPayloadInput!
   ): CheckbotResponse
@@ -123,6 +130,10 @@ input ApiV1WebhooksAuthSessionWebhooksAuthSessionsByCookieInput {
 
 input ApiV1gGetMySessionsInput {
   activeOnly: Boolean
+}
+
+input RevokeMySessionInput {
+  sessionId: String
 }
 
 type UserWithRole {

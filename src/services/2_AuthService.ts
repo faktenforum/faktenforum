@@ -2,7 +2,13 @@ import { Inject, Service } from "@tsed/di";
 import { Exception, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { EnvService } from "~/services";
 import type { Session } from "@ory/kratos-client";
-import { Configuration, IdentityApi, type Identity, FrontendApi } from "@ory/kratos-client";
+import {
+  Configuration,
+  IdentityApi,
+  type Identity,
+  FrontendApi,
+  GetSessionExpandEnum
+} from "@ory/kratos-client";
 import type { UserRole } from "~/models";
 import { Logger } from "@tsed/common";
 
@@ -101,6 +107,17 @@ export class AuthService {
     }
   }
 
+  async getUserSessionBySessionId(sessionId: string) {
+    const response = await this.kratosIdentityApi.getSession({
+      id: sessionId,
+      expand: [GetSessionExpandEnum.Identity]
+    });
+    if (!response.data) {
+      throw new Exception(response.status, response.statusText);
+    }
+    return response.data;
+  }
+
   async getAllUserSessions(userId: string, activeOnly?: boolean) {
     const response = await this.kratosIdentityApi.listIdentitySessions({ id: userId, active: activeOnly });
     return response.data.map((session) => {
@@ -144,6 +161,10 @@ export class AuthService {
     }
 
     return { identities: response.data, nextPageToken };
+  }
+
+  async revokeSession(sessionId: string): Promise<void> {
+    await this.kratosIdentityApi.disableSession({ id: sessionId });
   }
 
   async updateUserRole(userId: string, role: UserRole): Promise<KratosUser> {
