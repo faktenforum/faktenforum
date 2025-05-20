@@ -28,6 +28,14 @@ select_permissions:
       filter: {}
       allow_aggregations: true
     comment: ""
+  - role: aspirant
+    permission:
+      columns:
+        - label_de
+        - label_en
+        - name
+      filter: {}
+    comment: ""
   - role: editor
     permission:
       columns:

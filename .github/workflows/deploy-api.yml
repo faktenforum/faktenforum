@@ -28,7 +28,7 @@ jobs:
         with:
           endpoint: "${{ vars.DEV_PORTAINER_URL }}"
           access_token: ${{ secrets.DEV_PORTAINER_ACCESSTOKEN }}
-          stack_name: "${{ vars.DEV_PORTAINER_CHAT_STACK_NAME }}"
+          stack_name: "${{ vars.DEV_PORTAINER_API_STACK_NAME }}"
           prune: true
           pull: true
 
@@ -38,6 +38,6 @@ jobs:
         with:
           endpoint: ${{ vars.PROD_PORTAINER_URL }}
           access_token: ${{ secrets.PROD_PORTAINER_ACCESSTOKEN }}
-          stack_name: "${{ vars.PROD_PORTAINER_CHAT_STACK_NAME }}"
+          stack_name: "${{ vars.PROD_PORTAINER_API_STACK_NAME }}"
           prune: true
           pull: true

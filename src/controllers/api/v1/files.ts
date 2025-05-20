@@ -53,6 +53,7 @@ export class ClaimsController {
 
   @Get("/avatar/:username")
   @Tags("Files")
+  @Description("Endpoint to get the avatar of a user")
   @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
@@ -108,6 +109,7 @@ export class ClaimsController {
   }
 
   @Get("/:fileId")
+  @Description("Endpoint to get a file by its id")
   @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
@@ -157,6 +159,7 @@ export class ClaimsController {
   // route to get file by id and size, Size is in Bucket format xs sm md lg xl
   @Get("/:fileId/:size")
   @Tags("Files")
+  @Description("Endpoint to get a file by its id and size bucket")
   @AccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.")) // prettier-ignore
@@ -206,7 +209,9 @@ export class ClaimsController {
 
   @Post("/")
   @Tags("Files")
-  @Description("This endpoint allows for uploading a file to the server.")
+  @Description(
+    "This endpoint allows for uploading a file to the server. and add it to source, user profile, origin"
+  )
   @Consumes("multipart/form-data")
   @AccessControlDecorator({})
   @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore

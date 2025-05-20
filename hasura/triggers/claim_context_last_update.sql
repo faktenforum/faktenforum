@@ -8,10 +8,10 @@ DROP TRIGGER IF EXISTS update_claim_context_last_update ON public.claim_category
 
 DROP FUNCTION IF EXISTS public.update_claim_context_last_update();  
 DROP FUNCTION IF EXISTS public.update_claim_claim_context_last_update();
-DROP FUNCTION IF EXISTS public.update_fact_context_last_update();
-DROP FUNCTION IF EXISTS public.update_origin_context_last_update();
-DROP FUNCTION IF EXISTS public.update_source_context_last_update();
-DROP FUNCTION IF EXISTS public.update_claim_category_context_last_update();
+DROP FUNCTION IF EXISTS public.update_fact_claim_context_last_update();
+DROP FUNCTION IF EXISTS public.update_origin_claim_context_last_update();
+DROP FUNCTION IF EXISTS public.update_source_claim_context_last_update();
+DROP FUNCTION IF EXISTS public.update_claim_category_claim_context_last_update();
 
 -- Only dro(p claim-specific function
 -- Step 2: Create NEW function
@@ -63,30 +63,28 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Fact table example
+
 CREATE OR REPLACE FUNCTION public.update_fact_claim_context_last_update()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF TG_OP = 'UPDATE' AND NEW.deleted THEN
-        DELETE FROM public.fact WHERE id = NEW.id;
-    END IF;
 
     PERFORM public.update_claim_context_last_update(
         NEW.claim_id,
         COALESCE(NEW.updated_by, NEW.created_by),
-        COALESCE(NEW.updated_at, NEW.created_at)
+        COALESCE(NEW.updated_at, NEW.created_at) 
     );
-    RETURN NEW;
+    RETURN NEW; 
 END;
 $$ LANGUAGE plpgsql;
 
--- Fix origin event function declaration (typo in schema)
+
 CREATE OR REPLACE FUNCTION public.update_origin_claim_context_last_update()
 RETURNS TRIGGER AS $$
 BEGIN
     PERFORM public.update_claim_context_last_update(
         NEW.claim_id,
         COALESCE(NEW.updated_by, NEW.created_by),
-        COALESCE(NEW.updated_at, NEW.created_at)
+        COALESCE(NEW.updated_at, NEW.created_at) 
     );
     RETURN NEW;
 END;
@@ -98,7 +96,7 @@ BEGIN
     PERFORM public.update_claim_context_last_update(
         (SELECT claim_id FROM public.fact WHERE id = NEW.fact_id LIMIT 1),
         COALESCE(NEW.updated_by, NEW.created_by),
-        COALESCE(NEW.updated_at, NEW.created_at)
+        COALESCE(NEW.updated_at, NEW.created_at) 
     );
     RETURN NEW;
 END;
@@ -110,7 +108,7 @@ BEGIN
     PERFORM public.update_claim_context_last_update(
         NEW.claim_id,
         COALESCE(NEW.updated_by, NEW.created_by),
-        COALESCE(NEW.updated_at, NEW.created_at)
+        COALESCE(NEW.updated_at, NEW.created_at) 
     );
     RETURN NEW;
 END;

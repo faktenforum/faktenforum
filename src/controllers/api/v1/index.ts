@@ -12,6 +12,7 @@ export * from "./webhooks/auth/account";
 export * from "./webhooks/auth/login";
 export * from "./webhooks/auth/registration";
 export * from "./webhooks/auth/session";
+export * from "./webhooks/auth/sync";
 export * from "./webhooks/chat/message";
 export * from "./webhooks/chat/room";
 export * from "./webhooks/files/delete";

@@ -5,6 +5,7 @@ mutation insertUser(
   $firstName: String!
   $lastName: String!
   $profileImage: uuid!
+  $role: String!
 ) {
   insertUserOne(
     object: {
@@ -14,6 +15,7 @@ mutation insertUser(
       firstName: $firstName
       lastName: $lastName
       profileImage: $profileImage
+      role: $role
     }
   ) {
     id

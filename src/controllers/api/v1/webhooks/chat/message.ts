@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Post, Returns, Tags } from "@tsed/schema";
+import { Post, Returns, Tags, Description } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { RequestSuccessResponse } from "~/models";
 
@@ -17,6 +17,7 @@ export class ChatMessageWebHookController {
 
   @Post("/block")
   @Tags("Chat")
+  @Description("Webhook used by Hasura action to block a message in the matrix chat")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json")) // prettier-ignore
   async blockMessage(

@@ -1,7 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
 import { BodyParams } from "@tsed/platform-params";
-import { Post, Returns, Tags } from "@tsed/schema";
+import { Post, Returns, Tags, Description } from "@tsed/schema";
 import { ApiKeyAccessControlDecorator } from "~/decorators";
 import { CalculateClaimWorthinessRequest } from "~/models";
 
@@ -17,6 +17,7 @@ export class AiCheckworthinessWebHookController {
 
   @Post("/calculate")
   @Tags("AI")
+  @Description("Webhook used to start checkworthiness calculation of a claim")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(204).ContentType("application/json")) // prettier-ignore
   async calculateCheckworthiness(@BodyParams() body: CalculateClaimWorthinessRequest): Promise<void> {
@@ -27,6 +28,7 @@ export class AiCheckworthinessWebHookController {
 
   @Post("/calculate-all-claims")
   @Tags("AI")
+  @Description("Webhook used to start checkworthiness calculation of all claims")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200).ContentType("application/json")) // prettier-ignore
   async calculateForAllClaims(): Promise<void> {

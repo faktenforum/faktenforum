@@ -1,0 +1,5 @@
+mutation UpdateUserVerified($id: uuid!, $verified: Boolean!) {
+  updateUserByPk(pkColumns: { id: $id }, _set: { verified: $verified }) {
+    id
+  }
+}

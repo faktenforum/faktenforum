@@ -184,7 +184,7 @@ export class AuthService {
     }
   }
 
-  async activateUser(userId: string): Promise<Identity> {
+  async verifyUserEmail(userId: string): Promise<Identity> {
     try {
       const response = await this.kratosIdentityApi.patchIdentity({
         id: userId,
@@ -231,6 +231,9 @@ export class AuthService {
       const response = await this.kratosIdentityApi.getIdentity({ id: userId });
       if (response.status !== 200 || !response.data) {
         throw new Exception(response.status, `Failed to get user: ${response.statusText}`);
+      }
+      if (!!response.data.metadata_public.blocked === isBlocked && blockedUntil === null && !isBlocked) {
+        throw new Exception(400, "User is already unblocked");
       }
 
       if (isBlocked) {

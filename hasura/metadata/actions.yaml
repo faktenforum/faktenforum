@@ -1,42 +1,4 @@
 actions:
-  - name: accountDetails
-    definition:
-      kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/details'
-      headers:
-        - name: x-api-key
-          value_from_env: HASURA_WEBHOOKS_API_KEY
-      request_transform:
-        body:
-          action: transform
-          template: '{{$body.input}}'
-        template_engine: Kriti
-        version: 2
-    permissions:
-      - role: administrator
-    comment: Get Roles of users by array of user ids
-  - name: accountRole
-    definition:
-      kind: ""
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
-      headers:
-        - name: x-api-key
-          value_from_env: HASURA_WEBHOOKS_API_KEY
-      request_transform:
-        body:
-          action: transform
-          template: '{{$body.input}}'
-        method: POST
-        query_params: {}
-        template_engine: Kriti
-        url: '{{$base_url}}/auth/account/role'
-        version: 2
-    permissions:
-      - role: senior
-      - role: moderator
-      - role: junior
-      - role: editor
-      - role: administrator
   - name: blockAccount
     definition:
       kind: synchronous
@@ -85,7 +47,7 @@ actions:
   - name: deleteAccount
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/delete'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/delete-by-id'
       forward_client_headers: true
       headers:
         - name: x-api-key
@@ -102,6 +64,28 @@ actions:
     permissions:
       - role: administrator
     comment: This Action deletes a user this is not reverserable
+  - name: deleteMyAccount
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/account/delete-by-session'
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: aspirant
+      - role: administrator
+    comment: Webhook used by Hasura to delete a user by his kratos session, used by fafo users
   - name: requestVerificationCode
     definition:
       kind: synchronous
@@ -182,7 +166,7 @@ actions:
   - name: verifiyUserAccount
     definition:
       kind: synchronous
-      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/activate'
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}/auth/account/verify'
       forward_client_headers: true
       headers:
         - name: x-api-key
