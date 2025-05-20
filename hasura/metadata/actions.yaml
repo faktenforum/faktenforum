@@ -88,41 +88,25 @@ actions:
     comment: Webhook used by Hasura to delete a user by his kratos session, used by fafo users
   - name: getMySessions
     definition:
-      kind: synchronous
-      handler: http://spiegel.de
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
       forward_client_headers: true
       request_transform:
         body:
           action: transform
-          template: '{{$body.input.apiV1WebhooksAuthSessionWebhooksAuthSessionsByCookieInput}}'
+          template: |-
+            {
+              "activeOnly": {{$body.input.getMySessionsInput.activeOnly}}
+            }
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/auth/sessions-by-cookie'
+        url: '{{$base_url}}/auth/session/list'
         version: 2
       response_transform:
         body:
           action: transform
-          template: |-
-            {{if inverse(empty($body))}} {{ range _, item := $body}} {
-              "id": {{item?['id']}},
-              "active": {{item?['active']}},
-              "expiresAt": {{item?['expires_at']}},
-              "authenticatedAt": {{item?['authenticated_at']}},
-              "authenticatorAssuranceLevel": {{item?['authenticator_assurance_level']}},
-              "authenticationMethods": {{if inverse(empty(item?['authentication_methods']))}} {{ range _, authenticationMethods := item?['authentication_methods']}} {
-                "method": {{authentication_methods?['method']}},
-                "aal": {{authentication_methods?['aal']}},
-                "completedAt": {{authentication_methods?['completed_at']}}
-                } {{end}} {{else}} null {{end}},
-              "issuedAt": {{item?['issued_at']}},
-              "devices": {{if inverse(empty(item?['devices']))}} {{ range _, devices := item?['devices']}} {
-                "id": {{devices?['id']}},
-                "ipAddress": {{devices?['ip_address']}},
-                "userAgent": {{devices?['user_agent']}},
-                "location": {{devices?['location']}}
-                } {{end}} {{else}} null {{end}}
-              } {{end}} {{else}} null {{end}}
+          template: "{{if inverse(empty($body))}} \n  {{ range _, item := $body}} {\n    \"id\": {{item?['id']}},\n    \"active\": {{item?['active']}},\n    \"expiresAt\": {{item?['expires_at']}},\n    \"authenticatedAt\": {{item?['authenticated_at']}},\n    \"authenticatorAssuranceLevel\": {{item?['authenticator_assurance_level']}},\n    \"authenticationMethods\": {{if inverse(empty(item?['authentication_methods']))}} \n      {{ range _, authentication_methods := item?['authentication_methods']}} {\n        \"method\": {{authentication_methods?['method']}},\n        \"aal\": {{authentication_methods?['aal']}},\n        \"completedAt\": {{authentication_methods?['completed_at']}}\n      } {{end}} \n    {{else}} [] {{end}},\n    \"issuedAt\": {{item?['issued_at']}},\n    \"devices\": {{if inverse(empty(item?['devices']))}} \n      {{ range _, devices := item?['devices']}} {\n        \"id\": {{devices?['id']}},\n        \"ipAddress\": {{devices?['ip_address']}},\n        \"userAgent\": {{devices?['user_agent']}},\n        \"location\": {{devices?['location']}}\n      } {{end}} \n    {{else}} [] {{end}}\n  } {{end}} \n{{else}} [] {{end}}"
         template_engine: Kriti
         version: 2
     permissions:

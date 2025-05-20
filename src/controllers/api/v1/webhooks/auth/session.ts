@@ -14,6 +14,9 @@ export class AuthSessionWebHookController {
   @Inject(AuthService)
   authService: AuthService;
 
+  @Inject(Logger)
+  logger: Logger;
+
   @Get("/")
   @Tags("Auth")
   @Description("Authentication hook for hasura to get user role for a session")
@@ -32,8 +35,7 @@ export class AuthSessionWebHookController {
     return JSON.stringify(hasuraSession);
   }
 
-  @Post("/webhooks/auth/sessions-by-cookie")
-  @ApiKeyAccessControlDecorator({ service: "kratos" })
+  @Post("/list")
   @Tags("Auth")
   @Description("Get all sessions for a user his by session cookie used by fafo users")
   @(Returns(200, Array).Of(Session).ContentType("application/json")) // prettier-ignore
@@ -42,25 +44,13 @@ export class AuthSessionWebHookController {
     @Context() ctx: Context,
     @BodyParams("activeOnly") activeOnly: boolean
   ) {
+    this.logger.info("getSessionsByCookie", { cookieSession, activeOnly });
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
     const session = await this.authService.getUserSession(sessionCookie);
     if (!session) {
       throw new Error("Session not found");
     }
     const sessions = await this.authService.getAllUserSessions(session.identity!.id, activeOnly);
-    return sessions;
-  }
-
-  @Post("/webhooks/auth/sessions-by-user-id")
-  @Tags("Auth")
-  @ApiKeyAccessControlDecorator({ service: "hasura" })
-  @Description("Get all sessions for a user by user id used by admin interface")
-  @(Returns(200, Array).Of(Session).ContentType("application/json")) // prettier-ignore
-  async getSessionsByUserId(
-    @BodyParams("userId") userId: string,
-    @BodyParams("activeOnly") activeOnly: boolean
-  ) {
-    const sessions = await this.authService.getAllUserSessions(userId, activeOnly);
     return sessions;
   }
 }

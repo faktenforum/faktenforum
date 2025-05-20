@@ -21,7 +21,7 @@ type Mutation {
   deleteMyAccount: RequestSuccessResponse
 }
 
-type Mutation {
+type Query {
   getMySessions(
     getMySessionsInput: ApiV1gGetMySessionsInput
   ): [Session]
