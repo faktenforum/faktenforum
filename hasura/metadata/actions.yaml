@@ -86,6 +86,53 @@ actions:
       - role: aspirant
       - role: administrator
     comment: Webhook used by Hasura to delete a user by his kratos session, used by fafo users
+  - name: getMySessions
+    definition:
+      kind: synchronous
+      handler: http://spiegel.de
+      forward_client_headers: true
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.apiV1WebhooksAuthSessionWebhooksAuthSessionsByCookieInput}}'
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/sessions-by-cookie'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: |-
+            {{if inverse(empty($body))}} {{ range _, item := $body}} {
+              "id": {{item?['id']}},
+              "active": {{item?['active']}},
+              "expiresAt": {{item?['expires_at']}},
+              "authenticatedAt": {{item?['authenticated_at']}},
+              "authenticatorAssuranceLevel": {{item?['authenticator_assurance_level']}},
+              "authenticationMethods": {{if inverse(empty(item?['authentication_methods']))}} {{ range _, authenticationMethods := item?['authentication_methods']}} {
+                "method": {{authentication_methods?['method']}},
+                "aal": {{authentication_methods?['aal']}},
+                "completedAt": {{authentication_methods?['completed_at']}}
+                } {{end}} {{else}} null {{end}},
+              "issuedAt": {{item?['issued_at']}},
+              "devices": {{if inverse(empty(item?['devices']))}} {{ range _, devices := item?['devices']}} {
+                "id": {{devices?['id']}},
+                "ipAddress": {{devices?['ip_address']}},
+                "userAgent": {{devices?['user_agent']}},
+                "location": {{devices?['location']}}
+                } {{end}} {{else}} null {{end}}
+              } {{end}} {{else}} null {{end}}
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: aspirant
+      - role: administrator
+    comment: Get all sessions for a user his by session cookie used by fafo users
   - name: requestVerificationCode
     definition:
       kind: synchronous
@@ -224,11 +271,70 @@ custom_types:
         - description: null
           is_deprecated: null
           value: learningmaterial
+    - name: Aal
+      values:
+        - description: null
+          is_deprecated: null
+          value: aal0
+        - description: null
+          is_deprecated: null
+          value: aal1
+        - description: null
+          is_deprecated: null
+          value: aal2
+        - description: null
+          is_deprecated: null
+          value: aal3
+    - name: AuthenticatorAssuranceLevel
+      values:
+        - description: null
+          is_deprecated: null
+          value: aal0
+        - description: null
+          is_deprecated: null
+          value: aal1
+        - description: null
+          is_deprecated: null
+          value: aal2
+        - description: null
+          is_deprecated: null
+          value: aal3
+    - name: Method
+      values:
+        - description: null
+          is_deprecated: null
+          value: link_recovery
+        - description: null
+          is_deprecated: null
+          value: code_recovery
+        - description: null
+          is_deprecated: null
+          value: password
+        - description: null
+          is_deprecated: null
+          value: code
+        - description: null
+          is_deprecated: null
+          value: totp
+        - description: null
+          is_deprecated: null
+          value: oidc
+        - description: null
+          is_deprecated: null
+          value: webauthn
+        - description: null
+          is_deprecated: null
+          value: lookup_secret
+        - description: null
+          is_deprecated: null
+          value: v06_legacy_session
   input_objects:
     - name: SampleInput
     - name: TextPayloadInput
     - name: GetAccountRoleRequestInput
     - name: BlockAccountRequestInput
+    - name: ApiV1WebhooksAuthSessionWebhooksAuthSessionsByCookieInput
+    - name: ApiV1gGetMySessionsInput
   objects:
     - name: UserWithRole
     - name: AccountDetailsResponse
@@ -249,4 +355,7 @@ custom_types:
     - name: GetUserRoleResponse
     - name: RequestSuccessResponse
     - name: BlockedInfo
+    - name: Session
+    - name: SessionAuthenticationMethod
+    - name: SessionDevice
   scalars: []

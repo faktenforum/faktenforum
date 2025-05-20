@@ -101,6 +101,16 @@ export class AuthService {
     }
   }
 
+  async getAllUserSessions(userId: string, activeOnly?: boolean) {
+    const response = await this.kratosIdentityApi.listIdentitySessions({ id: userId, active: activeOnly });
+    return response.data.map((session) => {
+      return {
+        ...session,
+        identity: undefined
+      };
+    });
+  }
+
   async getUserIdentity(userId: string) {
     const response = await this.kratosIdentityApi.getIdentity({ id: userId });
     if (!response.data) {

@@ -22,6 +22,12 @@ type Mutation {
 }
 
 type Mutation {
+  getMySessions(
+    getMySessionsInput: ApiV1gGetMySessionsInput
+  ): [Session]
+}
+
+type Mutation {
   requestVerificationCode(
     email: String!
   ): SuccessInfo
@@ -66,6 +72,32 @@ enum CheckbotResponseType {
   learningmaterial
 }
 
+enum Aal {
+  aal0
+  aal1
+  aal2
+  aal3
+}
+
+enum AuthenticatorAssuranceLevel {
+  aal0
+  aal1
+  aal2
+  aal3
+}
+
+enum Method {
+  link_recovery
+  code_recovery
+  password
+  code
+  totp
+  oidc
+  webauthn
+  lookup_secret
+  v06_legacy_session
+}
+
 input SampleInput {
   username: String!
   password: String!
@@ -83,6 +115,14 @@ input BlockAccountRequestInput {
   blocked: Boolean!
   blockedUntil: String
   userId: String!
+}
+
+input ApiV1WebhooksAuthSessionWebhooksAuthSessionsByCookieInput {
+  activeOnly: Boolean
+}
+
+input ApiV1gGetMySessionsInput {
+  activeOnly: Boolean
 }
 
 type UserWithRole {
@@ -139,5 +179,29 @@ type RequestSuccessResponse {
 type BlockedInfo {
   until: String
   timestamp: String!
+}
+
+type Session {
+  active: Boolean!
+  authenticatedAt: String!
+  authenticationMethods: [SessionAuthenticationMethod]!
+  authenticatorAssuranceLevel: AuthenticatorAssuranceLevel!
+  devices: [SessionDevice]!
+  expiresAt: String!
+  id: String!
+  issuedAt: String!
+}
+
+type SessionAuthenticationMethod {
+  aal: Aal!
+  completedAt: String!
+  method: Method!
+}
+
+type SessionDevice {
+  id: String!
+  ipAddress: String!
+  location: String!
+  userAgent: String!
 }
 
