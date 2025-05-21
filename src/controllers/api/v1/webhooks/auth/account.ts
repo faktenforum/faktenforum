@@ -24,6 +24,7 @@ import {
   UpdateUserBlockedDocument
 } from "~/generated/graphql";
 import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
+import axios from "axios";
 
 const DEFAULT_LANGUAGE = "de";
 

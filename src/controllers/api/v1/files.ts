@@ -16,7 +16,7 @@ import {
   InsertFileAndInsertSourceDocument
 } from "~/generated/graphql";
 import { isUUID } from "class-validator";
-import type { Session } from "~/models";
+import type { User } from "~/models";
 import type {
   GetFileByIdQuery,
   GetFileByIdQueryVariables,
@@ -218,7 +218,7 @@ export class ClaimsController {
   async uploadFile(
     @BodyParams() body: FileUploadFormData,
     @MultipartFile("file") file: S3MulterFile,
-    @Req() request: Request & { user: Session }
+    @Req() request: Request & { user: User }
   ) {
     try {
       let response;
