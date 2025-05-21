@@ -28,6 +28,10 @@ type Query {
 }
 
 type Mutation {
+  refreshMySession: SucessRequestResponse
+}
+
+type Mutation {
   requestVerificationCode(
     email: String!
   ): SuccessInfo
@@ -215,4 +219,11 @@ type SessionDevice {
   location: String!
   userAgent: String!
 }
+
+type SucessRequestResponse {
+  success: Boolean!
+  error: String
+}
+
+scalar JSON
 

@@ -324,10 +324,20 @@ export class AuthService {
         this.logger.error(
           `Failed to revoke all sessions for user ${userId}  with response status ${response.status}`
         );
+        throw new Exception(response.status, `Failed to revoke all sessions for user ${userId}`);
       }
     } catch (error) {
       this.logger.error(`Error revoking sessions for user ${userId}`, error);
       throw new Exception(error.status || 500, error.message || "Failed to revoke user sessions");
     }
+  }
+
+  async refreshSession(sessionId: string): Promise<Session> {
+    const response = await this.kratosIdentityApi.extendSession({ id: sessionId });
+    if (response.status !== 200 || !response.data) {
+      this.logger.error(`[AuthService] Failed to refresh session: ${response.statusText}`);
+      throw new Exception(response.status, `Failed to refresh session: ${response.statusText}`);
+    }
+    return response.data;
   }
 }

@@ -120,6 +120,28 @@ actions:
       - role: aspirant
       - role: administrator
     comment: Get all sessions for a user his by session cookie used by fafo users
+  - name: refreshMySession
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/session/refresh'
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: aspirant
+      - role: administrator
+    comment: Webhook to check and instruct refresh of the current Ory Kratos session
   - name: requestVerificationCode
     definition:
       kind: synchronous
@@ -371,4 +393,6 @@ custom_types:
     - name: Session
     - name: SessionAuthenticationMethod
     - name: SessionDevice
-  scalars: []
+    - name: SucessRequestResponse
+  scalars:
+    - name: JSON

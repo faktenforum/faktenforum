@@ -19,7 +19,7 @@ export class AuthSessionWebHookController {
   logger: Logger;
 
   @Get("/")
-  @Tags("Auth")
+  @Tags("Auth", "Session")
   @Description("Authentication hook for hasura to get user role for a session")
   @(Returns(200, String).ContentType("application/json")) // prettier-ignore
   async getSession(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
@@ -37,7 +37,7 @@ export class AuthSessionWebHookController {
   }
 
   @Post("/list")
-  @Tags("Auth")
+  @Tags("Auth", "Session")
   @Description("Get all sessions for a user his by session cookie used by fafo users")
   @(Returns(200, Array).Of(Session).ContentType("application/json")) // prettier-ignore
   async getSessionsByCookie(
@@ -45,7 +45,6 @@ export class AuthSessionWebHookController {
     @Context() ctx: Context,
     @BodyParams("activeOnly") activeOnly: boolean
   ) {
-    this.logger.info("getSessionsByCookie", { cookieSession, activeOnly });
     const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
     const session = await this.authService.getUserSession(sessionCookie);
     if (!session) {
@@ -56,7 +55,7 @@ export class AuthSessionWebHookController {
   }
 
   @Post("/revoke-session")
-  @Tags("Auth")
+  @Tags("Auth", "Session")
   @Description("Webhook to revoke (invalidate) a specific Ory Kratos session by session ID")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
   @(Returns(200, RequestSuccessResponse).ContentType("application/json"))
@@ -88,6 +87,31 @@ export class AuthSessionWebHookController {
       return { success: true };
     } catch (error) {
       this.logger.error(`[HasuraWebHookController] Error revoking session: ${error.message}`);
+      return { success: false, error: error.message };
+    }
+  }
+
+  @Post("/refresh")
+  @Tags("Auth", "Session")
+  @Description("Webhook to check and instruct refresh of the current Ory Kratos session")
+  @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @(Returns(200, RequestSuccessResponse).ContentType("application/json"))
+  async refreshSession(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
+    const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
+
+    if (!sessionCookie) {
+      throw new BadRequest("No session cookie found");
+    }
+
+    try {
+      const session = await this.authService.getUserSession(sessionCookie);
+      if (!session) {
+        throw new BadRequest("Session not found");
+      }
+      await this.authService.refreshSession(session.id);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`[HasuraWebHookController] Error checking session: ${error.message}`);
       return { success: false, error: error.message };
     }
   }
