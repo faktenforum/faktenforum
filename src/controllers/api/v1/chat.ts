@@ -39,7 +39,8 @@ export class AuthController {
     const payload = { sub: (request.user as Session).username };
     const secret = this.envService.jwtSecret;
 
-    const token = jwt.sign(payload, secret, { algorithm: "HS256" });
+    const token = jwt.sign(payload, secret, { algorithm: "HS256", expiresIn: "5m" });
+    console.log("Token generated", token);
 
     // Send the JWT in the response
     response.json({ token });

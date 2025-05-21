@@ -1,0 +1,20 @@
+http: 
+  routers:
+    synapse-admin:
+      entryPoints:
+        - web
+      rule: host(`matrix-admin.localhost`)
+      service: synapse-admin
+      middlewares:
+        - synapse-admin
+
+  services:
+    synapse-admin:
+      loadBalancer:
+        servers:
+        - url: http://synapse-admin:80
+  middlewares:
+    synapse-admin:
+      stripPrefix:
+        prefixes:
+        - /api/v1/synapse-admin

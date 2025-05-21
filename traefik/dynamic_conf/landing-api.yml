@@ -1,0 +1,12 @@
+http:
+  routers:
+    payload:
+      entryPoints:
+        - web
+      rule: host(`localhost`) && (PathPrefix(`/cms`) || PathPrefix(`/_next`))
+      service: payload
+  services:
+    payload:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:5001
