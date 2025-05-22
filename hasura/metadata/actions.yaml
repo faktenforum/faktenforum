@@ -86,6 +86,62 @@ actions:
       - role: aspirant
       - role: administrator
     comment: Webhook used by Hasura to delete a user by his kratos session, used by fafo users
+  - name: getMySessions
+    definition:
+      kind: ""
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "activeOnly": {{$body.input.getMySessionsInput.activeOnly}}
+            }
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/session/list'
+        version: 2
+      response_transform:
+        body:
+          action: transform
+          template: "{{if inverse(empty($body))}} \n  {{ range _, item := $body}} {\n    \"id\": {{item?['id']}},\n    \"active\": {{item?['active']}},\n    \"expiresAt\": {{item?['expires_at']}},\n    \"authenticatedAt\": {{item?['authenticated_at']}},\n    \"authenticatorAssuranceLevel\": {{item?['authenticator_assurance_level']}},\n    \"authenticationMethods\": {{if inverse(empty(item?['authentication_methods']))}} \n      {{ range _, authentication_methods := item?['authentication_methods']}} {\n        \"method\": {{authentication_methods?['method']}},\n        \"aal\": {{authentication_methods?['aal']}},\n        \"completedAt\": {{authentication_methods?['completed_at']}}\n      } {{end}} \n    {{else}} [] {{end}},\n    \"issuedAt\": {{item?['issued_at']}},\n    \"devices\": {{if inverse(empty(item?['devices']))}} \n      {{ range _, devices := item?['devices']}} {\n        \"id\": {{devices?['id']}},\n        \"ipAddress\": {{devices?['ip_address']}},\n        \"userAgent\": {{devices?['user_agent']}},\n        \"location\": {{devices?['location']}}\n      } {{end}} \n    {{else}} [] {{end}}\n  } {{end}} \n{{else}} [] {{end}}"
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: aspirant
+      - role: administrator
+    comment: Get all sessions for a user his by session cookie used by fafo users
+  - name: refreshMySession
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/session/refresh'
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: aspirant
+      - role: administrator
+    comment: Webhook to check and instruct refresh of the current Ory Kratos session
   - name: requestVerificationCode
     definition:
       kind: synchronous
@@ -106,6 +162,31 @@ actions:
     permissions:
       - role: administrator
     comment: This Action sends a new verification code to the user's email
+  - name: revokeMySessionById
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_WEBHOOKS_BASE_URL}}'
+      forward_client_headers: true
+      headers:
+        - name: x-api-key
+          value_from_env: HASURA_WEBHOOKS_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: '{{$body.input.revokeMySessionInput}}'
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/auth/session/revoke-session'
+        version: 2
+    permissions:
+      - role: senior
+      - role: moderator
+      - role: junior
+      - role: editor
+      - role: aspirant
+      - role: administrator
+    comment: Webhook to revoke (invalidate) a specific Ory Kratos session by session ID
   - name: sendMessageToCheckbotMessagePost
     definition:
       kind: synchronous
@@ -224,11 +305,71 @@ custom_types:
         - description: null
           is_deprecated: null
           value: learningmaterial
+    - name: Aal
+      values:
+        - description: null
+          is_deprecated: null
+          value: aal0
+        - description: null
+          is_deprecated: null
+          value: aal1
+        - description: null
+          is_deprecated: null
+          value: aal2
+        - description: null
+          is_deprecated: null
+          value: aal3
+    - name: AuthenticatorAssuranceLevel
+      values:
+        - description: null
+          is_deprecated: null
+          value: aal0
+        - description: null
+          is_deprecated: null
+          value: aal1
+        - description: null
+          is_deprecated: null
+          value: aal2
+        - description: null
+          is_deprecated: null
+          value: aal3
+    - name: Method
+      values:
+        - description: null
+          is_deprecated: null
+          value: link_recovery
+        - description: null
+          is_deprecated: null
+          value: code_recovery
+        - description: null
+          is_deprecated: null
+          value: password
+        - description: null
+          is_deprecated: null
+          value: code
+        - description: null
+          is_deprecated: null
+          value: totp
+        - description: null
+          is_deprecated: null
+          value: oidc
+        - description: null
+          is_deprecated: null
+          value: webauthn
+        - description: null
+          is_deprecated: null
+          value: lookup_secret
+        - description: null
+          is_deprecated: null
+          value: v06_legacy_session
   input_objects:
     - name: SampleInput
     - name: TextPayloadInput
     - name: GetAccountRoleRequestInput
     - name: BlockAccountRequestInput
+    - name: ApiV1WebhooksAuthSessionWebhooksAuthSessionsByCookieInput
+    - name: ApiV1gGetMySessionsInput
+    - name: RevokeMySessionInput
   objects:
     - name: UserWithRole
     - name: AccountDetailsResponse
@@ -249,4 +390,9 @@ custom_types:
     - name: GetUserRoleResponse
     - name: RequestSuccessResponse
     - name: BlockedInfo
-  scalars: []
+    - name: Session
+    - name: SessionAuthenticationMethod
+    - name: SessionDevice
+    - name: SucessRequestResponse
+  scalars:
+    - name: JSON

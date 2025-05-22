@@ -4,4 +4,7 @@ export class RequestSuccessResponse {
   @Property()
   @Required()
   success: boolean;
+
+  @Property()
+  error?: string;
 }
