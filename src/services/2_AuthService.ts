@@ -84,7 +84,7 @@ export class AuthService {
   async getUserSession(sessionCookie: string): Promise<Session> {
     const response = await fetch(this.kratosSessionUrl, {
       method: "GET",
-      headers: { cookie: `ory_kratos_session=${sessionCookie};` }
+      headers: { cookie: `${this.envService.kratosSessionCookieName}=${sessionCookie};` }
     });
     if (response.status === 200) {
       const session: Session = await response.json();

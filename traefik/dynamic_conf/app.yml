@@ -3,7 +3,7 @@ http:
     app:
       entryPoints:
         - web
-      rule: host(`app.localhost`)
+      rule: host(`app.fafo.localhost`)
       service: app
 
   services:

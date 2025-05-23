@@ -3,7 +3,7 @@ http:
     hasura:
       entryPoints:
         - web
-      rule: host(`app.localhost`) && PathPrefix(`/api/v1/graphql`)
+      rule: host(`app.fafo.localhost`) && PathPrefix(`/api/v1/graphql`)
       service: hasura
       middlewares:
         - hasura

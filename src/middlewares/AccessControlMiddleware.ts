@@ -6,6 +6,7 @@ import { Context } from "@tsed/platform-params";
 import { UserRole } from "~/models";
 import { AuthService } from "~/services";
 import { POWER_LEVELS } from "~/utils/consts";
+const sessionCookieName = process.env.KRATOS_SESSION_COOKIE_NAME || "faktenforum_session_dev";
 
 interface AccessControlOptions {
   role: UserRole & "ALL";
@@ -19,7 +20,7 @@ export class AccessControlMiddleware implements MiddlewareMethods {
     // retrieve options given to the @UseAuth decorator
     const options = (ctx.endpoint.get(AccessControlMiddleware) || {}) as AccessControlOptions;
 
-    const session = await this.authService.getUserSession(request.cookies["ory_kratos_session"]);
+    const session = await this.authService.getUserSession(request.cookies[sessionCookieName]);
 
     const user: Session = {
       userId: session.identity!.id,

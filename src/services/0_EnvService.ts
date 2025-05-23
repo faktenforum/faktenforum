@@ -38,7 +38,8 @@ export class EnvService {
       MATRIX_ACCOUNT: process.env.MATRIX_ACCOUNT,
       MATRIX_DOMAIN: process.env.MATRIX_DOMAIN,
       MATRIX_INTERNAL_URL: process.env.MATRIX_INTERNAL_URL,
-      CHECK_WORTHINESS_BASE_URL: process.env.CHECK_WORTHINESS_BASE_URL
+      CHECK_WORTHINESS_BASE_URL: process.env.CHECK_WORTHINESS_BASE_URL,
+      KRATOS_SESSION_COOKIE_NAME: process.env.KRATOS_SESSION_COOKIE_NAME
     };
 
     // Delete environment variables to prevent security risks
@@ -201,6 +202,14 @@ export class EnvService {
     };
   }
 
+  get kratosSessionCookieName(): string {
+    if (!this.envVars.KRATOS_SESSION_COOKIE_NAME) {
+      this.logger.error("KRATOS_SESSION_COOKIE_NAME is not set!");
+      process.exit(1);
+    }
+    return this.envVars.KRATOS_SESSION_COOKIE_NAME;
+  }
+
   private validate() {
     const errors: string[] = [];
     if (!this.envVars.API_BASE_URL) errors.push("API_BASE_URL is not set!");
@@ -223,6 +232,7 @@ export class EnvService {
     if (!this.envVars.MATRIX_INTERNAL_URL) errors.push("MATRIX_INTERNAL_URL is not set!");
     if (!this.envVars.JWT_SECRET) errors.push("JWT_SECRET is not set!");
     if (!this.envVars.CHECK_WORTHINESS_BASE_URL) errors.push("CHECK_WORTHINESS_BASE_URL is not set!");
+    if (!this.envVars.KRATOS_SESSION_COOKIE_NAME) errors.push("KRATOS_SESSION_COOKIE_NAME is not set!");
     if (!this.validEnvs.includes(this.env)) {
       errors.push(`NODE_ENV is not set or invalid! It has to be ${this.validEnvs.join(" | ")}`);
     }

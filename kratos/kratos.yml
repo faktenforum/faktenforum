@@ -3,18 +3,22 @@ dsn: memory
 
 serve:
   public:
-    base_url: http://app.localhost:8000/api/v1/kratos
+    base_url: http://app.fafo.localhost:8000/api/v1/kratos
     cors:
       enabled: true
+      allowed_origins:
+        - http://app.fafo.localhost:8000
+        - http://fafo.localhost:8000
   admin:
     base_url: http://localhost:4434/
 
 selfservice:
-  default_browser_return_url: http://app.localhost:8000/
+  default_browser_return_url: http://app.fafo.localhost:8000/
   allowed_return_urls:
-    - http://app.localhost:8000/
+    - http://app.fafo.localhost:8000/
     - http://chat.localhost:8000/
     - http://localhost:3000/
+    - http://fafo.localhost:8000/
 
 
   methods:
@@ -33,25 +37,25 @@ selfservice:
 
   flows:
     error:
-      ui_url: http://app.localhost:8000/error
+      ui_url: http://app.fafo.localhost:8000/error
 
     settings:
-      ui_url: http://app.localhost:8000/authentication-settings
+      ui_url: http://app.fafo.localhost:8000/authentication-settings
       privileged_session_max_age: 15m
       required_aal: highest_available
 
     recovery:
       enabled: true
-      ui_url: http://app.localhost:8000/recovery
+      ui_url: http://app.fafo.localhost:8000/recovery
       use: code
 
     verification:
       enabled: true
       lifespan: 720m
-      ui_url: http://app.localhost:8000/verification
+      ui_url: http://app.fafo.localhost:8000/verification
       use: code
       after:
-        default_browser_return_url: http://app.localhost:8000/
+        default_browser_return_url: http://app.fafo.localhost:8000/
         hooks:
           - hook: web_hook
             config:
@@ -70,10 +74,10 @@ selfservice:
 
     logout:
       after:
-        default_browser_return_url: http://app.localhost:8000/login
+        default_browser_return_url: http://app.fafo.localhost:8000/login
 
     login:
-      ui_url: http://app.localhost:8000/login
+      ui_url: http://app.fafo.localhost:8000/login
       lifespan: 10m
       after:
         hooks:
@@ -94,7 +98,7 @@ selfservice:
 
     registration:
       lifespan: 60m
-      ui_url: http://app.localhost:8000/registration
+      ui_url: http://app.fafo.localhost:8000/registration
 
       after:
         password:
@@ -176,8 +180,12 @@ courier:
           subject: file:///etc/config/kratos/templates/recovery_code_email_subject.gotmpl
 
 
+session:
+  cookie:
+    name: faktenforum_session_dev
+    domain: .fafo.localhost
+    path: /
+    same_site: Lax
 
-cookies:
-  path: /
-  same_site: Lax
+
 

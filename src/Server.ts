@@ -12,7 +12,7 @@ import * as apiV1 from "./controllers/api/v1/index";
 import * as pages from "./controllers/pages/index";
 import { FileService } from "./services";
 import { SetSecurityResponseHeaders } from "~/middlewares";
-
+import cors from "cors";
 import helmet from "helmet";
 
 @Configuration({
@@ -25,7 +25,15 @@ import helmet from "helmet";
 
   middlewares: [
     SetSecurityResponseHeaders,
-    "cors",
+    cors({
+      origin: [
+        "http://app.fafo.localhost:8000",
+        "http://fafo.localhost:8000",
+        "https://app.fafo.localhost:8000",
+        "https://fafo.localhost:8000"
+      ],
+      credentials: true
+    }),
     "cookie-parser",
     {
       use: "compression",

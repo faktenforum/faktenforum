@@ -3,7 +3,7 @@ http:
     kratos:
       entryPoints:
         - web
-      rule: host(`app.localhost`) && PathPrefix(`/api/v1/kratos`)
+      rule: host(`app.fafo.localhost`) && PathPrefix(`/api/v1/kratos`)
       service: kratos
       middlewares:
         - kratos

@@ -3,7 +3,7 @@ http:
     backend:
       entryPoints:
         - web
-      rule: host(`app.localhost`) && PathPrefix(`/api`)
+      rule: host(`app.fafo.localhost`) && PathPrefix(`/api`)
       service: backend
   services:
     backend:

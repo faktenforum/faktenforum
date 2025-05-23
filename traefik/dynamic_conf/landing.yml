@@ -3,7 +3,7 @@ http:
     landing:
       entryPoints:
         - web
-      rule: host(`localhost`)
+      rule: host(`fafo.localhost`)
       service: landing
 
   services:

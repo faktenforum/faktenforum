@@ -75,7 +75,7 @@ const generateDummyData = () => {
 const uploadDummyData = async (environment: string, numberOfClaims: number) => {
   let url;
   if (environment === "local") {
-    url = "http://app.localhost:8000/api/v1/submission";
+    url = "http://app.fafo.localhost:8000/api/v1/submission";
   } else if (environment === "staging") {
     url = "http://dev-app.faktenforum.org/api/v1/submission";
   } else {

@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken"; // Import the jsonwebtoken library
 import { AccessControlDecorator } from "~/decorators";
 import { Returns, Tags, Description } from "@tsed/schema";
 import { Session } from "~/models";
-
+const sessionCookieName = process.env.KRATOS_SESSION_COOKIE_NAME || "faktenforum_session_dev";
 @Controller("/chat")
 export class AuthController {
   @Inject(AuthService)
@@ -30,7 +30,7 @@ export class AuthController {
   @(Returns(500, String).Description("Internal server error. An unexpected error occurred.") ) // prettier-ignore
   @Get("/token")
   async genToken(
-    @Cookies("ory_kratos_session") cookieSession: string,
+    @Cookies(sessionCookieName) cookieSession: string,
     @Req() request: Req,
     @Res() response: Res
   ) {

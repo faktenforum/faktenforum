@@ -3,7 +3,7 @@ http:
     payload:
       entryPoints:
         - web
-      rule: host(`localhost`) && (PathPrefix(`/cms`) || PathPrefix(`/_next`))
+      rule: host(`fafo.localhost`) && (PathPrefix(`/cms`) || PathPrefix(`/_next`))
       service: payload
   services:
     payload:

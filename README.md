@@ -80,7 +80,7 @@ Traefik a reverse proxy which will provide you
 with access to all services on localhost domain:
 
 - localhost:8000 -> localhost:3000 (landing page dev server)
-- app.localhost:8000 -> localhost:4000 (frontend dev server)
+- app.fafo.localhost:8000 -> localhost:4000 (frontend dev server)
 - api.localhost:8000 -> localhost:8083 (backend dev server)
 - api.localhost:8000/api/v1/graphql -> hasura (running as docker container)
 
