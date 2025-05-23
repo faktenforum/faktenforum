@@ -1,9 +1,9 @@
 import { Controller, Inject } from "@tsed/di";
 import { Logger } from "@tsed/common";
-import { BodyParams, Context, Cookies } from "@tsed/platform-params";
-import { Post, Returns, Tags, Description, CollectionOf } from "@tsed/schema";
+import { BodyParams, Context } from "@tsed/platform-params";
+import { Post, Returns, Tags, Description } from "@tsed/schema";
 
-import { ApiKeyAccessControlDecorator } from "~/decorators";
+import { ApiKeyAccessControlDecorator, UserAccessControlDecorator } from "~/decorators";
 import {
   AccountSchema,
   UpdateUserRoleRequest,
@@ -13,7 +13,8 @@ import {
   BlockAccountRequest,
   RequestSuccessResponse,
   GetUserRoleResponse,
-  ForKratosResponse
+  ForKratosResponse,
+  User
 } from "~/models";
 import { AuthService, HasuraService, MatrixService } from "~/services";
 import { Identity } from "@ory/kratos-client";
@@ -24,7 +25,6 @@ import {
   UpdateUserBlockedDocument
 } from "~/generated/graphql";
 import { BadRequest, InternalServerError, Exception } from "@tsed/exceptions";
-import axios from "axios";
 
 const DEFAULT_LANGUAGE = "de";
 
@@ -96,17 +96,12 @@ export class AuthAccountWebHookController {
   @Post("/delete-by-session")
   @Tags("Auth")
   @ApiKeyAccessControlDecorator({ service: "hasura" })
+  @UserAccessControlDecorator({ role: "All" })
   @Description("Webhook used by Hasura to delete a user by his kratos session, used by fafo users")
   @(Returns(200, RequestSuccessResponse).Description("Successfully deleted the user").ContentType("application/json")) // prettier-ignore
-  async deleteUserBySession(@Cookies("ory_kratos_session") cookieSession: string, @Context() ctx: Context) {
+  async deleteUserBySession(@Context("user") user: User) {
     this.logger.info(`[HasuraWebHookController] Deleting user by Session`);
-    const sessionCookie = cookieSession || ctx.request.getHeader("ory_kratos_session");
-
-    const session = await this.authService.getUserSession(sessionCookie);
-    if (!session) {
-      throw new BadRequest("No session found");
-    }
-    return this.deleteUser(session.identity!.id);
+    return this.deleteUser(user.userId);
   }
 
   @Post("/verify")

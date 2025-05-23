@@ -31,4 +31,11 @@ export class User {
   @Required()
   @Property()
   role: UserRole;
+
+  @Required()
+  @Property()
+  sessionId: string;
+
+  @Property()
+  lang: string;
 }

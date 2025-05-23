@@ -35,7 +35,7 @@ import type {
 } from "~/generated/graphql";
 import type { S3MulterFile } from "~/config/minio";
 import { FileUploadResponse, FileUploadFormData, OrginSourceData } from "~/models";
-import { AccessControlDecorator } from "~/decorators";
+import { UserAccessControlDecorator } from "~/decorators";
 import { BadRequest } from "@tsed/exceptions";
 
 const ajv = new Ajv();
@@ -54,7 +54,7 @@ export class ClaimsController {
   @Get("/avatar/:username")
   @Tags("Files")
   @Description("Endpoint to get the avatar of a user")
-  @AccessControlDecorator({})
+  @UserAccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore
@@ -110,7 +110,7 @@ export class ClaimsController {
 
   @Get("/:fileId")
   @Description("Endpoint to get a file by its id")
-  @AccessControlDecorator({})
+  @UserAccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content") // prettier-ignore
     ) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.") // prettier-ignore
@@ -160,7 +160,7 @@ export class ClaimsController {
   @Get("/:fileId/:size")
   @Tags("Files")
   @Description("Endpoint to get a file by its id and size bucket")
-  @AccessControlDecorator({})
+  @UserAccessControlDecorator({})
   @(Returns(200, String).ContentType("*/*").Description("File content")) // prettier-ignore
   @(Returns(400, String).Description("Bad request. The request or parameters are incorrect.")) // prettier-ignore
   @(Returns(401, String).Description("Unauthorized. Authentication credentials are missing or invalid.") // prettier-ignore
@@ -213,7 +213,7 @@ export class ClaimsController {
     "This endpoint allows for uploading a file to the server. and add it to source, user profile, origin"
   )
   @Consumes("multipart/form-data")
-  @AccessControlDecorator({})
+  @UserAccessControlDecorator({})
   @(Returns(200, FileUploadResponse).Description("Returns the ID of the uploaded file")) // prettier-ignore
   async uploadFile(
     @BodyParams() body: FileUploadFormData,
